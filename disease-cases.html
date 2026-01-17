@@ -17,7 +17,6 @@
             box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
         }
 
-        /* Status & Severity Badges based on your screenshots */
         .badge-high { background-color: #fef2f2; color: #ef4444; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #fee2e2; }
         .badge-moderate { background-color: #fffbeb; color: #f59e0b; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #fef3c7; }
         .badge-low { background-color: #f0fdf4; color: #22c55e; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #dcfce7; }
@@ -91,8 +90,7 @@
                         <th class="px-10 py-5 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="disease-table-body" class="divide-y divide-slate-50">
-                    </tbody>
+                <tbody id="disease-table-body" class="divide-y divide-slate-50"></tbody>
             </table>
         </div>
     </main>
@@ -151,7 +149,7 @@
                         <i data-lucide="trash-2" class="w-6 h-6"></i>
                     </button>
                     <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-slate-400 hover:text-slate-600">Dismiss</button>
-                    <button type="submit" class="flex-[2] py-4 bg-[#2563eb] text-white font-bold rounded-2xl shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all">
+                    <button type="submit" id="submit-btn" class="flex-[2] py-4 bg-[#2563eb] text-white font-bold rounded-2xl shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all">
                         Confirm Changes
                     </button>
                 </div>
@@ -163,7 +161,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, where, doc, addDoc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Your Firebase Configuration
+        // IMPORTANT: Make sure these are YOUR actual credentials
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -177,7 +175,6 @@
         const db = getFirestore(app);
         const tableBody = document.getElementById('disease-table-body');
 
-        // CRUD: Live Feed with Filters
         function syncDatabase() {
             let q = collection(db, "disease_reports");
             const filterVal = document.getElementById('brgy-filter').value;
@@ -217,12 +214,10 @@
             });
         }
 
-        // Search & Filter Listeners
         document.getElementById('disease-search').oninput = syncDatabase;
         document.getElementById('brgy-filter').onchange = syncDatabase;
         syncDatabase();
 
-        // Modal Controls
         window.openAddModal = () => {
             document.getElementById('modal-title').innerText = "Register New Case";
             document.getElementById('case-form').reset();
@@ -242,31 +237,54 @@
             document.getElementById('case-modal').classList.remove('hidden');
         };
 
-        window.closeModal = () => document.getElementById('case-modal').classList.add('hidden');
-
-        // Form Submit (Add/Update)
-        document.getElementById('case-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('case-id').value;
-            const payload = {
-                name: document.getElementById('form-name').value,
-                barangay: document.getElementById('form-brgy').value,
-                severity: document.getElementById('form-severity').value,
-                status: document.getElementById('form-status').value,
-                updatedAt: new Date()
-            };
-
-            if (id) await updateDoc(doc(db, "disease_reports", id), payload);
-            else await addDoc(collection(db, "disease_reports"), payload);
-            closeModal();
+        window.closeModal = () => {
+            document.getElementById('case-modal').classList.add('hidden');
         };
 
-        // Delete Logic
+        // FIXED SUBMIT LOGIC
+        document.getElementById('case-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.innerText;
+            
+            // UI Feedback
+            submitBtn.innerText = "Processing...";
+            submitBtn.disabled = true;
+
+            try {
+                const id = document.getElementById('case-id').value;
+                const payload = {
+                    name: document.getElementById('form-name').value,
+                    barangay: document.getElementById('form-brgy').value,
+                    severity: document.getElementById('form-severity').value,
+                    status: document.getElementById('form-status').value,
+                    updatedAt: new Date()
+                };
+
+                if (id) {
+                    await updateDoc(doc(db, "disease_reports", id), payload);
+                } else {
+                    await addDoc(collection(db, "disease_reports"), payload);
+                }
+            } catch (error) {
+                console.error("Database Error:", error);
+                alert("Error saving data. Please check your Firebase config.");
+            } finally {
+                // This ensures the modal closes even if there is a tiny delay
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+                closeModal();
+            }
+        };
+
         document.getElementById('delete-btn').onclick = async () => {
             const id = document.getElementById('case-id').value;
-            if (confirm("Confirm removal of this case? This action cannot be undone.")) {
-                await deleteDoc(doc(db, "disease_reports", id));
-                closeModal();
+            if (confirm("Confirm removal of this case?")) {
+                try {
+                    await deleteDoc(doc(db, "disease_reports", id));
+                } finally {
+                    closeModal();
+                }
             }
         };
 
