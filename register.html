@@ -20,13 +20,11 @@
             box-shadow: 0 0 0 1px #2563eb;
         }
 
-        /* ICON COLOR CHANGE: Targets the SVG when radio is checked */
         input[type="radio"]:checked + .selection-card svg {
             color: #2563eb !important;
             stroke: #2563eb !important;
         }
 
-        /* TEXT COLOR CHANGE: Targets labels when radio is checked */
         input[type="radio"]:checked + .selection-card .role-title,
         input[type="radio"]:checked + .selection-card .access-text {
             color: #2563eb !important;
@@ -44,72 +42,81 @@
 
         <div class="bg-white rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row overflow-hidden min-h-[700px]">
             
-            <div class="bg-brand-blue w-full md:w-[42%] p-10 text-white flex flex-col justify-center">
+            <div class="bg-brand-blue w-full md:w-[35%] p-10 text-white flex flex-col justify-center">
                 <div class="flex items-center gap-3 mb-8">
                     <div class="bg-white p-2 rounded-xl">
                         <div class="w-8 h-8 text-brand-blue flex items-center justify-center font-bold text-2xl">+</div>
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold leading-none">GUB-UP</h1>
-                        <p class="text-[10px] opacity-80 uppercase tracking-widest font-semibold">Disease Monitoring System</p>
+                        <p class="text-[10px] opacity-80 uppercase tracking-widest font-semibold">Disease Monitoring</p>
                     </div>
                 </div>
-                <h2 class="text-3xl font-bold mb-4">Welcome to GUB-UP</h2>
-                <p class="text-blue-100 text-sm mb-10 opacity-90">Your community health monitoring system for Gubat, Sorsogon.</p>
+                <h2 class="text-3xl font-bold mb-4">Join the Network</h2>
+                <p class="text-blue-100 text-sm mb-10 opacity-90">Help us monitor and improve the health status of Gubat, Sorsogon.</p>
+                
                 <div class="space-y-5">
                     <div class="flex items-center gap-4">
                         <div class="bg-white/20 p-2 rounded-lg"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
-                        <div><h4 class="font-bold text-sm">Secure Access</h4><p class="text-[11px] text-blue-100">Your health data is protected.</p></div>
+                        <div><h4 class="font-bold text-sm">Validated Roles</h4><p class="text-[11px] text-blue-100">Specific tools for health workers.</p></div>
                     </div>
                     <div class="flex items-center gap-4">
-                        <div class="bg-white/20 p-2 rounded-lg"><i data-lucide="clock" class="w-5 h-5"></i></div>
-                        <div><h4 class="font-bold text-sm">Real-time Updates</h4><p class="text-[11px] text-blue-100">Get instant health info.</p></div>
+                        <div class="bg-white/20 p-2 rounded-lg"><i data-lucide="database" class="w-5 h-5"></i></div>
+                        <div><h4 class="font-bold text-sm">Centralized Data</h4><p class="text-[11px] text-blue-100">Everything in one place.</p></div>
                     </div>
                 </div>
             </div>
 
-            <div class="w-full md:w-[58%] p-10 md:p-14 flex flex-col justify-center">
+            <div class="w-full md:w-[65%] p-10 md:p-14 flex flex-col justify-center">
                 <h3 class="text-3xl font-bold text-navy mb-1">Create Account</h3>
-                <p class="text-gray-400 mb-6 font-medium">Register to get started</p>
+                <p class="text-gray-400 mb-6 font-medium">Select your role and enter details</p>
 
                 <form id="registrationForm">
-                    <label class="block text-xs font-bold text-navy mb-3 uppercase tracking-wider">Select Account Type</label>
-                    <div class="grid grid-cols-2 gap-4 mb-6">
+                    <label class="block text-xs font-bold text-navy mb-3 uppercase tracking-wider">Account Type</label>
+                    <div class="grid grid-cols-3 gap-3 mb-6">
                         <label class="cursor-pointer">
                             <input type="radio" name="role" value="citizen" class="hidden" checked>
-                            <div class="selection-card border-2 border-gray-100 p-6 rounded-2xl flex flex-col items-center gap-2 transition-all text-center">
-                                <i data-lucide="user" class="w-8 h-8 text-gray-400"></i>
-                                <span class="role-title font-bold text-gray-800">Citizen</span>
-                                <span class="access-text text-[10px] text-gray-400">Basic access</span>
+                            <div class="selection-card border-2 border-gray-100 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all text-center h-full">
+                                <i data-lucide="user" class="w-6 h-6 text-gray-400"></i>
+                                <span class="role-title font-bold text-gray-800 text-xs">Citizen</span>
+                                <span class="access-text text-[9px] text-gray-400 leading-tight">View only access</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
-                            <input type="radio" name="role" value="worker" class="hidden">
-                            <div class="selection-card border-2 border-gray-100 p-6 rounded-2xl flex flex-col items-center gap-2 transition-all text-center">
-                                <i data-lucide="hospital" class="w-8 h-8 text-gray-400"></i>
-                                <span class="role-title font-bold text-gray-800">Health Worker</span>
-                                <span class="access-text text-[10px] text-gray-400">Full access</span>
+                            <input type="radio" name="role" value="bhw" class="hidden">
+                            <div class="selection-card border-2 border-gray-100 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all text-center h-full">
+                                <i data-lucide="pill" class="w-6 h-6 text-gray-400"></i>
+                                <span class="role-title font-bold text-gray-800 text-xs">BHW</span>
+                                <span class="access-text text-[9px] text-gray-400 leading-tight">Manage medicine</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="role" value="rhu" class="hidden">
+                            <div class="selection-card border-2 border-gray-100 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all text-center h-full">
+                                <i data-lucide="hospital" class="w-6 h-6 text-gray-400"></i>
+                                <span class="role-title font-bold text-gray-800 text-xs">RHU Staff</span>
+                                <span class="access-text text-[9px] text-gray-400 leading-tight">Manage diseases</span>
                             </div>
                         </label>
                     </div>
 
-                    <div class="space-y-4 mb-6">
-                        <div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div class="md:col-span-2">
                             <label class="block text-xs font-bold text-navy mb-1 uppercase tracking-wider">Full Name</label>
-                            <input type="text" id="fullName" placeholder="Enter your full name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
+                            <input type="text" id="fullName" placeholder="Juan Dela Cruz" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-navy mb-1 uppercase tracking-wider">Email Address</label>
-                            <input type="email" id="email" placeholder="your@email.com" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
+                            <input type="email" id="email" placeholder="name@email.com" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-navy mb-1 uppercase tracking-wider">Password</label>
-                            <input type="password" id="password" placeholder="Enter password" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
+                            <input type="password" id="password" placeholder="••••••••" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
                         </div>
-                        <div>
+                        <div class="md:col-span-2">
                             <label class="block text-xs font-bold text-navy mb-1 uppercase tracking-wider">Barangay</label>
                             <select id="barangay" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue bg-white cursor-pointer">
-                                <option value="" disabled selected>Select your barangay</option>
+                                <option value="" disabled selected>Select your location</option>
                                 <option>Ariman</option> <option>Bagacay</option> <option>Balud Del Norte</option>
                                 <option>Balud Del Sur</option> <option>Benguet</option> <option>Bentuco</option>
                                 <option>Beriran</option> <option>Buenavista</option> <option>Bulacao</option>
@@ -128,7 +135,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-blue-700 transition-all mb-4">Create Account</button>
+                    <button type="submit" id="submitBtn" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-blue-700 transition-all mb-4">Create Account</button>
                     
                     <p class="text-center text-sm text-gray-500 font-medium">
                         Already have an account? 
@@ -158,11 +165,10 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Initialize Logos immediately
     lucide.createIcons();
 
     const form = document.getElementById('registrationForm');
-    const submitBtn = form.querySelector('button[type="submit"]');
+    const submitBtn = document.getElementById('submitBtn');
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -197,9 +203,9 @@
             submitBtn.innerText = "Create Account";
             
             if (error.code === 'auth/email-already-in-use') {
-                alert("This email is already registered. Please login instead.");
+                alert("This email is already registered.");
             } else if (error.code === 'auth/weak-password') {
-                alert("Password is too weak. Please use at least 6 characters.");
+                alert("Password should be at least 6 characters.");
             } else {
                 alert("Error: " + error.message);
             }
