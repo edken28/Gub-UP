@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUB-UP | Disease Management</title>
+    <title>GUB-UP | RHU Disease Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
             <h1 class="font-extrabold text-[#001f54] text-xl tracking-tighter">GUB-UP</h1>
         </div>
         <nav class="mt-4 flex-1 px-6 space-y-2">
-            <a href="dashboard.html" class="flex items-center gap-3 text-slate-400 px-4 py-3.5 rounded-xl hover:bg-slate-50 font-semibold">
+            <a href="dashboard.html" class="flex items-center gap-3 text-slate-400 px-4 py-3.5 rounded-xl hover:bg-slate-50 font-semibold transition-all">
                 <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
             </a>
             <a href="disease-cases.html" class="sidebar-active flex items-center gap-3 px-4 py-3.5 font-bold transition-all">
@@ -35,8 +35,13 @@
     </aside>
 
     <main class="flex-1 ml-72 p-10">
-        <div class="flex justify-between items-center mb-10">
-            <h2 class="text-2xl font-bold text-[#001f54]">Disease Case Records</h2>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+            <div class="flex items-center gap-6 bg-white p-2 pr-6 rounded-2xl border border-slate-100 shadow-sm w-full max-w-2xl">
+                <div class="relative flex-1">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
+                    <input type="text" id="disease-search" placeholder="Search by disease or barangay..." class="w-full pl-12 pr-4 py-3 bg-transparent outline-none font-medium text-slate-600">
+                </div>
+            </div>
             <button onclick="openAddModal()" class="bg-[#2563eb] text-white px-8 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 hover:bg-blue-700 shadow-xl shadow-blue-100">
                 <i data-lucide="plus" class="w-5 h-5"></i> Add New Case
             </button>
@@ -52,18 +57,19 @@
                         <th class="px-10 py-5 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="disease-table-body" class="divide-y divide-slate-50"></tbody>
+                <tbody id="disease-table-body" class="divide-y divide-slate-50">
+                    </tbody>
             </table>
         </div>
     </main>
 
     <div id="case-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-6">
         <div class="bg-white rounded-[3rem] w-full max-w-lg p-12 shadow-2xl relative">
-            <h3 id="modal-title" class="text-3xl font-bold text-[#001f54] mb-8">Register New Case</h3>
+            <h3 id="modal-title" class="text-3xl font-bold text-[#001f54] mb-8">Register Case</h3>
             <form id="case-form" class="space-y-6">
                 <input type="hidden" id="case-id">
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Disease Identity</label>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Disease Name</label>
                     <input type="text" id="form-name" required class="w-full p-4 bg-slate-50 border rounded-2xl outline-none font-semibold">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -86,7 +92,7 @@
                     </div>
                 </div>
                 <div class="flex gap-4 pt-10">
-                    <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-slate-400">Dismiss</button>
+                    <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-slate-400">Cancel</button>
                     <button type="submit" id="submit-btn" class="flex-[2] py-4 bg-[#2563eb] text-white font-bold rounded-2xl shadow-lg">Confirm Changes</button>
                 </div>
             </form>
@@ -94,11 +100,9 @@
     </div>
 
     <script type="module">
-        // FIXED: Using Full URL Imports for Browser Compatibility
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // YOUR ACTUAL CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
             authDomain: "gub-up.firebaseapp.com",
@@ -112,27 +116,61 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const tableBody = document.getElementById('disease-table-body');
+        const searchInput = document.getElementById('disease-search');
+        let allCases = [];
 
-        // Sync with your new collection "disease_cases"
+        // 1. REAL-TIME DATA FETCH
         onSnapshot(collection(db, "disease_cases"), (snapshot) => {
+            allCases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderTable(allCases);
+        });
+
+        // 2. RENDER TABLE FUNCTION
+        function renderTable(data) {
             tableBody.innerHTML = "";
-            snapshot.forEach((doc) => {
-                const data = doc.data();
+            data.forEach((item) => {
                 tableBody.innerHTML += `
-                    <tr class="hover:bg-slate-50/50">
-                        <td class="px-10 py-7 font-bold text-[#001f54]">${data.name}</td>
-                        <td class="px-8 py-7 text-slate-500 font-semibold">${data.barangay}</td>
-                        <td class="px-8 py-7"><span class="badge-${data.severity.toLowerCase()}">${data.severity}</span></td>
-                        <td class="px-10 py-7 text-right">
-                            <button onclick="openEditModal('${doc.id}', '${data.name}', '${data.barangay}', '${data.severity}')" class="p-2 bg-slate-50 text-slate-400 rounded-xl hover:bg-blue-600 hover:text-white transition-all">
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-10 py-7 font-bold text-[#001f54]">${item.name}</td>
+                        <td class="px-8 py-7 text-slate-500 font-semibold">${item.barangay}</td>
+                        <td class="px-8 py-7">
+                            <span class="badge-${item.severity.toLowerCase()}">${item.severity}</span>
+                        </td>
+                        <td class="px-10 py-7 text-right flex justify-end gap-2">
+                            <button onclick="openEditModal('${item.id}', '${item.name}', '${item.barangay}', '${item.severity}')" 
+                                    class="p-3 bg-slate-50 text-slate-400 rounded-xl hover:bg-blue-600 hover:text-white transition-all">
                                 <i data-lucide="edit-3" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="confirmDelete('${item.id}')" 
+                                    class="p-3 bg-slate-50 text-slate-400 rounded-xl hover:bg-red-600 hover:text-white transition-all">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </td>
                     </tr>`;
             });
             lucide.createIcons();
-        });
+        }
 
+        // 3. SEARCH FILTER
+        searchInput.oninput = (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allCases.filter(c => 
+                c.name.toLowerCase().includes(term) || 
+                c.barangay.toLowerCase().includes(term)
+            );
+            renderTable(filtered);
+        };
+
+        // 4. DELETE LOGIC
+        window.confirmDelete = async (id) => {
+            if(confirm("Are you sure you want to delete this case?")) {
+                try {
+                    await deleteDoc(doc(db, "disease_cases", id));
+                } catch (e) { alert("Error deleting: " + e.message); }
+            }
+        };
+
+        // 5. MODAL & SUBMIT LOGIC (Same as before but handles ID)
         window.openAddModal = () => {
             document.getElementById('case-form').reset();
             document.getElementById('case-id').value = "";
@@ -153,10 +191,6 @@
 
         document.getElementById('case-form').onsubmit = async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('submit-btn');
-            btn.innerText = "Syncing with Cloud...";
-            btn.disabled = true;
-
             const id = document.getElementById('case-id').value;
             const payload = {
                 name: document.getElementById('form-name').value,
@@ -172,15 +206,8 @@
                     await addDoc(collection(db, "disease_cases"), payload);
                 }
                 closeModal();
-            } catch (err) {
-                console.error("Firebase Sync Error:", err);
-                alert("Database Error: " + err.message);
-            } finally {
-                btn.innerText = "Confirm Changes";
-                btn.disabled = false;
-            }
+            } catch (err) { alert("Error: " + err.message); }
         };
-        lucide.createIcons();
     </script>
 </body>
 </html>
