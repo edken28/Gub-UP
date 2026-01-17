@@ -9,8 +9,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .sidebar-active { background-color: #eff6ff; color: #2563eb; border-right: 4px solid #2563eb; }
         
+        /* Exact Sidebar Active State from your image */
+        .sidebar-active { 
+            background-color: #2563eb; 
+            color: white; 
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        .sidebar-active i { color: white; }
+
         /* Status & Severity Badges from image_d49feb.png */
         .badge-high { background-color: #fef2f2; color: #ef4444; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
         .badge-moderate { background-color: #fffbeb; color: #f59e0b; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
@@ -29,10 +36,10 @@
             <h1 class="font-bold text-blue-900 text-xl tracking-tight">GUB-UP</h1>
         </div>
         <nav class="mt-6 flex-1 px-4 space-y-2">
-            <a href="dashboard.html" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all">
+            <a href="dashboard.html" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-2xl hover:bg-slate-50 transition-all">
                 <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
             </a>
-            <a href="disease-cases.html" class="sidebar-active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold">
+            <a href="disease-cases.html" class="sidebar-active flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold transition-all">
                 <i data-lucide="activity" class="w-5 h-5"></i> Disease Cases
             </a>
         </nav>
@@ -140,9 +147,9 @@
                     </div>
                 </div>
                 <div class="flex gap-3 pt-6">
-                    <button type="button" id="remove-btn" class="hidden px-5 py-4 bg-rose-50 text-rose-500 font-bold rounded-2xl hover:bg-rose-100"><i data-lucide="trash-2"></i></button>
-                    <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-slate-400">Cancel</button>
-                    <button type="submit" class="flex-[2] py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-lg">Save Changes</button>
+                    <button type="button" id="remove-btn" class="hidden px-5 py-4 bg-rose-50 text-rose-500 font-bold rounded-2xl hover:bg-rose-100 transition-all"><i data-lucide="trash-2"></i></button>
+                    <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-slate-400 hover:bg-slate-50 rounded-2xl">Cancel</button>
+                    <button type="submit" class="flex-[2] py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-lg hover:bg-blue-700 transition-all">Save Record</button>
                 </div>
             </form>
         </div>
@@ -152,14 +159,15 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, where, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = { /* Config */ };
+        // Your Firebase Configuration
+        const firebaseConfig = { /* PASTE CONFIG HERE */ };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         const brgySelect = document.getElementById('brgy-filter');
         const tableBody = document.getElementById('disease-table-body');
 
-        // Watch for Barangay changes
+        // CRUD: READ
         brgySelect.addEventListener('change', (e) => {
             const val = e.target.value;
             if(!val) return;
@@ -174,7 +182,7 @@
                             <td class="px-8 py-6 text-blue-600 font-bold text-[13px]">RPT-${id.substring(0,5).toUpperCase()}</td>
                             <td class="px-8 py-6">
                                 <div class="font-bold text-slate-800 uppercase text-sm">${data.disease}</div>
-                                <div class="text-[10px] text-gray-400 font-bold">VERIFIED REPORT</div>
+                                <div class="text-[10px] text-gray-400 font-bold">VERIFIED BY RHU</div>
                             </td>
                             <td class="px-8 py-6 text-slate-500 font-medium text-sm italic">${data.barangay}</td>
                             <td class="px-8 py-6 text-center font-black text-slate-800 text-lg">${data.cases}</td>
@@ -192,7 +200,7 @@
             });
         });
 
-        // Modal Logic
+        // MODAL TOGGLES
         window.openAddModal = () => {
             document.getElementById('modal-title').innerText = "Register New Record";
             document.getElementById('record-form').reset();
@@ -215,7 +223,7 @@
 
         window.closeModal = () => document.getElementById('action-modal').classList.add('hidden');
 
-        // Form Submit
+        // CRUD: CREATE & UPDATE
         document.getElementById('record-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('edit-id').value;
@@ -225,7 +233,7 @@
                 cases: parseInt(document.getElementById('form-cases').value),
                 severity: document.getElementById('form-severity').value,
                 status: document.getElementById('form-status').value,
-                officer: "Paul Jhudiel F. Villareal"
+                officer: "RHU Admin"
             };
 
             if(id) await updateDoc(doc(db, "disease_reports", id), payload);
@@ -233,6 +241,7 @@
             closeModal();
         });
 
+        // CRUD: REMOVE
         document.getElementById('remove-btn').addEventListener('click', async () => {
             const id = document.getElementById('edit-id').value;
             if(confirm("Permanently delete this report?")) {
