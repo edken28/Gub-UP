@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUB-UP | RHU Disease Management</title>
+    <title>GUB-UP | Disease Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,26 +13,20 @@
         .badge-high { background-color: #fef2f2; color: #ef4444; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #fee2e2; }
         .badge-moderate { background-color: #fffbeb; color: #f59e0b; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #fef3c7; }
         .badge-low { background-color: #f0fdf4; color: #22c55e; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #dcfce7; }
-        .status-active { background-color: #eff6ff; color: #2563eb; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; }
-        .status-monitoring { background-color: #faf5ff; color: #9333ea; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; }
-        .status-resolved { background-color: #f0fdf4; color: #16a34a; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; }
     </style>
 </head>
 <body class="flex min-h-screen">
 
     <aside class="w-72 bg-white border-r border-slate-100 flex flex-col fixed h-full z-20">
         <div class="p-8 flex items-center gap-3">
-            <div class="bg-[#2563eb] w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+            <div class="bg-[#2563eb] w-10 h-10 rounded-xl flex items-center justify-center text-white">
                 <i data-lucide="plus" class="w-6 h-6 stroke-[3px]"></i>
             </div>
-            <div>
-                <h1 class="font-extrabold text-[#001f54] text-xl tracking-tighter leading-none">GUB-UP</h1>
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Disease Monitoring</p>
-            </div>
+            <h1 class="font-extrabold text-[#001f54] text-xl tracking-tighter">GUB-UP</h1>
         </div>
         <nav class="mt-4 flex-1 px-6 space-y-2">
-            <a href="dashboard.html" class="flex items-center gap-3 text-slate-400 px-4 py-3.5 rounded-xl hover:bg-slate-50 transition-all font-semibold group">
-                <i data-lucide="layout-grid" class="w-5 h-5 group-hover:text-blue-600"></i> Dashboard
+            <a href="dashboard.html" class="flex items-center gap-3 text-slate-400 px-4 py-3.5 rounded-xl hover:bg-slate-50 transition-all font-semibold">
+                <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
             </a>
             <a href="disease-cases.html" class="sidebar-active flex items-center gap-3 px-4 py-3.5 font-bold transition-all">
                 <i data-lucide="biohazard" class="w-5 h-5"></i> Disease Cases
@@ -41,30 +35,20 @@
     </aside>
 
     <main class="flex-1 ml-72 p-10">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-            <div class="flex items-center gap-6 bg-white p-2 pr-6 rounded-2xl border border-slate-100 shadow-sm w-full max-w-2xl">
-                <div class="relative flex-1">
-                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                    <input type="text" id="disease-search" placeholder="Search by disease name..." class="w-full pl-12 pr-4 py-3 bg-transparent outline-none font-medium text-slate-600">
-                </div>
-            </div>
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="text-2xl font-bold text-[#001f54]">Disease Case Records</h2>
             <button onclick="openAddModal()" class="bg-[#2563eb] text-white px-8 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 hover:bg-blue-700 shadow-xl shadow-blue-100">
                 <i data-lucide="plus" class="w-5 h-5"></i> Add New Case
             </button>
         </div>
 
         <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
-            <div class="p-8 border-b border-slate-50 flex justify-between items-center">
-                <h2 class="text-lg font-bold text-[#001f54]">Case Inventory List</h2>
-            </div>
             <table class="w-full text-left">
                 <thead class="bg-slate-50/30">
                     <tr class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
-                        <th class="px-10 py-5">ID</th>
-                        <th class="px-8 py-5">Disease</th>
+                        <th class="px-10 py-5">Disease Identity</th>
                         <th class="px-8 py-5">Barangay</th>
                         <th class="px-8 py-5">Severity</th>
-                        <th class="px-8 py-5">Status</th>
                         <th class="px-10 py-5 text-right">Actions</th>
                     </tr>
                 </thead>
@@ -75,19 +59,17 @@
 
     <div id="case-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-6">
         <div class="bg-white rounded-[3rem] w-full max-w-lg p-12 shadow-2xl relative">
-            <header class="mb-10">
-                <h3 id="modal-title" class="text-3xl font-bold text-[#001f54]">Case Entry</h3>
-            </header>
+            <h3 id="modal-title" class="text-3xl font-bold text-[#001f54] mb-8">Case Entry</h3>
             <form id="case-form" class="space-y-6">
                 <input type="hidden" id="case-id">
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Disease Identity</label>
-                    <input type="text" id="form-name" required class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:border-blue-500">
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Disease Name</label>
+                    <input type="text" id="form-name" required class="w-full p-4 bg-slate-50 border rounded-2xl outline-none font-semibold">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Barangay</label>
-                        <select id="form-brgy" class="w-full p-4 bg-slate-50 border rounded-2xl">
+                        <select id="form-brgy" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold">
                             <option value="Poblacion">Poblacion</option>
                             <option value="Cogon">Cogon</option>
                             <option value="Bentuco">Bentuco</option>
@@ -96,24 +78,16 @@
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Severity</label>
-                        <select id="form-severity" class="w-full p-4 bg-slate-50 border rounded-2xl">
+                        <select id="form-severity" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold">
                             <option value="High">High</option>
                             <option value="Moderate">Moderate</option>
                             <option value="Low">Low</option>
                         </select>
                     </div>
                 </div>
-                <div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Status</label>
-                    <select id="form-status" class="w-full p-4 bg-slate-50 border rounded-2xl">
-                        <option value="Active">Active Case</option>
-                        <option value="Monitoring">Monitoring</option>
-                        <option value="Resolved">Resolved</option>
-                    </select>
-                </div>
                 <div class="flex gap-4 pt-10">
                     <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-slate-400">Cancel</button>
-                    <button type="submit" id="submit-btn" class="flex-[2] py-4 bg-[#2563eb] text-white font-bold rounded-2xl shadow-lg">Confirm Changes</button>
+                    <button type="submit" id="submit-btn" class="flex-[2] py-4 bg-[#2563eb] text-white font-bold rounded-2xl">Confirm Changes</button>
                 </div>
             </form>
         </div>
@@ -121,9 +95,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // IMPORTANT: Ensure these values are correct from your Firebase Console
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -137,54 +110,46 @@
         const db = getFirestore(app);
         const tableBody = document.getElementById('disease-table-body');
 
-        // Fetch Data
-        function loadData() {
-            onSnapshot(collection(db, "disease_reports"), (snapshot) => {
-                tableBody.innerHTML = "";
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const id = doc.id;
-                    tableBody.innerHTML += `
-                        <tr class="hover:bg-slate-50/50">
-                            <td class="px-10 py-7 font-bold text-blue-600">#${id.substring(0,5)}</td>
-                            <td class="px-8 py-7 font-bold text-[#001f54]">${data.name}</td>
-                            <td class="px-8 py-7 text-slate-500">${data.barangay}</td>
-                            <td class="px-8 py-7"><span class="badge-${data.severity.toLowerCase()}">${data.severity}</span></td>
-                            <td class="px-8 py-7"><span class="status-${data.status.toLowerCase()}">${data.status}</span></td>
-                            <td class="px-10 py-7 text-right">
-                                <button onclick="openEditModal('${id}', '${data.name}', '${data.barangay}', '${data.severity}', '${data.status}')" class="p-2 bg-slate-50 rounded-xl hover:bg-blue-600 hover:text-white transition-all">
-                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
-                                </button>
-                            </td>
-                        </tr>`;
-                });
-                lucide.createIcons();
+        // Load data from "disease_cases" collection
+        onSnapshot(collection(db, "disease_cases"), (snapshot) => {
+            tableBody.innerHTML = "";
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                tableBody.innerHTML += `
+                    <tr class="hover:bg-slate-50/50">
+                        <td class="px-10 py-7 font-bold text-[#001f54]">${data.name}</td>
+                        <td class="px-8 py-7 text-slate-500 font-semibold">${data.barangay}</td>
+                        <td class="px-8 py-7"><span class="badge-${data.severity.toLowerCase()}">${data.severity}</span></td>
+                        <td class="px-10 py-7 text-right">
+                            <button onclick="openEditModal('${doc.id}', '${data.name}', '${data.barangay}', '${data.severity}')" class="p-2 bg-slate-50 text-slate-400 rounded-xl hover:bg-blue-600 hover:text-white transition-all">
+                                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    </tr>`;
             });
-        }
+            lucide.createIcons();
+        });
 
-        // Global Logic
         window.openAddModal = () => {
             document.getElementById('case-form').reset();
             document.getElementById('case-id').value = "";
             document.getElementById('case-modal').classList.remove('hidden');
         };
 
-        window.openEditModal = (id, name, brgy, sev, stat) => {
+        window.openEditModal = (id, name, brgy, sev) => {
             document.getElementById('case-id').value = id;
             document.getElementById('form-name').value = name;
             document.getElementById('form-brgy').value = brgy;
             document.getElementById('form-severity').value = sev;
-            document.getElementById('form-status').value = stat;
             document.getElementById('case-modal').classList.remove('hidden');
         };
 
         window.closeModal = () => document.getElementById('case-modal').classList.add('hidden');
 
-        // Submit Handler
         document.getElementById('case-form').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
-            btn.innerText = "Processing...";
+            btn.innerText = "Syncing...";
             btn.disabled = true;
 
             const id = document.getElementById('case-id').value;
@@ -192,27 +157,24 @@
                 name: document.getElementById('form-name').value,
                 barangay: document.getElementById('form-brgy').value,
                 severity: document.getElementById('form-severity').value,
-                status: document.getElementById('form-status').value,
-                updatedAt: new Date()
+                timestamp: new Date()
             };
 
             try {
                 if (id) {
-                    await updateDoc(doc(db, "disease_reports", id), payload);
+                    await updateDoc(doc(db, "disease_cases", id), payload);
                 } else {
-                    await addDoc(collection(db, "disease_reports"), payload);
+                    await addDoc(collection(db, "disease_cases"), payload);
                 }
                 closeModal();
             } catch (err) {
-                console.error("FIREBASE REJECTED:", err);
-                alert("Database Error! Check your Firebase Rules tab.");
+                console.error(err);
+                alert("Permission Denied! Check your Firestore Rules.");
             } finally {
                 btn.innerText = "Confirm Changes";
                 btn.disabled = false;
             }
         };
-
-        loadData();
     </script>
 </body>
 </html>
