@@ -68,22 +68,23 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
                     <div class="bg-red-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-red-200">
                         <i data-lucide="biohazard" class="w-6 h-6" stroke="white"></i>
                     </div>
-                    <p class="text-4xl font-bold text-navy mb-1">247</p>
+                    <p id="active-cases-count" class="text-4xl font-bold text-navy mb-1">0</p>
                     <p class="text-gray-400 font-medium text-sm">Active Cases</p>
-                    <p class="text-xs text-red-500 font-semibold mt-1">+12 this week</p>
+                    <p class="text-xs text-gray-300 mt-1">No data recorded</p>
                 </div>
 
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
                     <div class="bg-green-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-green-200">
                         <i data-lucide="pill" class="w-6 h-6" stroke="white"></i>
                     </div>
-                    <p class="text-4xl font-bold text-navy mb-1">89%</p>
+                    <p id="medicine-stock-count" class="text-4xl font-bold text-navy mb-1">0%</p>
                     <p class="text-gray-400 font-medium text-sm">Medicine Stock</p>
-                    <p class="text-xs text-gray-400 mt-1">Adequate supply</p>
+                    <p class="text-xs text-gray-300 mt-1">Pending inventory</p>
                 </div>
 
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
@@ -92,20 +93,20 @@
                     </div>
                     <p class="text-4xl font-bold text-navy mb-1">33</p>
                     <p class="text-gray-400 font-medium text-sm">Barangays</p>
-                    <p class="text-xs text-gray-400 mt-1">All connected</p>
+                    <p class="text-xs text-gray-400 mt-1">Gubat, Sorsogon</p>
                 </div>
 
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
                     <div class="bg-purple-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-purple-200">
                         <i data-lucide="file-text" class="w-6 h-6" stroke="white"></i>
                     </div>
-                    <p class="text-4xl font-bold text-navy mb-1">156</p>
+                    <p id="reports-count" class="text-4xl font-bold text-navy mb-1">0</p>
                     <p class="text-gray-400 font-medium text-sm">Reports</p>
-                    <p class="text-xs text-gray-400 mt-1">This month</p>
+                    <p class="text-xs text-gray-300 mt-1">Awaiting updates</p>
                 </div>
             </div>
 
-            <p class="text-center text-gray-400 italic">Data synchronized with Cloud Firestore</p>
+            <p class="text-center text-gray-400 italic">Please login as a Health Worker to update disease statistics.</p>
         </div>
     </main>
 
@@ -114,6 +115,7 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // Your Config
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
             authDomain: "gub-up.firebaseapp.com",
@@ -128,9 +130,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Initial render
-        lucide.createIcons();
-
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
@@ -141,13 +140,11 @@
                         document.getElementById('welcome-banner-text').innerText = `Welcome back, ${userData.name}!`;
                     }
                     
-                    // The "Safety Delay": ensures DOM is painted before icons are injected
-                    setTimeout(() => {
-                        lucide.createIcons();
-                    }, 150);
+                    // Render icons after the user state is checked
+                    setTimeout(() => lucide.createIcons(), 100);
 
                 } catch (error) {
-                    console.error("Error fetching user data:", error);
+                    console.error("Error:", error);
                     lucide.createIcons();
                 }
             } else {
