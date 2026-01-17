@@ -10,16 +10,16 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         
-        /* Exact Sidebar Active Style (Solid Blue Pill) */
+        /* EXACT Sidebar Active Style: Solid Blue Pill */
         .sidebar-active { 
             background-color: #2563eb !important; 
             color: white !important; 
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 8px 15px -3px rgba(37, 99, 235, 0.3);
         }
         .sidebar-active i { color: white !important; }
 
-        /* Status & Severity Badges */
+        /* Badge Styles */
         .badge-high { background-color: #fef2f2; color: #ef4444; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
         .badge-moderate { background-color: #fffbeb; color: #f59e0b; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
         .badge-low { background-color: #f0fdf4; color: #22c55e; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
@@ -33,15 +33,15 @@
 
     <aside class="w-64 bg-white border-r border-gray-100 flex flex-col fixed h-full z-20">
         <div class="p-8 flex items-center gap-3">
-            <div class="bg-[#2563eb] w-8 h-8 rounded-lg flex items-center justify-center text-white">
-                <i data-lucide="plus" class="w-5 h-5 stroke-[3px]"></i>
+            <div class="bg-[#2563eb] w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                <i data-lucide="plus" class="w-6 h-6 stroke-[3.5px]"></i>
             </div>
-            <h1 class="font-bold text-[#001f54] text-xl tracking-tight">GUB-UP</h1>
+            <h1 class="font-extrabold text-[#001f54] text-2xl tracking-tighter">GUB-UP</h1>
         </div>
 
         <nav class="mt-2 flex-1 px-4 space-y-2">
-            <a href="dashboard.html" class="flex items-center gap-3 text-gray-400 px-4 py-3 rounded-2xl hover:bg-slate-50 transition-all font-medium">
-                <i data-lucide="layout-grid" class="w-5 h-5 text-gray-400"></i> Dashboard
+            <a href="dashboard.html" class="flex items-center gap-3 text-gray-400 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all font-medium">
+                <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
             </a>
             <a href="disease-cases.html" class="sidebar-active flex items-center gap-3 px-4 py-3 font-semibold transition-all">
                 <i data-lucide="activity" class="w-5 h-5"></i> Disease Cases
@@ -51,20 +51,20 @@
 
     <main class="flex-1 ml-64 p-8">
         
-        <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm mb-8">
+        <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm mb-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
                 <div>
                     <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1 tracking-wider">Search Disease</label>
                     <div class="relative">
                         <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
-                        <input type="text" id="disease-search" placeholder="Type disease name..." 
+                        <input type="text" id="disease-search" placeholder="Search records..." 
                                class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500/10 font-medium text-slate-600">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1 tracking-wider">Filter by Barangay</label>
-                    <select id="brgy-filter" class="w-full px-4 py-4 bg-white border border-gray-200 rounded-2xl font-semibold text-blue-600 outline-none cursor-pointer">
-                        <option value="">Choose Barangay...</option>
+                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1 tracking-wider">Filter Barangay</label>
+                    <select id="brgy-filter" class="w-full px-4 py-4 bg-white border border-gray-200 rounded-2xl font-bold text-blue-600 outline-none cursor-pointer appearance-none">
+                        <option value="">Select Barangay...</option>
                         <option value="Poblacion">Poblacion</option>
                         <option value="Cogon">Cogon</option>
                         <option value="Bentuco">Bentuco</option>
@@ -75,29 +75,28 @@
 
         <div class="flex justify-between items-center mb-6 px-2">
             <h2 class="text-xl font-bold text-[#001f54]">Inventory List</h2>
-            <button onclick="openAddModal()" class="bg-[#2563eb] text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
+            <button onclick="openAddModal()" class="bg-[#2563eb] text-white px-7 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-blue-700 transition-all shadow-xl shadow-blue-100">
                 <i data-lucide="plus" class="w-4 h-4 text-white stroke-[3px]"></i> Add New Case
             </button>
         </div>
 
-        <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden min-h-[500px]">
+        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden min-h-[500px]">
             <table class="w-full text-left">
                 <thead class="bg-slate-50/50">
-                    <tr class="text-[10px] font-black text-gray-400 uppercase tracking-[0.1em] border-b border-gray-50">
-                        <th class="px-8 py-5">Report ID</th>
-                        <th class="px-8 py-5">Disease</th>
-                        <th class="px-8 py-5">Barangay</th>
-                        <th class="px-8 py-5 text-center">Cases</th>
-                        <th class="px-8 py-5">Severity</th>
-                        <th class="px-8 py-5">Status</th>
-                        <th class="px-8 py-5 text-right">Actions</th>
+                    <tr class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] border-b border-gray-50">
+                        <th class="px-8 py-6">ID</th>
+                        <th class="px-8 py-6">Disease Identity</th>
+                        <th class="px-8 py-6">Barangay</th>
+                        <th class="px-8 py-6 text-center">Cases</th>
+                        <th class="px-8 py-6">Severity</th>
+                        <th class="px-8 py-6 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="disease-table-body" class="divide-y divide-gray-50">
                     <tr>
-                        <td colspan="7" class="py-32 text-center text-gray-300">
-                            <i data-lucide="database" class="w-12 h-12 mx-auto mb-4 opacity-20"></i>
-                            <p class="font-medium">Select a barangay to view the database.</p>
+                        <td colspan="6" class="py-32 text-center text-gray-300">
+                            <i data-lucide="folder-search" class="w-12 h-12 mx-auto mb-4 opacity-20"></i>
+                            <p class="font-medium">Filter by Barangay to load the database.</p>
                         </td>
                     </tr>
                 </tbody>
@@ -108,17 +107,17 @@
     <div id="action-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-[2.5rem] w-full max-w-md p-10 shadow-2xl relative">
             <div class="absolute top-0 left-0 w-full h-2 bg-[#2563eb]"></div>
-            <h3 id="modal-title" class="text-2xl font-bold text-[#001f54] mb-8">Health Record</h3>
+            <h3 id="modal-title" class="text-2xl font-bold text-[#001f54] mb-8">Record Management</h3>
             
             <form id="record-form" class="space-y-5">
                 <input type="hidden" id="edit-id">
                 <div>
-                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Disease Identity</label>
-                    <input type="text" id="form-disease" required class="w-full p-4 bg-slate-50 border border-gray-100 rounded-2xl font-semibold outline-none focus:ring-2 focus:ring-blue-500/20">
+                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 ml-1">Disease Name</label>
+                    <input type="text" id="form-disease" required class="w-full p-4 bg-slate-50 border border-gray-100 rounded-2xl font-semibold outline-none">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Barangay</label>
+                        <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 ml-1">Barangay</label>
                         <select id="form-brgy" required class="w-full p-4 bg-slate-50 border border-gray-100 rounded-2xl font-semibold outline-none">
                             <option value="Poblacion">Poblacion</option>
                             <option value="Cogon">Cogon</option>
@@ -126,32 +125,22 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Cases</label>
+                        <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 ml-1">Total Cases</label>
                         <input type="number" id="form-cases" required class="w-full p-4 bg-slate-50 border border-gray-100 rounded-2xl font-black text-xl outline-none">
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Severity</label>
-                        <select id="form-severity" class="w-full p-4 bg-slate-50 border border-gray-100 rounded-2xl font-semibold outline-none">
-                            <option value="High">High</option>
-                            <option value="Moderate">Moderate</option>
-                            <option value="Low">Low</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Status</label>
-                        <select id="form-status" class="w-full p-4 bg-slate-50 border border-gray-100 rounded-2xl font-semibold outline-none">
-                            <option value="Active">Active</option>
-                            <option value="Monitoring">Monitoring</option>
-                            <option value="Resolved">Resolved</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 ml-1">Severity Level</label>
+                    <select id="form-severity" class="w-full p-4 bg-slate-50 border border-gray-100 rounded-2xl font-semibold outline-none">
+                        <option value="High">High</option>
+                        <option value="Moderate">Moderate</option>
+                        <option value="Low">Low</option>
+                    </select>
                 </div>
                 <div class="flex gap-4 pt-8">
                     <button type="button" id="remove-btn" class="hidden p-4 bg-rose-50 text-rose-500 font-bold rounded-2xl hover:bg-rose-500 hover:text-white transition-all"><i data-lucide="trash-2"></i></button>
-                    <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-gray-400 hover:bg-slate-50 rounded-2xl transition-all">Cancel</button>
-                    <button type="submit" class="flex-[2] py-4 bg-[#2563eb] text-white font-bold rounded-2xl shadow-lg shadow-blue-100">Save Data</button>
+                    <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-gray-400">Cancel</button>
+                    <button type="submit" class="flex-[2] py-4 bg-[#2563eb] text-white font-bold rounded-2xl shadow-lg">Save Record</button>
                 </div>
             </form>
         </div>
@@ -161,15 +150,15 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, where, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase Configuration
-        const firebaseConfig = { /* PASTE CONFIG */ };
+        // Firebase Setup
+        const firebaseConfig = { /* Your Config Here */ };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         const brgySelect = document.getElementById('brgy-filter');
         const tableBody = document.getElementById('disease-table-body');
 
-        // CRUD: READ with Real-time Filtering
+        // CRUD: READ
         brgySelect.addEventListener('change', (e) => {
             const val = e.target.value;
             if(!val) return;
@@ -180,18 +169,16 @@
                     const data = d.data();
                     const id = d.id;
                     tableBody.innerHTML += `
-                        <tr class="hover:bg-slate-50/80 transition-all border-b border-gray-50/50">
-                            <td class="px-8 py-6 text-blue-600 font-bold text-[13px]">RPT-${id.substring(0,5).toUpperCase()}</td>
+                        <tr class="hover:bg-slate-50/80 transition-all">
+                            <td class="px-8 py-6 text-blue-600 font-bold text-[13px]">#${id.substring(0,4).toUpperCase()}</td>
                             <td class="px-8 py-6">
                                 <div class="font-bold text-[#001f54] uppercase text-sm tracking-tight">${data.disease}</div>
-                                <div class="text-[10px] text-gray-400 font-bold">VERIFIED ENTRY</div>
                             </td>
                             <td class="px-8 py-6 text-slate-500 font-medium text-sm italic">${data.barangay}</td>
                             <td class="px-8 py-6 text-center font-black text-[#001f54] text-lg">${data.cases}</td>
                             <td class="px-8 py-6"><span class="badge-${data.severity.toLowerCase()}">${data.severity}</span></td>
-                            <td class="px-8 py-6"><span class="status-${data.status.toLowerCase()}">${data.status}</span></td>
                             <td class="px-8 py-6 text-right">
-                                <button onclick="openEditModal('${id}', '${data.disease}', '${data.barangay}', ${data.cases}, '${data.severity}', '${data.status}')" 
+                                <button onclick="openEditModal('${id}', '${data.disease}', '${data.barangay}', ${data.cases}, '${data.severity}')" 
                                         class="p-3 bg-slate-50 text-blue-600 rounded-xl hover:bg-[#2563eb] hover:text-white transition-all">
                                     <i data-lucide="edit-3" class="w-4 h-4"></i>
                                 </button>
@@ -202,30 +189,29 @@
             });
         });
 
-        // Modal Controls
+        // Modal Logic
         window.openAddModal = () => {
-            document.getElementById('modal-title').innerText = "Register Case";
+            document.getElementById('modal-title').innerText = "Register New Case";
             document.getElementById('record-form').reset();
             document.getElementById('edit-id').value = "";
             document.getElementById('remove-btn').classList.add('hidden');
             document.getElementById('action-modal').classList.remove('hidden');
         };
 
-        window.openEditModal = (id, name, brgy, cases, severity, status) => {
-            document.getElementById('modal-title').innerText = "Update Entry";
+        window.openEditModal = (id, name, brgy, cases, severity) => {
+            document.getElementById('modal-title').innerText = "Update Record";
             document.getElementById('edit-id').value = id;
             document.getElementById('form-disease').value = name;
             document.getElementById('form-brgy').value = brgy;
             document.getElementById('form-cases').value = cases;
             document.getElementById('form-severity').value = severity;
-            document.getElementById('form-status').value = status;
             document.getElementById('remove-btn').classList.remove('hidden');
             document.getElementById('action-modal').classList.remove('hidden');
         };
 
         window.closeModal = () => document.getElementById('action-modal').classList.add('hidden');
 
-        // CRUD: CREATE/UPDATE
+        // CRUD: SAVE/DELETE
         document.getElementById('record-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('edit-id').value;
@@ -233,19 +219,16 @@
                 disease: document.getElementById('form-disease').value,
                 barangay: document.getElementById('form-brgy').value,
                 cases: parseInt(document.getElementById('form-cases').value),
-                severity: document.getElementById('form-severity').value,
-                status: document.getElementById('form-status').value
+                severity: document.getElementById('form-severity').value
             };
-
             if(id) await updateDoc(doc(db, "disease_reports", id), payload);
             else await addDoc(collection(db, "disease_reports"), payload);
             closeModal();
         });
 
-        // CRUD: REMOVE
         document.getElementById('remove-btn').addEventListener('click', async () => {
             const id = document.getElementById('edit-id').value;
-            if(confirm("Confirm deletion of record?")) {
+            if(confirm("Permanently delete this record?")) {
                 await deleteDoc(doc(db, "disease_reports", id));
                 closeModal();
             }
