@@ -17,7 +17,7 @@
 <body class="bg-slate-50 min-h-screen flex">
 
     <aside class="w-64 bg-white border-r border-gray-100 flex flex-col hidden md:flex">
-        <div class="p-6 border-b border-gray-50">
+        <div class="p-6 border-b border-gray-50 cursor-pointer" id="logo-secret-trigger">
             <div class="flex items-center gap-3">
                 <div class="bg-brand-blue p-2 rounded-lg text-white font-bold text-xl">+</div>
                 <div>
@@ -31,8 +31,8 @@
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
             </a>
             
-            <a href="worker-panel.html" id="worker-secret-link" class="hidden flex items-center gap-3 text-red-600 bg-red-50 border border-red-100 px-4 py-3 rounded-xl font-bold transition-all hover:bg-red-100">
-                <i data-lucide="shield-check" class="w-5 h-5"></i> Worker Console
+            <a href="worker-panel.html" id="worker-secret-link" class="hidden flex items-center gap-3 text-emerald-600 bg-emerald-50 border border-emerald-100 px-4 py-3 rounded-xl font-bold transition-all hover:bg-emerald-100">
+                <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
             </a>
 
             <a href="#" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all">
@@ -118,7 +118,7 @@
                     </div>
                     <div class="flex flex-col items-center justify-center py-12 text-gray-300">
                         <i data-lucide="database" class="w-12 h-12 mb-4 opacity-20"></i>
-                        <p class="italic text-sm">Waiting for worker updates...</p>
+                        <p class="italic text-sm">Waiting for updates...</p>
                     </div>
                 </div>
 
@@ -136,7 +136,7 @@
                 </div>
             </div>
 
-            <p class="text-center text-gray-400 italic">Dashboard is now listening for live updates from BHWs.</p>
+            <p class="text-center text-gray-400 italic">Dashboard is now listening for live updates.</p>
         </div>
     </main>
 
@@ -164,27 +164,38 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
-                    // 1. ROLE-BASED ACCESS CONTROL
+                    // 1. Role-Based Check for BHW
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     if (userDoc.exists()) {
                         const userData = userDoc.data();
                         document.getElementById('user-name-display').innerText = userData.name;
                         document.getElementById('welcome-banner-text').innerText = `Welcome back, ${userData.name}!`;
                         
-                        // ONLY REVEAL TO BHW/WORKER
-                        if (userData.role === "worker") {
+                        // IF ROLE IS BHW, REVEAL TAB
+                        if (userData.role === "bhw") {
                             document.getElementById('worker-secret-link').classList.remove('hidden');
                         }
                     }
 
-                    // 2. SECRET KEYBOARD SHORTCUT (Press Shift + W to show)
+                    // 2. Secret Triggers
+                    // Trigger A: Click logo 3 times
+                    let clickCount = 0;
+                    document.getElementById('logo-secret-trigger').addEventListener('click', () => {
+                        clickCount++;
+                        if (clickCount === 3) {
+                            document.getElementById('worker-secret-link').classList.remove('hidden');
+                            clickCount = 0;
+                        }
+                    });
+
+                    // Trigger B: Keyboard Shift+W
                     window.addEventListener('keydown', (e) => {
                         if (e.shiftKey && e.key === 'W') {
                             document.getElementById('worker-secret-link').classList.toggle('hidden');
                         }
                     });
 
-                    // 3. MEDICINE LOGIC
+                    // 3. Medicine Logic (Real-time)
                     onSnapshot(collection(db, "inventory"), (querySnapshot) => {
                         let currentTotalUnits = 0;
                         let allMeds = [];
@@ -228,7 +239,7 @@
                         lucide.createIcons();
                     });
 
-                    // 4. GLOBAL STATS
+                    // 4. Global Stats (Real-time)
                     onSnapshot(doc(db, "statistics", "current_stats"), (snapshot) => {
                         if (snapshot.exists()) {
                             const data = snapshot.data();
