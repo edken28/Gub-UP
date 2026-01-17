@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | GUB-UP</title>
+    <title>Create Account | GUB-UP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +13,6 @@
         .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
 
-        /* THIS FIXES THE CLICK ACTION */
         input[type="radio"]:checked + .selection-card {
             border-color: #2563eb !important;
             background-color: #eff6ff !important;
@@ -36,7 +35,7 @@
             </a>
         </div>
 
-        <div class="bg-white rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row overflow-hidden min-h-[580px]">
+        <div class="bg-white rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row overflow-hidden min-h-[650px]">
             
             <div class="bg-brand-blue w-full md:w-[42%] p-10 text-white flex flex-col justify-center">
                 <div class="flex items-center gap-3 mb-8">
@@ -49,7 +48,7 @@
                     </div>
                 </div>
                 <h2 class="text-3xl font-bold mb-4">Welcome to GUB-UP</h2>
-                <p class="text-blue-100 text-sm mb-10 opacity-90">Your community health monitoring system for Gubat, Sorsogon. Access disease data, medicine inventory, and emergency services.</p>
+                <p class="text-blue-100 text-sm mb-10 opacity-90">Your community health monitoring system for Gubat, Sorsogon.</p>
                 <div class="space-y-5">
                     <div class="flex items-center gap-4">
                         <div class="bg-white/20 p-2 rounded-lg"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
@@ -63,13 +62,12 @@
             </div>
 
             <div class="w-full md:w-[58%] p-10 md:p-14 flex flex-col justify-center">
-                <h3 class="text-3xl font-bold text-navy mb-1">Login</h3>
-                <p class="text-gray-400 mb-8 font-medium">Access your account</p>
+                <h3 class="text-3xl font-bold text-navy mb-1">Create Account</h3>
+                <p class="text-gray-400 mb-8 font-medium">Register to get started</p>
 
                 <form>
                     <label class="block text-xs font-bold text-navy mb-3 uppercase tracking-wider">Select Account Type</label>
-                    <div class="grid grid-cols-2 gap-4 mb-8">
-                        
+                    <div class="grid grid-cols-2 gap-4 mb-6">
                         <label class="cursor-pointer">
                             <input type="radio" name="role" value="citizen" class="hidden" checked>
                             <div class="selection-card border-2 border-gray-100 p-4 rounded-2xl flex flex-col items-center gap-1 transition-all">
@@ -89,7 +87,11 @@
                         </label>
                     </div>
 
-                    <div class="space-y-5 mb-8">
+                    <div class="space-y-4 mb-8">
+                        <div>
+                            <label class="block text-xs font-bold text-navy mb-2 uppercase tracking-wider">Full Name</label>
+                            <input type="text" placeholder="Enter your full name" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
+                        </div>
                         <div>
                             <label class="block text-xs font-bold text-navy mb-2 uppercase tracking-wider">Email Address</label>
                             <input type="email" placeholder="your@email.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
@@ -98,10 +100,23 @@
                             <label class="block text-xs font-bold text-navy mb-2 uppercase tracking-wider">Password</label>
                             <input type="password" placeholder="Enter password" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
                         </div>
+                        <div>
+                            <label class="block text-xs font-bold text-navy mb-2 uppercase tracking-wider">Barangay</label>
+                            <select class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue bg-white">
+                                <option selected disabled>Select your barangay</option>
+                                <option>Ariman</option>
+                                <option>Bagacay</option>
+                                <option>Balud</option>
+                                <option>Cota na Daco</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <button type="submit" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-blue-700 transition-all mb-6">Login</button>
-                    <p class="text-center text-sm text-gray-500 font-medium">Don't have an account? <a href="#" class="text-brand-blue font-bold hover:underline">Register</a></p>
+                    <button type="submit" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-blue-700 transition-all mb-6">Create Account</button>
+                    <p class="text-center text-sm text-gray-500 font-medium">
+                        Already have an account? 
+                        <a href="login.html" class="text-brand-blue font-bold hover:underline">Login</a>
+                    </p>
                 </form>
             </div>
         </div>
@@ -109,5 +124,3 @@
     <script>lucide.createIcons();</script>
 </body>
 </html>
-
-
