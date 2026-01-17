@@ -110,6 +110,30 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+                <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-50 min-h-[300px]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-navy">Disease Cases</h3>
+                        <button class="text-brand-blue font-bold text-sm hover:underline">View All</button>
+                    </div>
+                    <div class="flex flex-col items-center justify-center py-12 text-gray-300">
+                        <i data-lucide="database" class="w-12 h-12 mb-4 opacity-20"></i>
+                        <p class="italic text-sm">Waiting for worker updates...</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-50 min-h-[300px]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-navy">Medicine Stock</h3>
+                        <button class="text-brand-blue font-bold text-sm hover:underline">View All</button>
+                    </div>
+                    <div class="flex flex-col items-center justify-center py-12 text-gray-300">
+                        <i data-lucide="package" class="w-12 h-12 mb-4 opacity-20"></i>
+                        <p class="italic text-sm">Inventory sync in progress...</p>
+                    </div>
+                </div>
+            </div>
+
             <p class="text-center text-gray-400 italic">Dashboard is now listening for live updates from BHWs.</p>
         </div>
     </main>
@@ -136,31 +160,25 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
-                    // Fetch User Profile
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     if (userDoc.exists()) {
                         const userData = userDoc.data();
                         document.getElementById('user-name-display').innerText = userData.name;
                         document.getElementById('welcome-banner-text').innerText = `Welcome back, ${userData.name}!`;
                         
-                        // REVEAL WORKER LINK IF ROLE IS WORKER
                         if (userData.role === "worker") {
                             document.getElementById('worker-secret-link').classList.remove('hidden');
                         }
                     }
 
-                    // --- LIVE UPDATES ---
                     const statsRef = doc(db, "statistics", "current_stats");
                     onSnapshot(statsRef, (snapshot) => {
                         if (snapshot.exists()) {
                             const data = snapshot.data();
-                            
-                            // Update UI Elements
                             document.getElementById('active-cases-count').innerText = data.activeCases || 0;
                             document.getElementById('medicine-stock-count').innerText = (data.medicineStock || 0) + "%";
                             document.getElementById('reports-count').innerText = data.totalReports || 0;
 
-                            // Dynamic Status Text
                             const cases = data.activeCases || 0;
                             const activeCasesTrend = document.getElementById('active-cases-trend');
                             activeCasesTrend.innerText = cases > 0 ? "⚠️ Immediate attention" : "✅ No active cases";
