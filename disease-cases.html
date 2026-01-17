@@ -10,7 +10,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         
-        /* EXACT Sidebar Active Style: Solid Blue Pill */
+        /* Sidebar Active Button Style (Solid Blue Pill) */
         .sidebar-active { 
             background-color: #2563eb !important; 
             color: white !important; 
@@ -19,14 +19,10 @@
         }
         .sidebar-active i { color: white !important; }
 
-        /* Badge Styles */
+        /* Severity Badges */
         .badge-high { background-color: #fef2f2; color: #ef4444; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
         .badge-moderate { background-color: #fffbeb; color: #f59e0b; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
         .badge-low { background-color: #f0fdf4; color: #22c55e; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
-        
-        .status-active { background-color: #eff6ff; color: #3b82f6; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
-        .status-monitoring { background-color: #faf5ff; color: #a855f7; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
-        .status-resolved { background-color: #f0fdf4; color: #22c55e; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
     </style>
 </head>
 <body class="flex min-h-screen">
@@ -43,6 +39,7 @@
             <a href="dashboard.html" class="flex items-center gap-3 text-gray-400 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all font-medium">
                 <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
             </a>
+            
             <a href="disease-cases.html" class="sidebar-active flex items-center gap-3 px-4 py-3 font-semibold transition-all">
                 <i data-lucide="activity" class="w-5 h-5"></i> Disease Cases
             </a>
@@ -51,23 +48,32 @@
 
     <main class="flex-1 ml-64 p-8">
         
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm">
+                <div class="bg-red-500 w-12 h-12 rounded-2xl flex items-center justify-center text-white mb-4 shadow-lg shadow-red-100">
+                    <i data-lucide="biohazard" class="w-6 h-6"></i>
+                </div>
+                <div class="text-4xl font-bold text-[#001f54] mb-1">0</div>
+                <div class="text-sm font-medium text-slate-400">Active Cases</div>
+                <div class="text-[10px] text-slate-300 font-bold uppercase tracking-wider">Live from database</div>
+            </div>
+            </div>
+
         <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm mb-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
                 <div>
-                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1 tracking-wider">Search Disease</label>
+                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1">Search Disease</label>
                     <div class="relative">
                         <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
-                        <input type="text" id="disease-search" placeholder="Search records..." 
-                               class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500/10 font-medium text-slate-600">
+                        <input type="text" placeholder="Search..." class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-gray-100 rounded-2xl outline-none">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1 tracking-wider">Filter Barangay</label>
-                    <select id="brgy-filter" class="w-full px-4 py-4 bg-white border border-gray-200 rounded-2xl font-bold text-blue-600 outline-none cursor-pointer appearance-none">
+                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1">Barangay</label>
+                    <select id="brgy-filter" class="w-full px-4 py-4 bg-white border border-gray-200 rounded-2xl font-bold text-blue-600 outline-none">
                         <option value="">Select Barangay...</option>
                         <option value="Poblacion">Poblacion</option>
                         <option value="Cogon">Cogon</option>
-                        <option value="Bentuco">Bentuco</option>
                     </select>
                 </div>
             </div>
@@ -75,165 +81,30 @@
 
         <div class="flex justify-between items-center mb-6 px-2">
             <h2 class="text-xl font-bold text-[#001f54]">Inventory List</h2>
-            <button onclick="openAddModal()" class="bg-[#2563eb] text-white px-7 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-blue-700 transition-all shadow-xl shadow-blue-100">
-                <i data-lucide="plus" class="w-4 h-4 text-white stroke-[3px]"></i> Add New Case
+            <button class="bg-[#2563eb] text-white px-7 py-3 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-blue-700 transition-all shadow-xl shadow-blue-100">
+                <i data-lucide="plus" class="w-4 h-4 stroke-[3px]"></i> Add New Case
             </button>
         </div>
 
-        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden min-h-[500px]">
+        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
             <table class="w-full text-left">
                 <thead class="bg-slate-50/50">
-                    <tr class="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] border-b border-gray-50">
+                    <tr class="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">
                         <th class="px-8 py-6">ID</th>
                         <th class="px-8 py-6">Disease Identity</th>
                         <th class="px-8 py-6">Barangay</th>
-                        <th class="px-8 py-6 text-center">Cases</th>
                         <th class="px-8 py-6">Severity</th>
                         <th class="px-8 py-6 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="disease-table-body" class="divide-y divide-gray-50">
-                    <tr>
-                        <td colspan="6" class="py-32 text-center text-gray-300">
-                            <i data-lucide="folder-search" class="w-12 h-12 mx-auto mb-4 opacity-20"></i>
-                            <p class="font-medium">Filter by Barangay to load the database.</p>
-                        </td>
-                    </tr>
-                </tbody>
+                    </tbody>
             </table>
         </div>
     </main>
 
-    <div id="action-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-md p-10 shadow-2xl relative">
-            <div class="absolute top-0 left-0 w-full h-2 bg-[#2563eb]"></div>
-            <h3 id="modal-title" class="text-2xl font-bold text-[#001f54] mb-8">Record Management</h3>
-            
-            <form id="record-form" class="space-y-5">
-                <input type="hidden" id="edit-id">
-                <div>
-                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 ml-1">Disease Name</label>
-                    <input type="text" id="form-disease" required class="w-full p-4 bg-slate-50 border border-gray-100 rounded-2xl font-semibold outline-none">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 ml-1">Barangay</label>
-                        <select id="form-brgy" required class="w-full p-4 bg-slate-50 border border-gray-100 rounded-2xl font-semibold outline-none">
-                            <option value="Poblacion">Poblacion</option>
-                            <option value="Cogon">Cogon</option>
-                            <option value="Bentuco">Bentuco</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 ml-1">Total Cases</label>
-                        <input type="number" id="form-cases" required class="w-full p-4 bg-slate-50 border border-gray-100 rounded-2xl font-black text-xl outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-2 ml-1">Severity Level</label>
-                    <select id="form-severity" class="w-full p-4 bg-slate-50 border border-gray-100 rounded-2xl font-semibold outline-none">
-                        <option value="High">High</option>
-                        <option value="Moderate">Moderate</option>
-                        <option value="Low">Low</option>
-                    </select>
-                </div>
-                <div class="flex gap-4 pt-8">
-                    <button type="button" id="remove-btn" class="hidden p-4 bg-rose-50 text-rose-500 font-bold rounded-2xl hover:bg-rose-500 hover:text-white transition-all"><i data-lucide="trash-2"></i></button>
-                    <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-gray-400">Cancel</button>
-                    <button type="submit" class="flex-[2] py-4 bg-[#2563eb] text-white font-bold rounded-2xl shadow-lg">Save Record</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, where, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        // Firebase Setup
-        const firebaseConfig = { /* Your Config Here */ };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        const brgySelect = document.getElementById('brgy-filter');
-        const tableBody = document.getElementById('disease-table-body');
-
-        // CRUD: READ
-        brgySelect.addEventListener('change', (e) => {
-            const val = e.target.value;
-            if(!val) return;
-
-            onSnapshot(query(collection(db, "disease_reports"), where("barangay", "==", val)), (snap) => {
-                tableBody.innerHTML = "";
-                snap.forEach((d) => {
-                    const data = d.data();
-                    const id = d.id;
-                    tableBody.innerHTML += `
-                        <tr class="hover:bg-slate-50/80 transition-all">
-                            <td class="px-8 py-6 text-blue-600 font-bold text-[13px]">#${id.substring(0,4).toUpperCase()}</td>
-                            <td class="px-8 py-6">
-                                <div class="font-bold text-[#001f54] uppercase text-sm tracking-tight">${data.disease}</div>
-                            </td>
-                            <td class="px-8 py-6 text-slate-500 font-medium text-sm italic">${data.barangay}</td>
-                            <td class="px-8 py-6 text-center font-black text-[#001f54] text-lg">${data.cases}</td>
-                            <td class="px-8 py-6"><span class="badge-${data.severity.toLowerCase()}">${data.severity}</span></td>
-                            <td class="px-8 py-6 text-right">
-                                <button onclick="openEditModal('${id}', '${data.disease}', '${data.barangay}', ${data.cases}, '${data.severity}')" 
-                                        class="p-3 bg-slate-50 text-blue-600 rounded-xl hover:bg-[#2563eb] hover:text-white transition-all">
-                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
-                                </button>
-                            </td>
-                        </tr>`;
-                });
-                lucide.createIcons();
-            });
-        });
-
-        // Modal Logic
-        window.openAddModal = () => {
-            document.getElementById('modal-title').innerText = "Register New Case";
-            document.getElementById('record-form').reset();
-            document.getElementById('edit-id').value = "";
-            document.getElementById('remove-btn').classList.add('hidden');
-            document.getElementById('action-modal').classList.remove('hidden');
-        };
-
-        window.openEditModal = (id, name, brgy, cases, severity) => {
-            document.getElementById('modal-title').innerText = "Update Record";
-            document.getElementById('edit-id').value = id;
-            document.getElementById('form-disease').value = name;
-            document.getElementById('form-brgy').value = brgy;
-            document.getElementById('form-cases').value = cases;
-            document.getElementById('form-severity').value = severity;
-            document.getElementById('remove-btn').classList.remove('hidden');
-            document.getElementById('action-modal').classList.remove('hidden');
-        };
-
-        window.closeModal = () => document.getElementById('action-modal').classList.add('hidden');
-
-        // CRUD: SAVE/DELETE
-        document.getElementById('record-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('edit-id').value;
-            const payload = {
-                disease: document.getElementById('form-disease').value,
-                barangay: document.getElementById('form-brgy').value,
-                cases: parseInt(document.getElementById('form-cases').value),
-                severity: document.getElementById('form-severity').value
-            };
-            if(id) await updateDoc(doc(db, "disease_reports", id), payload);
-            else await addDoc(collection(db, "disease_reports"), payload);
-            closeModal();
-        });
-
-        document.getElementById('remove-btn').addEventListener('click', async () => {
-            const id = document.getElementById('edit-id').value;
-            if(confirm("Permanently delete this record?")) {
-                await deleteDoc(doc(db, "disease_reports", id));
-                closeModal();
-            }
-        });
-
+    <script>
+        // Initialize Lucide icons
         lucide.createIcons();
     </script>
 </body>
