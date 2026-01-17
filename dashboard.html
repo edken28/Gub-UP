@@ -19,37 +19,32 @@
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      console.log("Logged in as:", user.email);
+      const welcomeBanner = document.querySelector('h2.text-3xl.font-bold') || document.querySelector('.bg-brand-blue h2');
+      if (welcomeBanner) {
+        welcomeBanner.innerText = `Welcome back, ${user.email}!`;
+      }
+
       try {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           const userData = userDoc.data();
           
-          // Updated Selector: This looks for the button containing "Citizen"
-          // based on your dashboard screenshot
-          const userDisplay = document.querySelector('button.flex.items-center.gap-2.bg-blue-50') || 
-                              document.querySelector('button span.text-sm.font-medium');
-          
-          if (userDisplay) {
-            userDisplay.innerHTML = `<i data-lucide="user" class="w-4 h-4"></i> ${userData.name}`;
-            if(window.lucide) lucide.createIcons();
+          const nameDisplay = document.querySelector('button.flex.items-center.gap-2.bg-blue-50 span');
+          if (nameDisplay) {
+            nameDisplay.innerText = userData.name;
           }
         }
-      } catch (err) {
-        console.error("Error fetching user data:", err);
+      } catch (error) {
+        console.error("Error loading user details:", error);
       }
     } else {
       window.location.href = "login.html";
     }
   });
 
-  // Safe Logout Logic: Find any button/link that says "Logout"
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('button')?.innerText.includes('Logout') || 
-        e.target.closest('a')?.innerText.includes('Logout')) {
-      signOut(auth).then(() => {
-        window.location.href = "login.html";
-      });
-    }
-  });
+  window.handleLogout = () => {
+    signOut(auth).then(() => {
+      window.location.href = "login.html";
+    });
+  };
 </script>
