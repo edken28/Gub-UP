@@ -13,6 +13,9 @@
         .badge-high { background-color: #fef2f2; color: #ef4444; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #fee2e2; }
         .badge-moderate { background-color: #fffbeb; color: #f59e0b; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #fef3c7; }
         .badge-low { background-color: #f0fdf4; color: #22c55e; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #dcfce7; }
+        /* Custom scrollbar for long dropdowns */
+        select::-webkit-scrollbar { width: 6px; }
+        select::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     </style>
 </head>
 <body class="flex min-h-screen">
@@ -35,13 +38,21 @@
     </aside>
 
     <main class="flex-1 ml-72 p-10">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-            <div class="flex items-center gap-6 bg-white p-2 pr-6 rounded-2xl border border-slate-100 shadow-sm w-full max-w-2xl">
-                <div class="relative flex-1">
-                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                    <input type="text" id="disease-search" placeholder="Search by disease or barangay..." class="w-full pl-12 pr-4 py-3 bg-transparent outline-none font-medium text-slate-600">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+            <div class="flex flex-1 items-center gap-4">
+                <div class="flex items-center bg-white p-2 pr-6 rounded-2xl border border-slate-100 shadow-sm flex-1 max-w-md">
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
+                        <input type="text" id="disease-search" placeholder="Search disease..." class="w-full pl-12 pr-4 py-3 bg-transparent outline-none font-medium text-slate-600">
+                    </div>
+                </div>
+                <div class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm w-64">
+                    <select id="filter-brgy" class="w-full p-3 bg-transparent outline-none font-bold text-slate-600">
+                        <option value="All">All Barangays</option>
+                        </select>
                 </div>
             </div>
+            
             <button onclick="openAddModal()" class="bg-[#2563eb] text-white px-8 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 hover:bg-blue-700 shadow-xl shadow-blue-100">
                 <i data-lucide="plus" class="w-5 h-5"></i> Add New Case
             </button>
@@ -57,8 +68,7 @@
                         <th class="px-10 py-5 text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="disease-table-body" class="divide-y divide-slate-50">
-                    </tbody>
+                <tbody id="disease-table-body" class="divide-y divide-slate-50"></tbody>
             </table>
         </div>
     </main>
@@ -69,18 +79,13 @@
             <form id="case-form" class="space-y-6">
                 <input type="hidden" id="case-id">
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Disease Name</label>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Disease Identity</label>
                     <input type="text" id="form-name" required class="w-full p-4 bg-slate-50 border rounded-2xl outline-none font-semibold">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Barangay</label>
-                        <select id="form-brgy" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold">
-                            <option value="Poblacion">Poblacion</option>
-                            <option value="Cogon">Cogon</option>
-                            <option value="Bentuco">Bentuco</option>
-                            <option value="Ariman">Ariman</option>
-                        </select>
+                        <select id="form-brgy" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold"></select>
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Severity</label>
@@ -115,62 +120,75 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const tableBody = document.getElementById('disease-table-body');
-        const searchInput = document.getElementById('disease-search');
-        let allCases = [];
+        
+        // --- BARANGAY LIST ---
+        const barangays = [
+            "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", 
+            "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", 
+            "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", 
+            "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", 
+            "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", 
+            "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"
+        ];
 
-        // 1. REAL-TIME DATA FETCH
-        onSnapshot(collection(db, "disease_cases"), (snapshot) => {
-            allCases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            renderTable(allCases);
+        // Populate Barangay Selects
+        const filterBrgy = document.getElementById('filter-brgy');
+        const formBrgy = document.getElementById('form-brgy');
+        
+        barangays.forEach(b => {
+            filterBrgy.innerHTML += `<option value="${b}">${b}</option>`;
+            formBrgy.innerHTML += `<option value="${b}">${b}</option>`;
         });
 
-        // 2. RENDER TABLE FUNCTION
+        const tableBody = document.getElementById('disease-table-body');
+        let allCases = [];
+
+        // Fetch Data
+        onSnapshot(collection(db, "disease_cases"), (snapshot) => {
+            allCases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            applyFilters();
+        });
+
         function renderTable(data) {
             tableBody.innerHTML = "";
             data.forEach((item) => {
                 tableBody.innerHTML += `
-                    <tr class="hover:bg-slate-50/50 transition-colors">
+                    <tr class="hover:bg-slate-50/50">
                         <td class="px-10 py-7 font-bold text-[#001f54]">${item.name}</td>
                         <td class="px-8 py-7 text-slate-500 font-semibold">${item.barangay}</td>
-                        <td class="px-8 py-7">
-                            <span class="badge-${item.severity.toLowerCase()}">${item.severity}</span>
-                        </td>
+                        <td class="px-8 py-7"><span class="badge-${item.severity.toLowerCase()}">${item.severity}</span></td>
                         <td class="px-10 py-7 text-right flex justify-end gap-2">
-                            <button onclick="openEditModal('${item.id}', '${item.name}', '${item.barangay}', '${item.severity}')" 
-                                    class="p-3 bg-slate-50 text-slate-400 rounded-xl hover:bg-blue-600 hover:text-white transition-all">
-                                <i data-lucide="edit-3" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="confirmDelete('${item.id}')" 
-                                    class="p-3 bg-slate-50 text-slate-400 rounded-xl hover:bg-red-600 hover:text-white transition-all">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
+                            <button onclick="openEditModal('${item.id}', '${item.name}', '${item.barangay}', '${item.severity}')" class="p-3 bg-slate-50 text-slate-400 rounded-xl hover:bg-blue-600 hover:text-white transition-all"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                            <button onclick="confirmDelete('${item.id}')" class="p-3 bg-slate-50 text-slate-400 rounded-xl hover:bg-red-600 hover:text-white transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </td>
                     </tr>`;
             });
             lucide.createIcons();
         }
 
-        // 3. SEARCH FILTER
-        searchInput.oninput = (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = allCases.filter(c => 
-                c.name.toLowerCase().includes(term) || 
-                c.barangay.toLowerCase().includes(term)
-            );
-            renderTable(filtered);
-        };
+        // --- FILTERING LOGIC ---
+        function applyFilters() {
+            const searchTerm = document.getElementById('disease-search').value.toLowerCase();
+            const brgyFilter = filterBrgy.value;
 
-        // 4. DELETE LOGIC
+            const filtered = allCases.filter(c => {
+                const matchesSearch = c.name.toLowerCase().includes(searchTerm);
+                const matchesBrgy = brgyFilter === "All" || c.barangay === brgyFilter;
+                return matchesSearch && matchesBrgy;
+            });
+            renderTable(filtered);
+        }
+
+        document.getElementById('disease-search').oninput = applyFilters;
+        filterBrgy.onchange = applyFilters;
+
+        // --- CRUD LOGIC ---
         window.confirmDelete = async (id) => {
-            if(confirm("Are you sure you want to delete this case?")) {
-                try {
-                    await deleteDoc(doc(db, "disease_cases", id));
-                } catch (e) { alert("Error deleting: " + e.message); }
+            if(confirm("Permanently delete this record?")) {
+                await deleteDoc(doc(db, "disease_cases", id));
             }
         };
 
-        // 5. MODAL & SUBMIT LOGIC (Same as before but handles ID)
         window.openAddModal = () => {
             document.getElementById('case-form').reset();
             document.getElementById('case-id').value = "";
@@ -196,17 +214,10 @@
                 name: document.getElementById('form-name').value,
                 barangay: document.getElementById('form-brgy').value,
                 severity: document.getElementById('form-severity').value,
-                timestamp: new Date()
+                updatedAt: new Date()
             };
-
-            try {
-                if (id) {
-                    await updateDoc(doc(db, "disease_cases", id), payload);
-                } else {
-                    await addDoc(collection(db, "disease_cases"), payload);
-                }
-                closeModal();
-            } catch (err) { alert("Error: " + err.message); }
+            id ? await updateDoc(doc(db, "disease_cases", id), payload) : await addDoc(collection(db, "disease_cases"), payload);
+            closeModal();
         };
     </script>
 </body>
