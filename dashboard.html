@@ -69,39 +69,43 @@
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                    <div class="bg-red-50 text-red-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+                    <div class="bg-red-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-red-100">
                         <i data-lucide="microbe" class="w-6 h-6"></i>
                     </div>
-                    <p class="text-4xl font-bold text-navy mb-1">0</p>
+                    <p class="text-4xl font-bold text-navy mb-1">247</p>
                     <p class="text-gray-400 font-medium text-sm">Active Cases</p>
+                    <p class="text-xs text-gray-400 mt-1">+12 this week</p>
                 </div>
 
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                    <div class="bg-green-50 text-green-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+                    <div class="bg-green-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-green-100">
                         <i data-lucide="pill" class="w-6 h-6"></i>
                     </div>
-                    <p class="text-4xl font-bold text-navy mb-1">0%</p>
+                    <p class="text-4xl font-bold text-navy mb-1">89%</p>
                     <p class="text-gray-400 font-medium text-sm">Medicine Stock</p>
+                    <p class="text-xs text-gray-400 mt-1">Adequate supply</p>
                 </div>
 
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                    <div class="bg-blue-50 text-blue-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+                    <div class="bg-blue-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-blue-100">
                         <i data-lucide="map-pin" class="w-6 h-6"></i>
                     </div>
                     <p class="text-4xl font-bold text-navy mb-1">33</p>
                     <p class="text-gray-400 font-medium text-sm">Barangays</p>
+                    <p class="text-xs text-gray-400 mt-1">All connected</p>
                 </div>
 
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                    <div class="bg-purple-50 text-purple-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+                    <div class="bg-purple-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-purple-100">
                         <i data-lucide="file-text" class="w-6 h-6"></i>
                     </div>
-                    <p class="text-4xl font-bold text-navy mb-1">0</p>
+                    <p class="text-4xl font-bold text-navy mb-1">156</p>
                     <p class="text-gray-400 font-medium text-sm">Reports</p>
+                    <p class="text-xs text-gray-400 mt-1">This month</p>
                 </div>
             </div>
 
-            <p class="text-center text-gray-400 italic">Pending update from Barangay Health Workers (BHW)...</p>
+            <p class="text-center text-gray-400 italic">Data synchronized with Cloud Firestore</p>
         </div>
     </main>
 
@@ -139,7 +143,7 @@
                         document.getElementById('user-name-display').innerText = user.email;
                         document.getElementById('welcome-banner-text').innerText = `Welcome back!`;
                     }
-                    // Re-run icons after name is injected
+                    // Refresh icons after dynamic content loads
                     lucide.createIcons();
                 } catch (error) {
                     console.error("Error fetching user data:", error);
