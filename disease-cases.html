@@ -9,23 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        
-        .sidebar-active { 
-            background-color: #2563eb !important; 
-            color: white !important; 
-            border-radius: 12px;
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
-        }
-
+        .sidebar-active { background-color: #2563eb !important; color: white !important; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2); }
         .badge-high { background-color: #fef2f2; color: #ef4444; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #fee2e2; }
         .badge-moderate { background-color: #fffbeb; color: #f59e0b; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #fef3c7; }
         .badge-low { background-color: #f0fdf4; color: #22c55e; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #dcfce7; }
-        
         .status-active { background-color: #eff6ff; color: #2563eb; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; }
         .status-monitoring { background-color: #faf5ff; color: #9333ea; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; }
         .status-resolved { background-color: #f0fdf4; color: #16a34a; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; }
-
-        input::placeholder { color: #cbd5e1; }
     </style>
 </head>
 <body class="flex min-h-screen">
@@ -40,7 +30,6 @@
                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Disease Monitoring</p>
             </div>
         </div>
-
         <nav class="mt-4 flex-1 px-6 space-y-2">
             <a href="dashboard.html" class="flex items-center gap-3 text-slate-400 px-4 py-3.5 rounded-xl hover:bg-slate-50 transition-all font-semibold group">
                 <i data-lucide="layout-grid" class="w-5 h-5 group-hover:text-blue-600"></i> Dashboard
@@ -56,8 +45,7 @@
             <div class="flex items-center gap-6 bg-white p-2 pr-6 rounded-2xl border border-slate-100 shadow-sm w-full max-w-2xl">
                 <div class="relative flex-1">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                    <input type="text" id="disease-search" placeholder="Search by disease name..." 
-                           class="w-full pl-12 pr-4 py-3 bg-transparent outline-none font-medium text-slate-600">
+                    <input type="text" id="disease-search" placeholder="Search by disease name..." class="w-full pl-12 pr-4 py-3 bg-transparent outline-none font-medium text-slate-600">
                 </div>
                 <div class="h-8 w-[1px] bg-slate-100"></div>
                 <select id="brgy-filter" class="bg-transparent font-bold text-blue-600 outline-none cursor-pointer text-sm">
@@ -68,7 +56,6 @@
                     <option value="Ariman">Ariman</option>
                 </select>
             </div>
-
             <button onclick="openAddModal()" class="bg-[#2563eb] text-white px-8 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 hover:bg-blue-700 transition-all shadow-xl shadow-blue-100 whitespace-nowrap">
                 <i data-lucide="plus" class="w-5 h-5 stroke-[3px]"></i> Add New Case
             </button>
@@ -98,26 +85,21 @@
     <div id="case-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-6">
         <div class="bg-white rounded-[3rem] w-full max-w-lg p-12 shadow-2xl relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-2 bg-[#2563eb]"></div>
-            
             <header class="mb-10">
-                <h3 id="modal-title" class="text-3xl font-bold text-[#001f54] tracking-tight">Case Entry</h3>
+                <h3 id="modal-title" class="text-3xl font-bold text-[#001f54]">Case Entry</h3>
                 <p class="text-slate-400 text-sm font-medium mt-2">Update the community health database.</p>
             </header>
-            
             <form id="case-form" class="space-y-6">
                 <input type="hidden" id="case-id">
-                
-                <div class="grid grid-cols-1 gap-6">
+                <div class="space-y-6">
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase mb-3 ml-1 tracking-widest">Disease Identity</label>
-                        <input type="text" id="form-name" required placeholder="e.g. Dengue Fever" 
-                               class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-semibold outline-none focus:border-blue-500 transition-colors">
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase mb-3 ml-1">Disease Identity</label>
+                        <input type="text" id="form-name" required placeholder="e.g. Dengue Fever" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-semibold outline-none focus:border-blue-500">
                     </div>
-
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-3 ml-1 tracking-widest">Barangay</label>
-                            <select id="form-brgy" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none">
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-3 ml-1">Barangay</label>
+                            <select id="form-brgy" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700">
                                 <option value="Poblacion">Poblacion</option>
                                 <option value="Cogon">Cogon</option>
                                 <option value="Bentuco">Bentuco</option>
@@ -125,31 +107,29 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-3 ml-1 tracking-widest">Severity</label>
-                            <select id="form-severity" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none">
+                            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-3 ml-1">Severity</label>
+                            <select id="form-severity" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700">
                                 <option value="High">High</option>
                                 <option value="Moderate">Moderate</option>
                                 <option value="Low">Low</option>
                             </select>
                         </div>
                     </div>
-
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-400 uppercase mb-3 ml-1 tracking-widest">Current Status</label>
-                        <select id="form-status" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none">
+                        <label class="block text-[11px] font-bold text-slate-400 uppercase mb-3 ml-1">Current Status</label>
+                        <select id="form-status" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700">
                             <option value="Active">Active Case</option>
                             <option value="Monitoring">Monitoring</option>
                             <option value="Resolved">Resolved</option>
                         </select>
                     </div>
                 </div>
-
                 <div class="flex gap-4 pt-10">
                     <button type="button" id="delete-btn" class="hidden p-4 bg-rose-50 text-rose-500 font-bold rounded-2xl hover:bg-rose-500 hover:text-white transition-all">
                         <i data-lucide="trash-2" class="w-6 h-6"></i>
                     </button>
                     <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-slate-400 hover:text-slate-600">Dismiss</button>
-                    <button type="submit" id="submit-btn" class="flex-[2] py-4 bg-[#2563eb] text-white font-bold rounded-2xl shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all">
+                    <button type="submit" id="submit-btn" class="flex-[2] py-4 bg-[#2563eb] text-white font-bold rounded-2xl shadow-lg hover:bg-blue-700 transition-all">
                         Confirm Changes
                     </button>
                 </div>
@@ -161,7 +141,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, where, doc, addDoc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // IMPORTANT: Make sure these are YOUR actual credentials
+        // REPLACE WITH YOUR ACTUAL FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -175,6 +155,7 @@
         const db = getFirestore(app);
         const tableBody = document.getElementById('disease-table-body');
 
+        // Live Sync
         function syncDatabase() {
             let q = collection(db, "disease_reports");
             const filterVal = document.getElementById('brgy-filter').value;
@@ -187,23 +168,18 @@
                 snapshot.forEach((doc) => {
                     const data = doc.data();
                     const id = doc.id;
-                    
                     if (data.name.toLowerCase().includes(searchVal)) {
                         tableBody.innerHTML += `
-                            <tr class="hover:bg-slate-50/50 transition-all group">
-                                <td class="px-10 py-7 font-bold text-blue-600 text-[13px] tracking-tight">#${id.substring(0,6).toUpperCase()}</td>
+                            <tr class="hover:bg-slate-50/50 transition-all">
+                                <td class="px-10 py-7 font-bold text-blue-600 text-[13px]">#${id.substring(0,6).toUpperCase()}</td>
                                 <td class="px-8 py-7">
                                     <div class="font-bold text-[#001f54] text-[15px] uppercase">${data.name}</div>
-                                    <div class="text-[10px] text-slate-400 font-bold mt-0.5">RHU VERIFIED</div>
                                 </td>
-                                <td class="px-8 py-7 text-slate-500 font-semibold text-sm flex items-center gap-2">
-                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-400"></i> ${data.barangay}
-                                </td>
+                                <td class="px-8 py-7 text-slate-500 font-semibold text-sm">${data.barangay}</td>
                                 <td class="px-8 py-7"><span class="badge-${data.severity.toLowerCase()}">${data.severity}</span></td>
                                 <td class="px-8 py-7"><span class="status-${data.status.toLowerCase()}">${data.status}</span></td>
                                 <td class="px-10 py-7 text-right">
-                                    <button onclick="openEditModal('${id}', '${data.name}', '${data.barangay}', '${data.severity}', '${data.status}')" 
-                                            class="p-3.5 bg-slate-50 text-slate-400 rounded-xl hover:bg-[#2563eb] hover:text-white transition-all">
+                                    <button onclick="openEditModal('${id}', '${data.name}', '${data.barangay}', '${data.severity}', '${data.status}')" class="p-3.5 bg-slate-50 text-slate-400 rounded-xl hover:bg-blue-600 hover:text-white transition-all">
                                         <i data-lucide="edit-3" class="w-4 h-4"></i>
                                     </button>
                                 </td>
@@ -214,10 +190,7 @@
             });
         }
 
-        document.getElementById('disease-search').oninput = syncDatabase;
-        document.getElementById('brgy-filter').onchange = syncDatabase;
-        syncDatabase();
-
+        // Modal Controls
         window.openAddModal = () => {
             document.getElementById('modal-title').innerText = "Register New Case";
             document.getElementById('case-form').reset();
@@ -237,57 +210,62 @@
             document.getElementById('case-modal').classList.remove('hidden');
         };
 
-        window.closeModal = () => {
-            document.getElementById('case-modal').classList.add('hidden');
-        };
+        window.closeModal = () => document.getElementById('case-modal').classList.add('hidden');
 
-        // FIXED SUBMIT LOGIC
+        // Handle Submit (The Fix)
         document.getElementById('case-form').onsubmit = async (e) => {
             e.preventDefault();
             const submitBtn = document.getElementById('submit-btn');
             const originalText = submitBtn.innerText;
             
-            // UI Feedback
             submitBtn.innerText = "Processing...";
             submitBtn.disabled = true;
 
-            try {
-                const id = document.getElementById('case-id').value;
-                const payload = {
-                    name: document.getElementById('form-name').value,
-                    barangay: document.getElementById('form-brgy').value,
-                    severity: document.getElementById('form-severity').value,
-                    status: document.getElementById('form-status').value,
-                    updatedAt: new Date()
-                };
+            const id = document.getElementById('case-id').value;
+            const payload = {
+                name: document.getElementById('form-name').value,
+                barangay: document.getElementById('form-brgy').value,
+                severity: document.getElementById('form-severity').value,
+                status: document.getElementById('form-status').value,
+                updatedAt: new Date()
+            };
 
+            // SAFETY TIMEOUT: If Firebase takes > 2.5s, just close the modal
+            const safetyTimer = setTimeout(() => {
+                console.warn("Database taking too long - forcing close.");
+                closeModal();
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }, 2500);
+
+            try {
                 if (id) {
                     await updateDoc(doc(db, "disease_reports", id), payload);
                 } else {
                     await addDoc(collection(db, "disease_reports"), payload);
                 }
-            } catch (error) {
-                console.error("Database Error:", error);
-                alert("Error saving data. Please check your Firebase config.");
+                clearTimeout(safetyTimer);
+                closeModal();
+            } catch (err) {
+                console.error("Firebase Error:", err);
+                alert("Permission Denied: Check your Firebase Rules!");
             } finally {
-                // This ensures the modal closes even if there is a tiny delay
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
-                closeModal();
             }
         };
 
         document.getElementById('delete-btn').onclick = async () => {
             const id = document.getElementById('case-id').value;
-            if (confirm("Confirm removal of this case?")) {
-                try {
-                    await deleteDoc(doc(db, "disease_reports", id));
-                } finally {
-                    closeModal();
-                }
+            if (confirm("Delete this record?")) {
+                await deleteDoc(doc(db, "disease_reports", id));
+                closeModal();
             }
         };
 
+        document.getElementById('disease-search').oninput = syncDatabase;
+        document.getElementById('brgy-filter').onchange = syncDatabase;
+        syncDatabase();
         lucide.createIcons();
     </script>
 </body>
