@@ -46,10 +46,10 @@
         <header class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
             <h2 class="text-xl font-bold text-navy md:hidden">GUB-UP</h2>
             <div class="flex items-center gap-4 ml-auto">
-                <button class="flex items-center gap-2 bg-blue-50 text-brand-blue px-4 py-2 rounded-xl font-medium">
+                <div class="flex items-center gap-2 bg-blue-50 text-brand-blue px-4 py-2 rounded-xl font-medium">
                     <i data-lucide="user" class="w-4 h-4"></i>
                     <span id="user-name-display">Loading...</span>
-                </button>
+                </div>
                 <button id="logout-btn" class="flex items-center gap-2 text-gray-500 hover:text-red-500 font-medium transition-colors">
                     <i data-lucide="log-out" class="w-4 h-4"></i> Logout
                 </button>
@@ -59,7 +59,7 @@
         <div class="p-8">
             <div class="bg-brand-blue rounded-[2.5rem] p-10 text-white mb-10 flex justify-between items-center relative overflow-hidden shadow-2xl shadow-blue-200">
                 <div class="relative z-10">
-                    <h2 id="welcome-banner-text" class="text-3xl font-bold mb-2">Welcome back!</h2>
+                    <h2 id="welcome-banner-text" class="text-3xl font-bold mb-2">Welcome!</h2>
                     <p class="text-blue-100 opacity-90 font-medium">Monitoring Gubat, Sorsogon Health Status</p>
                 </div>
                 <div class="bg-white/10 p-5 rounded-3xl backdrop-blur-md relative z-10">
@@ -69,22 +69,33 @@
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                    <div class="bg-red-50 text-red-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4"><i data-lucide="virus" class="w-6 h-6"></i></div>
+                    <div class="bg-red-50 text-red-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+                        <i data-lucide="microbe" class="w-6 h-6"></i>
+                    </div>
                     <p class="text-4xl font-bold text-navy mb-1">0</p>
                     <p class="text-gray-400 font-medium text-sm">Active Cases</p>
                 </div>
+
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                    <div class="bg-green-50 text-green-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4"><i data-lucide="pill" class="w-6 h-6"></i></div>
+                    <div class="bg-green-50 text-green-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+                        <i data-lucide="pill" class="w-6 h-6"></i>
+                    </div>
                     <p class="text-4xl font-bold text-navy mb-1">0%</p>
                     <p class="text-gray-400 font-medium text-sm">Medicine Stock</p>
                 </div>
+
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                    <div class="bg-blue-50 text-blue-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4"><i data-lucide="map-pin" class="w-6 h-6"></i></div>
+                    <div class="bg-blue-50 text-blue-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+                        <i data-lucide="map-pin" class="w-6 h-6"></i>
+                    </div>
                     <p class="text-4xl font-bold text-navy mb-1">33</p>
                     <p class="text-gray-400 font-medium text-sm">Barangays</p>
                 </div>
+
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                    <div class="bg-purple-50 text-purple-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4"><i data-lucide="file-text" class="w-6 h-6"></i></div>
+                    <div class="bg-purple-50 text-purple-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+                        <i data-lucide="file-text" class="w-6 h-6"></i>
+                    </div>
                     <p class="text-4xl font-bold text-navy mb-1">0</p>
                     <p class="text-gray-400 font-medium text-sm">Reports</p>
                 </div>
@@ -113,14 +124,25 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // Run icons on initial load
+        lucide.createIcons();
+
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Identity Logic: Show user info
-                document.getElementById('welcome-banner-text').innerText = `Welcome back, ${user.email}!`;
-                
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    document.getElementById('user-name-display').innerText = userDoc.data().name;
+                try {
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        document.getElementById('user-name-display').innerText = userData.name;
+                        document.getElementById('welcome-banner-text').innerText = `Welcome back, ${userData.name}!`;
+                    } else {
+                        document.getElementById('user-name-display').innerText = user.email;
+                        document.getElementById('welcome-banner-text').innerText = `Welcome back!`;
+                    }
+                    // Re-run icons after name is injected
+                    lucide.createIcons();
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
                 }
             } else {
                 window.location.href = "login.html";
@@ -130,8 +152,6 @@
         document.getElementById('logout-btn').addEventListener('click', () => {
             signOut(auth).then(() => { window.location.href = "login.html"; });
         });
-
-        lucide.createIcons();
     </script>
 </body>
 </html>
