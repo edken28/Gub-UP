@@ -36,12 +36,12 @@
                     </div>
                 </div>
                 <h2 class="text-3xl font-bold mb-4">Welcome to GUB-UP</h2>
-                <p class="text-blue-100 text-sm mb-10 opacity-90">Your community health monitoring system for Gubat, Sorsogon.</p>
+                <p class="text-blue-100 text-sm mb-10 opacity-90">Access your community health portal for Gubat, Sorsogon.</p>
             </div>
 
             <div class="w-full md:w-[58%] p-10 md:p-14 flex flex-col justify-center">
                 <h3 class="text-3xl font-bold text-navy mb-1">Login</h3>
-                <p class="text-gray-400 mb-8 font-medium">Access your account</p>
+                <p class="text-gray-400 mb-8 font-medium">Please enter your credentials</p>
 
                 <form id="loginForm">
                     <div class="space-y-5 mb-8">
@@ -58,11 +58,11 @@
                     </div>
 
                     <button type="submit" id="loginBtn" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-blue-700 transition-all mb-6 flex justify-center items-center gap-2">
-                        <span>Login</span>
+                        <span>Sign In</span>
                     </button>
                     
                     <p class="text-center text-sm text-gray-500 font-medium">
-                        Don't have an account? <a href="register.html" class="text-brand-blue font-bold hover:underline">Register</a>
+                        Don't have an account? <a href="register.html" class="text-brand-blue font-bold hover:underline">Register here</a>
                     </p>
                 </form>
             </div>
@@ -72,8 +72,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        // Added Firestore imports to check roles
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -87,7 +85,6 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
 
         const loginForm = document.getElementById('loginForm');
         const loginBtn = document.getElementById('loginBtn');
@@ -98,48 +95,30 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            // Visual feedback
             loginBtn.disabled = true;
             loginBtn.innerText = "Authenticating...";
 
             try {
-                // 1. Authenticate with Firebase Auth
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+                // Log the user in
+                await signInWithEmailAndPassword(auth, email, password);
                 
-                // 2. Fetch User Role from Firestore
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    
-                    // 3. Role-based Redirection
-                    if (userData.role === "worker") {
-                        window.location.href = "worker-panel.html"; 
-                    } else {
-                        window.location.href = "dashboard.html";
-                    }
-                } else {
-                    // Default if user exists in Auth but not in Firestore collection
-                    window.location.href = "dashboard.html";
-                }
+                // Redirect everyone to the Dashboard
+                // The Dashboard script will handle role-based UI
+                window.location.href = "dashboard.html";
 
             } catch (error) {
                 console.error("Login error:", error);
                 loginBtn.disabled = false;
-                loginBtn.innerText = "Login";
+                loginBtn.innerText = "Sign In";
                 
                 if (error.code === 'auth/invalid-credential') {
-                    alert("Incorrect email or password.");
+                    alert("Invalid email or password.");
                 } else {
                     alert("Error: " + error.message);
                 }
             }
         });
-    </script>
-
-    <script>
-        // Initialize Lucide icons
+        
         lucide.createIcons();
     </script>
 </body>
