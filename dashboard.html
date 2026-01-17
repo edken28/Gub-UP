@@ -1,140 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | GUB-UP</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .bg-brand-blue { background-color: #2563eb; }
-        .text-brand-blue { color: #2563eb; }
-    </style>
-</head>
-<body class="bg-slate-50 min-h-screen flex">
-
-    <aside class="w-64 bg-white border-r border-gray-100 flex flex-col hidden md:flex">
-        <div class="p-6 border-b border-gray-50">
-            <div class="flex items-center gap-3">
-                <div class="bg-brand-blue p-2 rounded-lg text-white font-bold text-xl">+</div>
-                <div>
-                    <h1 class="font-bold text-navy leading-none">GUB-UP</h1>
-                    <p class="text-[10px] text-gray-400 uppercase font-semibold">Disease Monitoring</p>
-                </div>
-            </div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
+        <div class="bg-red-50 text-red-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+            <i data-lucide="virus" class="w-6 h-6"></i>
         </div>
-        <nav class="flex-1 p-4 space-y-2">
-            <a href="#" class="flex items-center gap-3 bg-brand-blue text-white px-4 py-3 rounded-xl font-medium shadow-lg shadow-blue-100">
-                <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
-            </a>
-            <a href="#" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all">
-                <i data-lucide="pill" class="w-5 h-5"></i> Medicines
-            </a>
-            <a href="#" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all">
-                <i data-lucide="phone" class="w-5 h-5"></i> Hotlines
-            </a>
-            <a href="#" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all">
-                <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Reports
-            </a>
-        </nav>
-    </aside>
+        <p class="text-4xl font-bold text-navy mb-1">0</p>
+        <p class="text-gray-400 font-medium">Active Cases</p>
+        <p class="text-[10px] text-gray-400 mt-1">+0 this week</p>
+    </div>
 
-    <main class="flex-1 overflow-y-auto">
-        <header class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
-            <h2 class="text-xl font-bold text-navy md:hidden">GUB-UP</h2>
-            <div class="flex items-center gap-4 ml-auto">
-                <button class="flex items-center gap-2 bg-blue-50 text-brand-blue px-4 py-2 rounded-xl font-medium">
-                    <i data-lucide="user" class="w-4 h-4"></i>
-                    <span id="user-display">Citizen</span>
-                </button>
-                <button id="logoutBtn" class="flex items-center gap-2 text-gray-500 hover:text-red-500 font-medium transition-colors">
-                    <i data-lucide="log-out" class="w-4 h-4"></i> Logout
-                </button>
-            </div>
-        </header>
-
-        <div class="p-8">
-            <div class="bg-brand-blue rounded-[2rem] p-10 text-white mb-10 flex justify-between items-center relative overflow-hidden shadow-2xl shadow-blue-200">
-                <div class="relative z-10">
-                    <h2 id="welcome-message" class="text-3xl font-bold mb-2">Welcome back!</h2>
-                    <p class="text-blue-100 opacity-90 font-medium">View community health information</p>
-                </div>
-                <div class="bg-white/10 p-4 rounded-2xl backdrop-blur-md relative z-10">
-                    <i data-lucide="user" class="w-10 h-10"></i>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                    <div class="bg-red-50 text-red-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
-                        <i data-lucide="virus" class="w-6 h-6"></i>
-                    </div>
-                    <p class="text-4xl font-bold text-navy mb-1">247</p>
-                    <p class="text-gray-400 font-medium">Active Cases</p>
-                </div>
-                </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-50">
-                    <div class="flex justify-between items-center mb-8">
-                        <h3 class="text-xl font-bold text-navy">Disease Cases</h3>
-                        <a href="#" class="text-brand-blue font-bold text-sm">View All</a>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50">
-                            <div class="flex items-center gap-4">
-                                <div class="bg-red-50 text-red-500 p-2 rounded-lg"><i data-lucide="arrow-up-right" class="w-5 h-5"></i></div>
-                                <div><p class="font-bold text-navy">Dengue</p><p class="text-xs text-gray-400">Poblacion</p></div>
-                            </div>
-                            <p class="font-bold text-navy">45 <span class="text-[10px] text-gray-400">cases</span></p>
-                        </div>
-                        </div>
-                </div>
-            </div>
+    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
+        <div class="bg-green-50 text-green-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+            <i data-lucide="pill" class="w-6 h-6"></i>
         </div>
-    </main>
+        <p class="text-4xl font-bold text-navy mb-1">0%</p>
+        <p class="text-gray-400 font-medium">Medicine Stock</p>
+        <p class="text-[10px] text-gray-400 mt-1">No data available</p>
+    </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
+        <div class="bg-blue-50 text-blue-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+            <i data-lucide="map-pin" class="w-6 h-6"></i>
+        </div>
+        <p class="text-4xl font-bold text-navy mb-1">33</p>
+        <p class="text-gray-400 font-medium">Barangays</p>
+        <p class="text-[10px] text-gray-400 mt-1">Gubat, Sorsogon</p>
+    </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
-            authDomain: "gub-up.firebaseapp.com",
-            projectId: "gub-up",
-            storageBucket: "gub-up.firebasestorage.app",
-            messagingSenderId: "75119179497",
-            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278",
-            measurementId: "G-9MGFP3RC88"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // Update the Blue Banner
-                document.getElementById('welcome-message').innerText = `Welcome back, ${user.email}!`;
-
-                // Fetch real name from Firestore
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    document.getElementById('user-display').innerText = userDoc.data().name;
-                }
-            } else {
-                window.location.href = "login.html";
-            }
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => window.location.href = "login.html");
-        });
-
-        lucide.createIcons();
-    </script>
-</body>
-</html>
+    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
+        <div class="bg-purple-50 text-purple-500 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+            <i data-lucide="file-text" class="w-6 h-6"></i>
+        </div>
+        <p class="text-4xl font-bold text-navy mb-1">0</p>
+        <p class="text-gray-400 font-medium">Reports</p>
+        <p class="text-[10px] text-gray-400 mt-1">This month</p>
+    </div>
+</div>
