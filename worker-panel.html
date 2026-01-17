@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BHW Management | GUB-UP</title>
+    <title>BHW Stock Management | GUB-UP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,189 +11,136 @@
         body { font-family: 'Inter', sans-serif; }
         .bg-brand-blue { background-color: #2563eb; }
         .text-navy { color: #1e3a8a; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen">
 
-    <div id="selection-screen" class="fixed inset-0 bg-slate-50 z-[100] flex flex-col items-center p-8 overflow-y-auto">
-        <div class="max-w-4xl w-full text-center mt-12">
-            <h1 class="text-4xl font-bold text-navy mb-2">Select Your Barangay</h1>
-            <p class="text-gray-500 mb-10">Choose the barangay you are currently managing to access inventory tools.</p>
+    <div id="selection-view" class="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center p-6 text-center">
+        <div class="max-w-md w-full">
+            <div class="bg-blue-50 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 text-brand-blue">
+                <i data-lucide="map-pin" class="w-10 h-10"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-navy mb-2">Assign Barangay</h1>
+            <p class="text-gray-500 mb-8">Choose the barangay you are managing today to access the editing tools.</p>
             
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="barangay-grid">
-                </div>
+            <select id="barangay-select" class="w-full p-4 rounded-2xl border-2 border-gray-100 mb-4 focus:border-brand-blue outline-none text-lg">
+                <option value="" disabled selected>Select Barangay...</option>
+                <option>Poblacion</option>
+                <option>Cogon</option>
+                <option>Bentuco</option>
+                <option>Ariman</option>
+            </select>
+            
+            <button onclick="enterDashboard()" class="w-full bg-brand-blue text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-blue-100">
+                Manage Inventory
+            </button>
         </div>
     </div>
 
-    <div id="dashboard-layout" class="hidden flex min-h-screen">
+    <div id="dashboard-view" class="hidden flex min-h-screen">
         <aside class="w-64 bg-white border-r border-gray-100 flex flex-col fixed h-full">
             <div class="p-6 border-b border-gray-50">
-                <h1 class="font-bold text-navy text-xl flex items-center gap-2">
-                    <div class="bg-brand-blue p-1 rounded-lg text-white"><i data-lucide="plus" class="w-4 h-4"></i></div>
-                    GUB-UP
-                </h1>
+                <h1 class="font-bold text-navy text-xl">GUB-UP</h1>
             </div>
             <nav class="p-4 space-y-2 flex-1">
-                <button onclick="location.reload()" class="w-full flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50">
-                    <i data-lucide="map" class="w-5 h-5"></i> Switch Barangay
+                <a href="#" class="flex items-center gap-3 bg-blue-50 text-brand-blue px-4 py-3 rounded-xl font-bold">
+                    <i data-lucide="pill" class="w-5 h-5"></i> Edit Stocks
+                </a>
+                <button onclick="location.reload()" class="w-full flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 mt-10">
+                    <i data-lucide="refresh-cw" class="w-5 h-5"></i> Switch Barangay
                 </button>
-                <div class="bg-blue-50 text-brand-blue flex items-center gap-3 px-4 py-3 rounded-xl font-bold">
-                    <i data-lucide="pill" class="w-5 h-5"></i> Medicine Stocks
-                </div>
             </nav>
         </aside>
 
         <main class="flex-1 ml-64 p-8">
-            <header class="flex justify-between items-center mb-10">
+            <header class="flex justify-between items-center mb-8">
                 <div>
-                    <h2 class="text-2xl font-bold text-navy">Inventory Management</h2>
-                    <div class="flex items-center gap-2 text-brand-blue text-sm mt-1 font-bold">
+                    <h2 class="text-2xl font-bold text-navy">Medicine Inventory</h2>
+                    <div class="flex items-center gap-2 text-brand-blue text-sm font-bold mt-1">
                         <i data-lucide="map-pin" class="w-4 h-4"></i>
-                        <span id="active-barangay-name">--</span>
+                        <span id="display-barangay">--</span>
                     </div>
                 </div>
-                <button onclick="openAddModal()" class="bg-brand-blue text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
-                    <i data-lucide="plus" class="w-5 h-5"></i> Add New Medicine
+                <button onclick="openModal('add')" class="bg-brand-blue text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
+                    <i data-lucide="plus" class="w-5 h-5"></i> Add Medicine
                 </button>
             </header>
 
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
                 <table class="w-full text-left">
-                    <thead class="bg-slate-50 border-b border-gray-100">
+                    <thead class="bg-slate-50/80 border-b border-gray-100">
                         <tr class="text-gray-400 text-[11px] font-bold uppercase tracking-wider">
                             <th class="px-8 py-5">Medicine Item</th>
                             <th class="px-8 py-5">Category</th>
-                            <th class="px-8 py-5">Current Stock</th>
+                            <th class="px-8 py-5">Stock</th>
+                            <th class="px-8 py-5">Status</th>
                             <th class="px-8 py-5 text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="inventory-tbody" class="divide-y divide-gray-50">
-                        </tbody>
+                    <tbody id="inventory-list" class="divide-y divide-gray-50">
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-8 py-5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-50 text-brand-blue flex items-center justify-center">
+                                        <i data-lucide="pill" class="w-4 h-4"></i>
+                                    </div>
+                                    <span class="font-bold text-navy">Paracetamol 500mg</span>
+                                </div>
+                            </td>
+                            <td class="px-8 py-5 text-gray-500">Pain Relief</td>
+                            <td class="px-8 py-5 font-bold">1,250 units</td>
+                            <td class="px-8 py-5">
+                                <span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-emerald-50 text-emerald-600 border border-emerald-100">Good Stock</span>
+                            </td>
+                            <td class="px-8 py-5 text-right space-x-3">
+                                <button onclick="openModal('edit')" class="text-brand-blue font-bold text-sm hover:underline">Edit</button>
+                                <button class="text-red-500 font-bold text-sm hover:underline">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </main>
     </div>
 
     <div id="stock-modal" class="fixed inset-0 bg-navy/40 backdrop-blur-sm z-[110] hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-3xl p-8 shadow-2xl">
+        <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl scale-95 transition-transform">
             <h3 id="modal-title" class="text-xl font-bold text-navy mb-6">Add Medicine</h3>
-            <form id="stockForm" class="space-y-4">
-                <input type="hidden" id="edit-original-name">
+            <form class="space-y-4">
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Medicine Name</label>
-                    <input type="text" id="medName" required placeholder="e.g. Paracetamol" class="w-full p-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Medicine Name</label>
+                    <input type="text" placeholder="e.g. Biogesic" class="w-full p-4 border border-gray-200 rounded-2xl outline-none focus:ring-4 focus:ring-blue-50 transition-all">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Category</label>
-                    <select id="medCategory" class="w-full p-3 border border-gray-200 rounded-xl outline-none bg-white">
-                        <option>Pain Relief</option>
-                        <option>Antibiotic</option>
-                        <option>Vitamin</option>
-                        <option>Antihistamine</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Quantity</label>
-                    <input type="number" id="medQty" required min="0" class="w-full p-3 border border-gray-200 rounded-xl outline-none">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Current Quantity</label>
+                    <input type="number" placeholder="Enter number of units" class="w-full p-4 border border-gray-200 rounded-2xl outline-none focus:ring-4 focus:ring-blue-50 transition-all">
                 </div>
                 <div class="flex gap-3 pt-4">
-                    <button type="button" onclick="closeModal()" class="flex-1 py-3 text-gray-400 font-bold">Cancel</button>
-                    <button type="submit" class="flex-1 py-3 bg-brand-blue text-white font-bold rounded-xl">Save Item</button>
+                    <button type="button" onclick="closeModal()" class="flex-1 py-4 text-gray-400 font-bold">Cancel</button>
+                    <button type="submit" class="flex-1 py-4 bg-brand-blue text-white font-bold rounded-2xl shadow-lg shadow-blue-100">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, setDoc, deleteField, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = { /* Your Config */ };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        const barangays = ["Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Buenavista", "Bulacao", "Cogon", "Poblacion"];
-        let currentBarangay = "";
-
-        // Generate Barangay Cards
-        const grid = document.getElementById('barangay-grid');
-        barangays.forEach(b => {
-            const card = document.createElement('button');
-            card.className = "bg-white p-6 rounded-2xl border border-gray-100 hover:border-brand-blue hover:shadow-md transition-all text-navy font-bold text-sm";
-            card.innerText = b;
-            card.onclick = () => selectBarangay(b);
-            grid.appendChild(card);
-        });
-
-        function selectBarangay(name) {
-            currentBarangay = name;
-            document.getElementById('active-barangay-name').innerText = `Barangay ${name}`;
-            document.getElementById('selection-screen').classList.add('hidden');
-            document.getElementById('dashboard-layout').classList.remove('hidden');
-            startSync();
+    <script>
+        function enterDashboard() {
+            const b = document.getElementById('barangay-select').value;
+            if(!b) return alert("Select a barangay first");
+            document.getElementById('display-barangay').innerText = "Barangay " + b;
+            document.getElementById('selection-view').classList.add('hidden');
+            document.getElementById('dashboard-view').classList.remove('hidden');
         }
 
-        function startSync() {
-            onSnapshot(doc(db, "inventory", currentBarangay), (snap) => {
-                const tbody = document.getElementById('inventory-tbody');
-                tbody.innerHTML = "";
-                if(snap.exists()) {
-                    const data = snap.data();
-                    Object.entries(data).forEach(([name, details]) => {
-                        tbody.innerHTML += `
-                            <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="px-8 py-5 font-bold text-navy">${name}</td>
-                                <td class="px-8 py-5 text-gray-500">${details.category || 'General'}</td>
-                                <td class="px-8 py-5 font-bold">${details.qty} units</td>
-                                <td class="px-8 py-5 text-right space-x-4">
-                                    <button onclick="editItem('${name}', '${details.category}', ${details.qty})" class="text-brand-blue font-bold text-sm hover:underline">Edit</button>
-                                    <button onclick="deleteItem('${name}')" class="text-red-500 font-bold text-sm hover:underline">Delete</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
-                lucide.createIcons();
-            });
+        function openModal(type) {
+            document.getElementById('modal-title').innerText = type === 'add' ? 'Add New Medicine' : 'Update Stock';
+            document.getElementById('stock-modal').classList.remove('hidden');
         }
 
-        // CRUD Operations
-        window.deleteItem = async (name) => {
-            if(confirm(`Delete ${name}?`)) {
-                const ref = doc(db, "inventory", currentBarangay);
-                await updateDoc(ref, { [name]: deleteField() });
-            }
-        };
+        function closeModal() {
+            document.getElementById('stock-modal').classList.add('hidden');
+        }
 
-        document.getElementById('stockForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('medName').value;
-            const cat = document.getElementById('medCategory').value;
-            const qty = parseInt(document.getElementById('medQty').value);
-            
-            await setDoc(doc(db, "inventory", currentBarangay), {
-                [name]: { category: cat, qty: qty }
-            }, { merge: true });
-            closeModal();
-        };
-
-        window.openAddModal = () => {
-            document.getElementById('stockForm').reset();
-            document.getElementById('modal-title').innerText = "Add New Medicine";
-            document.getElementById('stock-modal').classList.remove('hidden');
-        };
-
-        window.editItem = (name, cat, qty) => {
-            document.getElementById('medName').value = name;
-            document.getElementById('medCategory').value = cat;
-            document.getElementById('medQty').value = qty;
-            document.getElementById('modal-title').innerText = "Edit Medicine";
-            document.getElementById('stock-modal').classList.remove('hidden');
-        };
-
-        window.closeModal = () => document.getElementById('stock-modal').classList.add('hidden');
-        
         lucide.createIcons();
     </script>
 </body>
