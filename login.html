@@ -43,15 +43,15 @@
                 <h3 class="text-3xl font-bold text-navy mb-1">Login</h3>
                 <p class="text-gray-400 mb-8 font-medium">Access your account</p>
 
-                <form>
+                <form id="loginForm">
                     <div class="space-y-5 mb-8">
                         <div>
                             <label class="block text-xs font-bold text-navy mb-2 uppercase tracking-wider">Email Address</label>
-                            <input type="email" placeholder="your@email.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
+                            <input type="email" id="email" placeholder="your@email.com" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-navy mb-2 uppercase tracking-wider">Password</label>
-                            <input type="password" placeholder="Enter password" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
+                            <input type="password" id="password" placeholder="Enter password" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
                         </div>
                     </div>
 
@@ -64,6 +64,57 @@
             </div>
         </div>
     </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Your Firebase project configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
+            authDomain: "gub-up.firebaseapp.com",
+            projectId: "gub-up",
+            storageBucket: "gub-up.firebasestorage.app",
+            messagingSenderId: "75119179497",
+            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278",
+            measurementId: "G-9MGFP3RC88"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const loginForm = document.getElementById('loginForm');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                // Sign in the user
+                await signInWithEmailAndPassword(auth, email, password);
+                
+                alert("Login successful! Redirecting to dashboard...");
+                // Redirect to your main page
+                window.location.href = "dashboard.html"; 
+
+            } catch (error) {
+                console.error("Login error:", error);
+                
+                // Friendly error handling
+                if (error.code === 'auth/invalid-credential') {
+                    alert("Wrong email or password. Please try again.");
+                } else if (error.code === 'auth/user-not-found') {
+                    alert("No account found with this email.");
+                } else {
+                    alert("Error: " + error.message);
+                }
+            }
+        });
+    </script>
+
     <script>lucide.createIcons();</script>
 </body>
 </html>
