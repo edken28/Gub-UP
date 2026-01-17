@@ -10,7 +10,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         
-        /* Sidebar Active Button Style (Solid Blue Pill) */
+        /* Sidebar Active Button (Solid Blue Pill) from image_d58109.png */
         .sidebar-active { 
             background-color: #2563eb !important; 
             color: white !important; 
@@ -19,7 +19,7 @@
         }
         .sidebar-active i { color: white !important; }
 
-        /* Severity Badges */
+        /* Severity Badges from image_d49feb.png */
         .badge-high { background-color: #fef2f2; color: #ef4444; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
         .badge-moderate { background-color: #fffbeb; color: #f59e0b; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
         .badge-low { background-color: #f0fdf4; color: #22c55e; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
@@ -41,39 +41,30 @@
             </a>
             
             <a href="disease-cases.html" class="sidebar-active flex items-center gap-3 px-4 py-3 font-semibold transition-all">
-                <i data-lucide="activity" class="w-5 h-5"></i> Disease Cases
+                <i data-lucide="biohazard" class="w-5 h-5"></i> Disease Cases
             </a>
         </nav>
     </aside>
 
     <main class="flex-1 ml-64 p-8">
         
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm">
-                <div class="bg-red-500 w-12 h-12 rounded-2xl flex items-center justify-center text-white mb-4 shadow-lg shadow-red-100">
-                    <i data-lucide="biohazard" class="w-6 h-6"></i>
-                </div>
-                <div class="text-4xl font-bold text-[#001f54] mb-1">0</div>
-                <div class="text-sm font-medium text-slate-400">Active Cases</div>
-                <div class="text-[10px] text-slate-300 font-bold uppercase tracking-wider">Live from database</div>
-            </div>
-            </div>
-
         <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm mb-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
                 <div>
-                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1">Search Disease</label>
+                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1 tracking-wider">Search Disease</label>
                     <div class="relative">
                         <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
-                        <input type="text" placeholder="Search..." class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-gray-100 rounded-2xl outline-none">
+                        <input type="text" id="disease-search" placeholder="Type name..." 
+                               class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500/10 font-medium text-slate-600">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1">Barangay</label>
-                    <select id="brgy-filter" class="w-full px-4 py-4 bg-white border border-gray-200 rounded-2xl font-bold text-blue-600 outline-none">
-                        <option value="">Select Barangay...</option>
+                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1 tracking-wider">Select Barangay</label>
+                    <select id="brgy-filter" class="w-full px-4 py-4 bg-white border border-gray-200 rounded-2xl font-bold text-blue-600 outline-none cursor-pointer">
+                        <option value="">Choose...</option>
                         <option value="Poblacion">Poblacion</option>
                         <option value="Cogon">Cogon</option>
+                        <option value="Bentuco">Bentuco</option>
                     </select>
                 </div>
             </div>
@@ -86,12 +77,12 @@
             </button>
         </div>
 
-        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden min-h-[400px]">
             <table class="w-full text-left">
                 <thead class="bg-slate-50/50">
                     <tr class="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">
-                        <th class="px-8 py-6">ID</th>
-                        <th class="px-8 py-6">Disease Identity</th>
+                        <th class="px-8 py-6">Report ID</th>
+                        <th class="px-8 py-6">Disease</th>
                         <th class="px-8 py-6">Barangay</th>
                         <th class="px-8 py-6">Severity</th>
                         <th class="px-8 py-6 text-right">Actions</th>
@@ -104,7 +95,7 @@
     </main>
 
     <script>
-        // Initialize Lucide icons
+        // Initialize icons
         lucide.createIcons();
     </script>
 </body>
