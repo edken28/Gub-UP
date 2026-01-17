@@ -19,7 +19,15 @@
             background-color: #eff6ff !important;
             box-shadow: 0 0 0 1px #2563eb;
         }
-        input[type="radio"]:checked + .selection-card i,
+
+        /* ICON COLOR CHANGE: Targets the SVG when radio is checked */
+        input[type="radio"]:checked + .selection-card svg {
+            color: #2563eb !important;
+            stroke: #2563eb !important;
+        }
+
+        /* TEXT COLOR CHANGE: Targets labels when radio is checked */
+        input[type="radio"]:checked + .selection-card .role-title,
         input[type="radio"]:checked + .selection-card .access-text {
             color: #2563eb !important;
         }
@@ -150,7 +158,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Initialize Logos
+    // Initialize Logos immediately
     lucide.createIcons();
 
     const form = document.getElementById('registrationForm');
