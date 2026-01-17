@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BHW Management | GUB-UP</title>
+    <title>BHW Inventory Management | GUB-UP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,96 +18,115 @@
     <aside class="w-64 bg-white border-r border-gray-100 hidden md:flex flex-col fixed h-full">
         <div class="p-6 border-b border-gray-50">
             <h1 class="font-bold text-navy text-xl flex items-center gap-2">
-                <div class="bg-brand-blue p-1 rounded-lg text-white"><i data-lucide="plus" class="w-4 h-4"></i></div>
+                <div class="bg-brand-blue p-1 rounded-lg text-white">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                </div>
                 GUB-UP
             </h1>
         </div>
         <nav class="p-4 space-y-2 flex-1">
-            <a href="dashboard.html" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50">
+            <a href="dashboard.html" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
             </a>
             <a href="worker-panel.html" class="flex items-center gap-3 bg-blue-50 text-brand-blue px-4 py-3 rounded-xl font-bold">
                 <i data-lucide="pill" class="w-5 h-5"></i> Medicine Stocks
             </a>
         </nav>
+        <div class="p-4 border-t border-gray-100">
+            <button id="logout-btn" class="flex items-center gap-3 text-gray-400 px-4 py-3 hover:text-red-500 transition-colors w-full text-left">
+                <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+            </button>
+        </div>
     </aside>
 
     <main class="flex-1 ml-64 p-8">
-        <header class="flex justify-between items-center mb-8">
+        <header class="flex justify-between items-center mb-10">
             <div>
                 <h2 class="text-2xl font-bold text-navy">Inventory Management</h2>
-                <div class="flex items-center gap-2 text-gray-500 text-sm">
-                    <i data-lucide="map-pin" class="w-4 h-4"></i>
-                    <span id="barangay-display">Loading Barangay...</span>
+                <div class="flex items-center gap-2 text-gray-500 text-sm mt-1">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-brand-blue"></i>
+                    <span id="barangay-display" class="font-medium">Barangay --</span>
                 </div>
             </div>
-            <button onclick="toggleModal(true)" class="bg-brand-blue text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 transition-all">
-                <i data-lucide="plus" class="w-4 h-4"></i> Update Stock
+            <button onclick="toggleModal(true)" class="bg-brand-blue text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
+                <i data-lucide="plus" class="w-5 h-5"></i> Update Stock
             </button>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-navy text-lg">Disease Cases</h3>
-                    <button class="text-brand-blue text-sm font-bold">View All</button>
-                </div>
-                <div id="disease-list" class="space-y-4">
-                    </div>
-            </div>
-
-            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-navy text-lg">Medicine Stock</h3>
-                    <button class="text-brand-blue text-sm font-bold">View All</button>
-                </div>
-                <div id="medicine-quick-list" class="space-y-4">
-                    </div>
-            </div>
-        </div>
-
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <table class="w-full text-left border-collapse">
-                <thead class="bg-slate-50/50 border-b border-gray-100">
+                <thead class="bg-slate-50/80 border-b border-gray-100">
                     <tr class="text-gray-400 text-[11px] font-bold uppercase tracking-wider">
-                        <th class="px-6 py-4">Medicine Name</th>
-                        <th class="px-6 py-4">Category</th>
-                        <th class="px-6 py-4">Barangay</th>
-                        <th class="px-6 py-4">Stock</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4">Last Update</th>
+                        <th class="px-8 py-5">Medicine Name</th>
+                        <th class="px-8 py-5">Category</th>
+                        <th class="px-8 py-5 text-center">Barangay</th>
+                        <th class="px-8 py-5">Stock Level</th>
+                        <th class="px-8 py-5">Status</th>
+                        <th class="px-8 py-5 text-right">Last Update</th>
                     </tr>
                 </thead>
                 <tbody id="full-inventory-table" class="divide-y divide-gray-50">
                     </tbody>
             </table>
+            
+            <div id="loader" class="p-20 flex flex-col items-center justify-center text-gray-400">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-blue mb-4"></div>
+                <p class="text-sm font-medium">Syncing with database...</p>
+            </div>
         </div>
     </main>
 
     <div id="modal-overlay" class="fixed inset-0 bg-navy/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-3xl p-8">
-            <h3 class="text-xl font-bold text-navy mb-6">Update Stock</h3>
+        <div class="bg-white w-full max-w-md rounded-3xl p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-navy">Update Inventory</h3>
+                <button onclick="toggleModal(false)" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
             <form id="stockForm" class="space-y-4">
-                <select id="medName" class="w-full p-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="Paracetamol 500mg">Paracetamol 500mg</option>
-                    <option value="Amoxicillin 500mg">Amoxicillin 500mg</option>
-                    <option value="Biogesic">Biogesic</option>
-                    <option value="Cetirizine 10mg">Cetirizine 10mg</option>
-                    <option value="Ibuprofen 400mg">Ibuprofen 400mg</option>
-                </select>
-                <input type="number" id="medQty" placeholder="New Stock Quantity" class="w-full p-3 border border-gray-200 rounded-xl outline-none">
-                <div class="flex gap-3 pt-4">
-                    <button type="button" onclick="toggleModal(false)" class="flex-1 py-3 text-gray-500 font-bold border border-gray-100 rounded-xl">Cancel</button>
-                    <button type="submit" class="flex-1 py-3 bg-brand-blue text-white font-bold rounded-xl shadow-lg shadow-blue-100">Save Update</button>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Select Item</label>
+                    <select id="medName" required class="w-full p-3 border border-gray-200 rounded-xl outline-none focus:ring-4 focus:ring-blue-50 transition-all">
+                        <option value="Paracetamol 500mg">Paracetamol 500mg</option>
+                        <option value="Amoxicillin 500mg">Amoxicillin 500mg</option>
+                        <option value="Biogesic">Biogesic</option>
+                        <option value="Cetirizine 10mg">Cetirizine 10mg</option>
+                        <option value="Ibuprofen 400mg">Ibuprofen 400mg</option>
+                    </select>
                 </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">New Quantity</label>
+                    <input type="number" id="medQty" required min="0" placeholder="0" class="w-full p-3 border border-gray-200 rounded-xl outline-none focus:ring-4 focus:ring-blue-50 transition-all">
+                </div>
+                <button type="submit" class="w-full py-4 bg-brand-blue text-white font-bold rounded-xl shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all mt-4">
+                    Confirm Changes
+                </button>
             </form>
         </div>
     </div>
 
     <script type="module">
-        // (Includes same Firebase initialization as previous codes)
-        // Note: For the "Category" and "Last Update" in the table:
-        // When saving to Firestore, we will now include the timestamp.
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Your Firebase config (Keep this identical to your other files)
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
+            authDomain: "gub-up.firebaseapp.com",
+            projectId: "gub-up",
+            storageBucket: "gub-up.firebasestorage.app",
+            messagingSenderId: "75119179497",
+            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let currentUserBarangay = "";
 
         const medCategories = {
             "Paracetamol 500mg": "Pain Relief",
@@ -118,23 +137,85 @@
         };
 
         function getStatus(qty) {
-            if (qty < 100) return { label: 'Critical', css: 'bg-red-100 text-red-600' };
-            if (qty < 200) return { label: 'Medium', css: 'bg-blue-100 text-blue-600' };
-            return { label: 'Good Stock', css: 'bg-emerald-100 text-emerald-600' };
+            if (qty < 100) return { label: 'Critical', css: 'bg-red-50 text-red-600 border border-red-100' };
+            if (qty < 250) return { label: 'Medium', css: 'bg-blue-50 text-blue-600 border border-blue-100' };
+            return { label: 'Good Stock', css: 'bg-emerald-50 text-emerald-600 border border-emerald-100' };
         }
 
-        // Inside your onSnapshot listener, you would populate the table like this:
-        // table.innerHTML += `
-        //    <tr>
-        //        <td class="px-6 py-4 font-bold text-navy">${med}</td>
-        //        <td class="px-6 py-4 text-gray-500">${medCategories[med] || 'General'}</td>
-        //        <td class="px-6 py-4 text-gray-400">@ ${currentUserBarangay}</td>
-        //        <td class="px-6 py-4 font-bold">${qty} units</td>
-        //        <td class="px-6 py-4"><span class="px-2 py-1 rounded-md text-[10px] font-bold ${getStatus(qty).css}">${getStatus(qty).label}</span></td>
-        //        <td class="px-6 py-4 text-gray-400 text-sm">Just now</td>
-        //    </tr>
-        // `;
-        
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists() && userDoc.data().role === 'bhw') {
+                    currentUserBarangay = userDoc.data().barangay;
+                    document.getElementById('barangay-display').innerText = `Barangay ${currentUserBarangay}`;
+                    startLiveSync();
+                } else {
+                    window.location.href = "dashboard.html";
+                }
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        function startLiveSync() {
+            onSnapshot(doc(db, "inventory", currentUserBarangay), (snapshot) => {
+                const table = document.getElementById('full-inventory-table');
+                const loader = document.getElementById('loader');
+                table.innerHTML = "";
+                loader.style.display = 'none';
+
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    Object.keys(data).forEach(med => {
+                        const qty = data[med];
+                        const status = getStatus(qty);
+                        
+                        table.innerHTML += `
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-8 py-5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-blue-50 text-brand-blue flex items-center justify-center">
+                                            <i data-lucide="pill" class="w-4 h-4"></i>
+                                        </div>
+                                        <span class="font-bold text-navy">${med}</span>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-5 text-gray-500 text-sm">${medCategories[med] || 'General'}</td>
+                                <td class="px-8 py-5 text-center">
+                                    <span class="text-xs font-bold text-gray-400">📍 ${currentUserBarangay}</span>
+                                </td>
+                                <td class="px-8 py-5">
+                                    <span class="font-bold text-navy">${qty.toLocaleString()} units</span>
+                                </td>
+                                <td class="px-8 py-5">
+                                    <span class="px-3 py-1 rounded-md text-[10px] font-extrabold uppercase tracking-tight ${status.css}">
+                                        ${status.label}
+                                    </span>
+                                </td>
+                                <td class="px-8 py-5 text-right text-gray-400 text-xs">Recently updated</td>
+                            </tr>
+                        `;
+                    });
+                    lucide.createIcons();
+                }
+            });
+        }
+
+        document.getElementById('stockForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const med = document.getElementById('medName').value;
+            const qty = parseInt(document.getElementById('medQty').value);
+
+            await setDoc(doc(db, "inventory", currentUserBarangay), { [med]: qty }, { merge: true });
+            toggleModal(false);
+            document.getElementById('stockForm').reset();
+        });
+
+        window.toggleModal = (show) => {
+            document.getElementById('modal-overlay').classList.toggle('hidden', !show);
+        };
+
+        document.getElementById('logout-btn').onclick = () => signOut(auth);
         lucide.createIcons();
     </script>
 </body>
