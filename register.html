@@ -69,16 +69,16 @@
                     <div class="grid grid-cols-2 gap-4 mb-6">
                         <label class="cursor-pointer">
                             <input type="radio" name="role" value="citizen" class="hidden" checked>
-                            <div class="selection-card border-2 border-gray-100 p-4 rounded-2xl flex flex-col items-center gap-1 transition-all text-center">
-                                <i data-lucide="user" class="w-6 h-6 text-gray-400"></i>
+                            <div class="selection-card border-2 border-gray-100 p-6 rounded-2xl flex flex-col items-center gap-2 transition-all text-center">
+                                <i data-lucide="user" class="w-8 h-8 text-gray-400"></i>
                                 <span class="role-title font-bold text-gray-800">Citizen</span>
                                 <span class="access-text text-[10px] text-gray-400">Basic access</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="role" value="worker" class="hidden">
-                            <div class="selection-card border-2 border-gray-100 p-4 rounded-2xl flex flex-col items-center gap-1 transition-all text-center">
-                                <i data-lucide="hospital" class="w-6 h-6 text-gray-400"></i>
+                            <div class="selection-card border-2 border-gray-100 p-6 rounded-2xl flex flex-col items-center gap-2 transition-all text-center">
+                                <i data-lucide="hospital" class="w-8 h-8 text-gray-400"></i>
                                 <span class="role-title font-bold text-gray-800">Health Worker</span>
                                 <span class="access-text text-[10px] text-gray-400">Full access</span>
                             </div>
@@ -150,13 +150,15 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Initialize Logos
+    lucide.createIcons();
+
     const form = document.getElementById('registrationForm');
     const submitBtn = form.querySelector('button[type="submit"]');
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Show loading state
         submitBtn.disabled = true;
         submitBtn.innerText = "Creating Account...";
 
@@ -167,17 +169,14 @@
         const role = document.querySelector('input[name="role"]:checked').value;
 
         try {
-            // 1. Create the user in Authentication
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            // 2. Create the "Identity" in Firestore Database
-            // This is what stops the "Loading..." error on the dashboard!
             await setDoc(doc(db, "users", user.uid), {
                 name: fullName,
                 email: email,
                 barangay: barangay,
-                role: role, // 'citizen' or 'worker'
+                role: role,
                 createdAt: new Date()
             });
 
@@ -189,7 +188,6 @@
             submitBtn.disabled = false;
             submitBtn.innerText = "Create Account";
             
-            // Helpful error messages for Gubat users
             if (error.code === 'auth/email-already-in-use') {
                 alert("This email is already registered. Please login instead.");
             } else if (error.code === 'auth/weak-password') {
@@ -200,3 +198,5 @@
         }
     });
 </script>
+</body>
+</html>
