@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUB-UP | Disease Management</title>
+    <title>GUB-UP | RHU Disease Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,6 +13,7 @@
         .badge-high { background-color: #fef2f2; color: #ef4444; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #fee2e2; }
         .badge-moderate { background-color: #fffbeb; color: #f59e0b; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #fef3c7; }
         .badge-low { background-color: #f0fdf4; color: #22c55e; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; border: 1px solid #dcfce7; }
+        .status-active { background-color: #eff6ff; color: #2563eb; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 600; }
     </style>
 </head>
 <body class="flex min-h-screen">
@@ -36,7 +37,7 @@
 
     <main class="flex-1 ml-72 p-10">
         <div class="flex justify-between items-center mb-10">
-            <h2 class="text-2xl font-bold text-[#001f54]">Disease Case Records</h2>
+            <h2 class="text-2xl font-bold text-[#001f54]">Disease Case Inventory</h2>
             <button onclick="openAddModal()" class="bg-[#2563eb] text-white px-8 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 hover:bg-blue-700 shadow-xl shadow-blue-100">
                 <i data-lucide="plus" class="w-5 h-5"></i> Add New Case
             </button>
@@ -49,6 +50,7 @@
                         <th class="px-10 py-5">Disease Identity</th>
                         <th class="px-8 py-5">Barangay</th>
                         <th class="px-8 py-5">Severity</th>
+                        <th class="px-8 py-5">Status</th>
                         <th class="px-10 py-5 text-right">Actions</th>
                     </tr>
                 </thead>
@@ -59,11 +61,11 @@
 
     <div id="case-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-6">
         <div class="bg-white rounded-[3rem] w-full max-w-lg p-12 shadow-2xl relative">
-            <h3 id="modal-title" class="text-3xl font-bold text-[#001f54] mb-8">Case Entry</h3>
+            <h3 id="modal-title" class="text-3xl font-bold text-[#001f54] mb-8">Register New Case</h3>
             <form id="case-form" class="space-y-6">
                 <input type="hidden" id="case-id">
                 <div>
-                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Disease Name</label>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Disease Identity</label>
                     <input type="text" id="form-name" required class="w-full p-4 bg-slate-50 border rounded-2xl outline-none font-semibold">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -85,8 +87,16 @@
                         </select>
                     </div>
                 </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-400 uppercase mb-2">Current Status</label>
+                    <select id="form-status" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold">
+                        <option value="Active">Active Case</option>
+                        <option value="Monitoring">Monitoring</option>
+                        <option value="Resolved">Resolved</option>
+                    </select>
+                </div>
                 <div class="flex gap-4 pt-10">
-                    <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-slate-400">Cancel</button>
+                    <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-slate-400">Dismiss</button>
                     <button type="submit" id="submit-btn" class="flex-[2] py-4 bg-[#2563eb] text-white font-bold rounded-2xl">Confirm Changes</button>
                 </div>
             </form>
@@ -97,6 +107,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // IMPORTANT: Use your actual Firebase Config values here
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
@@ -110,7 +121,7 @@
         const db = getFirestore(app);
         const tableBody = document.getElementById('disease-table-body');
 
-        // Load data from "disease_cases" collection
+        // 1. SYNC TABLE WITH NEW COLLECTION
         onSnapshot(collection(db, "disease_cases"), (snapshot) => {
             tableBody.innerHTML = "";
             snapshot.forEach((doc) => {
@@ -120,8 +131,9 @@
                         <td class="px-10 py-7 font-bold text-[#001f54]">${data.name}</td>
                         <td class="px-8 py-7 text-slate-500 font-semibold">${data.barangay}</td>
                         <td class="px-8 py-7"><span class="badge-${data.severity.toLowerCase()}">${data.severity}</span></td>
+                        <td class="px-8 py-7"><span class="status-active">${data.status}</span></td>
                         <td class="px-10 py-7 text-right">
-                            <button onclick="openEditModal('${doc.id}', '${data.name}', '${data.barangay}', '${data.severity}')" class="p-2 bg-slate-50 text-slate-400 rounded-xl hover:bg-blue-600 hover:text-white transition-all">
+                            <button onclick="openEditModal('${doc.id}', '${data.name}', '${data.barangay}', '${data.severity}', '${data.status}')" class="p-2 bg-slate-50 text-slate-400 rounded-xl hover:bg-blue-600 hover:text-white transition-all">
                                 <i data-lucide="edit-3" class="w-4 h-4"></i>
                             </button>
                         </td>
@@ -130,26 +142,31 @@
             lucide.createIcons();
         });
 
+        // 2. MODAL LOGIC
         window.openAddModal = () => {
+            document.getElementById('modal-title').innerText = "Register New Case";
             document.getElementById('case-form').reset();
             document.getElementById('case-id').value = "";
             document.getElementById('case-modal').classList.remove('hidden');
         };
 
-        window.openEditModal = (id, name, brgy, sev) => {
+        window.openEditModal = (id, name, brgy, sev, stat) => {
+            document.getElementById('modal-title').innerText = "Edit Case Record";
             document.getElementById('case-id').value = id;
             document.getElementById('form-name').value = name;
             document.getElementById('form-brgy').value = brgy;
             document.getElementById('form-severity').value = sev;
+            document.getElementById('form-status').value = stat;
             document.getElementById('case-modal').classList.remove('hidden');
         };
 
         window.closeModal = () => document.getElementById('case-modal').classList.add('hidden');
 
+        // 3. SUBMIT LOGIC (Targets disease_cases)
         document.getElementById('case-form').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
-            btn.innerText = "Syncing...";
+            btn.innerText = "Processing...";
             btn.disabled = true;
 
             const id = document.getElementById('case-id').value;
@@ -157,7 +174,8 @@
                 name: document.getElementById('form-name').value,
                 barangay: document.getElementById('form-brgy').value,
                 severity: document.getElementById('form-severity').value,
-                timestamp: new Date()
+                status: document.getElementById('form-status').value,
+                updatedAt: new Date()
             };
 
             try {
@@ -168,8 +186,8 @@
                 }
                 closeModal();
             } catch (err) {
-                console.error(err);
-                alert("Permission Denied! Check your Firestore Rules.");
+                console.error("Firebase Error:", err);
+                alert("Database Error: " + err.message);
             } finally {
                 btn.innerText = "Confirm Changes";
                 btn.disabled = false;
