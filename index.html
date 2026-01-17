@@ -3,119 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUB-APP | Health Monitoring</title>
+    <title>GUB-APP | Gubat Disease Monitoring</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        .bg-navy { background-color: #1e3a8a; }
         .text-navy { color: #1e3a8a; }
+        .bg-navy { background-color: #1e3a8a; }
         .bg-brand-blue { background-color: #2563eb; }
         .text-brand-blue { color: #2563eb; }
-        .hidden { display: none; }
     </style>
 </head>
-<body class="bg-white">
+<body class="bg-white text-gray-800">
 
-    <div id="landing-page">
-        <nav class="flex justify-between items-center px-6 md:px-12 py-4 bg-white sticky top-0 z-50 shadow-sm">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white">
-                    <i data-lucide="plus" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold text-navy leading-none">GUB-APP</h1>
-                    <p class="text-[10px] text-brand-blue font-semibold uppercase tracking-wider">Gubat Disease Monitoring</p>
-                </div>
+    <nav class="flex justify-between items-center px-6 md:px-12 py-4 bg-white sticky top-0 z-50 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white">
+                <i data-lucide="plus" class="w-6 h-6"></i>
             </div>
-            <button onclick="showLogin()" class="bg-brand-blue text-white px-8 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Login</button>
-        </nav>
-
-        <header class="flex flex-col items-center justify-center text-center px-6 py-24 bg-slate-50">
-            <div class="inline-flex items-center gap-2 bg-blue-100 text-brand-blue px-4 py-1.5 rounded-full text-sm font-medium mb-8">
-                <i data-lucide="shield-check" class="w-4 h-4"></i> Disease Monitoring System
-            </div>
-            <h2 class="text-4xl md:text-6xl font-bold text-navy max-w-4xl mb-6">Health Monitoring for <br> Gubat, Sorsogon</h2>
-            <p class="text-gray-500 text-lg md:text-xl max-w-2xl mb-10">A comprehensive web-based system to monitor diseases, track medicine availability, and provide quick access to emergency services.</p>
-            <div class="flex flex-col sm:row gap-4">
-                <button onclick="showLogin()" class="bg-brand-blue text-white px-10 py-4 rounded-xl font-bold shadow-lg hover:opacity-90">Get Started</button>
-                <button class="bg-white text-brand-blue border-2 border-blue-600 px-10 py-4 rounded-xl font-bold hover:bg-blue-50">Learn More</button>
-            </div>
-        </header>
-
-        <section class="py-20 px-6 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="p-8 border border-blue-100 rounded-2xl"><div class="w-12 h-12 bg-brand-blue text-white rounded-lg flex items-center justify-center mb-4"><i data-lucide="trending-up"></i></div><h3 class="font-bold text-navy mb-2">Disease Monitoring</h3><p class="text-sm text-gray-500">Track and monitor disease cases across Gubat with real-time data.</p></div>
-            <div class="p-8 border border-blue-100 rounded-2xl"><div class="w-12 h-12 bg-brand-blue text-white rounded-lg flex items-center justify-center mb-4"><i data-lucide="package"></i></div><h3 class="font-bold text-navy mb-2">Medicine Inventory</h3><p class="text-sm text-gray-500">Check available medicines in each barangay health center.</p></div>
-            <div class="p-8 border border-blue-100 rounded-2xl"><div class="w-12 h-12 bg-brand-blue text-white rounded-lg flex items-center justify-center mb-4"><i data-lucide="phone"></i></div><h3 class="font-bold text-navy mb-2">Emergency Hotlines</h3><p class="text-sm text-gray-500">Quick access to emergency contacts and authorities.</p></div>
-        </section>
-
-        <footer class="bg-navy text-white py-12 px-6">
-            <div class="max-w-7xl mx-auto flex flex-wrap justify-between gap-8">
-                <div class="max-w-xs">
-                    <h1 class="text-xl font-bold mb-4">GUB-APP</h1>
-                    <p class="text-blue-100/60 text-sm">Web-based disease monitoring system for Gubat, Sorsogon</p>
-                </div>
-                <div><h4 class="font-bold mb-4">Quick Links</h4><ul class="text-sm text-blue-100/60 space-y-2"><li>Login</li><li>Features</li></ul></div>
-                <div><h4 class="font-bold mb-4">Contact</h4><p class="text-sm text-blue-100/60">Gubat, Sorsogon<br>health@gubat.gov.ph</p></div>
-            </div>
-        </footer>
-    </div>
-
-    <div id="login-page" class="hidden min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-        <button onclick="showHome()" class="absolute top-8 left-8 text-brand-blue font-semibold flex items-center gap-2">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Home
-        </button>
-
-        <div class="bg-white rounded-3xl shadow-2xl flex overflow-hidden max-w-4xl w-full">
-            <div class="bg-brand-blue w-1/2 p-12 text-white hidden md:flex flex-col justify-center">
-                <div class="bg-white w-12 h-12 rounded-xl flex items-center justify-center mb-6">
-                    <i data-lucide="plus" class="text-brand-blue w-8 h-8"></i>
-                </div>
-                <h2 class="text-3xl font-bold mb-4 leading-tight">Welcome to GUB-APP</h2>
-                <p class="mb-8 text-blue-100">Your community health monitoring system for Gubat, Sorsogon. Access disease data, medicine inventory, and emergency services.</p>
-                <div class="space-y-4">
-                    <div class="flex items-center gap-3"><i data-lucide="shield-check" class="w-5 h-5"></i><span>Secure Access</span></div>
-                    <div class="flex items-center gap-3"><i data-lucide="clock" class="w-5 h-5"></i><span>Real-time Updates</span></div>
-                </div>
-            </div>
-
-            <div class="w-full md:w-1/2 p-12">
-                <h2 class="text-3xl font-bold text-navy mb-2">Login</h2>
-                <p class="text-gray-500 mb-8">Access your account</p>
-
-                <p class="text-sm font-semibold mb-4">Select Account Type</p>
-                <div class="grid grid-cols-2 gap-4 mb-8">
-                    <button class="border-2 border-brand-blue rounded-xl p-4 flex flex-col items-center text-brand-blue bg-blue-50">
-                        <i data-lucide="user" class="mb-2"></i><span class="font-bold">Citizen</span><span class="text-[10px]">Basic access</span>
-                    </button>
-                    <button class="border-2 border-gray-100 rounded-xl p-4 flex flex-col items-center text-gray-400 hover:border-brand-blue transition">
-                        <i data-lucide="hospital" class="mb-2"></i><span class="font-bold">Health Worker</span><span class="text-[10px]">Full access</span>
-                    </button>
-                </div>
-
-                <div class="space-y-4">
-                    <div><label class="text-sm font-semibold block mb-1">Email Address</label><input type="email" placeholder="your@email.com" class="w-full border p-3 rounded-lg bg-gray-50"></div>
-                    <div><label class="text-sm font-semibold block mb-1">Password</label><input type="password" placeholder="Enter password" class="w-full border p-3 rounded-lg bg-gray-50"></div>
-                    <button class="w-full bg-brand-blue text-white py-3 rounded-xl font-bold shadow-lg mt-4">Login</button>
-                </div>
-                <p class="text-center text-sm mt-6 text-gray-500">Don't have an account? <span class="text-brand-blue font-bold cursor-pointer">Register</span></p>
+            <div>
+                <h1 class="text-xl font-bold text-navy leading-none">GUB-APP</h1>
+                <p class="text-[10px] text-brand-blue font-semibold uppercase tracking-wider">Gubat Disease Monitoring</p>
             </div>
         </div>
-    </div>
+        <button class="bg-brand-blue text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">Login</button>
+    </nav>
+
+    <header class="flex flex-col items-center justify-center text-center px-6 py-24 bg-slate-50">
+        <div class="inline-flex items-center gap-2 bg-blue-100 text-brand-blue px-4 py-1.5 rounded-full text-sm font-medium mb-8">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            Disease Monitoring System
+        </div>
+        <h2 class="text-4xl md:text-6xl font-bold text-navy max-w-4xl mb-6 leading-tight">
+            Health Monitoring for <br> Gubat, Sorsogon
+        </h2>
+        <p class="text-gray-500 text-lg md:text-xl max-w-2xl mb-10">
+            A comprehensive web-based system to monitor diseases, track medicine availability across barangays, and provide quick access to emergency services in our community.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+            <button class="bg-brand-blue text-white px-10 py-4 rounded-xl font-bold shadow-lg hover:opacity-90 transition">Get Started</button>
+            <button class="bg-white text-brand-blue border-2 border-blue-600 px-10 py-4 rounded-xl font-bold hover:bg-blue-50 transition">Learn More</button>
+        </div>
+    </header>
+
+    <section class="py-24 px-6 md:px-12 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-navy mb-4">Key Features</h2>
+            <p class="text-gray-500">Simple and easy-to-use tools for community health management</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="p-8 border border-blue-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-brand-blue text-white rounded-lg flex items-center justify-center mb-6"><i data-lucide="trending-up"></i></div>
+                <h3 class="text-xl font-bold text-navy mb-3">Disease Monitoring</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Track and monitor disease cases across Gubat with real-time data and comprehensive records for better health management.</p>
+            </div>
+            <div class="p-8 border border-blue-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-brand-blue text-white rounded-lg flex items-center justify-center mb-6"><i data-lucide="package"></i></div>
+                <h3 class="text-xl font-bold text-navy mb-3">Medicine Inventory</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Check available medicines in each barangay health center. Know what's in stock before you visit.</p>
+            </div>
+            <div class="p-8 border border-blue-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-brand-blue text-white rounded-lg flex items-center justify-center mb-6"><i data-lucide="phone"></i></div>
+                <h3 class="text-xl font-bold text-navy mb-3">Emergency Hotlines</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Quick access to emergency contacts. Connect directly with authorities when you need immediate help.</p>
+            </div>
+            <div class="p-8 border border-blue-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-brand-blue text-white rounded-lg flex items-center justify-center mb-6"><i data-lucide="file-text"></i></div>
+                <h3 class="text-xl font-bold text-navy mb-3">Health Reports</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Health workers can submit and manage health reports for accurate record-keeping and analysis.</p>
+            </div>
+            <div class="p-8 border border-blue-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-brand-blue text-white rounded-lg flex items-center justify-center mb-6"><i data-lucide="user-check"></i></div>
+                <h3 class="text-xl font-bold text-navy mb-3">Citizen Access</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Easy-to-use interface for citizens to access health information and community resources.</p>
+            </div>
+            <div class="p-8 border border-blue-100 rounded-2xl bg-white shadow-sm hover:shadow-md transition">
+                <div class="w-12 h-12 bg-brand-blue text-white rounded-lg flex items-center justify-center mb-6"><i data-lucide="shield"></i></div>
+                <h3 class="text-xl font-bold text-navy mb-3">Secure Authentication</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Verified health worker accounts ensure data integrity and secure health information management.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 px-6 bg-slate-50">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-navy mb-4">How It Works</h2>
+            <p class="text-gray-500">Simple steps to get started with GUB-APP</p>
+        </div>
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 bg-brand-blue text-white rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg shadow-blue-200">1</div>
+                <h3 class="text-xl font-bold text-navy mb-3">Create Account</h3>
+                <p class="text-gray-500 text-sm px-4">Register as a citizen or health worker. Health workers need verification for full access.</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 bg-brand-blue text-white rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg shadow-blue-200">2</div>
+                <h3 class="text-xl font-bold text-navy mb-3">Access Dashboard</h3>
+                <p class="text-gray-500 text-sm px-4">View health information, medicine availability, and emergency contacts on your personalized dashboard.</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 bg-brand-blue text-white rounded-full flex items-center justify-center text-2xl font-bold mb-6 shadow-lg shadow-blue-200">3</div>
+                <h3 class="text-xl font-bold text-navy mb-3">Stay Informed</h3>
+                <p class="text-gray-500 text-sm px-4">Get real-time updates on diseases, medicine stock, and community health status.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-brand-blue py-20 px-6 text-center text-white">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Get Started?</h2>
+        <p class="mb-10 opacity-90">Join GUB-APP today and stay connected with your community's health information</p>
+        <button class="bg-white text-brand-blue px-10 py-4 rounded-xl font-bold text-lg hover:bg-slate-100 transition shadow-xl">
+            Login or Register Now
+        </button>
+    </section>
+
+    <footer class="bg-navy text-white py-16 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                        <i data-lucide="plus" class="w-6 h-6"></i>
+                    </div>
+                    <h1 class="text-xl font-bold">GUB-APP</h1>
+                </div>
+                <p class="text-blue-200/70 text-sm leading-relaxed max-w-xs">
+                    Web-based disease monitoring system for Gubat, Sorsogon
+                </p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6">Quick Links</h4>
+                <ul class="space-y-3 text-sm text-blue-100/70">
+                    <li><a href="#" class="hover:text-white transition">Login</a></li>
+                    <li><a href="#" class="hover:text-white transition">Features</a></li>
+                    <li><a href="#" class="hover:text-white transition">Emergency Hotlines</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6">Contact</h4>
+                <p class="text-sm text-blue-100/70 mb-2">Gubat, Sorsogon</p>
+                <p class="text-sm text-blue-100/70 mb-2">Municipality Health Office</p>
+                <p class="text-sm text-blue-100/70">Email: health@gubat.gov.ph</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         lucide.createIcons();
-        function showLogin() {
-            document.getElementById('landing-page').classList.add('hidden');
-            document.getElementById('login-page').classList.remove('hidden');
-            window.scrollTo(0, 0);
-        }
-        function showHome() {
-            document.getElementById('login-page').classList.add('hidden');
-            document.getElementById('landing-page').classList.remove('hidden');
-            window.scrollTo(0, 0);
-        }
     </script>
 </body>
 </html>
