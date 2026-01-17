@@ -12,12 +12,14 @@
         .bg-brand-blue { background-color: #2563eb; }
         .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
+        /* Smooth transition for loading data */
+        #disease-dashboard-list, #medicine-dashboard-list { transition: all 0.3s ease; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
 
     <aside class="w-64 bg-white border-r border-gray-100 flex flex-col hidden md:flex">
-        <div class="p-6 border-b border-gray-50 cursor-pointer" id="logo-secret-trigger">
+        <div class="p-6 border-b border-gray-50">
             <div class="flex items-center gap-3">
                 <div class="bg-brand-blue p-2 rounded-lg text-white font-bold text-xl">+</div>
                 <div>
@@ -44,9 +46,6 @@
             </a>
             <a href="#" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all">
                 <i data-lucide="phone" class="w-5 h-5"></i> Hotlines
-            </a>
-            <a href="#" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all">
-                <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Reports
             </a>
         </nav>
     </aside>
@@ -110,13 +109,13 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
                 <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-50 min-h-[300px]">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-navy">Disease Cases</h3>
+                        <h3 class="text-2xl font-bold text-navy">Recent Disease Cases</h3>
                         <a href="disease-cases.html" id="view-all-disease" class="hidden text-brand-blue font-bold text-sm hover:underline">View All</a>
                     </div>
                     <div id="disease-dashboard-list" class="space-y-4">
                         <div class="flex flex-col items-center justify-center py-12 text-gray-300">
-                            <i data-lucide="database" class="w-12 h-12 mb-4 opacity-20"></i>
-                            <p class="italic text-sm">Waiting for live case data...</p>
+                            <i data-lucide="loader-2" class="w-8 h-8 mb-4 animate-spin"></i>
+                            <p class="italic text-sm">Fetching latest cases...</p>
                         </div>
                     </div>
                 </div>
@@ -128,8 +127,8 @@
                     </div>
                     <div id="medicine-dashboard-list" class="space-y-4">
                         <div class="flex flex-col items-center justify-center py-12 text-gray-300">
-                            <i data-lucide="package" class="w-12 h-12 mb-4 opacity-20"></i>
-                            <p class="italic text-sm">Inventory sync in progress...</p>
+                            <i data-lucide="loader-2" class="w-8 h-8 mb-4 animate-spin"></i>
+                            <p class="italic text-sm">Checking inventory...</p>
                         </div>
                     </div>
                 </div>
@@ -140,7 +139,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -162,102 +161,130 @@
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     if (userDoc.exists()) {
                         const userData = userDoc.data();
+                        
+                        // Set local role for access control on other pages
+                        localStorage.setItem('userRole', userData.role);
+
                         document.getElementById('user-name-display').innerText = userData.name;
                         document.getElementById('welcome-banner-text').innerText = `Welcome back, ${userData.name}!`;
                         
-                        // --- ROLE-BASED ACCESS CONTROL ---
+                        // Role-based Nav Logic
                         if (userData.role === "rhu") {
-                            // Reveal link and View All button for RHU
                             document.getElementById('rhu-disease-link').classList.remove('hidden');
                             document.getElementById('view-all-disease').classList.remove('hidden');
-                            
-                            // Load disease preview specifically for RHU
-                            loadDiseasePreview();
                         } else if (userData.role === "bhw") {
                             document.getElementById('worker-secret-link').classList.remove('hidden');
                         }
                     }
 
-                    // Medicine Stock Logic
-                    onSnapshot(collection(db, "inventory"), (querySnapshot) => {
-                        let currentTotalUnits = 0;
-                        let allMeds = [];
-                        querySnapshot.forEach((barangayDoc) => {
-                            const medsInBarangay = barangayDoc.data();
-                            Object.entries(medsInBarangay).forEach(([name, info]) => {
-                                currentTotalUnits += info.qty;
-                                allMeds.push({ name, qty: info.qty, barangay: barangayDoc.id });
-                            });
-                        });
-                        let stockPercent = Math.min(Math.round((currentTotalUnits / 50000) * 100), 100);
-                        document.getElementById('medicine-stock-count').innerText = `${stockPercent}%`;
-                        
-                        const dashboardList = document.getElementById('medicine-dashboard-list');
-                        dashboardList.innerHTML = "";
-                        allMeds.sort((a,b) => a.qty - b.qty).slice(0, 5).forEach(m => {
-                            dashboardList.innerHTML += `
-                                <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-gray-100">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-xl ${m.qty < 100 ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-brand-blue'} flex items-center justify-center">
-                                            <i data-lucide="pill" class="w-5 h-5"></i>
-                                        </div>
-                                        <div>
-                                            <p class="font-bold text-navy text-sm">${m.name}</p>
-                                            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">📍 ${m.barangay}</p>
-                                        </div>
-                                    </div>
-                                    <p class="font-bold ${m.qty < 100 ? 'text-red-500' : 'text-navy'} text-sm">${m.qty} units</p>
-                                </div>`;
-                        });
-                        lucide.createIcons();
-                    });
+                    // Start live listeners for everyone
+                    initDiseaseCounter();
+                    initDiseaseList();
+                    initInventoryStats();
 
                 } catch (error) {
-                    console.error("Dashboard Error:", error);
+                    console.error("Dashboard Sync Error:", error);
                 }
             } else {
                 window.location.href = "login.html";
             }
         });
 
-        // FUNCTION TO LOAD DISEASE CASES IN DASHBOARD (RHU ONLY)
-        function loadDiseasePreview() {
-            const diseaseList = document.getElementById('disease-dashboard-list');
-            // Listen to the new disease_cases collection
-            onSnapshot(query(collection(db, "disease_cases"), limit(5)), (snapshot) => {
-                diseaseList.innerHTML = "";
-                if (snapshot.empty) {
-                    diseaseList.innerHTML = '<p class="text-center text-gray-400 italic py-10">No cases recorded yet.</p>';
-                    return;
-                }
-                
-                // Update active cases counter live based on the actual collection count
+        // 1. Live Count of all Disease Cases
+        function initDiseaseCounter() {
+            onSnapshot(collection(db, "disease_cases"), (snapshot) => {
                 document.getElementById('active-cases-count').innerText = snapshot.size;
+            });
+        }
 
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const sevColor = data.severity === 'High' ? 'text-red-500' : (data.severity === 'Moderate' ? 'text-orange-500' : 'text-green-500');
-                    diseaseList.innerHTML += `
+        // 2. Live List of latest 5 Disease Cases
+        function initDiseaseList() {
+            const listContainer = document.getElementById('disease-dashboard-list');
+            // We order by updatedAt if it exists, otherwise just limit to 5
+            const q = query(collection(db, "disease_cases"), limit(5));
+
+            onSnapshot(q, (snapshot) => {
+                listContainer.innerHTML = "";
+                if (snapshot.empty) {
+                    listContainer.innerHTML = `
+                        <div class="flex flex-col items-center justify-center py-12 text-gray-300">
+                            <i data-lucide="database" class="w-12 h-12 mb-4 opacity-20"></i>
+                            <p class="italic text-sm">No disease cases recorded yet.</p>
+                        </div>`;
+                } else {
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const sevClass = data.severity === 'High' ? 'text-red-500' : (data.severity === 'Moderate' ? 'text-orange-500' : 'text-green-500');
+                        
+                        listContainer.innerHTML += `
+                            <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-gray-100 hover:border-blue-200 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center">
+                                        <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-navy text-sm">${data.name}</p>
+                                        <p class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">${data.barangay}</p>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-black uppercase ${sevClass} bg-white px-3 py-1 rounded-full shadow-sm border border-gray-50">${data.severity}</span>
+                            </div>`;
+                    });
+                }
+                lucide.createIcons();
+            });
+        }
+
+        // 3. Live Inventory Logic
+        function initInventoryStats() {
+            onSnapshot(collection(db, "inventory"), (querySnapshot) => {
+                let currentTotalUnits = 0;
+                let allMeds = [];
+                
+                querySnapshot.forEach((barangayDoc) => {
+                    const medsInBarangay = barangayDoc.data();
+                    Object.entries(medsInBarangay).forEach(([name, info]) => {
+                        currentTotalUnits += info.qty;
+                        allMeds.push({ name, qty: info.qty, barangay: barangayDoc.id });
+                    });
+                });
+
+                // Update Stock % (Targeting 50,000 as max capacity)
+                let stockPercent = Math.min(Math.round((currentTotalUnits / 50000) * 100), 100);
+                document.getElementById('medicine-stock-count').innerText = `${stockPercent}%`;
+                
+                // Show Top 5 lowest stock items
+                const medList = document.getElementById('medicine-dashboard-list');
+                medList.innerHTML = "";
+                
+                allMeds.sort((a,b) => a.qty - b.qty).slice(0, 5).forEach(m => {
+                    const isCritical = m.qty < 100;
+                    medList.innerHTML += `
                         <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-gray-100">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center">
-                                    <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                                <div class="w-10 h-10 rounded-xl ${isCritical ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-brand-blue'} flex items-center justify-center">
+                                    <i data-lucide="pill" class="w-5 h-5"></i>
                                 </div>
                                 <div>
-                                    <p class="font-bold text-navy text-sm">${data.name}</p>
-                                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">${data.barangay}</p>
+                                    <p class="font-bold text-navy text-sm">${m.name}</p>
+                                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">📍 ${m.barangay}</p>
                                 </div>
                             </div>
-                            <span class="text-xs font-black uppercase ${sevColor}">${data.severity}</span>
+                            <p class="font-bold ${isCritical ? 'text-red-500' : 'text-navy'} text-sm">${m.qty} <span class="text-[10px] text-gray-400">qty</span></p>
                         </div>`;
                 });
                 lucide.createIcons();
             });
         }
 
+        // Logout
         document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('userRole');
             signOut(auth).then(() => { window.location.href = "login.html"; });
         });
+
+        // Initialize Lucide Icons for static elements
+        lucide.createIcons();
     </script>
 </body>
 </html>
