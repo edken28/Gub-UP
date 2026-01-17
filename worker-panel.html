@@ -17,27 +17,32 @@
 
     <div id="auth-overlay" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
         <div class="loader w-12 h-12 border-4 border-slate-200 rounded-full mb-4"></div>
-        <p class="text-slate-500 font-medium italic">Checking Authorization...</p>
+        <p id="loading-text" class="text-slate-500 font-medium italic">Checking Authorization...</p>
+        <a href="dashboard.html" id="back-home" class="hidden mt-4 text-blue-600 underline">Back to Dashboard</a>
     </div>
 
     <div class="max-w-2xl w-full bg-white rounded-[3rem] shadow-2xl border border-gray-100 overflow-hidden">
         <div class="bg-blue-600 p-8 text-white flex justify-between items-center">
             <div>
-                <h1 class="text-2xl font-bold italic tracking-tight">WORKER CONSOLE</h1>
-                <p class="text-blue-100 text-sm" id="worker-id-display">Verified Health Worker</p>
+                <h1 class="text-2xl font-bold italic tracking-tight uppercase">Worker Console</h1>
+                <p class="text-blue-100 text-sm" id="worker-id-display">Verifying Identity...</p>
             </div>
-            <i data-lucide="lock" class="w-8 h-8 opacity-50"></i>
+            <i data-lucide="shield-check" class="w-8 h-8 opacity-50"></i>
         </div>
 
         <form id="worker-form" class="p-10 space-y-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-2">
                     <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Active Cases</label>
                     <input type="number" id="form-cases" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-gray-200 focus:ring-4 focus:ring-blue-500/10 outline-none font-bold text-lg">
                 </div>
                 <div class="space-y-2">
-                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Medicine Stock (%)</label>
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Medicine %</label>
                     <input type="number" id="form-stock" required max="100" class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-gray-200 focus:ring-4 focus:ring-blue-500/10 outline-none font-bold text-lg">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Reports</label>
+                    <input type="number" id="form-reports" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-gray-200 focus:ring-4 focus:ring-blue-500/10 outline-none font-bold text-lg">
                 </div>
             </div>
 
@@ -59,11 +64,28 @@
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = { /* ... your config ... */ };
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
+            authDomain: "gub-up.firebaseapp.com",
+            projectId: "gub-up",
+            storageBucket: "gub-up.firebasestorage.app",
+            messagingSenderId: "75119179497",
+            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278",
+            measurementId: "G-9MGFP3RC88"
+        };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         lucide.createIcons();
+
+        // Safety timeout: If it takes more than 5 seconds, show a manual back link
+        setTimeout(() => {
+            if (!document.getElementById('auth-overlay').classList.contains('hidden')) {
+                document.getElementById('loading-text').innerText = "Taking too long? Please check your connection.";
+                document.getElementById('back-home').classList.remove('hidden');
+            }
+        }, 5000);
 
         // 1. GATEKEEPER LOGIC
         onAuthStateChanged(auth, async (user) => {
@@ -72,32 +94,40 @@
                 return;
             }
 
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                
-                // If NOT worker, redirect them
-                if (userData.role !== "worker") {
-                    window.location.href = "dashboard.html";
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    
+                    if (userData.role === "worker") {
+                        document.getElementById('worker-id-display').innerText = `Logged in: ${userData.name}`;
+                        document.getElementById('auth-overlay').classList.add('hidden');
+                        loadCurrentData();
+                    } else {
+                        // Not a worker? Kick back to dashboard
+                        window.location.href = "dashboard.html";
+                    }
                 } else {
-                    // If IS worker, reveal the page
-                    document.getElementById('worker-id-display').innerText = `Logged in: ${userData.name}`;
-                    document.getElementById('auth-overlay').classList.add('hidden');
-                    loadCurrentData();
+                    window.location.href = "dashboard.html";
                 }
+            } catch (err) {
+                console.error("Auth error:", err);
+                document.getElementById('loading-text').innerText = "Permission Denied or Network Error.";
             }
         });
 
-        // 2. LOAD DATA TO FORM
+        // 2. PRE-FILL CURRENT DATA
         async function loadCurrentData() {
             const snap = await getDoc(doc(db, "statistics", "current_stats"));
             if (snap.exists()) {
-                document.getElementById('form-cases').value = snap.data().activeCases;
-                document.getElementById('form-stock').value = snap.data().medicineStock;
+                const data = snap.data();
+                document.getElementById('form-cases').value = data.activeCases || 0;
+                document.getElementById('form-stock').value = data.medicineStock || 0;
+                document.getElementById('form-reports').value = data.totalReports || 0;
             }
         }
 
-        // 3. UPDATE LOGIC
+        // 3. UPDATE DATABASE
         document.getElementById('worker-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submit-btn');
@@ -110,12 +140,14 @@
                 await updateDoc(doc(db, "statistics", "current_stats"), {
                     activeCases: Number(document.getElementById('form-cases').value),
                     medicineStock: Number(document.getElementById('form-stock').value),
+                    totalReports: Number(document.getElementById('form-reports').value),
                     lastUpdated: new Date()
                 });
-                msg.innerText = "✅ UPDATED";
+                msg.innerText = "✅ DATA PUBLISHED";
                 msg.className = "text-green-500 font-bold text-sm";
             } catch (err) {
-                msg.innerText = "❌ FAILED";
+                console.error(err);
+                msg.innerText = "❌ UPDATE FAILED";
                 msg.className = "text-red-500 font-bold text-sm";
             } finally {
                 btn.disabled = false;
