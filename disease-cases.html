@@ -3,31 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUB-UP | Disease Cases</title>
+    <title>RHU | Disease Control Panel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         .sidebar-active { background-color: #eff6ff; color: #2563eb; border-right: 4px solid #2563eb; }
-        /* Style match for Severity and Status badges from image_d49feb.png */
+        /* Severity styling matching your reports theme */
         .badge-high { background-color: #fef2f2; color: #ef4444; }
         .badge-moderate { background-color: #fffbeb; color: #f59e0b; }
         .badge-low { background-color: #f0fdf4; color: #22c55e; }
-        .status-active { background-color: #eff6ff; color: #3b82f6; }
-        .status-monitoring { background-color: #faf5ff; color: #a855f7; }
-        .status-resolved { background-color: #f0fdf4; color: #22c55e; }
     </style>
 </head>
 <body class="flex min-h-screen">
 
-    <aside class="w-64 bg-white border-r border-gray-100 flex flex-col fixed h-full">
+    <aside class="w-64 bg-white border-r border-gray-100 flex flex-col fixed h-full z-20">
         <div class="p-6 flex items-center gap-3 border-b border-gray-50">
             <div class="bg-blue-600 p-1.5 rounded-lg text-white"><i data-lucide="plus" class="w-5 h-5"></i></div>
-            <div>
-                <h1 class="font-bold text-blue-900 text-lg leading-tight">GUB-UP</h1>
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-tighter">Disease Monitoring</p>
-            </div>
+            <h1 class="font-bold text-blue-900 text-xl tracking-tight">GUB-UP</h1>
         </div>
         <nav class="mt-6 flex-1 px-4 space-y-2">
             <a href="dashboard.html" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all">
@@ -37,93 +31,117 @@
                 <i data-lucide="pill" class="w-5 h-5"></i> Medicines
             </a>
             <a href="disease-cases.html" class="sidebar-active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold">
-                <i data-lucide="file-text" class="w-5 h-5"></i> Reports
+                <i data-lucide="activity" class="w-5 h-5"></i> Disease Management
             </a>
         </nav>
     </aside>
 
-    <main class="flex-1 ml-64 p-8">
-        <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm mb-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
-                <div>
-                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1">Search Case</label>
-                    <div class="relative">
-                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
-                        <input type="text" id="search-input" placeholder="Type disease name..." 
-                               class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500/10 font-medium">
+    <div class="flex-1 ml-64 flex flex-col">
+        
+        <header class="bg-blue-600 px-8 py-4 flex justify-between items-center text-white sticky top-0 z-10 shadow-lg shadow-blue-900/10">
+            <div class="flex items-center gap-4">
+                <h2 class="text-lg font-bold">RHU Disease Oversight</h2>
+                <span class="bg-blue-500/50 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-400/30">Official Access</span>
+            </div>
+            <button onclick="openAddModal()" class="bg-white text-blue-600 px-5 py-2 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-blue-50 transition-all">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i> Add New Record
+            </button>
+        </header>
+
+        <main class="p-8">
+            <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1">Search Record</label>
+                        <div class="relative">
+                            <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                            <input type="text" id="search-input" placeholder="Search disease or ID..." 
+                                   class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500/10 font-medium">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1">Barangay Filter</label>
+                        <select id="brgy-filter" class="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-2xl font-semibold text-blue-600 outline-none">
+                            <option value="">Select Barangay...</option>
+                            <option value="Poblacion">Poblacion</option>
+                            <option value="Cogon">Cogon</option>
+                            <option value="Bentuco">Bentuco</option>
+                        </select>
                     </div>
                 </div>
-                <div>
-                    <label class="block text-[11px] font-bold text-gray-400 uppercase mb-3 ml-1">Filter by Barangay</label>
-                    <select id="brgy-filter" class="w-full px-4 py-3.5 bg-white border border-gray-200 rounded-2xl font-semibold text-blue-600 outline-none">
-                        <option value="">Choose Barangay...</option>
-                        <option value="Poblacion">Poblacion</option>
-                        <option value="Cogon">Cogon</option>
-                        <option value="Bentuco">Bentuco</option>
-                    </select>
-                </div>
             </div>
-        </div>
 
-        <div>
-            <h2 class="text-xl font-bold text-gray-800 mb-6">Case Inventory</h2>
-            <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden min-h-[400px]">
-                <table class="w-full text-left">
+            <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+                <div class="px-8 py-6 border-b border-gray-50">
+                    <h3 class="font-bold text-gray-800 text-lg">Case Inventory List</h3>
+                </div>
+                <table class="w-full text-left border-collapse">
                     <thead class="bg-slate-50/50">
                         <tr class="text-[10px] font-bold text-gray-400 uppercase tracking-widest border-b border-gray-50">
                             <th class="px-8 py-5">Report ID</th>
-                            <th class="px-8 py-5">Disease</th>
+                            <th class="px-8 py-5">Disease Identity</th>
                             <th class="px-8 py-5">Barangay</th>
-                            <th class="px-8 py-5 text-center">Cases</th>
+                            <th class="px-8 py-5 text-center">Active Cases</th>
                             <th class="px-8 py-5">Severity</th>
-                            <th class="px-8 py-5">Date</th>
-                            <th class="px-8 py-5">Status</th>
                             <th class="px-8 py-5 text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="case-table-body" class="divide-y divide-gray-50">
+                    <tbody id="disease-list" class="divide-y divide-gray-50">
                         <tr>
-                            <td colspan="8" class="py-32 text-center text-gray-400">
-                                <i data-lucide="map-pin" class="w-12 h-12 mx-auto mb-4 opacity-20"></i>
-                                <p class="font-medium">Select a barangay to view disease reports.</p>
+                            <td colspan="6" class="py-24 text-center">
+                                <div class="opacity-30">
+                                    <i data-lucide="activity" class="w-12 h-12 mx-auto mb-4"></i>
+                                    <p class="font-medium">Filter by Barangay to start managing cases.</p>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
-    <div id="edit-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-md p-8 shadow-2xl">
-            <h3 class="text-xl font-bold text-slate-800 mb-6">Edit Case Record</h3>
-            <form id="edit-form" class="space-y-4">
-                <input type="hidden" id="edit-id">
-                <div>
-                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Total Cases</label>
-                    <input type="number" id="edit-cases" class="w-full p-4 bg-slate-50 border border-gray-100 rounded-2xl text-2xl font-black text-slate-800">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
+    <div id="disease-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] w-full max-w-md p-8 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-blue-600"></div>
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="modal-title" class="text-xl font-bold text-slate-800">Add New Disease Case</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x"></i></button>
+            </div>
+            
+            <form id="disease-form" class="space-y-4">
+                <input type="hidden" id="doc-id">
+                
+                <div class="grid grid-cols-1 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Severity</label>
-                        <select id="edit-severity" class="w-full p-3.5 bg-white border border-gray-200 rounded-xl font-semibold">
-                            <option value="High">High</option>
-                            <option value="Moderate">Moderate</option>
-                            <option value="Low">Low</option>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Disease Type</label>
+                        <input type="text" id="disease-type" required class="w-full p-3.5 bg-slate-50 border border-gray-100 rounded-xl font-semibold text-slate-700 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Target Barangay</label>
+                        <select id="target-brgy" required class="w-full p-3.5 bg-slate-50 border border-gray-100 rounded-xl font-semibold text-blue-600 outline-none">
+                            <option value="Poblacion">Poblacion</option>
+                            <option value="Cogon">Cogon</option>
+                            <option value="Bentuco">Bentuco</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Status</label>
-                        <select id="edit-status" class="w-full p-3.5 bg-white border border-gray-200 rounded-xl font-semibold">
-                            <option value="Active">Active</option>
-                            <option value="Monitoring">Monitoring</option>
-                            <option value="Resolved">Resolved</option>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Total Case Count</label>
+                        <input type="number" id="case-count" required class="w-full p-3.5 bg-slate-50 border border-gray-100 rounded-xl text-xl font-black text-slate-800 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Risk Severity</label>
+                        <select id="severity-level" class="w-full p-3.5 bg-slate-50 border border-gray-100 rounded-xl font-semibold outline-none">
+                            <option value="Low">Low Risk</option>
+                            <option value="Moderate">Moderate Risk</option>
+                            <option value="High">High Risk</option>
                         </select>
                     </div>
                 </div>
+
                 <div class="flex gap-3 pt-6">
-                    <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-gray-400 hover:bg-slate-50 rounded-2xl">Cancel</button>
-                    <button type="submit" class="flex-1 py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-lg shadow-blue-200 hover:bg-blue-700">Save Update</button>
+                    <button type="button" id="delete-btn" class="hidden px-5 py-4 bg-rose-50 text-rose-600 font-bold rounded-2xl hover:bg-rose-100 transition-all">Delete</button>
+                    <button type="submit" class="flex-1 py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-lg shadow-blue-100 hover:bg-blue-700 transition-all">Save Report</button>
                 </div>
             </form>
         </div>
@@ -131,39 +149,41 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, where, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, where, doc, setDoc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = { /* Your Config Here */ };
+        const firebaseConfig = { /* USE YOUR CONFIG */ };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const filter = document.getElementById('brgy-filter');
-        const body = document.getElementById('case-table-body');
+        const brgySelect = document.getElementById('brgy-filter');
+        const listBody = document.getElementById('disease-list');
 
-        filter.addEventListener('change', (e) => {
-            const brgy = e.target.value;
-            if(!brgy) return;
+        // LOAD DATA
+        brgySelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if(!val) return;
 
-            onSnapshot(query(collection(db, "disease_reports"), where("barangay", "==", brgy)), (snap) => {
-                body.innerHTML = "";
+            onSnapshot(query(collection(db, "disease_reports"), where("barangay", "==", val)), (snap) => {
+                listBody.innerHTML = "";
                 snap.forEach((d) => {
                     const data = d.data();
                     const id = d.id;
-                    body.innerHTML += `
+                    listBody.innerHTML += `
                         <tr class="hover:bg-slate-50 transition-all">
-                            <td class="px-8 py-6 text-blue-600 font-bold text-sm tracking-tight">RPT-2025-${id.substring(0,3).toUpperCase()}</td>
+                            <td class="px-8 py-6 text-blue-600 font-bold text-xs">RPT-${id.substring(0,5).toUpperCase()}</td>
                             <td class="px-8 py-6">
-                                <div class="font-bold text-gray-800">${data.disease}</div>
-                                <div class="text-[10px] text-gray-400 font-bold uppercase mt-0.5">by ${data.officer}</div>
+                                <div class="font-bold text-gray-800 uppercase text-sm">${data.disease}</div>
+                                <div class="text-[10px] text-gray-400 font-bold">RHU VERIFIED</div>
                             </td>
-                            <td class="px-8 py-6 text-gray-500 font-medium text-sm">${data.barangay}</td>
-                            <td class="px-8 py-6 text-center font-black text-gray-800 text-lg">${data.cases}</td>
-                            <td class="px-8 py-6"><span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase badge-${data.severity.toLowerCase()}">${data.severity}</span></td>
-                            <td class="px-8 py-6 text-gray-400 text-xs font-semibold">${data.date}</td>
-                            <td class="px-8 py-6"><span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase status-${data.status.toLowerCase()}">${data.status}</span></td>
+                            <td class="px-8 py-6 text-gray-500 font-medium text-sm italic">${data.barangay}</td>
+                            <td class="px-8 py-6 text-center font-black text-slate-800 text-lg">${data.cases}</td>
+                            <td class="px-8 py-6">
+                                <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase badge-${data.severity.toLowerCase()}">${data.severity}</span>
+                            </td>
                             <td class="px-8 py-6 text-right">
-                                <button onclick="openEditModal('${id}', ${data.cases}, '${data.severity}', '${data.status}')" class="p-2 text-gray-300 hover:text-blue-600 transition-all">
-                                    <i data-lucide="edit-3" class="w-5 h-5"></i>
+                                <button onclick="openEditModal('${id}', '${data.disease}', '${data.barangay}', ${data.cases}, '${data.severity}')" 
+                                        class="p-2.5 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-600 hover:text-white transition-all">
+                                    <i data-lucide="settings-2" class="w-4 h-4"></i>
                                 </button>
                             </td>
                         </tr>`;
@@ -172,25 +192,53 @@
             });
         });
 
-        window.openEditModal = (id, cases, severity, status) => {
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-cases').value = cases;
-            document.getElementById('edit-severity').value = severity;
-            document.getElementById('edit-status').value = status;
-            document.getElementById('edit-modal').classList.remove('hidden');
+        // MODAL ACTIONS
+        window.openAddModal = () => {
+            document.getElementById('modal-title').innerText = "Register New Disease Case";
+            document.getElementById('disease-form').reset();
+            document.getElementById('doc-id').value = "";
+            document.getElementById('delete-btn').classList.add('hidden');
+            document.getElementById('disease-modal').classList.remove('hidden');
         };
 
-        window.closeModal = () => document.getElementById('edit-modal').classList.add('hidden');
+        window.openEditModal = (id, name, brgy, count, severity) => {
+            document.getElementById('modal-title').innerText = "Edit Case Record";
+            document.getElementById('doc-id').value = id;
+            document.getElementById('disease-type').value = name;
+            document.getElementById('target-brgy').value = brgy;
+            document.getElementById('case-count').value = count;
+            document.getElementById('severity-level').value = severity;
+            document.getElementById('delete-btn').classList.remove('hidden');
+            document.getElementById('disease-modal').classList.remove('hidden');
+        };
 
-        document.getElementById('edit-form').addEventListener('submit', async (e) => {
+        window.closeModal = () => document.getElementById('disease-modal').classList.add('hidden');
+
+        // SUBMIT (ADD/UPDATE)
+        document.getElementById('disease-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const id = document.getElementById('edit-id').value;
-            await updateDoc(doc(db, "disease_reports", id), {
-                cases: parseInt(document.getElementById('edit-cases').value),
-                severity: document.getElementById('edit-severity').value,
-                status: document.getElementById('edit-status').value
-            });
+            const id = document.getElementById('doc-id').value;
+            const payload = {
+                disease: document.getElementById('disease-type').value,
+                barangay: document.getElementById('target-brgy').value,
+                cases: parseInt(document.getElementById('case-count').value),
+                severity: document.getElementById('severity-level').value,
+                date: new Date().toLocaleDateString()
+            };
+
+            if(id) await updateDoc(doc(db, "disease_reports", id), payload);
+            else await addDoc(collection(db, "disease_reports"), payload);
+            
             closeModal();
+        });
+
+        // DELETE
+        document.getElementById('delete-btn').addEventListener('click', async () => {
+            const id = document.getElementById('doc-id').value;
+            if(confirm("Confirm deletion of this medical record?")) {
+                await deleteDoc(doc(db, "disease_reports", id));
+                closeModal();
+            }
         });
 
         lucide.createIcons();
