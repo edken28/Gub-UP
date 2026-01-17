@@ -31,6 +31,10 @@
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
             </a>
             
+            <a href="disease-cases.html" id="rhu-disease-link" class="hidden flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all font-semibold border border-transparent hover:border-blue-100">
+                <i data-lucide="biohazard" class="w-5 h-5 text-red-500"></i> Disease Cases
+            </a>
+
             <a href="worker-panel.html" id="worker-secret-link" class="hidden flex items-center gap-3 text-emerald-600 bg-emerald-50 border border-emerald-100 px-4 py-3 rounded-xl font-bold transition-all hover:bg-emerald-100">
                 <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
             </a>
@@ -79,34 +83,27 @@
                     </div>
                     <p id="active-cases-count" class="text-4xl font-bold text-navy mb-1">0</p>
                     <p class="text-gray-400 font-medium text-sm">Active Cases</p>
-                    <p id="active-cases-trend" class="text-xs text-gray-300 mt-1">Live from database</p>
                 </div>
-
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
                     <div class="bg-green-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-green-200">
                         <i data-lucide="pill" class="w-6 h-6"></i>
                     </div>
                     <p id="medicine-stock-count" class="text-4xl font-bold text-navy mb-1">0%</p>
                     <p class="text-gray-400 font-medium text-sm">Medicine Stock</p>
-                    <p id="medicine-status" class="text-xs text-gray-300 mt-1">Checking inventory...</p>
                 </div>
-
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
                     <div class="bg-blue-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-blue-200">
                         <i data-lucide="map-pin" class="w-6 h-6"></i>
                     </div>
                     <p class="text-4xl font-bold text-navy mb-1">42</p>
                     <p class="text-gray-400 font-medium text-sm">Barangays</p>
-                    <p class="text-xs text-gray-400 mt-1">Gubat, Sorsogon</p>
                 </div>
-
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
                     <div class="bg-purple-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-purple-200">
                         <i data-lucide="file-text" class="w-6 h-6"></i>
                     </div>
                     <p id="reports-count" class="text-4xl font-bold text-navy mb-1">0</p>
                     <p class="text-gray-400 font-medium text-sm">Reports</p>
-                    <p class="text-xs text-gray-300 mt-1">Awaiting updates</p>
                 </div>
             </div>
 
@@ -114,11 +111,13 @@
                 <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-50 min-h-[300px]">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-2xl font-bold text-navy">Disease Cases</h3>
-                        <button class="text-brand-blue font-bold text-sm hover:underline">View All</button>
+                        <a href="disease-cases.html" id="view-all-disease" class="hidden text-brand-blue font-bold text-sm hover:underline">View All</a>
                     </div>
-                    <div class="flex flex-col items-center justify-center py-12 text-gray-300">
-                        <i data-lucide="database" class="w-12 h-12 mb-4 opacity-20"></i>
-                        <p class="italic text-sm">Waiting for updates...</p>
+                    <div id="disease-dashboard-list" class="space-y-4">
+                        <div class="flex flex-col items-center justify-center py-12 text-gray-300">
+                            <i data-lucide="database" class="w-12 h-12 mb-4 opacity-20"></i>
+                            <p class="italic text-sm">Waiting for live case data...</p>
+                        </div>
                     </div>
                 </div>
 
@@ -135,15 +134,13 @@
                     </div>
                 </div>
             </div>
-
-            <p class="text-center text-gray-400 italic">Dashboard is now listening for live updates.</p>
         </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -159,47 +156,32 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const GLOBAL_MAX_STOCK_TARGET = 50000; 
-
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
-                    // 1. Role-Based Check for BHW
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     if (userDoc.exists()) {
                         const userData = userDoc.data();
                         document.getElementById('user-name-display').innerText = userData.name;
                         document.getElementById('welcome-banner-text').innerText = `Welcome back, ${userData.name}!`;
                         
-                        // IF ROLE IS BHW, REVEAL TAB
-                        if (userData.role === "bhw") {
+                        // --- ROLE-BASED ACCESS CONTROL ---
+                        if (userData.role === "rhu") {
+                            // Reveal link and View All button for RHU
+                            document.getElementById('rhu-disease-link').classList.remove('hidden');
+                            document.getElementById('view-all-disease').classList.remove('hidden');
+                            
+                            // Load disease preview specifically for RHU
+                            loadDiseasePreview();
+                        } else if (userData.role === "bhw") {
                             document.getElementById('worker-secret-link').classList.remove('hidden');
                         }
                     }
 
-                    // 2. Secret Triggers
-                    // Trigger A: Click logo 3 times
-                    let clickCount = 0;
-                    document.getElementById('logo-secret-trigger').addEventListener('click', () => {
-                        clickCount++;
-                        if (clickCount === 3) {
-                            document.getElementById('worker-secret-link').classList.remove('hidden');
-                            clickCount = 0;
-                        }
-                    });
-
-                    // Trigger B: Keyboard Shift+W
-                    window.addEventListener('keydown', (e) => {
-                        if (e.shiftKey && e.key === 'W') {
-                            document.getElementById('worker-secret-link').classList.toggle('hidden');
-                        }
-                    });
-
-                    // 3. Medicine Logic (Real-time)
+                    // Medicine Stock Logic
                     onSnapshot(collection(db, "inventory"), (querySnapshot) => {
                         let currentTotalUnits = 0;
                         let allMeds = [];
-
                         querySnapshot.forEach((barangayDoc) => {
                             const medsInBarangay = barangayDoc.data();
                             Object.entries(medsInBarangay).forEach(([name, info]) => {
@@ -207,15 +189,9 @@
                                 allMeds.push({ name, qty: info.qty, barangay: barangayDoc.id });
                             });
                         });
-
-                        let stockPercent = Math.round((currentTotalUnits / GLOBAL_MAX_STOCK_TARGET) * 100);
-                        if(stockPercent > 100) stockPercent = 100;
-
+                        let stockPercent = Math.min(Math.round((currentTotalUnits / 50000) * 100), 100);
                         document.getElementById('medicine-stock-count').innerText = `${stockPercent}%`;
-                        const stockStatus = document.getElementById('medicine-status');
-                        stockStatus.innerText = `${currentTotalUnits.toLocaleString()} units available`;
-                        stockStatus.className = `text-xs font-semibold mt-1 ${stockPercent < 20 ? 'text-red-500' : 'text-green-500'}`;
-
+                        
                         const dashboardList = document.getElementById('medicine-dashboard-list');
                         dashboardList.innerHTML = "";
                         allMeds.sort((a,b) => a.qty - b.qty).slice(0, 5).forEach(m => {
@@ -230,22 +206,10 @@
                                             <p class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">📍 ${m.barangay}</p>
                                         </div>
                                     </div>
-                                    <div class="text-right">
-                                        <p class="font-bold ${m.qty < 100 ? 'text-red-500' : 'text-navy'} text-sm">${m.qty} units</p>
-                                    </div>
-                                </div>
-                            `;
+                                    <p class="font-bold ${m.qty < 100 ? 'text-red-500' : 'text-navy'} text-sm">${m.qty} units</p>
+                                </div>`;
                         });
                         lucide.createIcons();
-                    });
-
-                    // 4. Global Stats (Real-time)
-                    onSnapshot(doc(db, "statistics", "current_stats"), (snapshot) => {
-                        if (snapshot.exists()) {
-                            const data = snapshot.data();
-                            document.getElementById('active-cases-count').innerText = data.activeCases || 0;
-                            document.getElementById('reports-count').innerText = data.totalReports || 0;
-                        }
                     });
 
                 } catch (error) {
@@ -255,6 +219,41 @@
                 window.location.href = "login.html";
             }
         });
+
+        // FUNCTION TO LOAD DISEASE CASES IN DASHBOARD (RHU ONLY)
+        function loadDiseasePreview() {
+            const diseaseList = document.getElementById('disease-dashboard-list');
+            // Listen to the new disease_cases collection
+            onSnapshot(query(collection(db, "disease_cases"), limit(5)), (snapshot) => {
+                diseaseList.innerHTML = "";
+                if (snapshot.empty) {
+                    diseaseList.innerHTML = '<p class="text-center text-gray-400 italic py-10">No cases recorded yet.</p>';
+                    return;
+                }
+                
+                // Update active cases counter live based on the actual collection count
+                document.getElementById('active-cases-count').innerText = snapshot.size;
+
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const sevColor = data.severity === 'High' ? 'text-red-500' : (data.severity === 'Moderate' ? 'text-orange-500' : 'text-green-500');
+                    diseaseList.innerHTML += `
+                        <div class="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-gray-100">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center">
+                                    <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-navy text-sm">${data.name}</p>
+                                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-tight">${data.barangay}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-black uppercase ${sevColor}">${data.severity}</span>
+                        </div>`;
+                });
+                lucide.createIcons();
+            });
+        }
 
         document.getElementById('logout-btn').addEventListener('click', () => {
             signOut(auth).then(() => { window.location.href = "login.html"; });
