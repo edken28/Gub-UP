@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <h2 class="text-3xl font-bold mb-4">Welcome to GUB-UP</h2>
-                <p class="text-blue-100 text-sm mb-10 opacity-90">Your community health monitoring system for Gubat, Sorsogon. Access disease data, medicine inventory, and emergency services.</p>
+                <p class="text-blue-100 text-sm mb-10 opacity-90">Your community health monitoring system for Gubat, Sorsogon.</p>
                 <div class="space-y-5">
                     <div class="flex items-center gap-4">
                         <div class="bg-white/20 p-2 rounded-lg"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
@@ -64,7 +64,7 @@
                 <h3 class="text-3xl font-bold text-navy mb-1">Create Account</h3>
                 <p class="text-gray-400 mb-6 font-medium">Register to get started</p>
 
-                <form>
+                <form id="registrationForm">
                     <label class="block text-xs font-bold text-navy mb-3 uppercase tracking-wider">Select Account Type</label>
                     <div class="grid grid-cols-2 gap-4 mb-6">
                         <label class="cursor-pointer">
@@ -88,19 +88,19 @@
                     <div class="space-y-4 mb-6">
                         <div>
                             <label class="block text-xs font-bold text-navy mb-1 uppercase tracking-wider">Full Name</label>
-                            <input type="text" placeholder="Enter your full name" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
+                            <input type="text" id="fullName" placeholder="Enter your full name" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-navy mb-1 uppercase tracking-wider">Email Address</label>
-                            <input type="email" placeholder="your@email.com" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
+                            <input type="email" id="email" placeholder="your@email.com" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-navy mb-1 uppercase tracking-wider">Password</label>
-                            <input type="password" placeholder="Enter password" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
+                            <input type="password" id="password" placeholder="Enter password" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-navy mb-1 uppercase tracking-wider">Barangay</label>
-                            <select class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue bg-white cursor-pointer overflow-y-auto">
+                            <select id="barangay" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue bg-white cursor-pointer">
                                 <option value="" disabled selected>Select your barangay</option>
                                 <option>Ariman</option> <option>Bagacay</option> <option>Balud Del Norte</option>
                                 <option>Balud Del Sur</option> <option>Benguet</option> <option>Bentuco</option>
@@ -130,6 +130,62 @@
             </div>
         </div>
     </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Your specific config you provided
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
+            authDomain: "gub-up.firebaseapp.com",
+            projectId: "gub-up",
+            storageBucket: "gub-up.firebasestorage.app",
+            messagingSenderId: "75119179497",
+            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278",
+            measurementId: "G-9MGFP3RC88"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const form = document.getElementById('registrationForm');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const fullName = document.getElementById('fullName').value;
+            const barangay = document.getElementById('barangay').value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+
+            try {
+                // 1. Create the user in Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // 2. Save additional info (Name, Barangay) to Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    name: fullName,
+                    email: email,
+                    barangay: barangay,
+                    role: role,
+                    createdAt: new Date()
+                });
+
+                alert("Account created successfully for " + fullName + "!");
+                window.location.href = "login.html";
+
+            } catch (error) {
+                console.error("Error signing up:", error);
+                alert("Error: " + error.message);
+            }
+        });
+    </script>
+
     <script>lucide.createIcons();</script>
 </body>
 </html>
