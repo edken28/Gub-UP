@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg-gray-white: #f1f5f9; }
-        body { font-family: 'Inter', sans-serif; overflow: hidden; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .bg-brand-blue { background-color: #2563eb; }
         .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
@@ -45,7 +45,7 @@
             transition: opacity 0.8s ease-out;
         }
         .content-visible #main-layout { opacity: 1; }
-        .content-visible { overflow: auto; }
+        .content-visible { overflow-y: auto; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
@@ -81,16 +81,12 @@
                         <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
                     </a>
                     
-                    <a href="disease-cases.html" id="rhu-disease-link" class="hidden flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100">
-                        <i data-lucide="biohazard" class="w-5 h-5 text-red-500"></i> Disease Cases
+                    <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100">
+                        <i data-lucide="biohazard" class="w-5 h-5 text-red-500"></i> RHU Console
                     </a>
 
-                    <a href="worker-panel.html" id="worker-secret-link" class="hidden flex items-center gap-3 text-emerald-600 bg-emerald-50/50 px-5 py-4 rounded-2xl font-bold border border-emerald-100/50 hover:bg-emerald-50 transition-all">
+                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 text-emerald-600 bg-emerald-50/50 px-5 py-4 rounded-2xl font-bold border border-emerald-100/50 hover:bg-emerald-50 transition-all">
                         <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
-                    </a>
-
-                    <a href="#" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all">
-                        <i data-lucide="pill" class="w-5 h-5 text-blue-400"></i> Medicines
                     </a>
 
                     <a href="#" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all">
@@ -110,9 +106,6 @@
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between sticky top-0 z-40">
                 <div>
                     <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest md:block hidden">Overview</h2>
-                    <h2 class="text-xl font-bold text-navy md:hidden flex items-center gap-2">
-                        <span class="bg-brand-blue w-6 h-6 flex-shrink-0 rounded-full inline-flex items-center justify-center text-[10px] text-white">+</span> GUB-UP
-                    </h2>
                 </div>
                 
                 <div class="flex items-center gap-4">
@@ -140,17 +133,20 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     <div data-aos="fade-right" class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 min-h-[400px]">
                         <div class="flex justify-between items-center mb-8">
-                            <h3 class="text-2xl font-bold text-navy">Recent Cases</h3>
-                            <a href="disease-cases.html" id="view-all-disease" class="hidden text-brand-blue font-bold text-sm hover:underline">View All</a>
+                            <h3 class="text-2xl font-bold text-navy">Recent Disease Cases</h3>
+                            <a href="rhu-console.html" id="view-all-disease" class="hidden text-brand-blue font-bold text-sm hover:underline">View All</a>
                         </div>
-                        <div id="disease-dashboard-list" class="space-y-4"></div>
+                        <div id="disease-dashboard-list" class="space-y-4">
+                            </div>
                     </div>
+
                     <div data-aos="fade-left" class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 min-h-[400px]">
                         <div class="flex justify-between items-center mb-8">
-                            <h3 class="text-2xl font-bold text-navy">Stock Alerts</h3>
-                            <button class="text-brand-blue font-bold text-sm hover:underline">View All</button>
+                            <h3 class="text-2xl font-bold text-navy">Critical Stock Alerts</h3>
+                            <a href="bhw-console.html" id="view-all-stock" class="hidden text-brand-blue font-bold text-sm hover:underline">View All</a>
                         </div>
-                        <div id="medicine-dashboard-list" class="space-y-4"></div>
+                        <div id="medicine-dashboard-list" class="space-y-4">
+                            </div>
                     </div>
                 </div>
             </div>
@@ -161,7 +157,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -169,8 +165,7 @@
             projectId: "gub-up",
             storageBucket: "gub-up.firebasestorage.app",
             messagingSenderId: "75119179497",
-            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278",
-            measurementId: "G-9MGFP3RC88"
+            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
         };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -187,24 +182,79 @@
                     if (userData.role === "rhu") {
                         document.getElementById('rhu-disease-link').classList.remove('hidden');
                         document.getElementById('view-all-disease').classList.remove('hidden');
+                        fetchRecentCases(); // RHU sees all cases
                     } else if (userData.role === "bhw") {
                         document.getElementById('worker-secret-link').classList.remove('hidden');
+                        document.getElementById('view-all-stock').classList.remove('hidden');
+                        fetchRecentCases(userData.barangay); // BHW sees only their brgy
+                        fetchLowStock(userData.barangay);
                     }
                 }
                 
-                // End Loader
                 setTimeout(() => {
                     document.getElementById('loader-container').classList.add('loaded');
                     document.body.classList.add('content-visible');
                     setTimeout(() => {
                         AOS.init({ duration: 800, once: true, easing: 'ease-out-quad' });
                     }, 400);
-                }, 1800);
+                }, 1500);
 
             } else {
                 window.location.href = "login.html";
             }
         });
+
+        // Dashboard Live Data: Recent Cases
+        function fetchRecentCases(brgy = null) {
+            let q = query(collection(db, "disease_cases"), orderBy("updatedAt", "desc"), limit(5));
+            if (brgy) q = query(collection(db, "disease_cases"), where("barangay", "==", brgy), orderBy("updatedAt", "desc"), limit(5));
+
+            onSnapshot(q, (snapshot) => {
+                const list = document.getElementById('disease-dashboard-list');
+                list.innerHTML = "";
+                if(snapshot.empty) list.innerHTML = "<p class='text-slate-400 font-medium'>No recent cases reported.</p>";
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    list.innerHTML += `
+                        <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-red-100 text-red-500 rounded-xl flex items-center justify-center font-bold">${data.count}</div>
+                                <div>
+                                    <p class="font-bold text-navy">${data.name}</p>
+                                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">${data.barangay}</p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] font-black uppercase px-3 py-1 bg-white rounded-lg border border-slate-100 text-slate-400">${data.severity}</span>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        // Dashboard Live Data: Low Stock
+        function fetchLowStock(brgy) {
+            const q = query(collection(db, "medicine_inventory"), where("barangay", "==", brgy), where("quantity", "<", 10), limit(5));
+            onSnapshot(q, (snapshot) => {
+                const list = document.getElementById('medicine-dashboard-list');
+                list.innerHTML = "";
+                if(snapshot.empty) list.innerHTML = "<p class='text-emerald-500 font-bold'>✓ All stocks are sufficient.</p>";
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    list.innerHTML += `
+                        <div class="flex items-center justify-between p-5 bg-orange-50 rounded-2xl border border-orange-100">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-white text-orange-500 rounded-xl flex items-center justify-center"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
+                                <div>
+                                    <p class="font-bold text-orange-900">${data.name}</p>
+                                    <p class="text-xs text-orange-600 font-bold">Only ${data.quantity} units left</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                lucide.createIcons();
+            });
+        }
 
         document.getElementById('logout-btn').addEventListener('click', () => {
             signOut(auth).then(() => { window.location.href = "login.html"; });
