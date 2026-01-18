@@ -12,8 +12,10 @@
         :root { --bg-gray-white: #f1f5f9; }
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .bg-brand-blue { background-color: #2563eb; }
+        .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
-        
+        .bg-navy { background-color: #1e3a8a; }
+
         #loader-container {
             position: fixed; inset: 0; background-color: var(--bg-gray-white);
             z-index: 9999; display: flex; align-items: center; justify-content: center;
@@ -30,11 +32,11 @@
 <body class="bg-slate-50 min-h-screen flex">
 
     <div id="loader-container">
-        <div class="flex items-center gap-4 animate-pulse">
-            <div class="w-12 h-12 bg-brand-blue rounded-full flex items-center justify-center text-white">
-                <i data-lucide="plus"></i>
+        <div class="flex items-center gap-4">
+            <div class="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-2xl animate-bounce">
+                <i data-lucide="plus" class="w-8 h-8"></i>
             </div>
-            <h1 class="text-2xl font-bold text-navy">GUB-UP</h1>
+            <h1 class="text-3xl font-bold text-navy">GUB-UP</h1>
         </div>
     </div>
 
@@ -47,11 +49,11 @@
                     </div>
                     <div>
                         <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
-                        <p class="text-[10px] text-blue-600 uppercase font-bold tracking-tighter">Disease Monitoring</p>
+                        <p class="text-[10px] text-brand-blue uppercase font-bold tracking-tighter">Disease Monitoring</p>
                     </div>
                 </div>
                 <nav class="space-y-2">
-                    <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-lg">
+                    <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-100">
                         <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
                     </a>
                     <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-600 text-white px-5 py-4 rounded-2xl font-bold">
@@ -71,26 +73,24 @@
 
         <main class="flex-1">
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between sticky top-0 z-40">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Gubat Disease Watch</h2>
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Live Monitoring Dashboard</h2>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
-                    <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                    <div class="w-8 h-8 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center">
                         <i data-lucide="user" class="w-4 h-4"></i>
                     </div>
-                    <span id="user-name-display" class="font-bold text-navy text-sm">Guest</span>
+                    <span id="user-name-display" class="font-bold text-navy text-sm">Guest Citizen</span>
                 </div>
             </header>
 
             <div class="p-8 max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    
                     <div id="active-cases-card" data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
                         <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white">
-                            <i data-lucide="virus" class="w-6 h-6"></i>
-                        </div>
+                            <i data-lucide="biohazard" class="w-6 h-6"></i> </div>
                         <div>
                             <h3 id="total-active-cases" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Active Cases</p>
-                            <p id="active-cases-subtext" class="text-xs text-red-500 mt-1 font-bold uppercase">Live System Data</p>
+                            <p id="active-cases-subtext" class="text-xs text-red-500 mt-1 font-bold uppercase tracking-wider">Live System Data</p>
                         </div>
                     </div>
 
@@ -101,7 +101,7 @@
                         <div>
                             <h3 id="avg-medicine-stock" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Medicine Stock</p>
-                            <p id="stock-status-text" class="text-xs mt-1 font-bold">Checking...</p>
+                            <p id="stock-status-text" class="text-xs mt-1 font-bold">Live Inventory</p>
                         </div>
                     </div>
 
@@ -112,7 +112,7 @@
                         <div>
                             <h3 class="text-4xl font-bold text-navy">42</h3>
                             <p class="text-slate-500 font-medium">Barangays</p>
-                            <p class="text-xs text-slate-400 mt-1 font-semibold uppercase tracking-tighter">Gubat, Sorsogon</p>
+                            <p class="text-xs text-slate-400 mt-1 font-semibold uppercase tracking-wider">Gubat, Sorsogon</p>
                         </div>
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                         <div class="flex justify-between items-center mb-8">
                             <div>
                                 <h3 class="text-2xl font-bold text-navy">Disease Hotspots</h3>
-                                <p class="text-xs text-red-500 font-bold uppercase tracking-tight">Top 10 Ranking by Cases</p>
+                                <p class="text-xs text-red-500 font-bold uppercase tracking-tight">Top 10 Rankings by Case Count</p>
                             </div>
                             <i data-lucide="trending-up" class="text-red-500 w-6 h-6"></i>
                         </div>
@@ -155,7 +155,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Fetch Data immediately for public view
         fetchGlobalActiveCases();
         fetchRankingCases();
         fetchLowStock();
@@ -164,9 +163,9 @@
         onAuthStateChanged(auth, async (user) => {
             const rhuLink = document.getElementById('rhu-disease-link');
             const bhwLink = document.getElementById('worker-secret-link');
-            const userDisplay = document.getElementById('user-name-display');
             const activeCard = document.getElementById('active-cases-card');
             const stockCard = document.getElementById('medicine-stock-card');
+            const userDisplay = document.getElementById('user-name-display');
 
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -177,22 +176,20 @@
                     if (userData.role === "rhu") {
                         rhuLink.classList.remove('hidden');
                         activeCard.classList.add('role-clickable');
-                        document.getElementById('active-cases-subtext').innerText = "MANAGE ACTIVE CASES →";
+                        // REMOVED MANAGE TEXT - CLICKING CARD STILL WORKS FOR RHU
                         activeCard.onclick = () => window.location.href = "rhu-console.html";
                     } else if (userData.role === "bhw") {
                         bhwLink.classList.remove('hidden');
                         stockCard.classList.add('role-clickable');
-                        document.getElementById('stock-status-text').innerText += " • MANAGE →";
                         stockCard.onclick = () => window.location.href = "bhw-console.html";
                     }
                 }
             }
 
-            // Initialization: Fixes missing icons by re-scanning the DOM
             setTimeout(() => {
                 document.getElementById('loader-container').classList.add('loaded');
                 document.body.classList.add('content-visible');
-                lucide.createIcons(); // Force re-render icons
+                lucide.createIcons();
                 AOS.init({ duration: 800, once: true });
             }, 1000);
         });
@@ -215,13 +212,13 @@
                     list.innerHTML += `
                         <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
                             <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-brand-blue text-white rounded-xl flex items-center justify-center font-bold">${data.count}</div>
-                                <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs text-slate-400 font-bold">${data.barangay}</p></div>
+                                <div class="w-10 h-10 bg-brand-blue text-white rounded-xl flex items-center justify-center font-bold shadow-sm">${data.count}</div>
+                                <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs text-slate-400 font-bold uppercase">${data.barangay}</p></div>
                             </div>
-                            <span class="text-[10px] font-black px-2 py-1 ${data.severity === 'High' ? 'bg-red-500' : 'bg-orange-400'} text-white rounded-md">${data.severity}</span>
+                            <span class="text-[10px] font-black uppercase px-2 py-1 ${data.severity === 'High' ? 'bg-red-500' : 'bg-orange-400'} text-white rounded-md">${data.severity}</span>
                         </div>`;
                 });
-                lucide.createIcons(); 
+                lucide.createIcons();
             });
         }
 
@@ -232,7 +229,7 @@
                 const finalPct = Math.min(Math.round((totalQuantity / (totalItems * 100)) * 100), 100) || 0;
                 document.getElementById('avg-medicine-stock').innerText = `${finalPct}%`;
                 const status = document.getElementById('stock-status-text');
-                status.innerText = finalPct < 30 ? "CRITICAL" : finalPct < 70 ? "LOW STOCK" : "SUFFICIENT";
+                status.innerText = finalPct < 30 ? "Critical Supply" : finalPct < 70 ? "Low Stock" : "Sufficient Supply";
                 status.className = `text-xs mt-1 font-bold ${finalPct < 30 ? 'text-red-500' : finalPct < 70 ? 'text-orange-500' : 'text-emerald-500'}`;
             });
         }
@@ -254,6 +251,5 @@
 
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
     </script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </body>
 </html>
