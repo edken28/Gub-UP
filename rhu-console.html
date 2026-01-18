@@ -14,17 +14,17 @@
         .text-rhu-red { color: #ef4444; }
         .text-navy { color: #1e3a8a; }
         
-        #main-layout { visibility: hidden; }
-        .auth-ready #main-layout { visibility: visible; }
+        #main-layout { display: none; }
+        .auth-ready #main-layout { display: flex; }
 
         .badge-high { background-color: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; }
         .badge-moderate { background-color: #fffbeb; color: #f59e0b; border: 1px solid #fef3c7; }
         .badge-low { background-color: #f0fdf4; color: #22c55e; border: 1px solid #dcfce7; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex">
+<body class="bg-slate-50 min-h-screen">
 
-    <div id="main-layout" class="flex w-full min-h-screen">
+    <div id="main-layout" class="w-full min-h-screen">
         <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
             <div class="p-8">
                 <div class="flex items-center gap-3 mb-10">
@@ -75,7 +75,7 @@
                         <div class="bg-white p-1 rounded-2xl border border-slate-100 shadow-sm w-64">
                             <select id="filter-brgy" class="w-full p-4 bg-transparent outline-none font-bold text-slate-600 cursor-pointer">
                                 <option value="All">Global View (All)</option>
-                            </select>
+                                </select>
                         </div>
                     </div>
                     <button onclick="openAddModal()" class="bg-rhu-red text-white px-10 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 hover:bg-red-600 shadow-xl shadow-red-100 transition-all">
@@ -94,7 +94,8 @@
                                 <th class="px-10 py-6 text-right">Admin Control</th>
                             </tr>
                         </thead>
-                        <tbody id="disease-table-body" class="divide-y divide-slate-50"></tbody>
+                        <tbody id="disease-table-body" class="divide-y divide-slate-50">
+                            </tbody>
                     </table>
                 </div>
             </div>
@@ -141,9 +142,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
             authDomain: "gub-up.firebaseapp.com",
@@ -157,6 +157,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        const barangays = ["Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
+        
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -164,35 +166,44 @@
                     document.getElementById('user-name-display').innerText = userDoc.data().name;
                     document.body.classList.add('auth-ready');
                     AOS.init({ duration: 600, once: true });
+                    initData();
                 } else { window.location.href = "dashboard.html"; }
             } else { window.location.href = "login.html"; }
         });
 
-        const barangays = ["Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
+        // Initialize Dropdowns
         const filterBrgy = document.getElementById('filter-brgy');
         const formBrgy = document.getElementById('form-brgy');
-        
         barangays.forEach(b => {
             filterBrgy.innerHTML += `<option value="${b}">${b}</option>`;
             formBrgy.innerHTML += `<option value="${b}">${b}</option>`;
         });
 
         let allCases = [];
-        onSnapshot(collection(db, "disease_cases"), (snapshot) => {
-            allCases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            applyFilters();
-        });
+        function initData() {
+            onSnapshot(collection(db, "disease_cases"), (snapshot) => {
+                allCases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                applyFilters();
+            });
+        }
 
         function applyFilters() {
             const search = document.getElementById('disease-search').value.toLowerCase();
             const brgy = filterBrgy.value;
-            const filtered = allCases.filter(c => (c.name.toLowerCase().includes(search)) && (brgy === "All" || c.barangay === brgy));
+            const filtered = allCases.filter(c => 
+                (c.name && c.name.toLowerCase().includes(search)) && 
+                (brgy === "All" || c.barangay === brgy)
+            );
             renderTable(filtered);
         }
 
         function renderTable(data) {
             const tbody = document.getElementById('disease-table-body');
             tbody.innerHTML = "";
+            if(data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-20 text-center text-slate-400 font-medium">No records found matching your criteria.</td></tr>`;
+                return;
+            }
             data.forEach(item => {
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50 transition-all">
@@ -215,10 +226,11 @@
             lucide.createIcons();
         }
 
+        // Global functions for buttons
         window.openAddModal = () => {
             document.getElementById('case-form').reset();
             document.getElementById('case-id').value = "";
-            document.getElementById('modal-title').innerText = "Register Case";
+            document.getElementById('modal-title').innerText = "Register New Record";
             document.getElementById('case-modal').classList.remove('hidden');
         };
 
@@ -228,7 +240,7 @@
             document.getElementById('form-brgy').value = brgy;
             document.getElementById('form-severity').value = sev;
             document.getElementById('form-count').value = count;
-            document.getElementById('modal-title').innerText = "Edit Case";
+            document.getElementById('modal-title').innerText = "Update Record";
             document.getElementById('case-modal').classList.remove('hidden');
         };
 
@@ -242,14 +254,21 @@
                 count: parseInt(document.getElementById('form-count').value),
                 barangay: document.getElementById('form-brgy').value,
                 severity: document.getElementById('form-severity').value,
-                updatedAt: new Date()
+                updatedAt: serverTimestamp()
             };
-            id ? await updateDoc(doc(db, "disease_cases", id), payload) : await addDoc(collection(db, "disease_cases"), payload);
-            closeModal();
+            
+            try {
+                id ? await updateDoc(doc(db, "disease_cases", id), payload) : await addDoc(collection(db, "disease_cases"), payload);
+                closeModal();
+            } catch (err) { alert("Error saving record: " + err.message); }
         };
 
-        window.deleteCase = async (id) => { if(confirm("Delete record?")) await deleteDoc(doc(db, "disease_cases", id)); };
+        window.deleteCase = async (id) => { 
+            if(confirm("Are you sure you want to delete this municipal record?")) 
+                await deleteDoc(doc(db, "disease_cases", id)); 
+        };
 
+        // Event Listeners
         document.getElementById('disease-search').oninput = applyFilters;
         filterBrgy.onchange = applyFilters;
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
