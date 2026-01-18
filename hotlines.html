@@ -15,8 +15,6 @@
         .text-navy { color: #1e3a8a; }
         .hover-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .hover-card:hover { transform: translateY(-8px); }
-        /* Role Control */
-        .role-hidden { display: none !important; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
@@ -41,6 +39,20 @@
                     <span>Dashboard</span>
                 </a>
 
+                <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
+                    <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
+                        <i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <span>Medicine Stocks</span>
+                </a>
+
+                <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 hover:text-amber-600 transition-all group">
+                    <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
+                        <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <span>Disease Reports</span>
+                </a>
+
                 <a href="hotlines.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-100 transition-all scale-[1.02]">
                     <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                         <i data-lucide="phone" class="w-4 h-4 text-white"></i>
@@ -48,14 +60,14 @@
                     <span>Hotlines</span>
                 </a>
 
-                <div id="internal-console-section" class="pt-6 pb-2 role-hidden">
+                <div id="internal-consoles-section" class="pt-6 pb-2 hidden">
                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
                     
-                    <a href="rhu-console.html" id="rhu-link" class="role-hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2 group">
+                    <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2 group">
                         <i data-lucide="shield-alert" class="w-5 h-5 group-hover:animate-pulse"></i> RHU Console
                     </a>
 
-                    <a href="bhw-console.html" id="bhw-link" class="role-hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:text-white transition-all group">
+                    <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:text-white transition-all group">
                         <i data-lucide="shield-check" class="w-5 h-5 group-hover:rotate-12 transition-transform"></i> BHW Console
                     </a>
                 </div>
@@ -63,7 +75,7 @@
         </div>
 
         <div class="mt-auto p-8 border-t border-slate-50">
-            <button class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
+            <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
                 <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
             </button>
         </div>
@@ -86,11 +98,11 @@
                 <p class="text-red-700 font-medium">If you need immediate medical assistance, call the authorities directly.</p>
             </div>
             <div class="flex flex-wrap gap-3">
-                <a href="tel:0563111234" class="bg-red-600 text-white px-6 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-red-700 transition-all shadow-lg shadow-red-200">
+                <a href="tel:0563111234" class="bg-red-600 text-white px-6 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-red-700 hover:scale-105 transition-all shadow-lg shadow-red-200">
                     <i data-lucide="phone" class="w-5 h-5"></i> Call Health Office
                 </a>
-                <a href="tel:0563115678" class="bg-slate-900 text-white px-6 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-black transition-all shadow-lg shadow-slate-200">
-                    <i data-lucide="ambulance" class="w-5 h-5"></i> Call Ambulance
+                <a href="tel:0563115678" class="bg-slate-900 text-white px-6 py-4 rounded-2xl font-bold flex items-center gap-2 hover:bg-black hover:scale-105 transition-all shadow-lg shadow-slate-200">
+                    <i data-lucide="truck" class="w-5 h-5"></i> Call Ambulance
                 </a>
             </div>
         </div>
@@ -217,12 +229,36 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="tel:${bhc.phone.replace(/-/g, '')}" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 transition-all shadow-md">
+                            <a href="tel:${bhc.phone.replace(/-/g, '')}" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 hover:scale-105 transition-all shadow-md active:scale-95">
                                 <i data-lucide="phone-call" class="w-4 h-4"></i> Call Center
                             </a>
                         </div>
                     `).join(''));
                 </script>
+            </div>
+        </div>
+
+        <div class="bg-blue-50/50 border border-blue-100 rounded-[2rem] p-8" data-aos="fade-up">
+            <h3 class="font-black text-navy uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
+                <i data-lucide="info" class="w-4 h-4 text-blue-600"></i> Important Information
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-start gap-3 text-slate-600 text-sm font-medium">
+                    <i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5"></i>
+                    All emergency hotlines are available 24/7.
+                </div>
+                <div class="flex items-start gap-3 text-slate-600 text-sm font-medium">
+                    <i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5"></i>
+                    Visit barangay health centers for non-emergencies.
+                </div>
+                <div class="flex items-start gap-3 text-slate-600 text-sm font-medium">
+                    <i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5"></i>
+                    Save these numbers for quick offline access.
+                </div>
+                <div class="flex items-start gap-3 text-slate-600 text-sm font-medium">
+                    <i data-lucide="check" class="w-4 h-4 text-blue-600 mt-0.5"></i>
+                    Always call for professional help immediately.
+                </div>
             </div>
         </div>
     </main>
@@ -232,32 +268,21 @@
         AOS.init({ duration: 800, once: true });
         lucide.createIcons();
         
-        // --- ROLE BASED ACCESS LOGIC ---
-        function checkUserRole() {
-            // Get user role from local storage (or your auth system)
-            const userRole = localStorage.getItem('userRole'); // Expected: 'RHU' or 'BHW' or 'PATIENT'
+        // --- ROLE-BASED ACCESS CONTROL (RBAC) ---
+        // This simulates getting the user role from your database/auth session
+        const userRole = localStorage.getItem('userRole') || 'rhu'; // Change to 'bhw' or 'rhu' to test
 
-            const internalSection = document.getElementById('internal-console-section');
-            const rhuLink = document.getElementById('rhu-link');
-            const bhwLink = document.getElementById('bhw-link');
+        const internalSection = document.getElementById('internal-consoles-section');
+        const rhuLink = document.getElementById('rhu-link');
+        const bhwLink = document.getElementById('bhw-link');
 
-            if (userRole === 'RHU') {
-                internalSection.classList.remove('role-hidden');
-                rhuLink.classList.remove('role-hidden');
-            } else if (userRole === 'BHW') {
-                internalSection.classList.remove('role-hidden');
-                bhwLink.classList.remove('role-hidden');
-            } else {
-                // If it's a patient or not logged in, section stays hidden
-                console.log("Internal consoles restricted to RHU/BHW roles.");
-            }
+        if (userRole === 'rhu') {
+            internalSection.classList.remove('hidden');
+            rhuLink.classList.remove('hidden');
+        } else if (userRole === 'bhw') {
+            internalSection.classList.remove('hidden');
+            bhwLink.classList.remove('hidden');
         }
-
-        // Run on load
-        checkUserRole();
-
-        // FOR TESTING: You can type this in your browser console to see it work:
-        // localStorage.setItem('userRole', 'RHU'); location.reload();
     </script>
 </body>
 </html>
