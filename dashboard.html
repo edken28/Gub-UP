@@ -25,6 +25,7 @@
         #main-layout { opacity: 0; transition: opacity 0.8s ease-out; }
         .content-visible #main-layout { opacity: 1; }
         
+        /* Interactive feedback for BHW Medicine card only */
         .role-clickable { cursor: pointer !important; transition: all 0.2s; }
         .role-clickable:hover { transform: translateY(-4px); border-color: #2563eb; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
     </style>
@@ -84,35 +85,36 @@
 
             <div class="p-8 max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div id="active-cases-card" data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                    <div data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
                         <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white">
-                            <i data-lucide="biohazard" class="w-6 h-6"></i> </div>
+                            <i data-lucide="biohazard" class="w-6 h-6"></i>
+                        </div>
                         <div>
                             <h3 id="total-active-cases" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Active Cases</p>
-                            <p id="active-cases-subtext" class="text-xs text-red-500 mt-1 font-bold uppercase tracking-wider">Live System Data</p>
+                            <p class="text-xs text-red-500 mt-1 font-bold uppercase tracking-wider">Live System Data</p>
                         </div>
                     </div>
 
-                    <div id="medicine-stock-card" data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                    <div id="medicine-stock-card" data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
                         <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="pill" class="w-6 h-6"></i>
                         </div>
                         <div>
                             <h3 id="avg-medicine-stock" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Medicine Stock</p>
-                            <p id="stock-status-text" class="text-xs mt-1 font-bold">Live Inventory</p>
+                            <p id="stock-status-text" class="text-xs mt-1 font-bold">Checking...</p>
                         </div>
                     </div>
 
-                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
                         <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="map-pin" class="w-6 h-6"></i>
                         </div>
                         <div>
                             <h3 class="text-4xl font-bold text-navy">42</h3>
                             <p class="text-slate-500 font-medium">Barangays</p>
-                            <p class="text-xs text-slate-400 mt-1 font-semibold uppercase tracking-wider">Gubat, Sorsogon</p>
+                            <p class="text-xs text-slate-400 mt-1 font-semibold">Gubat, Sorsogon</p>
                         </div>
                     </div>
                 </div>
@@ -156,16 +158,15 @@
         const db = getFirestore(app);
 
         fetchGlobalActiveCases();
-        fetchRankingCases();
+        fetchRankingCases(); 
         fetchLowStock();
         fetchGlobalMedicineStock();
 
         onAuthStateChanged(auth, async (user) => {
             const rhuLink = document.getElementById('rhu-disease-link');
             const bhwLink = document.getElementById('worker-secret-link');
-            const activeCard = document.getElementById('active-cases-card');
-            const stockCard = document.getElementById('medicine-stock-card');
             const userDisplay = document.getElementById('user-name-display');
+            const stockCard = document.getElementById('medicine-stock-card');
 
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -175,9 +176,6 @@
                     
                     if (userData.role === "rhu") {
                         rhuLink.classList.remove('hidden');
-                        activeCard.classList.add('role-clickable');
-                        // REMOVED MANAGE TEXT - CLICKING CARD STILL WORKS FOR RHU
-                        activeCard.onclick = () => window.location.href = "rhu-console.html";
                     } else if (userData.role === "bhw") {
                         bhwLink.classList.remove('hidden');
                         stockCard.classList.add('role-clickable');
@@ -212,7 +210,7 @@
                     list.innerHTML += `
                         <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
                             <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-brand-blue text-white rounded-xl flex items-center justify-center font-bold shadow-sm">${data.count}</div>
+                                <div class="w-10 h-10 bg-brand-blue text-white rounded-xl flex items-center justify-center font-bold">${data.count}</div>
                                 <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs text-slate-400 font-bold uppercase">${data.barangay}</p></div>
                             </div>
                             <span class="text-[10px] font-black uppercase px-2 py-1 ${data.severity === 'High' ? 'bg-red-500' : 'bg-orange-400'} text-white rounded-md">${data.severity}</span>
@@ -229,7 +227,7 @@
                 const finalPct = Math.min(Math.round((totalQuantity / (totalItems * 100)) * 100), 100) || 0;
                 document.getElementById('avg-medicine-stock').innerText = `${finalPct}%`;
                 const status = document.getElementById('stock-status-text');
-                status.innerText = finalPct < 30 ? "Critical Supply" : finalPct < 70 ? "Low Stock" : "Sufficient Supply";
+                status.innerText = finalPct < 30 ? "Critical Level" : finalPct < 70 ? "Low Stock" : "Sufficient";
                 status.className = `text-xs mt-1 font-bold ${finalPct < 30 ? 'text-red-500' : finalPct < 70 ? 'text-orange-500' : 'text-emerald-500'}`;
             });
         }
@@ -251,5 +249,6 @@
 
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
     </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </body>
 </html>
