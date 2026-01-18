@@ -9,16 +9,73 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; overflow: hidden; } /* Hide scroll during loading */
         .bg-brand-blue { background-color: #2563eb; }
         .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
-        /* Smooth transitions for all cards */
         .hover-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .hover-card:hover { transform: translateY(-8px); }
+
+        /* LOADING SCREEN STYLES */
+        #loader-screen {
+            position: fixed;
+            inset: 0;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+
+        .floating-circle {
+            position: absolute;
+            background: #2563eb15;
+            border-radius: 50%;
+            filter: blur(40px);
+            z-index: -1;
+            animation: float 6s infinite alternate ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 50px); }
+        }
+
+        .loader-ring {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
+
+    <div id="loader-screen">
+        <div class="floating-circle w-64 h-64 top-10 left-10"></div>
+        <div class="floating-circle w-96 h-96 bottom-10 right-10" style="animation-delay: -2s;"></div>
+        
+        <div class="flex items-center gap-4 mb-6">
+            <div class="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-xl">
+                <i data-lucide="plus" class="w-10 h-10"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-navy text-3xl leading-none">GUB-UP</h1>
+                <p class="text-xs text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
+            </div>
+        </div>
+        
+        <div class="loader-ring"></div>
+    </div>
 
     <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
         <div class="p-8">
@@ -225,11 +282,18 @@
         AOS.init({ duration: 800, once: true });
         lucide.createIcons();
         
-        // Dynamic Role Check (Replace with your actual Firebase Logic if needed)
-        // This ensures the Internal Consoles section is visible as requested
+        // LOADING SCREEN TIMER
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader-screen');
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+                document.body.style.overflow = 'auto'; // Re-enable scroll
+            }, 3000); // 3 seconds
+        });
+
         const rhuLink = document.getElementById('rhu-link');
         const bhwLink = document.getElementById('bhw-link');
-        // If these were hidden by default, you would remove 'hidden' here based on user data
     </script>
 </body>
 </html>
