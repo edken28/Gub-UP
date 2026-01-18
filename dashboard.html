@@ -44,26 +44,49 @@
         <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
             <div class="p-8">
                 <div class="flex items-center gap-3 mb-10">
-                    <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white">
-                        <i data-lucide="plus" class="w-5 h-5"></i>
+                    <div class="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center text-white shadow-lg">
+                        <i data-lucide="plus" class="w-6 h-6"></i>
                     </div>
                     <div>
                         <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
-                        <p class="text-[10px] text-brand-blue uppercase font-bold tracking-tighter">Disease Monitoring</p>
+                        <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest">Health Network</p>
                     </div>
                 </div>
-                <nav class="space-y-2">
-                    <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-100">
-                        <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+
+                <nav class="space-y-3">
+                    <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-200 transition-all hover:scale-[1.02]">
+                        <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4 text-white"></i>
+                        </div>
+                        <span>Dashboard</span>
                     </a>
-                    <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-600 text-white px-5 py-4 rounded-2xl font-bold">
-                        <i data-lucide="biohazard" class="w-5 h-5"></i> RHU Console
+
+                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
+                        <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <span>Medicine Stocks</span>
                     </a>
-                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-600 text-white px-5 py-4 rounded-2xl font-bold">
-                        <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
+
+                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 hover:text-amber-600 transition-all group">
+                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <span>Disease Reports</span>
                     </a>
+
+                    <div class="pt-6 pb-2">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
+                        <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2">
+                            <i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console
+                        </a>
+                        <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-indigo-50 text-indigo-600 px-5 py-4 rounded-2xl font-bold hover:bg-indigo-600 hover:text-white transition-all">
+                            <i data-lucide="users" class="w-5 h-5"></i> BHW Console
+                        </a>
+                    </div>
                 </nav>
             </div>
+
             <div class="mt-auto p-8 border-t border-slate-50">
                 <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
                     <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
@@ -165,7 +188,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Core Listeners
+        // Initialization
         fetchGlobalActiveCases();
         fetchRankingCases(); 
         fetchLowStockAlerts();
@@ -231,30 +254,21 @@
             });
         }
 
-        // UPDATED GLOBAL LOGIC: Individual Medicine Health Average
         function fetchGlobalInventoryHealth() {
             onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
                 let totalHealthPoints = 0;
                 let medCount = 0;
-
                 snapshot.forEach(doc => {
                     const qty = parseInt(doc.data().quantity || 0);
                     medCount++;
-
-                    // Tiered scoring to penalize low stock properly
                     if (qty >= 500) totalHealthPoints += 100;
                     else if (qty >= 300) totalHealthPoints += 75;
                     else if (qty >= 100) totalHealthPoints += 40;
                     else totalHealthPoints += 10;
                 });
-
                 const averageHealth = medCount > 0 ? Math.round(totalHealthPoints / medCount) : 0;
-                
-                const display = document.getElementById('avg-medicine-stock');
+                document.getElementById('avg-medicine-stock').innerText = `${averageHealth}%`;
                 const status = document.getElementById('stock-status-text');
-                
-                display.innerText = `${averageHealth}%`;
-                
                 if (averageHealth >= 80) {
                     status.innerText = "Optimal Supply";
                     status.className = "text-xs mt-1 font-bold text-emerald-500 uppercase tracking-wider";
