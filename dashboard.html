@@ -119,14 +119,49 @@
             </header>
 
             <div class="p-8 max-w-7xl mx-auto">
-                <div id="welcome-banner" data-aos="fade-up" class="bg-brand-blue rounded-[3rem] p-12 text-white mb-10 flex justify-between items-center relative overflow-hidden shadow-2xl shadow-blue-200">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                    <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                        <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-red-100">
+                            <i data-lucide="virus" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 id="stat-active-cases" class="text-4xl font-bold text-navy">247</h3>
+                            <p class="text-slate-500 font-medium">Active Cases</p>
+                            <p class="text-xs text-slate-400 mt-1 font-semibold">+12 this week</p>
+                        </div>
+                    </div>
+
+                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                        <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-100">
+                            <i data-lucide="pill" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 id="stat-medicine-stock" class="text-4xl font-bold text-navy">89%</h3>
+                            <p class="text-slate-500 font-medium">Medicine Stock</p>
+                            <p class="text-xs text-emerald-500 mt-1 font-bold">Adequate supply</p>
+                        </div>
+                    </div>
+
+                    <div data-aos="fade-up" data-aos-delay="300" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                        <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                            <i data-lucide="map-pin" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-4xl font-bold text-navy">33</h3>
+                            <p class="text-slate-500 font-medium">Barangays</p>
+                            <p class="text-xs text-slate-400 mt-1 font-semibold">All connected</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div data-aos="fade-up" class="bg-emerald-600 rounded-[2.5rem] p-10 text-white mb-10 flex justify-between items-center relative overflow-hidden shadow-2xl shadow-emerald-100">
                     <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20"></div>
                     <div class="relative z-10">
-                        <h2 id="welcome-banner-text" class="text-4xl font-bold mb-3 tracking-tight">Welcome!</h2>
-                        <p class="text-blue-100 text-lg opacity-90 font-medium">Monitoring Gubat, Sorsogon Health Status</p>
-                    </div>
-                    <div class="bg-white/20 p-6 rounded-[2rem] backdrop-blur-lg relative z-10 hidden md:block border border-white/20">
-                        <i data-lucide="activity" class="w-12 h-12 text-white"></i>
+                        <div class="mb-6">
+                            <i data-lucide="file-text" class="w-10 h-10"></i>
+                        </div>
+                        <h2 class="text-4xl font-bold mb-2 tracking-tight">New Field Report</h2>
+                        <p class="text-emerald-100 text-lg opacity-90 font-medium">Submit health cases to RHU.</p>
                     </div>
                 </div>
 
@@ -175,7 +210,6 @@
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
                     document.getElementById('user-name-display').innerText = userData.name;
-                    document.getElementById('welcome-banner-text').innerText = `Welcome, ${userData.name.split(' ')[0]}!`;
                     
                     if (userData.role === "rhu") {
                         document.getElementById('rhu-disease-link').classList.remove('hidden');
