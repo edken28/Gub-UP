@@ -82,14 +82,14 @@
             <div class="p-8 max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     
-                    <a href="rhu-console.html" data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 hover:border-red-200 transition-colors group">
+                    <a href="rhu-console.html" data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 hover:border-red-200 transition-all hover:shadow-md group">
                         <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform">
                             <i data-lucide="virus" class="w-6 h-6"></i>
                         </div>
                         <div>
                             <h3 id="total-active-cases" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Active Cases</p>
-                            <p class="text-xs text-red-500 mt-1 font-bold">Click to view details →</p>
+                            <p class="text-xs text-red-500 mt-1 font-bold">Live Data • View Details →</p>
                         </div>
                     </a>
 
@@ -117,10 +117,18 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    
                     <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100">
-                        <h3 class="text-2xl font-bold text-navy mb-8">Recent Disease Cases</h3>
+                        <div class="flex justify-between items-center mb-8">
+                            <div>
+                                <h3 class="text-2xl font-bold text-navy">High Severity Cases</h3>
+                                <p class="text-xs text-red-500 font-bold uppercase tracking-tight">Top 10 Critical Reports</p>
+                            </div>
+                            <i data-lucide="alert-circle" class="text-red-500 w-6 h-6"></i>
+                        </div>
                         <div id="disease-dashboard-list" class="space-y-4"></div>
                     </div>
+
                     <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100">
                         <h3 class="text-2xl font-bold text-navy mb-8">Critical Stock Alerts</h3>
                         <div id="medicine-dashboard-list" class="space-y-4"></div>
@@ -134,7 +142,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -160,7 +168,7 @@
 
                 // Initialise real-time listeners
                 fetchGlobalActiveCases();
-                fetchRecentCases();
+                fetchHighSeverityCases(); // Fixed function
                 fetchLowStock();
                 
                 setTimeout(() => {
@@ -173,7 +181,7 @@
             }
         });
 
-        // Sum up all "count" values from the disease_cases collection
+        // Sums total case count across all reports
         function fetchGlobalActiveCases() {
             onSnapshot(collection(db, "disease_cases"), (snapshot) => {
                 let total = 0;
@@ -184,21 +192,47 @@
             });
         }
 
-        function fetchRecentCases() {
-            const q = query(collection(db, "disease_cases"), orderBy("updatedAt", "desc"), limit(5));
+        // Top 10 High Severity Reports
+        function fetchHighSeverityCases() {
+            const q = query(
+                collection(db, "disease_cases"), 
+                where("severity", "==", "High"), 
+                orderBy("updatedAt", "desc"), 
+                limit(10)
+            );
+
             onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('disease-dashboard-list');
-                list.innerHTML = snapshot.empty ? "<p class='text-slate-400'>No data.</p>" : "";
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    list.innerHTML += `
-                        <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-red-100 text-red-500 rounded-xl flex items-center justify-center font-bold">${data.count}</div>
-                                <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs text-slate-400 font-semibold uppercase">${data.barangay}</p></div>
-                            </div>
-                        </div>`;
-                });
+                list.innerHTML = "";
+
+                if (snapshot.empty) {
+                    list.innerHTML = `
+                        <div class="flex flex-col items-center justify-center py-10 opacity-50">
+                            <i data-lucide="shield-check" class="w-12 h-12 text-emerald-500 mb-2"></i>
+                            <p class="text-slate-400 font-medium">No high severity cases reported.</p>
+                        </div>
+                    `;
+                } else {
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        list.innerHTML += `
+                            <div class="flex items-center justify-between p-5 bg-red-50/50 rounded-2xl border border-red-100 group hover:bg-red-50 transition-colors">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 bg-red-500 text-white rounded-xl flex items-center justify-center font-bold shadow-lg shadow-red-200">
+                                        ${data.count}
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-navy">${data.name}</p>
+                                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">${data.barangay}</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] font-black uppercase px-2 py-1 bg-red-600 text-white rounded-md">Critical</span>
+                                </div>
+                            </div>`;
+                    });
+                }
+                lucide.createIcons();
             });
         }
 
