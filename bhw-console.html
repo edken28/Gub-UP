@@ -1,40 +1,305 @@
-function fetchGlobalMedicineStock() {
-    onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
-        let totalItems = 0;
-        let totalHealthPoints = 0;
-        let globalQuantity = 0;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BHW Console | GUB-UP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .bg-emerald-brand { background-color: #10b981; }
+        .text-navy { color: #1e3a8a; }
+        #main-layout { visibility: hidden; }
+        .auth-ready #main-layout { visibility: visible; }
 
-        snapshot.forEach(doc => {
-            const qty = parseInt(doc.data().quantity || 0);
-            globalQuantity += qty;
-            totalItems++;
+        /* Threshold Styles */
+        .status-critical { background-color: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; }
+        .status-low { background-color: #fff7ed; color: #f97316; border: 1px solid #ffedd5; }
+        .status-medium { background-color: #eff6ff; color: #3b82f6; border: 1px solid #dbeafe; }
+        .status-good { background-color: #f0fdf4; color: #22c55e; border: 1px solid #dcfce7; }
+        
+        .search-focus:focus-within { ring: 2px solid #10b981; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex">
 
-            // Statistical Scoring per item
-            if (qty >= 500) totalHealthPoints += 100;      // Good
-            else if (qty >= 300) totalHealthPoints += 75;  // Medium
-            else if (qty >= 100) totalHealthPoints += 50;  // Low
-            else totalHealthPoints += 10;                  // Critical
+    <div id="main-layout" class="flex w-full min-h-screen">
+        <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
+            <div class="p-8">
+                <div class="flex items-center gap-3 mb-10">
+                    <div class="w-10 h-10 flex-shrink-0 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-navy text-lg">GUB-UP</h1>
+                        <p class="text-[10px] text-emerald-600 uppercase font-bold tracking-tighter">BHW Field Panel</p>
+                    </div>
+                </div>
+                <nav class="space-y-2">
+                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all">
+                        <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+                    </a>
+                    <a href="bhw-console.html" class="flex items-center gap-3 bg-emerald-500 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-100 transition-all">
+                        <i data-lucide="home" class="w-5 h-5"></i> BHW Console
+                    </a>
+                </nav>
+            </div>
+            <div class="mt-auto p-8 border-t border-slate-50">
+                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full group transition-colors">
+                    <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1">
+            <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between sticky top-0 z-40">
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Barangay Stock Management</h2>
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
+                    <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                    </div>
+                    <span id="user-name-display" class="font-bold text-navy text-sm">BHW User</span>
+                </div>
+            </header>
+
+            <div class="p-8 max-w-7xl mx-auto">
+                <div data-aos="fade-up" class="mb-8 bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-wrap items-center justify-between gap-6">
+                    <div>
+                        <h4 class="text-3xl font-bold text-navy mb-1">Inventory Overview</h4>
+                        <p class="text-slate-400 font-medium">Assigned to: <span id="assigned-brgy-text" class="text-emerald-600 font-bold">...</span></p>
+                    </div>
+                    <div class="flex gap-8">
+                        <div class="text-center">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Units</p>
+                            <p id="total-units-count" class="text-2xl font-black text-navy">0</p>
+                        </div>
+                        <div class="text-center border-l border-slate-100 pl-8">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Dash %</p>
+                            <p id="dash-percent-preview" class="text-2xl font-black text-emerald-500">0%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div data-aos="fade-up" class="mb-8">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <div class="relative flex-1 search-focus rounded-2xl transition-all">
+                            <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4"></i>
+                            <input type="text" id="stock-search" placeholder="Search inventory..." class="w-full pl-11 pr-4 py-4 bg-white border border-slate-100 rounded-2xl font-bold text-navy outline-none shadow-sm">
+                        </div>
+                        <button onclick="openStockModal()" class="flex items-center justify-center gap-3 px-8 py-4 bg-emerald-500 text-white rounded-2xl font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-100">
+                            <i data-lucide="plus" class="w-5 h-5"></i>
+                            Add New Stock
+                        </button>
+                    </div>
+                </div>
+
+                <div data-aos="fade-up" data-aos-delay="100" class="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden min-h-[400px]">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50/50 border-b border-slate-50">
+                            <tr class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                <th class="px-10 py-6">Medicine Name</th>
+                                <th class="px-8 py-6">Quantity</th>
+                                <th class="px-8 py-6">Statistic Tier</th>
+                                <th class="px-10 py-6 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stock-table-body" class="divide-y divide-slate-50"></tbody>
+                    </table>
+                    <div id="no-results" class="hidden p-20 text-center flex flex-col items-center">
+                        <i data-lucide="package-search" class="w-12 h-12 text-slate-200 mb-4"></i>
+                        <p class="text-slate-400 font-bold">No matching medicine found.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="stock-modal" class="fixed inset-0 bg-navy/40 backdrop-blur-md z-50 hidden flex items-center justify-center p-6">
+        <div class="bg-white rounded-[3rem] w-full max-w-md p-10 shadow-2xl">
+            <h3 id="stock-modal-title" class="text-2xl font-bold text-navy mb-2">Update Stock</h3>
+            <p class="text-slate-400 text-xs mb-6 font-medium">Goal: 500 total units for 100% dashboard health.</p>
+            
+            <form id="stock-form" class="space-y-4">
+                <input type="hidden" id="stock-id">
+                <div>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Medicine Name</label>
+                    <input type="text" id="med-name" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Quantity (Current Units)</label>
+                    <input type="number" id="med-qty" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy">
+                </div>
+                
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 mt-4">
+                    <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Impact on Dashboard</p>
+                    <div class="flex justify-between items-center">
+                        <span id="modal-impact-text" class="text-sm font-bold text-navy">This item: 0%</span>
+                        <span id="modal-status-preview" class="text-[10px] font-black px-2 py-1 rounded-md bg-slate-200">Tier Check</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 pt-6">
+                    <button type="button" onclick="closeStockModal()" class="flex-1 font-bold text-slate-400 hover:text-navy">Cancel</button>
+                    <button type="submit" class="flex-[2] py-4 bg-emerald-500 text-white font-bold rounded-2xl shadow-lg shadow-emerald-100 hover:bg-emerald-600 transition-all">Save Stock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
+            authDomain: "gub-up.firebaseapp.com",
+            projectId: "gub-up",
+            storageBucket: "gub-up.firebasestorage.app",
+            messagingSenderId: "75119179497",
+            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userBrgy = "";
+        let allStock = [];
+        const DASHBOARD_GOAL = 500;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists() && userDoc.data().role === "bhw") {
+                    const data = userDoc.data();
+                    userBrgy = data.barangay;
+                    document.getElementById('user-name-display').innerText = data.name;
+                    document.getElementById('assigned-brgy-text').innerText = userBrgy;
+                    document.body.classList.add('auth-ready');
+                    AOS.init({ duration: 600, once: true });
+                    listenToStock();
+                } else { window.location.href = "dashboard.html"; }
+            } else { window.location.href = "login.html"; }
         });
 
-        // The new percentage is the average health of all medicine types
-        const stockHealthPercentage = totalItems > 0 
-            ? Math.round(totalHealthPoints / totalItems) 
-            : 0;
-
-        document.getElementById('avg-medicine-stock').innerText = `${stockHealthPercentage}%`;
-        
-        const status = document.getElementById('stock-status-text');
-        
-        // Status label based on the weakest link
-        if (stockHealthPercentage >= 90) {
-            status.innerText = "Good / Sufficient";
-            status.className = "text-xs mt-1 font-bold text-emerald-500";
-        } else if (stockHealthPercentage >= 60) {
-            status.innerText = "Medium Level";
-            status.className = "text-xs mt-1 font-bold text-blue-500";
-        } else {
-            status.innerText = "Critical Items Detected";
-            status.className = "text-xs mt-1 font-bold text-red-500 animate-pulse";
+        function listenToStock() {
+            const q = query(collection(db, "medicine_inventory"), where("barangay", "==", userBrgy));
+            onSnapshot(q, (snapshot) => {
+                allStock = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                updateGlobalStats();
+                applyFilters();
+            });
         }
-    });
-}
+
+        function updateGlobalStats() {
+            const total = allStock.reduce((acc, curr) => acc + (curr.quantity || 0), 0);
+            const percent = Math.min(Math.round((total / DASHBOARD_GOAL) * 100), 100);
+            
+            document.getElementById('total-units-count').innerText = total;
+            document.getElementById('dash-percent-preview').innerText = percent + "%";
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('stock-search').value.toLowerCase();
+            const filtered = allStock.filter(item => item.name.toLowerCase().includes(searchTerm));
+            renderTable(filtered);
+        }
+
+        function getTierInfo(qty) {
+            if (qty >= 500) return { label: 'Good', class: 'status-good' };
+            if (qty >= 300) return { label: 'Medium', class: 'status-medium' };
+            if (qty >= 100) return { label: 'Low', class: 'status-low' };
+            return { label: 'Critical', class: 'status-critical' };
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('stock-table-body');
+            const noResults = document.getElementById('no-results');
+            tbody.innerHTML = "";
+            
+            if (data.length === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+                data.forEach(item => {
+                    const tier = getTierInfo(item.quantity);
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50/50 transition-all">
+                            <td class="px-10 py-7 font-bold text-navy text-lg">${item.name}</td>
+                            <td class="px-8 py-7 text-slate-500 font-bold">${item.quantity} units</td>
+                            <td class="px-8 py-7"><span class="px-3 py-1 rounded-lg text-[10px] font-black uppercase ${tier.class}">${tier.label}</span></td>
+                            <td class="px-10 py-7 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <button onclick="editStock('${item.id}', '${item.name}', ${item.quantity})" class="p-2 text-slate-400 hover:text-emerald-500"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                                    <button onclick="deleteStock('${item.id}')" class="p-2 text-slate-400 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                </div>
+                            </td>
+                        </tr>`;
+                });
+            }
+            lucide.createIcons();
+        }
+
+        // Live Modal Calculation
+        document.getElementById('med-qty').addEventListener('input', (e) => {
+            const val = parseInt(e.target.value) || 0;
+            const impact = Math.min(Math.round((val / DASHBOARD_GOAL) * 100), 100);
+            const tier = getTierInfo(val);
+            
+            document.getElementById('modal-impact-text').innerText = `This item: ${impact}% of goal`;
+            const badge = document.getElementById('modal-status-preview');
+            badge.innerText = tier.label;
+            badge.className = `text-[10px] font-black px-2 py-1 rounded-md ${tier.class}`;
+        });
+
+        window.openStockModal = () => {
+            document.getElementById('stock-form').reset();
+            document.getElementById('stock-id').value = "";
+            document.getElementById('stock-modal-title').innerText = "Add New Stock";
+            document.getElementById('modal-impact-text').innerText = "This item: 0% of goal";
+            document.getElementById('stock-modal').classList.remove('hidden');
+        };
+
+        window.editStock = (id, name, qty) => {
+            document.getElementById('stock-id').value = id;
+            document.getElementById('med-name').value = name;
+            document.getElementById('med-qty').value = qty;
+            document.getElementById('stock-modal-title').innerText = "Edit Stock";
+            // Trigger the live calculation
+            document.getElementById('med-qty').dispatchEvent(new Event('input'));
+            document.getElementById('stock-modal').classList.remove('hidden');
+        };
+
+        window.closeStockModal = () => document.getElementById('stock-modal').classList.add('hidden');
+
+        document.getElementById('stock-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('stock-id').value;
+            const data = {
+                name: document.getElementById('med-name').value,
+                quantity: parseInt(document.getElementById('med-qty').value),
+                barangay: userBrgy,
+                updatedAt: new Date()
+            };
+            id ? await updateDoc(doc(db, "medicine_inventory", id), data) : await addDoc(collection(db, "medicine_inventory"), data);
+            closeStockModal();
+        };
+
+        window.deleteStock = async (id) => {
+            if(confirm("Remove this medicine from inventory?")) { await deleteDoc(doc(db, "medicine_inventory", id)); }
+        };
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            signOut(auth).then(() => { window.location.href = "login.html"; });
+        });
+
+        document.getElementById('stock-search').addEventListener('input', applyFilters);
+        lucide.createIcons();
+    </script>
+</body>
+</html>
