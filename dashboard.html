@@ -82,18 +82,18 @@
             <div class="p-8 max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     
-                    <a href="rhu-console.html" data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 hover:border-red-200 transition-all hover:shadow-md group">
-                        <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+                    <div data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
+                        <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="virus" class="w-6 h-6"></i>
                         </div>
                         <div>
                             <h3 id="total-active-cases" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Active Cases</p>
-                            <p class="text-xs text-red-500 mt-1 font-bold">Live Data • View Details →</p>
+                            <p class="text-xs text-red-500 mt-1 font-bold uppercase tracking-wider">Live System Feed</p>
                         </div>
-                    </a>
+                    </div>
 
-                    <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                    <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
                         <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="pill" class="w-6 h-6"></i>
                         </div>
@@ -104,7 +104,7 @@
                         </div>
                     </div>
 
-                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
                         <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="map-pin" class="w-6 h-6"></i>
                         </div>
@@ -165,11 +165,10 @@
                     if (userData.role === "bhw") document.getElementById('worker-secret-link').classList.remove('hidden');
                 }
 
-                // Initialise real-time listeners
                 fetchGlobalActiveCases();
                 fetchHighSeverityCases(); 
                 fetchLowStock();
-                fetchGlobalMedicineStock(); // New Dynamic Function
+                fetchGlobalMedicineStock(); 
                 
                 setTimeout(() => {
                     document.getElementById('loader-container').classList.add('loaded');
@@ -191,12 +190,11 @@
             });
         }
 
-        // NEW: Real-time calculation for the 89% replacement
         function fetchGlobalMedicineStock() {
             onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
                 let totalItems = 0;
                 let totalQuantity = 0;
-                const TARGET_STOCK = 100; // The capacity we consider "100%" per item type
+                const TARGET_STOCK = 100; 
 
                 if (snapshot.empty) {
                     document.getElementById('avg-medicine-stock').innerText = "0%";
@@ -209,7 +207,6 @@
                     totalItems++;
                 });
 
-                // Calculation: (Total Sum / (Number of Types * Max Target)) * 100
                 const rawPercentage = (totalQuantity / (totalItems * TARGET_STOCK)) * 100;
                 const finalPct = Math.min(Math.round(rawPercentage), 100);
 
