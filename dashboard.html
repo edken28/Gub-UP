@@ -84,6 +84,17 @@
             </header>
 
             <div class="p-8 max-w-7xl mx-auto">
+                
+                <div data-aos="fade-down" class="bg-brand-blue rounded-[2.5rem] p-8 mb-10 text-white flex justify-between items-center shadow-xl shadow-blue-100">
+                    <div>
+                        <h1 class="text-3xl font-bold">Welcome back, <span id="welcome-user-name">Citizen</span>!</h1>
+                        <p class="text-blue-100 mt-1">View community health information</p>
+                    </div>
+                    <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                        <i data-lucide="user" class="w-8 h-8"></i>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     <div data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
                         <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white">
@@ -166,6 +177,7 @@
             const rhuLink = document.getElementById('rhu-disease-link');
             const bhwLink = document.getElementById('worker-secret-link');
             const userDisplay = document.getElementById('user-name-display');
+            const welcomeNameDisplay = document.getElementById('welcome-user-name');
             const stockCard = document.getElementById('medicine-stock-card');
 
             if (user) {
@@ -173,6 +185,7 @@
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
                     userDisplay.innerText = userData.name;
+                    welcomeNameDisplay.innerText = userData.name; // Update Banner Name
                     
                     if (userData.role === "rhu") {
                         rhuLink.classList.remove('hidden');
