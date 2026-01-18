@@ -14,47 +14,38 @@
         .text-emerald-brand { color: #10b981; }
         .text-navy { color: #1e3a8a; }
         
-        /* Anti-flicker for Auth */
         #main-layout { visibility: hidden; }
         .auth-ready #main-layout { visibility: visible; }
 
-        input:focus, select:focus, textarea:focus {
-            ring: 2px;
-            ring-color: #d1fae5;
-            border-color: #10b981;
-            outline: none;
-        }
+        .stock-low { background-color: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; }
+        .stock-good { background-color: #f0fdf4; color: #22c55e; border: 1px solid #dcfce7; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
 
     <div id="main-layout" class="flex w-full min-h-screen">
-        
         <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
             <div class="p-8">
                 <div class="flex items-center gap-3 mb-10">
-                    <div class="w-10 h-10 flex-shrink-0 aspect-square bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-100">
+                    <div class="w-10 h-10 flex-shrink-0 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg">
                         <i data-lucide="shield-check" class="w-5 h-5"></i>
                     </div>
                     <div>
-                        <h1 class="font-bold text-navy leading-none text-lg">GUB-UP</h1>
-                        <p class="text-[10px] text-emerald-600 uppercase font-bold tracking-tighter mt-0.5">BHW Field Panel</p>
+                        <h1 class="font-bold text-navy text-lg">GUB-UP</h1>
+                        <p class="text-[10px] text-emerald-600 uppercase font-bold tracking-tighter">BHW Field Panel</p>
                     </div>
                 </div>
-
                 <nav class="space-y-2">
                     <a href="dashboard.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all">
                         <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
                     </a>
-                    
                     <a href="worker-panel.html" class="flex items-center gap-3 bg-emerald-500 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-100 transition-all">
                         <i data-lucide="home" class="w-5 h-5"></i> BHW Console
                     </a>
                 </nav>
             </div>
-
             <div class="mt-auto p-8 border-t border-slate-50">
-                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
+                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full group transition-colors">
                     <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
                 </button>
             </div>
@@ -62,9 +53,9 @@
 
         <main class="flex-1">
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between sticky top-0 z-40">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Field Operations</h2>
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Barangay Stock Management</h2>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
-                    <div class="w-8 h-8 flex-shrink-0 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
+                    <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center">
                         <i data-lucide="user" class="w-4 h-4"></i>
                     </div>
                     <span id="user-name-display" class="font-bold text-navy text-sm">BHW User</span>
@@ -72,54 +63,57 @@
             </header>
 
             <div class="p-8 max-w-7xl mx-auto">
-                <div data-aos="fade-up" class="bg-emerald-600 rounded-[3rem] p-12 text-white mb-10 flex justify-between items-center relative overflow-hidden shadow-2xl shadow-emerald-200">
-                    <div class="relative z-10">
-                        <h2 class="text-4xl font-bold mb-3 tracking-tight">Worker Console</h2>
-                        <p class="text-emerald-100 text-lg opacity-90 font-medium">Log field reports and monitor your assigned area.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <div data-aos="fade-up" onclick="openReportModal()" class="cursor-pointer group bg-emerald-600 p-10 rounded-[3rem] text-white shadow-2xl shadow-emerald-200 transition-all hover:-translate-y-1">
+                        <i data-lucide="file-text" class="w-10 h-10 mb-6 opacity-80"></i>
+                        <h4 class="text-2xl font-bold mb-2">New Field Report</h4>
+                        <p class="text-emerald-100 opacity-80">Submit health cases to RHU.</p>
                     </div>
-                    <i data-lucide="map-pin" class="w-20 h-20 text-white/20 absolute right-10 top-1/2 -translate-y-1/2"></i>
+                    <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <h4 class="text-2xl font-bold text-navy">Medicine Inventory</h4>
+                            <button onclick="openStockModal()" class="p-3 bg-emerald-50 text-emerald-600 rounded-2xl hover:bg-emerald-500 hover:text-white transition-all">
+                                <i data-lucide="plus" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                        <p class="text-slate-400 font-medium">Manage medicine stocks for <span id="assigned-brgy-text" class="text-emerald-600 font-bold">...</span></p>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div data-aos="fade-right" onclick="openReportModal()" class="cursor-pointer group bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-xl hover:border-emerald-200 transition-all">
-                        <div class="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-[1.5rem] flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
-                            <i data-lucide="file-plus-2" class="w-8 h-8"></i>
-                        </div>
-                        <h4 class="text-2xl font-bold text-navy mb-3">New Field Report</h4>
-                        <p class="text-slate-400 font-medium leading-relaxed">Submit new health observations or household cases directly to the RHU.</p>
-                    </div>
-
-                    <div data-aos="fade-left" class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm">
-                        <div class="flex items-center justify-between mb-8">
-                            <h4 class="text-2xl font-bold text-navy">Assigned Area</h4>
-                            <span class="px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-xs font-black uppercase tracking-widest" id="assigned-brgy">Loading...</span>
-                        </div>
-                        <p class="text-slate-400 font-medium">You are currently authorized to submit data for your registered barangay.</p>
-                    </div>
+                <div data-aos="fade-up" data-aos-delay="200" class="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50/50 border-b border-slate-50">
+                            <tr class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+                                <th class="px-10 py-6">Medicine Name</th>
+                                <th class="px-8 py-6">Quantity</th>
+                                <th class="px-8 py-6">Status</th>
+                                <th class="px-10 py-6 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stock-table-body" class="divide-y divide-slate-50">
+                            </tbody>
+                    </table>
                 </div>
             </div>
         </main>
     </div>
 
-    <div id="report-modal" class="fixed inset-0 bg-navy/40 backdrop-blur-md z-50 hidden flex items-center justify-center p-6">
-        <div class="bg-white rounded-[3rem] w-full max-w-xl p-10 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-2 bg-emerald-500"></div>
-            <h3 class="text-3xl font-bold text-navy mb-8">New Field Report</h3>
-            
-            <form id="report-form" class="space-y-5">
+    <div id="stock-modal" class="fixed inset-0 bg-navy/40 backdrop-blur-md z-50 hidden flex items-center justify-center p-6">
+        <div class="bg-white rounded-[3rem] w-full max-w-md p-10 shadow-2xl">
+            <h3 id="stock-modal-title" class="text-2xl font-bold text-navy mb-6">Update Stock</h3>
+            <form id="stock-form" class="space-y-4">
+                <input type="hidden" id="stock-id">
                 <div>
-                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Subject / Case Name</label>
-                    <input type="text" id="subject" required placeholder="e.g. Unusual Fever Cluster" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy transition-all">
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Medicine Name</label>
+                    <input type="text" id="med-name" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy">
                 </div>
-
                 <div>
-                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Observations & Details</label>
-                    <textarea id="details" rows="4" required placeholder="Describe what you observed in the field..." class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-medium text-navy transition-all"></textarea>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Quantity (Boxes/Units)</label>
+                    <input type="number" id="med-qty" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy">
                 </div>
-
                 <div class="flex gap-4 pt-6">
-                    <button type="button" onclick="closeModal()" class="flex-1 py-4 font-bold text-slate-400 hover:text-slate-600 transition-colors">Discard</button>
-                    <button type="submit" class="flex-[2] py-4 bg-emerald-500 text-white font-bold rounded-2xl shadow-xl shadow-emerald-100 hover:bg-emerald-600 transition-all">Submit to RHU</button>
+                    <button type="button" onclick="closeStockModal()" class="flex-1 font-bold text-slate-400">Cancel</button>
+                    <button type="submit" class="flex-[2] py-4 bg-emerald-500 text-white font-bold rounded-2xl shadow-lg shadow-emerald-100">Save Stock</button>
                 </div>
             </form>
         </div>
@@ -129,7 +123,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -144,46 +138,94 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let currentUserData = null;
+        let userBrgy = "";
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    currentUserData = userDoc.data();
-                    if (currentUserData.role !== "bhw") {
-                        window.location.href = "dashboard.html";
-                        return;
-                    }
-                    document.getElementById('user-name-display').innerText = currentUserData.name;
-                    document.getElementById('assigned-brgy').innerText = currentUserData.barangay || "Assigned Area";
+                if (userDoc.exists() && userDoc.data().role === "bhw") {
+                    const data = userDoc.data();
+                    userBrgy = data.barangay;
+                    document.getElementById('user-name-display').innerText = data.name;
+                    document.getElementById('assigned-brgy-text').innerText = userBrgy;
                     document.body.classList.add('auth-ready');
                     AOS.init({ duration: 600, once: true });
+                    listenToStock();
+                } else {
+                    window.location.href = "dashboard.html";
                 }
             } else {
                 window.location.href = "login.html";
             }
         });
 
-        window.openReportModal = () => document.getElementById('report-modal').classList.remove('hidden');
-        window.closeModal = () => document.getElementById('report-modal').classList.add('hidden');
+        function listenToStock() {
+            // Only listen to stock belonging to the BHW's barangay
+            const q = query(collection(db, "medicine_inventory"), where("barangay", "==", userBrgy));
+            onSnapshot(q, (snapshot) => {
+                const tbody = document.getElementById('stock-table-body');
+                tbody.innerHTML = "";
+                snapshot.docs.forEach(docSnap => {
+                    const item = docSnap.data();
+                    const id = docSnap.id;
+                    const statusClass = item.quantity < 10 ? 'stock-low' : 'stock-good';
+                    const statusText = item.quantity < 10 ? 'Low Stock' : 'Available';
 
-        document.getElementById('report-form').onsubmit = async (e) => {
-            e.preventDefault();
-            try {
-                await addDoc(collection(db, "field_reports"), {
-                    bhwName: currentUserData.name,
-                    barangay: currentUserData.barangay,
-                    subject: document.getElementById('subject').value,
-                    details: document.getElementById('details').value,
-                    timestamp: new Date(),
-                    status: "pending"
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50/50 transition-all">
+                            <td class="px-10 py-7 font-bold text-navy text-lg">${item.name}</td>
+                            <td class="px-8 py-7 text-slate-500 font-bold">${item.quantity} units</td>
+                            <td class="px-8 py-7"><span class="px-3 py-1 rounded-lg text-[10px] font-black uppercase ${statusClass}">${statusText}</span></td>
+                            <td class="px-10 py-7 text-right">
+                                <div class="flex justify-end gap-2">
+                                    <button onclick="editStock('${id}', '${item.name}', ${item.quantity})" class="p-2 text-slate-400 hover:text-emerald-500"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                                    <button onclick="deleteStock('${id}')" class="p-2 text-slate-400 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                </div>
+                            </td>
+                        </tr>`;
                 });
-                alert("Report submitted successfully!");
-                document.getElementById('report-form').reset();
-                closeModal();
-            } catch (error) {
-                alert("Error submitting report.");
+                lucide.createIcons();
+            });
+        }
+
+        window.openStockModal = () => {
+            document.getElementById('stock-form').reset();
+            document.getElementById('stock-id').value = "";
+            document.getElementById('stock-modal-title').innerText = "Add New Stock";
+            document.getElementById('stock-modal').classList.remove('hidden');
+        };
+
+        window.editStock = (id, name, qty) => {
+            document.getElementById('stock-id').value = id;
+            document.getElementById('med-name').value = name;
+            document.getElementById('med-qty').value = qty;
+            document.getElementById('stock-modal-title').innerText = "Edit Stock";
+            document.getElementById('stock-modal').classList.remove('hidden');
+        };
+
+        window.closeStockModal = () => document.getElementById('stock-modal').classList.add('hidden');
+
+        document.getElementById('stock-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('stock-id').value;
+            const data = {
+                name: document.getElementById('med-name').value,
+                quantity: parseInt(document.getElementById('med-qty').value),
+                barangay: userBrgy,
+                updatedAt: new Date()
+            };
+
+            if (id) {
+                await updateDoc(doc(db, "medicine_inventory", id), data);
+            } else {
+                await addDoc(collection(db, "medicine_inventory"), data);
+            }
+            closeStockModal();
+        };
+
+        window.deleteStock = async (id) => {
+            if(confirm("Remove this medicine from inventory?")) {
+                await deleteDoc(doc(db, "medicine_inventory", id));
             }
         };
 
