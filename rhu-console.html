@@ -9,134 +9,197 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        body { font-family: 'Inter', sans-serif; }
         .bg-brand-blue { background-color: #2563eb; }
         .text-brand-blue { color: #2563eb; }
-        .bg-rhu-red { background-color: #ef4444; }
-        .text-rhu-red { color: #ef4444; }
         .text-navy { color: #1e3a8a; }
-        
-        #main-layout { display: none; }
-        .auth-ready #main-layout { display: flex; }
-
-        .badge-high { background-color: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; }
-        .badge-moderate { background-color: #fffbeb; color: #f59e0b; border: 1px solid #fef3c7; }
-        .badge-low { background-color: #f0fdf4; color: #22c55e; border: 1px solid #dcfce7; }
+        #disease-table-body tr { transition: all 0.3s ease; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body class="bg-slate-50 min-h-screen flex">
 
-    <div id="main-layout" class="w-full min-h-screen">
-        <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
-            <div class="p-8">
-                <div class="flex items-center gap-3 mb-10">
-                    <div class="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center text-white shadow-lg">
-                        <i data-lucide="plus" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
-                        <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest">Health Network</p>
-                    </div>
+    <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
+        <div class="p-8">
+            <div class="flex items-center gap-3 mb-10" data-aos="fade-right">
+                <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg">
+                    <i data-lucide="plus" class="w-6 h-6"></i>
                 </div>
-
-                <nav class="space-y-3">
-                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all group">
-                        <div class="w-8 h-8 bg-slate-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="layout-dashboard" class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors"></i>
-                        </div>
-                        <span>Dashboard</span>
-                    </a>
-
-                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
-                        <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white transition-colors"></i>
-                        </div>
-                        <span>Medicine Stocks</span>
-                    </a>
-
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 hover:text-amber-600 transition-all group">
-                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white transition-colors"></i>
-                        </div>
-                        <span>Disease Reports</span>
-                    </a>
-
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:text-blue-600 transition-all group">
-                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white transition-colors"></i>
-                        </div>
-                        <span>Hotlines</span>
-                    </a>
-
-                    <div class="pt-6 pb-2">
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                        
-                        <a href="rhu-console.html" class="flex items-center gap-3 bg-rhu-red text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-red-200 transition-all scale-[1.02] mb-2">
-                            <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                                <i data-lucide="shield-alert" class="w-4 h-4 text-white"></i>
-                            </div>
-                            <span>RHU Console</span>
-                        </a>
-
-                        <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-indigo-50 text-indigo-600 px-5 py-4 rounded-2xl font-bold hover:bg-indigo-600 hover:text-white transition-all">
-                            <i data-lucide="users" class="w-5 h-5"></i> BHW Console
-                        </a>
-                    </div>
-                </nav>
-            </div>
-
-            <div class="mt-auto p-8 border-t border-slate-50">
-                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
-                    <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
-                </button>
-            </div>
-        </aside>
-
-        <main class="flex-1">
-            <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between sticky top-0 z-40">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">RHU Case Management</h2>
-                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
-                    <div class="w-8 h-8 bg-red-50 text-rhu-red rounded-full flex items-center justify-center">
-                        <i data-lucide="user-cog" class="w-4 h-4"></i>
-                    </div>
-                    <span id="user-name-display" class="font-bold text-navy text-sm">RHU Official</span>
-                </div>
-            </header>
-
-            <div class="p-8 max-w-7xl mx-auto">
-                <div data-aos="fade-up" class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-                    <div class="flex flex-1 items-center gap-4">
-                        <div class="flex items-center bg-white p-1 pr-6 rounded-2xl border border-slate-100 shadow-sm flex-1 max-w-md focus-within:ring-2 ring-red-100 transition-all">
-                            <div class="relative flex-1">
-                                <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                                <input type="text" id="disease-search" placeholder="Search Municipal Records..." class="w-full pl-14 pr-4 py-4 bg-transparent outline-none font-semibold text-navy">
-                            </div>
-                        </div>
-                        <div class="bg-white p-1 rounded-2xl border border-slate-100 shadow-sm w-64">
-                            <select id="filter-brgy" class="w-full p-4 bg-transparent outline-none font-bold text-slate-600 cursor-pointer">
-                                <option value="All">Global View (All)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button onclick="openAddModal()" class="bg-rhu-red text-white px-10 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 hover:bg-red-600 shadow-xl shadow-red-100 transition-all">
-                        <i data-lucide="plus-circle" class="w-5 h-5"></i> Add New Record
-                    </button>
-                </div>
-
-                <div data-aos="fade-up" data-aos-delay="100" class="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden min-h-[500px]">
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-50/50 border-b border-slate-50">
-                            <tr class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
-                                <th class="px-10 py-6">Infection Identity</th>
-                                <th class="px-8 py-6">Barangay</th>
-                                <th class="px-8 py-6 text-center">Count</th>
-                                <th class="px-8 py-6">Severity Status</th>
-                                <th class="px-10 py-6 text-right">Admin Control</th>
-                            </tr>
-                        </thead>
-                        <tbody id="disease-table-body" class="divide-y divide-slate-50"></tbody>
-                    </table>
+                <div>
+                    <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
+                    <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
                 </div>
             </div>
-        </main>
-    </div>
+
+            <nav class="space-y-3">
+                <a href="dashboard.html" data-aos="fade-right" data-aos-delay="100" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all group">
+                    <div class="w-8 h-8 bg-slate-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="stock.html" data-aos="fade-right" data-aos-delay="200" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
+                    <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
+                        <i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <span>Medicine Stocks</span>
+                </a>
+
+                <a href="reports.html" data-aos="fade-right" data-aos-delay="300" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 hover:text-amber-600 transition-all group">
+                    <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
+                        <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <span>Disease Reports</span>
+                </a>
+
+                <a href="hotlines.html" data-aos="fade-right" data-aos-delay="350" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:text-blue-600 transition-all group">
+                    <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
+                        <i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white transition-colors"></i>
+                    </div>
+                    <span>Hotlines</span>
+                </a>
+
+                <div class="pt-6 pb-2" data-aos="fade-up" data-aos-delay="400">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
+                    
+                    <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-red-100 transition-all scale-[1.02] mb-2">
+                        <i data-lucide="shield-alert" class="w-5 h-5 text-white"></i> RHU Console
+                    </a>
+
+                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:text-white transition-all">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="mt-auto p-8 border-t border-slate-50" data-aos="fade-up" data-aos-delay="500">
+            <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
+                <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 p-8">
+        <header class="flex justify-between items-center mb-10" data-aos="fade-down" data-aos-duration="800">
+            <div>
+                <h1 class="text-3xl font-extrabold text-navy">RHU Command Center</h1>
+                <p class="text-slate-500">Global Disease Case Management</p>
+            </div>
+            
+            <div class="relative w-96">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5"></i>
+                <input type="text" id="disease-search" placeholder="Search entries..." 
+                    class="w-full pl-12 pr-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-4 focus:ring-red-500/10 transition-all">
+            </div>
+        </header>
+
+        <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+            <table class="w-full text-left">
+                <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 text-xs font-black uppercase tracking-widest">
+                    <tr>
+                        <th class="px-8 py-5">Disease Name</th>
+                        <th class="px-8 py-5">Barangay</th>
+                        <th class="px-8 py-5 text-center">Active Cases</th>
+                        <th class="px-8 py-5">Severity Level</th>
+                    </tr>
+                </thead>
+                <tbody id="disease-table-body" class="divide-y divide-slate-50 text-navy font-medium"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        AOS.init({ duration: 800, once: true, easing: 'ease-out-quart' });
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
+            authDomain: "gub-up.firebaseapp.com",
+            projectId: "gub-up",
+            storageBucket: "gub-up.firebasestorage.app",
+            messagingSenderId: "75119179497",
+            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        lucide.createIcons();
+
+        const tableBody = document.getElementById('disease-table-body');
+        const searchInput = document.getElementById('disease-search');
+        const rhuLink = document.getElementById('rhu-disease-link');
+        const bhwLink = document.getElementById('worker-secret-link');
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    if (userData.role === "rhu") {
+                        rhuLink.classList.remove('hidden');
+                    } else if (userData.role === "bhw") {
+                        bhwLink.classList.remove('hidden');
+                    }
+                }
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        onSnapshot(query(collection(db, "disease_cases"), orderBy("count", "desc")), (snapshot) => {
+            renderTable(snapshot.docs);
+        });
+
+        function renderTable(docs) {
+            const searchTerm = searchInput.value.toLowerCase();
+            tableBody.innerHTML = "";
+
+            docs.forEach(doc => {
+                const data = doc.data();
+                const cases = parseInt(data.count || 0);
+                
+                if(data.name.toLowerCase().includes(searchTerm) || data.barangay.toLowerCase().includes(searchTerm)) {
+                    let severityClass = "bg-blue-100 text-blue-600";
+                    if(data.severity === 'High') severityClass = "bg-red-500 text-white";
+                    else if(data.severity === 'Medium') severityClass = "bg-orange-400 text-white";
+                    else if(data.severity === 'Low') severityClass = "bg-emerald-500 text-white";
+
+                    tableBody.innerHTML += `
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-8 py-6">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 bg-red-50 text-red-600 rounded-lg flex items-center justify-center">
+                                        <i data-lucide="activity" class="w-4 h-4"></i>
+                                    </div>
+                                    <span class="font-bold">${data.name}</span>
+                                </div>
+                            </td>
+                            <td class="px-8 py-6 text-slate-500 font-bold uppercase text-xs">${data.barangay}</td>
+                            <td class="px-8 py-6 font-mono text-lg text-center font-black">${cases.toLocaleString()}</td>
+                            <td class="px-8 py-6">
+                                <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${severityClass}">
+                                    ${data.severity || 'Unrated'}
+                                </span>
+                            </td>
+                        </tr>`;
+                }
+            });
+            lucide.createIcons();
+        }
+
+        searchInput.addEventListener('input', () => {
+            onSnapshot(query(collection(db, "disease_cases"), orderBy("count", "desc")), (snapshot) => {
+                renderTable(snapshot.docs);
+            });
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
+    </script>
+</body>
+</html>
