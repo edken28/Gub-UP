@@ -121,47 +121,36 @@
             <div class="p-8 max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
-                        <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-red-100">
+                        <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="virus" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <h3 id="stat-active-cases" class="text-4xl font-bold text-navy">247</h3>
+                            <h3 class="text-4xl font-bold text-navy">247</h3>
                             <p class="text-slate-500 font-medium">Active Cases</p>
                             <p class="text-xs text-slate-400 mt-1 font-semibold">+12 this week</p>
                         </div>
                     </div>
 
                     <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
-                        <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-100">
+                        <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="pill" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <h3 id="stat-medicine-stock" class="text-4xl font-bold text-navy">89%</h3>
+                            <h3 class="text-4xl font-bold text-navy">89%</h3>
                             <p class="text-slate-500 font-medium">Medicine Stock</p>
                             <p class="text-xs text-emerald-500 mt-1 font-bold">Adequate supply</p>
                         </div>
                     </div>
 
                     <div data-aos="fade-up" data-aos-delay="300" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
-                        <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                        <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="map-pin" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <h3 class="text-4xl font-bold text-navy">33</h3>
+                            <h3 class="text-4xl font-bold text-navy">42</h3>
                             <p class="text-slate-500 font-medium">Barangays</p>
                             <p class="text-xs text-slate-400 mt-1 font-semibold">All connected</p>
                         </div>
-                    </div>
-                </div>
-
-                <div data-aos="fade-up" class="bg-emerald-600 rounded-[2.5rem] p-10 text-white mb-10 flex justify-between items-center relative overflow-hidden shadow-2xl shadow-emerald-100">
-                    <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20"></div>
-                    <div class="relative z-10">
-                        <div class="mb-6">
-                            <i data-lucide="file-text" class="w-10 h-10"></i>
-                        </div>
-                        <h2 class="text-4xl font-bold mb-2 tracking-tight">New Field Report</h2>
-                        <p class="text-emerald-100 text-lg opacity-90 font-medium">Submit health cases to RHU.</p>
                     </div>
                 </div>
 
@@ -169,7 +158,7 @@
                     <div data-aos="fade-right" class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 min-h-[400px]">
                         <div class="flex justify-between items-center mb-8">
                             <h3 class="text-2xl font-bold text-navy">Recent Disease Cases</h3>
-                            <a href="rhu-console.html" id="view-all-disease" class="hidden text-brand-blue font-bold text-sm hover:underline">View All</a>
+                            <a href="#" class="text-brand-blue font-bold text-sm hover:underline">View All</a>
                         </div>
                         <div id="disease-dashboard-list" class="space-y-4"></div>
                     </div>
@@ -177,7 +166,7 @@
                     <div data-aos="fade-left" class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 min-h-[400px]">
                         <div class="flex justify-between items-center mb-8">
                             <h3 class="text-2xl font-bold text-navy">Critical Stock Alerts</h3>
-                            <a href="bhw-console.html" id="view-all-stock" class="hidden text-brand-blue font-bold text-sm hover:underline">View All</a>
+                            <a href="#" class="text-brand-blue font-bold text-sm hover:underline">View All</a>
                         </div>
                         <div id="medicine-dashboard-list" class="space-y-4"></div>
                     </div>
@@ -190,7 +179,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -213,15 +202,14 @@
                     
                     if (userData.role === "rhu") {
                         document.getElementById('rhu-disease-link').classList.remove('hidden');
-                        document.getElementById('view-all-disease').classList.remove('hidden');
-                        fetchRecentCases(); 
                     } else if (userData.role === "bhw") {
                         document.getElementById('worker-secret-link').classList.remove('hidden');
-                        document.getElementById('view-all-stock').classList.remove('hidden');
-                        fetchRecentCases(userData.barangay);
-                        fetchLowStock(userData.barangay);
                     }
                 }
+
+                // Global data fetch so everyone can see the lists
+                fetchRecentCases();
+                fetchLowStock();
                 
                 setTimeout(() => {
                     document.getElementById('loader-container').classList.add('loaded');
@@ -236,10 +224,8 @@
             }
         });
 
-        function fetchRecentCases(brgy = null) {
-            let q = query(collection(db, "disease_cases"), orderBy("updatedAt", "desc"), limit(5));
-            if (brgy) q = query(collection(db, "disease_cases"), where("barangay", "==", brgy), orderBy("updatedAt", "desc"), limit(5));
-
+        function fetchRecentCases() {
+            const q = query(collection(db, "disease_cases"), orderBy("updatedAt", "desc"), limit(5));
             onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('disease-dashboard-list');
                 list.innerHTML = "";
@@ -249,34 +235,37 @@
                     list.innerHTML += `
                         <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
                             <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-red-100 text-red-500 rounded-xl flex items-center justify-center font-bold">${data.count}</div>
+                                <div class="w-10 h-10 bg-red-100 text-red-500 rounded-xl flex items-center justify-center font-bold">${data.count || 0}</div>
                                 <div>
                                     <p class="font-bold text-navy">${data.name}</p>
                                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">${data.barangay}</p>
                                 </div>
                             </div>
-                            <span class="text-[10px] font-black uppercase px-3 py-1 bg-white rounded-lg border border-slate-100 text-slate-400">${data.severity}</span>
+                            <span class="text-[10px] font-black uppercase px-3 py-1 bg-white rounded-lg border border-slate-100 text-slate-400">${data.severity || 'Unknown'}</span>
                         </div>
                     `;
                 });
             });
         }
 
-        function fetchLowStock(brgy) {
-            const q = query(collection(db, "medicine_inventory"), where("barangay", "==", brgy), where("quantity", "<", 10), limit(5));
+        function fetchLowStock() {
+            const q = query(collection(db, "medicine_inventory"), orderBy("quantity", "asc"), limit(5));
             onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('medicine-dashboard-list');
                 list.innerHTML = "";
                 if(snapshot.empty) list.innerHTML = "<p class='text-emerald-500 font-bold'>✓ All stocks are sufficient.</p>";
                 snapshot.forEach(doc => {
                     const data = doc.data();
+                    const isLow = data.quantity < 10;
                     list.innerHTML += `
-                        <div class="flex items-center justify-between p-5 bg-orange-50 rounded-2xl border border-orange-100">
+                        <div class="flex items-center justify-between p-5 ${isLow ? 'bg-orange-50 border-orange-100' : 'bg-slate-50 border-slate-100'} rounded-2xl border">
                             <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-white text-orange-500 rounded-xl flex items-center justify-center"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
+                                <div class="w-10 h-10 ${isLow ? 'bg-white text-orange-500' : 'bg-white text-blue-500'} rounded-xl flex items-center justify-center">
+                                    <i data-lucide="${isLow ? 'alert-triangle' : 'package'}" class="w-5 h-5"></i>
+                                </div>
                                 <div>
-                                    <p class="font-bold text-orange-900">${data.name}</p>
-                                    <p class="text-xs text-orange-600 font-bold">Only ${data.quantity} units left</p>
+                                    <p class="font-bold text-navy">${data.name}</p>
+                                    <p class="text-xs ${isLow ? 'text-orange-600' : 'text-slate-400'} font-bold">${data.quantity} units - ${data.barangay}</p>
                                 </div>
                             </div>
                         </div>
