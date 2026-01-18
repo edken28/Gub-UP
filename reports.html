@@ -10,6 +10,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .bg-brand-blue { background-color: #2563eb; }
+        .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
     </style>
 </head>
@@ -18,12 +19,12 @@
     <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
         <div class="p-8">
             <div class="flex items-center gap-3 mb-10">
-                <div class="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center text-white shadow-lg">
+                <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg">
                     <i data-lucide="plus" class="w-6 h-6"></i>
                 </div>
                 <div>
                     <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
-                    <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest">Health Network</p>
+                    <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
                 </div>
             </div>
 
@@ -51,11 +52,13 @@
 
                 <div class="pt-6 pb-2">
                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
+                    
                     <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2">
                         <i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console
                     </a>
-                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-indigo-50 text-indigo-600 px-5 py-4 rounded-2xl font-bold hover:bg-indigo-600 hover:text-white transition-all">
-                        <i data-lucide="users" class="w-5 h-5"></i> BHW Console
+
+                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:text-white transition-all">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
                     </a>
                 </div>
             </nav>
@@ -121,7 +124,6 @@
         const rhuLink = document.getElementById('rhu-disease-link');
         const bhwLink = document.getElementById('worker-secret-link');
 
-        // Role Protection Logic
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -138,7 +140,6 @@
             }
         });
 
-        // Real-time Disease Data
         onSnapshot(query(collection(db, "disease_cases"), orderBy("count", "desc")), (snapshot) => {
             renderTable(snapshot.docs);
         });
@@ -180,7 +181,13 @@
             lucide.createIcons();
         }
 
-        searchInput.addEventListener('input', () => { /* Filter logic inside renderTable */ });
+        searchInput.addEventListener('input', () => {
+            // Re-render handled by onSnapshot stream or trigger manually:
+            onSnapshot(query(collection(db, "disease_cases"), orderBy("count", "desc")), (snapshot) => {
+                renderTable(snapshot.docs);
+            });
+        });
+
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
     </script>
 </body>
