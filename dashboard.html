@@ -24,9 +24,6 @@
         .loaded#loader-container { opacity: 0; pointer-events: none; visibility: hidden; }
         #main-layout { opacity: 0; transition: opacity 0.8s ease-out; }
         .content-visible #main-layout { opacity: 1; }
-        
-        .role-clickable { cursor: pointer !important; transition: all 0.2s; }
-        .role-clickable:hover { transform: translateY(-4px); border-color: #2563eb; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
@@ -77,11 +74,9 @@
 
                     <div class="pt-6 pb-2">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                        
                         <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2">
                             <i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console
                         </a>
-
                         <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:text-white transition-all">
                             <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
                         </a>
@@ -136,7 +131,6 @@
                         <div>
                             <h3 id="avg-medicine-stock" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Inventory Health Score</p>
-                            <p id="stock-status-text" class="text-xs mt-1 font-bold uppercase tracking-wider">Calculating...</p>
                         </div>
                     </div>
 
@@ -190,7 +184,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Initialization
         fetchGlobalActiveCases();
         fetchRankingCases(); 
         fetchLowStockAlerts();
@@ -201,7 +194,6 @@
             const bhwLink = document.getElementById('worker-secret-link');
             const userDisplay = document.getElementById('user-name-display');
             const welcomeNameDisplay = document.getElementById('welcome-user-name');
-            const stockCard = document.getElementById('medicine-stock-card');
 
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -214,8 +206,6 @@
                         rhuLink.classList.remove('hidden');
                     } else if (userData.role === "bhw") {
                         bhwLink.classList.remove('hidden');
-                        stockCard.classList.add('role-clickable');
-                        stockCard.onclick = () => window.location.href = "bhw-console.html";
                     }
                 }
             }
@@ -270,17 +260,7 @@
                 });
                 const averageHealth = medCount > 0 ? Math.round(totalHealthPoints / medCount) : 0;
                 document.getElementById('avg-medicine-stock').innerText = `${averageHealth}%`;
-                const status = document.getElementById('stock-status-text');
-                if (averageHealth >= 80) {
-                    status.innerText = "Optimal Supply";
-                    status.className = "text-xs mt-1 font-bold text-emerald-500 uppercase tracking-wider";
-                } else if (averageHealth >= 50) {
-                    status.innerText = "Stock Warnings";
-                    status.className = "text-xs mt-1 font-bold text-orange-500 uppercase tracking-wider";
-                } else {
-                    status.innerText = "Critical Shortage";
-                    status.className = "text-xs mt-1 font-bold text-red-500 uppercase tracking-wider";
-                }
+                // Logic for stock-status-text was removed as the element no longer exists
             });
         }
 
