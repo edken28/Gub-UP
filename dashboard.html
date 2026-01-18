@@ -98,9 +98,9 @@
                             <i data-lucide="pill" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <h3 class="text-4xl font-bold text-navy">89%</h3>
+                            <h3 id="avg-medicine-stock" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Medicine Stock</p>
-                            <p class="text-xs text-emerald-500 mt-1 font-bold">Adequate supply</p>
+                            <p id="stock-status-text" class="text-xs mt-1 font-bold">Checking Inventory...</p>
                         </div>
                     </div>
 
@@ -117,7 +117,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                    
                     <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100">
                         <div class="flex justify-between items-center mb-8">
                             <div>
@@ -168,8 +167,9 @@
 
                 // Initialise real-time listeners
                 fetchGlobalActiveCases();
-                fetchHighSeverityCases(); // Fixed function
+                fetchHighSeverityCases(); 
                 fetchLowStock();
+                fetchGlobalMedicineStock(); // New Dynamic Function
                 
                 setTimeout(() => {
                     document.getElementById('loader-container').classList.add('loaded');
@@ -181,7 +181,6 @@
             }
         });
 
-        // Sums total case count across all reports
         function fetchGlobalActiveCases() {
             onSnapshot(collection(db, "disease_cases"), (snapshot) => {
                 let total = 0;
@@ -192,7 +191,44 @@
             });
         }
 
-        // Top 10 High Severity Reports
+        // NEW: Real-time calculation for the 89% replacement
+        function fetchGlobalMedicineStock() {
+            onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
+                let totalItems = 0;
+                let totalQuantity = 0;
+                const TARGET_STOCK = 100; // The capacity we consider "100%" per item type
+
+                if (snapshot.empty) {
+                    document.getElementById('avg-medicine-stock').innerText = "0%";
+                    document.getElementById('stock-status-text').innerText = "No Inventory Record";
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    totalQuantity += parseInt(doc.data().quantity || 0);
+                    totalItems++;
+                });
+
+                // Calculation: (Total Sum / (Number of Types * Max Target)) * 100
+                const rawPercentage = (totalQuantity / (totalItems * TARGET_STOCK)) * 100;
+                const finalPct = Math.min(Math.round(rawPercentage), 100);
+
+                document.getElementById('avg-medicine-stock').innerText = `${finalPct}%`;
+                
+                const statusText = document.getElementById('stock-status-text');
+                if(finalPct < 30) {
+                    statusText.innerText = "Critical Supply Level";
+                    statusText.className = "text-xs mt-1 font-bold text-red-500";
+                } else if(finalPct < 70) {
+                    statusText.innerText = "Supply is Low";
+                    statusText.className = "text-xs mt-1 font-bold text-orange-500";
+                } else {
+                    statusText.innerText = "Adequate Supply";
+                    statusText.className = "text-xs mt-1 font-bold text-emerald-500";
+                }
+            });
+        }
+
         function fetchHighSeverityCases() {
             const q = query(
                 collection(db, "disease_cases"), 
