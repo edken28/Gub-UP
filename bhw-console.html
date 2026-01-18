@@ -61,6 +61,13 @@
                         <span>Disease Reports</span>
                     </a>
 
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:text-blue-600 transition-all group">
+                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <span>Hotlines</span>
+                    </a>
+
                     <div class="pt-6 pb-2">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
                         
@@ -187,12 +194,16 @@
                     document.body.classList.add('auth-ready');
                     AOS.init({ duration: 600, once: true });
                     initData();
+
+                    // Check if user is also RHU (optional but good for visibility)
+                    if (userData.role === "rhu") {
+                        document.getElementById('rhu-link').classList.remove('hidden');
+                    }
                 } else { window.location.href = "dashboard.html"; }
             } else { window.location.href = "login.html"; }
         });
 
         function initData() {
-            // BHW only sees their specific Barangay stocks
             const q = query(collection(db, "medicine_inventory"), where("barangay", "==", userBrgy));
             onSnapshot(q, (snapshot) => {
                 const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
