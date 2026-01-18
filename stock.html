@@ -48,7 +48,23 @@
                     </div>
                     <span>Disease Reports</span>
                 </a>
+
+                <div class="pt-6 pb-2">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
+                    <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2">
+                        <i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console
+                    </a>
+                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-indigo-50 text-indigo-600 px-5 py-4 rounded-2xl font-bold hover:bg-indigo-600 hover:text-white transition-all">
+                        <i data-lucide="users" class="w-5 h-5"></i> BHW Console
+                    </a>
+                </div>
             </nav>
+        </div>
+
+        <div class="mt-auto p-8 border-t border-slate-50">
+            <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
+                <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
+            </button>
         </div>
     </aside>
 
@@ -76,15 +92,15 @@
                         <th class="px-8 py-5">Status</th>
                     </tr>
                 </thead>
-                <tbody id="inventory-table-body" class="divide-y divide-slate-50 text-navy font-medium">
-                    </tbody>
+                <tbody id="inventory-table-body" class="divide-y divide-slate-50 text-navy font-medium"></tbody>
             </table>
         </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -96,13 +112,34 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
         lucide.createIcons();
 
+        // Elements
         const tableBody = document.getElementById('inventory-table-body');
         const searchInput = document.getElementById('med-search');
+        const rhuLink = document.getElementById('rhu-disease-link');
+        const bhwLink = document.getElementById('worker-secret-link');
 
-        // Real-time Listener for all inventory
+        // Role-Based Access Control
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    if (userData.role === "rhu") {
+                        rhuLink.classList.remove('hidden');
+                    } else if (userData.role === "bhw") {
+                        bhwLink.classList.remove('hidden');
+                    }
+                }
+            } else {
+                window.location.href = "login.html"; // Redirect if not logged in
+            }
+        });
+
+        // Inventory Data Fetching
         onSnapshot(query(collection(db, "medicine_inventory"), orderBy("name", "asc")), (snapshot) => {
             renderTable(snapshot.docs);
         });
@@ -110,53 +147,36 @@
         function renderTable(docs) {
             const searchTerm = searchInput.value.toLowerCase();
             tableBody.innerHTML = "";
-
             docs.forEach(doc => {
                 const data = doc.data();
                 const qty = parseInt(data.quantity || 0);
-                
-                // Search filter
                 if(data.name.toLowerCase().includes(searchTerm) || data.barangay.toLowerCase().includes(searchTerm)) {
-                    
                     let statusClass = "bg-emerald-100 text-emerald-600";
                     let statusText = "Stable";
-
-                    if(qty < 100) {
-                        statusClass = "bg-red-100 text-red-600";
-                        statusText = "Critical";
-                    } else if (qty < 300) {
-                        statusClass = "bg-orange-100 text-orange-600";
-                        statusText = "Low Stock";
-                    }
+                    if(qty < 100) { statusClass = "bg-red-100 text-red-600"; statusText = "Critical"; }
+                    else if (qty < 300) { statusClass = "bg-orange-100 text-orange-600"; statusText = "Low Stock"; }
 
                     tableBody.innerHTML += `
                         <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="px-8 py-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 bg-emerald-50 text-emerald-500 rounded-lg flex items-center justify-center">
-                                        <i data-lucide="pill" class="w-4 h-4"></i>
-                                    </div>
-                                    <span class="font-bold">${data.name}</span>
+                            <td class="px-8 py-6 flex items-center gap-3">
+                                <div class="w-8 h-8 bg-emerald-50 text-emerald-50 rounded-lg flex items-center justify-center">
+                                    <i data-lucide="pill" class="w-4 h-4 text-emerald-500"></i>
                                 </div>
+                                <span class="font-bold">${data.name}</span>
                             </td>
-                            <td class="px-8 py-6 text-slate-500 font-bold uppercase text-xs tracking-tighter">${data.barangay}</td>
+                            <td class="px-8 py-6 text-slate-500 font-bold uppercase text-xs">${data.barangay}</td>
                             <td class="px-8 py-6 font-mono text-lg">${qty.toLocaleString()}</td>
                             <td class="px-8 py-6">
-                                <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${statusClass}">
-                                    ${statusText}
-                                </span>
+                                <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${statusClass}">${statusText}</span>
                             </td>
-                        </tr>
-                    `;
+                        </tr>`;
                 }
             });
             lucide.createIcons();
         }
 
-        searchInput.addEventListener('input', () => {
-            // Re-fetch or re-render is handled by standard logic
-            location.reload; // Note: In a real app we'd just filter the array
-        });
+        searchInput.addEventListener('input', () => { /* Filter logic is handled in renderTable */ });
+        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
     </script>
 </body>
 </html>
