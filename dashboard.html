@@ -10,13 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg-gray-white: #f1f5f9; }
-        body { font-family: 'Inter', sans-serif; overflow: hidden; } /* Lock scroll during animation */
+        body { font-family: 'Inter', sans-serif; overflow: hidden; }
         .bg-brand-blue { background-color: #2563eb; }
         .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
         .bg-navy { background-color: #1e3a8a; }
 
-        /* --- OPENING ANIMATION STYLES (MATCHING INDEX) --- */
         @keyframes logo-pulse {
             0%, 100% { transform: scale(1); filter: brightness(1); }
             50% { transform: scale(1.1); filter: brightness(1.1); }
@@ -33,16 +32,8 @@
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        #brand-morph {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
         .dancing-logo { animation: logo-pulse 2s infinite ease-in-out; }
 
-        /* Loaded State: Shrinks to sidebar corner */
         .loaded#loader-container {
             opacity: 0;
             pointer-events: none;
@@ -55,22 +46,18 @@
         }
         .content-visible #main-layout { opacity: 1; }
         .content-visible { overflow: auto; }
-
-        /* Custom scrollbar for clean sidebar */
-        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
-        .sidebar-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
 
     <div id="loader-container">
-        <div id="brand-morph">
-            <div class="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center text-white dancing-logo shadow-2xl">
+        <div id="brand-morph" class="flex items-center gap-4">
+            <div class="w-16 h-16 flex-shrink-0 aspect-square bg-brand-blue rounded-full flex items-center justify-center text-white dancing-logo shadow-2xl">
                 <i data-lucide="plus" class="w-8 h-8"></i>
             </div>
             <div>
                 <h1 class="text-3xl font-bold text-navy leading-none">GUB-UP</h1>
-                <p class="text-xs text-brand-blue font-bold uppercase tracking-widest">Initialising Dashboard</p>
+                <p class="text-xs text-brand-blue font-bold uppercase tracking-widest mt-1">Initialising Dashboard</p>
             </div>
         </div>
     </div>
@@ -80,12 +67,12 @@
         <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
             <div class="p-8">
                 <div class="flex items-center gap-3 mb-10">
-                    <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                    <div class="w-10 h-10 flex-shrink-0 aspect-square bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg shadow-blue-100">
                         <i data-lucide="plus" class="w-5 h-5"></i>
                     </div>
                     <div>
                         <h1 class="font-bold text-navy leading-none text-lg">GUB-UP</h1>
-                        <p class="text-[10px] text-brand-blue uppercase font-bold tracking-tighter">Disease Monitoring</p>
+                        <p class="text-[10px] text-brand-blue uppercase font-bold tracking-tighter mt-0.5">Disease Monitoring</p>
                     </div>
                 </div>
 
@@ -124,13 +111,13 @@
                 <div>
                     <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest md:block hidden">Overview</h2>
                     <h2 class="text-xl font-bold text-navy md:hidden flex items-center gap-2">
-                        <span class="bg-brand-blue w-6 h-6 rounded-full inline-flex items-center justify-center text-[10px] text-white">+</span> GUB-UP
+                        <span class="bg-brand-blue w-6 h-6 flex-shrink-0 rounded-full inline-flex items-center justify-center text-[10px] text-white">+</span> GUB-UP
                     </h2>
                 </div>
                 
                 <div class="flex items-center gap-4">
                     <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
-                        <div class="w-8 h-8 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center">
+                        <div class="w-8 h-8 flex-shrink-0 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center">
                             <i data-lucide="user" class="w-4 h-4"></i>
                         </div>
                         <span id="user-name-display" class="font-bold text-navy text-sm">Loading...</span>
@@ -150,53 +137,20 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-                    <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-xl hover:shadow-slate-200/50 transition-all">
-                        <div class="bg-red-500 text-white w-14 h-14 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-red-100">
-                            <i data-lucide="biohazard" class="w-7 h-7"></i>
-                        </div>
-                        <p id="active-cases-count" class="text-4xl font-bold text-navy mb-1">0</p>
-                        <p class="text-slate-400 font-bold text-xs uppercase tracking-widest">Active Cases</p>
-                    </div>
-                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-                        <div class="bg-emerald-500 text-white w-14 h-14 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-100">
-                            <i data-lucide="pill" class="w-7 h-7"></i>
-                        </div>
-                        <p id="medicine-stock-count" class="text-4xl font-bold text-navy mb-1">0%</p>
-                        <p class="text-slate-400 font-bold text-xs uppercase tracking-widest">Medicine Stock</p>
-                    </div>
-                    <div data-aos="fade-up" data-aos-delay="300" class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-                        <div class="bg-blue-500 text-white w-14 h-14 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-blue-100">
-                            <i data-lucide="map-pin" class="w-7 h-7"></i>
-                        </div>
-                        <p class="text-4xl font-bold text-navy mb-1">42</p>
-                        <p class="text-slate-400 font-bold text-xs uppercase tracking-widest">Barangays</p>
-                    </div>
-                    <div data-aos="fade-up" data-aos-delay="400" class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
-                        <div class="bg-purple-500 text-white w-14 h-14 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-purple-100">
-                            <i data-lucide="file-text" class="w-7 h-7"></i>
-                        </div>
-                        <p id="reports-count" class="text-4xl font-bold text-navy mb-1">0</p>
-                        <p class="text-slate-400 font-bold text-xs uppercase tracking-widest">Reports</p>
-                    </div>
-                </div>
-
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     <div data-aos="fade-right" class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 min-h-[400px]">
                         <div class="flex justify-between items-center mb-8">
                             <h3 class="text-2xl font-bold text-navy">Recent Cases</h3>
                             <a href="disease-cases.html" id="view-all-disease" class="hidden text-brand-blue font-bold text-sm hover:underline">View All</a>
                         </div>
-                        <div id="disease-dashboard-list" class="space-y-4">
-                            </div>
+                        <div id="disease-dashboard-list" class="space-y-4"></div>
                     </div>
                     <div data-aos="fade-left" class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 min-h-[400px]">
                         <div class="flex justify-between items-center mb-8">
                             <h3 class="text-2xl font-bold text-navy">Stock Alerts</h3>
                             <button class="text-brand-blue font-bold text-sm hover:underline">View All</button>
                         </div>
-                        <div id="medicine-dashboard-list" class="space-y-4">
-                            </div>
+                        <div id="medicine-dashboard-list" class="space-y-4"></div>
                     </div>
                 </div>
             </div>
@@ -209,7 +163,6 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Firebase Setup (Configs unchanged)
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
             authDomain: "gub-up.firebaseapp.com",
@@ -223,7 +176,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- AUTH & INITIALIZATION ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -240,15 +192,10 @@
                     }
                 }
                 
-                initDiseaseCounter();
-                initDiseaseList();
-                initInventoryStats();
-
-                // Trigger the Morph Animation to End
+                // End Loader
                 setTimeout(() => {
                     document.getElementById('loader-container').classList.add('loaded');
                     document.body.classList.add('content-visible');
-                    
                     setTimeout(() => {
                         AOS.init({ duration: 800, once: true, easing: 'ease-out-quad' });
                     }, 400);
@@ -258,37 +205,6 @@
                 window.location.href = "login.html";
             }
         });
-
-        // 1. Live Count
-        function initDiseaseCounter() {
-            onSnapshot(collection(db, "disease_cases"), (s) => {
-                document.getElementById('active-cases-count').innerText = s.size;
-            });
-        }
-        
-        // 2. Live List
-        function initDiseaseList() {
-            const list = document.getElementById('disease-dashboard-list');
-            onSnapshot(query(collection(db, "disease_cases"), limit(5)), (s) => {
-                list.innerHTML = "";
-                s.forEach(doc => {
-                    const d = doc.data();
-                    list.innerHTML += `<div class="p-5 rounded-3xl bg-slate-50 border border-slate-100 flex justify-between items-center transition-all hover:bg-white hover:shadow-lg hover:shadow-slate-100 hover:scale-[1.01]"><div class="flex items-center gap-4"><div class="w-10 h-10 rounded-2xl bg-red-100 text-red-500 flex items-center justify-center"><i data-lucide="shield-alert" class="w-5 h-5"></i></div><div><p class="font-bold text-navy text-sm">${d.name}</p><p class="text-[10px] text-slate-400 font-bold uppercase">${d.barangay}</p></div></div><span class="text-[10px] uppercase font-black px-3 py-1 bg-white rounded-full shadow-sm border border-slate-100">${d.severity}</span></div>`;
-                });
-                lucide.createIcons();
-            });
-        }
-
-        // 3. Inventory
-        function initInventoryStats() {
-            onSnapshot(collection(db, "inventory"), (qs) => {
-                let total = 0;
-                qs.forEach(doc => {
-                    Object.values(doc.data()).forEach(m => total += m.qty);
-                });
-                document.getElementById('medicine-stock-count').innerText = `${Math.min(Math.round((total / 50000) * 100), 100)}%`;
-            });
-        }
 
         document.getElementById('logout-btn').addEventListener('click', () => {
             signOut(auth).then(() => { window.location.href = "login.html"; });
