@@ -25,7 +25,6 @@
         #main-layout { opacity: 0; transition: opacity 0.8s ease-out; }
         .content-visible #main-layout { opacity: 1; }
         
-        /* Interactive feedback for BHW Medicine card only */
         .role-clickable { cursor: pointer !important; transition: all 0.2s; }
         .role-clickable:hover { transform: translateY(-4px); border-color: #2563eb; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
     </style>
@@ -84,48 +83,46 @@
             </header>
 
             <div class="p-8 max-w-7xl mx-auto">
-                
                 <div data-aos="fade-down" class="bg-brand-blue rounded-[2.5rem] p-8 mb-10 text-white flex justify-between items-center shadow-xl shadow-blue-100">
                     <div>
                         <h1 class="text-3xl font-bold">Welcome back, <span id="welcome-user-name">Citizen</span>!</h1>
-                        <p class="text-blue-100 mt-1">View community health information</p>
+                        <p class="text-blue-100 mt-1">Gubat Community Health Overview</p>
                     </div>
                     <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                        <i data-lucide="user" class="w-8 h-8"></i>
+                        <i data-lucide="activity" class="w-8 h-8"></i>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
+                    <div data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
                         <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="biohazard" class="w-6 h-6"></i>
                         </div>
                         <div>
                             <h3 id="total-active-cases" class="text-4xl font-bold text-navy">...</h3>
-                            <p class="text-slate-500 font-medium">Active Cases</p>
-                            <p class="text-xs text-red-500 mt-1 font-bold uppercase tracking-wider">Live System Data</p>
+                            <p class="text-slate-500 font-medium">Global Active Cases</p>
                         </div>
                     </div>
 
-                    <div id="medicine-stock-card" data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
+                    <div id="medicine-stock-card" data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
                         <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="pill" class="w-6 h-6"></i>
                         </div>
                         <div>
                             <h3 id="avg-medicine-stock" class="text-4xl font-bold text-navy">...</h3>
-                            <p class="text-slate-500 font-medium">Medicine Stock</p>
-                            <p id="stock-status-text" class="text-xs mt-1 font-bold">Checking...</p>
+                            <p class="text-slate-500 font-medium">Inventory Health Score</p>
+                            <p id="stock-status-text" class="text-xs mt-1 font-bold uppercase tracking-wider">Calculating...</p>
                         </div>
                     </div>
 
-                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
+                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
                         <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="map-pin" class="w-6 h-6"></i>
                         </div>
                         <div>
                             <h3 class="text-4xl font-bold text-navy">42</h3>
-                            <p class="text-slate-500 font-medium">Barangays</p>
-                            <p class="text-xs text-slate-400 mt-1 font-semibold">Gubat, Sorsogon</p>
+                            <p class="text-slate-500 font-medium">Active Barangays</p>
+                            <p class="text-xs text-slate-400 mt-1 font-semibold uppercase">Sorsogon, Region V</p>
                         </div>
                     </div>
                 </div>
@@ -133,17 +130,17 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100">
                         <div class="flex justify-between items-center mb-8">
-                            <div>
-                                <h3 class="text-2xl font-bold text-navy">Disease Cases</h3>
-                                <p class="text-xs text-red-500 font-bold uppercase tracking-tight">Top Cases of Diseases</p>
-                            </div>
-                            <i data-lucide="trending-up" class="text-red-500 w-6 h-6"></i>
+                            <h3 class="text-2xl font-bold text-navy">Top Disease Alerts</h3>
+                            <i data-lucide="alert-circle" class="text-red-500 w-6 h-6"></i>
                         </div>
                         <div id="disease-dashboard-list" class="space-y-4"></div>
                     </div>
 
                     <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100">
-                        <h3 class="text-2xl font-bold text-navy mb-8">Critical Stock Alerts</h3>
+                        <div class="flex justify-between items-center mb-8">
+                            <h3 class="text-2xl font-bold text-navy">Critical Inventory Needs</h3>
+                            <i data-lucide="shopping-cart" class="text-orange-500 w-6 h-6"></i>
+                        </div>
                         <div id="medicine-dashboard-list" class="space-y-4"></div>
                     </div>
                 </div>
@@ -168,10 +165,11 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // Core Listeners
         fetchGlobalActiveCases();
         fetchRankingCases(); 
-        fetchLowStock();
-        fetchGlobalMedicineStock();
+        fetchLowStockAlerts();
+        fetchGlobalInventoryHealth();
 
         onAuthStateChanged(auth, async (user) => {
             const rhuLink = document.getElementById('rhu-disease-link');
@@ -185,7 +183,7 @@
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
                     userDisplay.innerText = userData.name;
-                    welcomeNameDisplay.innerText = userData.name; // Update Banner Name
+                    welcomeNameDisplay.innerText = userData.name;
                     
                     if (userData.role === "rhu") {
                         rhuLink.classList.remove('hidden');
@@ -209,12 +207,12 @@
             onSnapshot(collection(db, "disease_cases"), (snapshot) => {
                 let total = 0;
                 snapshot.forEach(doc => total += parseInt(doc.data().count || 0));
-                document.getElementById('total-active-cases').innerText = total;
+                document.getElementById('total-active-cases').innerText = total.toLocaleString();
             });
         }
 
         function fetchRankingCases() {
-            const q = query(collection(db, "disease_cases"), orderBy("count", "desc"), limit(10));
+            const q = query(collection(db, "disease_cases"), orderBy("count", "desc"), limit(6));
             onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('disease-dashboard-list');
                 list.innerHTML = "";
@@ -224,37 +222,76 @@
                         <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
                             <div class="flex items-center gap-4">
                                 <div class="w-10 h-10 bg-brand-blue text-white rounded-xl flex items-center justify-center font-bold">${data.count}</div>
-                                <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs text-slate-400 font-bold uppercase">${data.barangay}</p></div>
+                                <div><p class="font-bold text-navy">${data.name}</p><p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">${data.barangay}</p></div>
                             </div>
-                            <span class="text-[10px] font-black uppercase px-2 py-1 ${data.severity === 'High' ? 'bg-red-500' : 'bg-orange-400'} text-white rounded-md">${data.severity}</span>
+                            <span class="text-[9px] font-black uppercase px-2 py-1 ${data.severity === 'High' ? 'bg-red-500' : 'bg-orange-400'} text-white rounded-md">${data.severity}</span>
                         </div>`;
                 });
                 lucide.createIcons();
             });
         }
 
-        function fetchGlobalMedicineStock() {
+        // UPDATED GLOBAL LOGIC: Individual Medicine Health Average
+        function fetchGlobalInventoryHealth() {
             onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
-                let totalItems = 0, totalQuantity = 0;
-                snapshot.forEach(doc => { totalQuantity += parseInt(doc.data().quantity || 0); totalItems++; });
-                const finalPct = Math.min(Math.round((totalQuantity / (totalItems * 100)) * 100), 100) || 0;
-                document.getElementById('avg-medicine-stock').innerText = `${finalPct}%`;
+                let totalHealthPoints = 0;
+                let medCount = 0;
+
+                snapshot.forEach(doc => {
+                    const qty = parseInt(doc.data().quantity || 0);
+                    medCount++;
+
+                    // Tiered scoring to penalize low stock properly
+                    if (qty >= 500) totalHealthPoints += 100;
+                    else if (qty >= 300) totalHealthPoints += 75;
+                    else if (qty >= 100) totalHealthPoints += 40;
+                    else totalHealthPoints += 10;
+                });
+
+                const averageHealth = medCount > 0 ? Math.round(totalHealthPoints / medCount) : 0;
+                
+                const display = document.getElementById('avg-medicine-stock');
                 const status = document.getElementById('stock-status-text');
-                status.innerText = finalPct < 30 ? "Critical Level" : finalPct < 70 ? "Low Stock" : "Sufficient";
-                status.className = `text-xs mt-1 font-bold ${finalPct < 30 ? 'text-red-500' : finalPct < 70 ? 'text-orange-500' : 'text-emerald-500'}`;
+                
+                display.innerText = `${averageHealth}%`;
+                
+                if (averageHealth >= 80) {
+                    status.innerText = "Optimal Supply";
+                    status.className = "text-xs mt-1 font-bold text-emerald-500 uppercase tracking-wider";
+                } else if (averageHealth >= 50) {
+                    status.innerText = "Stock Warnings";
+                    status.className = "text-xs mt-1 font-bold text-orange-500 uppercase tracking-wider";
+                } else {
+                    status.innerText = "Critical Shortage";
+                    status.className = "text-xs mt-1 font-bold text-red-500 uppercase tracking-wider";
+                }
             });
         }
 
-        function fetchLowStock() {
-            const q = query(collection(db, "medicine_inventory"), orderBy("quantity", "asc"), limit(5));
+        function fetchLowStockAlerts() {
+            const q = query(collection(db, "medicine_inventory"), orderBy("quantity", "asc"), limit(6));
             onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('medicine-dashboard-list');
                 list.innerHTML = "";
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    list.innerHTML += `<div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                        <div class="flex items-center gap-4"><i data-lucide="package" class="w-5 h-5 text-blue-500"></i>
-                        <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs font-bold text-slate-400">${data.quantity} units - ${data.barangay}</p></div></div></div>`;
+                    const isCritical = data.quantity < 100;
+                    list.innerHTML += `
+                        <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 ${isCritical ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'} rounded-xl flex items-center justify-center">
+                                    <i data-lucide="package" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-navy">${data.name}</p>
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">${data.barangay}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-black ${isCritical ? 'text-red-500' : 'text-orange-500'}">${data.quantity.toLocaleString()}</p>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase">Remaining</p>
+                            </div>
+                        </div>`;
                 });
                 lucide.createIcons();
             });
