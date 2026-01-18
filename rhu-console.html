@@ -7,21 +7,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .bg-brand-blue { background-color: #2563eb; }
-        .text-brand-blue { color: #2563eb; }
+        .text-navy { color: #1e3a8a; }
         .bg-rhu-red { background-color: #ef4444; }
         .text-rhu-red { color: #ef4444; }
-        .text-navy { color: #1e3a8a; }
         
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
 
-        .severity-high { background-color: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; }
+        .severity-high { background-color: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; animation: pulse-red 2s infinite; }
         .severity-medium { background-color: #fff7ed; color: #f97316; border: 1px solid #ffedd5; }
         .severity-low { background-color: #f0fdf4; color: #22c55e; border: 1px solid #dcfce7; }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen">
@@ -30,12 +34,12 @@
         <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
             <div class="p-8">
                 <div class="flex items-center gap-3 mb-10">
-                    <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg">
-                        <i data-lucide="plus" class="w-6 h-6"></i>
+                    <div class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                        <i data-lucide="shield-alert" class="w-6 h-6"></i>
                     </div>
                     <div>
                         <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
-                        <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
+                        <p class="text-[10px] text-red-600 uppercase font-black tracking-widest mt-1">Health Network</p>
                     </div>
                 </div>
 
@@ -54,24 +58,15 @@
                         <span>Medicine Stocks</span>
                     </a>
 
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 hover:text-amber-600 transition-all group">
-                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white transition-colors"></i>
-                        </div>
-                        <span>Disease Reports</span>
-                    </a>
-
                     <div class="pt-6 pb-2">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                        
-                        <a href="rhu-console.html" class="flex items-center gap-3 bg-rhu-red text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-red-200 transition-all scale-[1.02] mb-2">
+                        <a href="rhu-console.html" class="flex items-center gap-3 bg-red-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-red-200 transition-all scale-[1.02]">
                             <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                                <i data-lucide="shield-alert" class="w-4 h-4 text-white"></i>
+                                <i data-lucide="activity" class="w-4 h-4 text-white"></i>
                             </div>
                             <span>RHU Console</span>
                         </a>
-
-                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all">
+                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all mt-2">
                             <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
                         </a>
                     </div>
@@ -87,10 +82,10 @@
 
         <main class="flex-1">
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between sticky top-0 z-40">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Disease Management Console</h2>
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Disease Management System</h2>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
-                    <div class="w-8 h-8 bg-red-50 text-rhu-red rounded-full flex items-center justify-center">
-                        <i data-lucide="activity" class="w-4 h-4"></i>
+                    <div class="w-8 h-8 bg-red-50 text-red-600 rounded-full flex items-center justify-center">
+                        <i data-lucide="user-check" class="w-4 h-4"></i>
                     </div>
                     <span id="user-name-display" class="font-bold text-navy text-sm">RHU Officer</span>
                 </div>
@@ -102,12 +97,12 @@
                         <div class="flex items-center bg-white p-1 pr-6 rounded-2xl border border-slate-100 shadow-sm flex-1 max-w-md focus-within:ring-2 ring-red-100 transition-all">
                             <div class="relative flex-1">
                                 <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                                <input type="text" id="disease-search" placeholder="Search Disease or Barangay..." class="w-full pl-14 pr-4 py-4 bg-transparent outline-none font-semibold text-navy">
+                                <input type="text" id="disease-search" placeholder="Search disease or barangay..." class="w-full pl-14 pr-4 py-4 bg-transparent outline-none font-semibold text-navy">
                             </div>
                         </div>
                     </div>
-                    <button onclick="openAddModal()" class="bg-rhu-red text-white px-10 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 hover:bg-red-600 shadow-xl shadow-red-100 transition-all active:scale-95">
-                        <i data-lucide="plus-circle" class="w-5 h-5"></i> Add New Case
+                    <button onclick="openAddModal()" class="bg-red-600 text-white px-10 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 hover:bg-red-700 shadow-xl shadow-red-100 transition-all">
+                        <i data-lucide="plus-circle" class="w-5 h-5"></i> Report New Case
                     </button>
                 </div>
 
@@ -115,11 +110,11 @@
                     <table class="w-full text-left">
                         <thead class="bg-slate-50/50 border-b border-slate-50">
                             <tr class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
-                                <th class="px-10 py-6">Infectious Disease</th>
-                                <th class="px-8 py-6">Affected Barangay</th>
+                                <th class="px-10 py-6">Disease Entity</th>
+                                <th class="px-8 py-6">Affected Area</th>
                                 <th class="px-8 py-6 text-center">Case Count</th>
-                                <th class="px-8 py-6">Alert Level</th>
-                                <th class="px-10 py-6 text-right">Admin Control</th>
+                                <th class="px-8 py-6">Severity Status</th>
+                                <th class="px-10 py-6 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="disease-table-body" class="divide-y divide-slate-50"></tbody>
@@ -131,68 +126,24 @@
 
     <div id="disease-modal" class="fixed inset-0 bg-navy/40 backdrop-blur-md z-50 hidden flex items-center justify-center p-6">
         <div class="bg-white rounded-[3rem] w-full max-w-lg p-10 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-2 bg-rhu-red"></div>
-            <h3 id="modal-title" class="text-3xl font-bold text-navy mb-8">Disease Entry</h3>
-            
+            <div class="absolute top-0 left-0 w-full h-2 bg-red-600"></div>
+            <h3 id="modal-title" class="text-3xl font-bold text-navy mb-8">Disease Record</h3>
             <form id="disease-form" class="space-y-5">
-                <input type="hidden" id="entry-id">
+                <input type="hidden" id="edit-id">
                 
                 <div>
-                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Disease Name</label>
-                    <input type="text" id="form-name" required placeholder="e.g. Dengue Fever" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy focus:ring-2 ring-red-100 outline-none">
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Affected Barangay</label>
-                    <input list="gubat-barangays" id="form-brgy" required placeholder="Select or type barangay..." class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy focus:ring-2 ring-red-100 outline-none">
-                    <datalist id="gubat-barangays">
-                        <option value="Ariman">
-                        <option value="Bagaccay">
-                        <option value="Balud Norte">
-                        <option value="Balud Sur">
-                        <option value="Benguet">
-                        <option value="Bentuco">
-                        <option value="Beriran">
-                        <option value="Buenavista">
-                        <option value="Bulacao">
-                        <option value="Cabigaan">
-                        <option value="Cabañangan">
-                        <option value="Carisican">
-                        <option value="Casiguran">
-                        <option value="Cogon">
-                        <option value="Jupi">
-                        <option value="Lapinig">
-                        <option value="Luna Candol">
-                        <option value="Manook">
-                        <option value="Naagtan">
-                        <option value="Nazareno">
-                        <option value="Orosite">
-                        <option value="Paco">
-                        <option value="Panganiban">
-                        <option value="Paradijon">
-                        <option value="Patag">
-                        <option value="Payawin">
-                        <option value="Pinontingan">
-                        <option value="Rizal">
-                        <option value="San Ignacio">
-                        <option value="San Jose">
-                        <option value="San Roque">
-                        <option value="Santa Ana">
-                        <option value="Tabi">
-                        <option value="Tigkiw">
-                        <option value="Union">
-                        <option value="Villareal">
-                    </datalist>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Disease Name</label>
+                    <input type="text" id="form-name" required placeholder="e.g. Dengue" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy focus:ring-2 ring-red-100 outline-none">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Total Cases</label>
+                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Total Cases</label>
                         <input type="number" id="form-count" required min="0" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy focus:ring-2 ring-red-100 outline-none">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">Severity Level</label>
-                        <select id="form-severity" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy focus:ring-2 ring-red-100 outline-none appearance-none">
+                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Severity</label>
+                        <select id="form-severity" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy focus:ring-2 ring-red-100 outline-none">
                             <option value="Low">Low</option>
                             <option value="Medium">Medium</option>
                             <option value="High">High</option>
@@ -200,9 +151,16 @@
                     </div>
                 </div>
 
+                <div>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase tracking-widest mb-2">Barangay</label>
+                    <select id="form-barangay" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy focus:ring-2 ring-red-100 outline-none">
+                        <option value="">Select Barangay...</option>
+                        </select>
+                </div>
+
                 <div class="flex gap-4 pt-8">
-                    <button type="button" onclick="closeModal()" class="flex-1 font-bold text-slate-400 hover:text-navy transition-colors">Discard</button>
-                    <button type="submit" class="flex-[2] py-4 bg-rhu-red text-white font-bold rounded-2xl shadow-xl shadow-red-100 hover:bg-red-600 transition-all">Save Case Record</button>
+                    <button type="button" onclick="closeModal()" class="flex-1 font-bold text-slate-400">Discard</button>
+                    <button type="submit" class="flex-[2] py-4 bg-red-600 text-white font-bold rounded-2xl shadow-xl shadow-red-100 hover:bg-red-700 transition-all">Save Record</button>
                 </div>
             </form>
         </div>
@@ -227,33 +185,45 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Security & Role Check
+        const gubatBarangays = [
+            "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "良好 (Buenavista)", 
+            "Bulacao", "Cabigaan", "Cabalquinto", "Cogon", "Copon", "Dita", "Jupi", "Lapinig", "Manook", "Naic", 
+            "Nazareno", "Orosite", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontulan", "Poblacion Central", 
+            "Poblacion North", "Poblacion South", "Quezon", "Rizal", "San Ignacio", "San Jose", "Santa Ana", "Tabi", 
+            "Tagas", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"
+        ];
+
+        // Access Control
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    if (userData.role === "rhu") {
-                        document.getElementById('user-name-display').innerText = userData.name;
-                        document.body.classList.add('auth-ready');
-                        AOS.init({ duration: 600, once: true });
-                        initData();
-                        
-                        // Show BHW link only if they have dual role or for reference
-                        if (userData.role === "bhw") {
-                            document.getElementById('bhw-link').classList.remove('hidden');
-                        }
-                    } else {
-                        // Kick out BHW or Citizens
-                        window.location.href = "dashboard.html";
-                    }
-                } else { window.location.href = "login.html"; }
-            } else { window.location.href = "login.html"; }
+                const userData = userDoc.data();
+                if (userDoc.exists() && userData.role === "rhu") {
+                    document.getElementById('user-name-display').innerText = userData.name;
+                    document.body.classList.add('auth-ready');
+                    AOS.init({ duration: 600, once: true });
+                    populateBarangays();
+                    initData();
+                } else {
+                    window.location.href = "dashboard.html";
+                }
+            } else {
+                window.location.href = "login.html";
+            }
         });
 
+        function populateBarangays() {
+            const select = document.getElementById('form-barangay');
+            gubatBarangays.sort().forEach(brgy => {
+                const opt = document.createElement('option');
+                opt.value = brgy;
+                opt.textContent = brgy;
+                select.appendChild(opt);
+            });
+        }
+
         function initData() {
-            const q = query(collection(db, "disease_cases"), orderBy("count", "desc"));
-            onSnapshot(q, (snapshot) => {
+            onSnapshot(query(collection(db, "disease_cases"), orderBy("count", "desc")), (snapshot) => {
                 const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderTable(items);
             });
@@ -269,29 +239,24 @@
                 item.barangay.toLowerCase().includes(search)
             );
 
-            if(filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-20 text-center text-slate-400 font-medium">No disease records found.</td></tr>`;
-                return;
-            }
-
             filtered.forEach(item => {
                 let sevClass = "severity-low";
-                if(item.severity === "High") sevClass = "severity-high";
-                else if(item.severity === "Medium") sevClass = "severity-medium";
+                if(item.severity === 'High') sevClass = "severity-high";
+                else if(item.severity === 'Medium') sevClass = "severity-medium";
 
                 tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition-all group">
+                    <tr class="hover:bg-slate-50 transition-all">
                         <td class="px-10 py-7">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 bg-red-50 text-rhu-red rounded-lg flex items-center justify-center group-hover:rotate-12 transition-transform">
+                                <div class="w-8 h-8 bg-red-50 text-red-600 rounded-lg flex items-center justify-center">
                                     <i data-lucide="virus" class="w-4 h-4"></i>
                                 </div>
                                 <span class="font-bold text-navy text-lg">${item.name}</span>
                             </div>
                         </td>
                         <td class="px-8 py-7 text-slate-500 font-bold uppercase text-xs">
-                             <div class="flex items-center gap-1">
-                                <i data-lucide="map-pin" class="w-3 h-3"></i>
+                             <div class="flex items-center gap-1.5">
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
                                 ${item.barangay}
                              </div>
                         </td>
@@ -302,8 +267,8 @@
                             </span>
                         </td>
                         <td class="px-10 py-7 text-right">
-                            <div class="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onclick="editEntry('${item.id}', '${item.name}', '${item.barangay}', ${item.count}, '${item.severity}')" class="p-3 bg-white border border-slate-100 text-slate-400 rounded-xl hover:bg-navy hover:text-white transition-all shadow-sm">
+                            <div class="flex justify-end gap-3">
+                                <button onclick="editEntry('${item.id}', '${item.name}', '${item.barangay}', ${item.count}, '${item.severity}')" class="p-3 bg-white border border-slate-100 text-slate-400 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm">
                                     <i data-lucide="edit-3" class="w-4 h-4"></i>
                                 </button>
                                 <button onclick="deleteEntry('${item.id}')" class="p-3 bg-white border border-slate-100 text-slate-400 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm">
@@ -318,18 +283,18 @@
 
         window.openAddModal = () => {
             document.getElementById('disease-form').reset();
-            document.getElementById('entry-id').value = "";
-            document.getElementById('modal-title').innerText = "Record New Case";
+            document.getElementById('edit-id').value = "";
+            document.getElementById('modal-title').innerText = "Report New Case";
             document.getElementById('disease-modal').classList.remove('hidden');
         };
 
         window.editEntry = (id, name, brgy, count, severity) => {
-            document.getElementById('entry-id').value = id;
+            document.getElementById('edit-id').value = id;
             document.getElementById('form-name').value = name;
-            document.getElementById('form-brgy').value = brgy;
             document.getElementById('form-count').value = count;
-            document.getElementById('form-severity').value = severity;
-            document.getElementById('modal-title').innerText = "Update Disease Data";
+            document.getElementById('form-barangay').value = brgy;
+            document.getElementById('form-severity').value = severity || "Low";
+            document.getElementById('modal-title').innerText = "Update Record";
             document.getElementById('disease-modal').classList.remove('hidden');
         };
 
@@ -337,11 +302,11 @@
 
         document.getElementById('disease-form').onsubmit = async (e) => {
             e.preventDefault();
-            const id = document.getElementById('entry-id').value;
+            const id = document.getElementById('edit-id').value;
             const payload = {
                 name: document.getElementById('form-name').value,
-                barangay: document.getElementById('form-brgy').value,
                 count: parseInt(document.getElementById('form-count').value),
+                barangay: document.getElementById('form-barangay').value,
                 severity: document.getElementById('form-severity').value,
                 updatedAt: serverTimestamp()
             };
@@ -352,13 +317,12 @@
         };
 
         window.deleteEntry = async (id) => { 
-            if(confirm("Permanently delete this disease record? This will update the Dashboard immediately.")) 
+            if(confirm("Permanently delete this record?")) 
                 await deleteDoc(doc(db, "disease_cases", id)); 
         };
 
         document.getElementById('disease-search').oninput = () => initData();
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
-        lucide.createIcons();
     </script>
 </body>
 </html>
