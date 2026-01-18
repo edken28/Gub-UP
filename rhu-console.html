@@ -9,72 +9,110 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        .bg-brand-blue { background-color: #2563eb; }
+        .text-brand-blue { color: #2563eb; }
+        .text-navy { color: #1e3a8a; }
         .bg-navy { background-color: #1e3a8a; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body class="bg-slate-50 min-h-screen flex">
 
-    <div class="max-w-4xl mx-auto p-6 md:p-12">
-        <div class="flex items-center justify-between mb-8">
-            <a href="dashboard.html" class="flex items-center gap-2 text-slate-500 hover:text-navy transition-colors font-semibold">
-                <i data-lucide="arrow-left" class="w-5 h-5"></i> Back to Dashboard
-            </a>
-            <h1 class="text-2xl font-bold text-navy">RHU Disease Console</h1>
-        </div>
-
-        <div class="bg-white rounded-[2rem] p-8 shadow-xl shadow-slate-200/50 border border-slate-100 mb-10">
-            <h2 class="text-lg font-bold text-navy mb-6 flex items-center gap-2">
-                <i data-lucide="plus-circle" class="w-5 h-5 text-blue-500"></i> Report New Case
-            </h2>
-            
-            <form id="case-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-xs font-black uppercase text-slate-400 mb-2">Disease Name</label>
-                    <input type="text" id="disease-name" placeholder="e.g. Dengue" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
+    <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
+        <div class="p-8">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white">
+                    <i data-lucide="plus" class="w-5 h-5"></i>
                 </div>
                 <div>
-                    <label class="block text-xs font-black uppercase text-slate-400 mb-2">Number of Cases</label>
-                    <input type="number" id="case-count" placeholder="0" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
+                    <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
+                    <p class="text-[10px] text-brand-blue uppercase font-bold tracking-tighter">Disease Monitoring</p>
                 </div>
-                <div>
-                    <label class="block text-xs font-black uppercase text-slate-400 mb-2">Barangay (42 Total)</label>
-                    <input type="text" id="barangay-name" placeholder="Enter Barangay" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" required>
-                </div>
-                <div>
-                    <label class="block text-xs font-black uppercase text-slate-400 mb-2">Severity Level</label>
-                    <select id="severity-level" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
-                        <option value="Low">Low</option>
-                        <option value="Medium">Medium</option>
-                        <option value="High">High (Shows on Dashboard)</option>
-                    </select>
-                </div>
-                <button type="submit" class="md:col-span-2 w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all active:scale-[0.98]">
-                    Submit Report
-                </button>
-            </form>
-        </div>
-
-        <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
-            <div class="p-6 border-b border-slate-50 bg-slate-50/50">
-                <h3 class="font-bold text-navy">Recent Submissions</h3>
             </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="text-[10px] uppercase font-black text-slate-400 border-b border-slate-50">
-                            <th class="px-8 py-4">Disease</th>
-                            <th class="px-8 py-4">Cases</th>
-                            <th class="px-8 py-4">Barangay</th>
-                            <th class="px-8 py-4">Severity</th>
-                            <th class="px-8 py-4">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cases-table-body" class="text-sm">
-                        </tbody>
-                </table>
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center gap-3 text-slate-500 hover:bg-slate-50 px-5 py-4 rounded-2xl font-bold transition-all">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+                </a>
+                <a href="rhu-console.html" class="flex items-center gap-3 bg-red-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-red-100">
+                    <i data-lucide="biohazard" class="w-5 h-5"></i> RHU Console
+                </a>
+                <a href="bhw-console.html" class="flex items-center gap-3 text-slate-500 hover:bg-slate-50 px-5 py-4 rounded-2xl font-bold transition-all">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <main class="flex-1">
+        <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between sticky top-0 z-40">
+            <div class="flex items-center gap-4">
+                <a href="dashboard.html" class="text-slate-400 hover:text-navy transition-colors">
+                    <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                </a>
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Disease Management</h2>
+            </div>
+            <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
+                <span id="user-role-badge" class="text-[10px] font-black uppercase px-2 py-1 bg-red-100 text-red-600 rounded-md">RHU Official</span>
+            </div>
+        </header>
+
+        <div class="p-8 max-w-5xl mx-auto">
+            <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-slate-100 mb-10">
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-10 bg-blue-50 text-brand-blue rounded-xl flex items-center justify-center">
+                        <i data-lucide="plus-circle" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-navy">Report New Case</h3>
+                </div>
+
+                <form id="case-form" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-slate-400 ml-1">Disease Name</label>
+                        <input type="text" id="disease-name" placeholder="e.g. Dengue" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium" required>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-slate-400 ml-1">Number of Cases</label>
+                        <input type="number" id="case-count" placeholder="0" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium" required>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-slate-400 ml-1">Barangay</label>
+                        <input type="text" id="barangay-name" placeholder="Enter Barangay" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium" required>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase text-slate-400 ml-1">Severity Level</label>
+                        <select id="severity-level" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-bold text-navy appearance-none">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High (Urgent)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="md:col-span-2 w-full bg-brand-blue text-white font-bold py-5 rounded-2xl shadow-xl shadow-blue-100 hover:scale-[1.01] active:scale-95 transition-all text-lg">
+                        Submit Report to Dashboard
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden">
+                <div class="p-8 border-b border-slate-50">
+                    <h3 class="font-bold text-navy text-xl">Recent Submissions</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-[10px] uppercase font-black text-slate-400 bg-slate-50/50">
+                                <th class="px-8 py-4">Disease</th>
+                                <th class="px-8 py-4">Cases</th>
+                                <th class="px-8 py-4">Barangay</th>
+                                <th class="px-8 py-4">Severity</th>
+                                <th class="px-8 py-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cases-table-body" class="text-sm">
+                            </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -95,26 +133,26 @@
         const caseForm = document.getElementById('case-form');
         caseForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('disease-name').value;
-            const count = document.getElementById('case-count').value;
-            const barangay = document.getElementById('barangay-name').value;
-            const severity = document.getElementById('severity-level').value;
+            const btn = e.target.querySelector('button');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
 
             try {
                 await addDoc(collection(db, "disease_cases"), {
-                    name: name,
-                    count: parseInt(count),
-                    barangay: barangay,
-                    severity: severity,
+                    name: document.getElementById('disease-name').value,
+                    count: parseInt(document.getElementById('case-count').value),
+                    barangay: document.getElementById('barangay-name').value,
+                    severity: document.getElementById('severity-level').value,
                     updatedAt: serverTimestamp()
                 });
                 caseForm.reset();
-            } catch (error) {
-                console.error("Error adding document: ", error);
-            }
+            } catch (err) { console.error(err); }
+            
+            btn.innerText = "Submit Report to Dashboard";
+            btn.disabled = false;
         });
 
-        // Real-time Display Logic
+        // Real-time Table Update
         const q = query(collection(db, "disease_cases"), orderBy("updatedAt", "desc"));
         onSnapshot(q, (snapshot) => {
             const tableBody = document.getElementById('cases-table-body');
@@ -122,18 +160,20 @@
             snapshot.forEach((report) => {
                 const data = report.data();
                 const id = report.id;
+                const severityClass = data.severity === 'High' ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-500';
+                
                 tableBody.innerHTML += `
-                    <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                    <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
                         <td class="px-8 py-5 font-bold text-navy">${data.name}</td>
-                        <td class="px-8 py-5 font-medium text-slate-600">${data.count}</td>
-                        <td class="px-8 py-5 text-slate-500">${data.barangay}</td>
+                        <td class="px-8 py-5 font-semibold text-slate-600">${data.count}</td>
+                        <td class="px-8 py-5 text-slate-500 font-medium">${data.barangay}</td>
                         <td class="px-8 py-5">
-                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase ${data.severity === 'High' ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-600'}">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase ${severityClass}">
                                 ${data.severity}
                             </span>
                         </td>
                         <td class="px-8 py-5 text-right">
-                            <button onclick="deleteReport('${id}')" class="text-red-400 hover:text-red-600 transition-colors">
+                            <button onclick="deleteReport('${id}')" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-all ml-auto">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </td>
@@ -143,9 +183,8 @@
             lucide.createIcons();
         });
 
-        // Delete function (Global scope for button)
         window.deleteReport = async (id) => {
-            if(confirm("Are you sure you want to remove this case?")) {
+            if(confirm("Permanently delete this report?")) {
                 await deleteDoc(doc(db, "disease_cases", id));
             }
         };
