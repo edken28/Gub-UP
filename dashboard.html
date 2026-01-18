@@ -3,269 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | GUB-UP</title>
+    <title>GUB-UP | Gubat Disease Monitoring</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; overflow: hidden; } /* Hidden until loaded */
+        :root {
+            --bg-gray-white: #f1f5f9; 
+        }
+
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
+        .text-navy { color: #1e3a8a; }
+        .bg-navy { background-color: #1e3a8a; }
         .bg-brand-blue { background-color: #2563eb; }
         .text-brand-blue { color: #2563eb; }
-        .text-navy { color: #1e3a8a; }
         
+        .hero-gradient {
+            background: radial-gradient(circle at top right, #eff6ff, transparent),
+                        radial-gradient(circle at bottom left, #f8fafc, transparent);
+        }
+
         /* --- OPENING ANIMATION STYLES --- */
         @keyframes logo-pulse {
             0%, 100% { transform: scale(1); filter: brightness(1); }
             50% { transform: scale(1.1); filter: brightness(1.1); }
         }
 
-        #loader-overlay {
+        #nav-container {
             position: fixed;
-            inset: 0;
-            background-color: #f8fafc;
+            top: 0; left: 0;
+            width: 100%; height: 100vh;
+            background-color: var(--bg-gray-white);
             z-index: 9999;
+            transition: height 0.8s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.5s;
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        #loader-brand {
+        #brand-wrapper {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
         }
 
         .dancing-logo { animation: logo-pulse 2s infinite ease-in-out; }
 
         /* Loaded State */
-        .loaded#loader-overlay {
-            opacity: 0;
-            pointer-events: none;
-            visibility: hidden;
+        .loaded#nav-container {
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #f1f5f9;
         }
 
-        #main-content {
-            opacity: 0;
-            transition: opacity 0.8s ease-in;
+        .loaded #brand-wrapper {
+            left: 24px;
+            top: 50%;
+            transform: translate(0, -50%) scale(0.9);
         }
-        .content-visible #main-content { opacity: 1; }
-        .content-visible { overflow-y: auto; }
+
+        @media (min-width: 1024px) {
+            .loaded #brand-wrapper { left: 80px; }
+        }
+
+        .loaded .dancing-logo { animation: none !important; }
+
+        /* Content Visibility */
+        #main-wrapper {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            padding-top: 80px;
+        }
+        .content-visible #main-wrapper { opacity: 1; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex">
+<body class="bg-white text-gray-800">
 
-    <div id="loader-overlay">
-        <div id="loader-brand">
-            <div class="bg-brand-blue p-3 rounded-2xl text-white font-bold text-3xl dancing-logo shadow-xl shadow-blue-100">+</div>
-            <div>
-                <h1 class="font-bold text-navy text-2xl leading-none">GUB-UP</h1>
-                <p class="text-xs text-brand-blue uppercase font-bold tracking-widest">Initialising Dashboard</p>
+    <nav id="nav-container">
+        <div id="brand-wrapper">
+            <div id="logo-ball" class="w-12 h-12 bg-brand-blue rounded-full flex flex-shrink-0 items-center justify-center text-white dancing-logo shadow-lg shadow-blue-200">
+                <i data-lucide="plus" class="w-7 h-7"></i>
+            </div>
+            <div id="brand-text">
+                <h1 class="text-2xl font-bold text-navy leading-none tracking-tight">GUB-UP</h1>
+                <p class="text-[10px] text-brand-blue font-bold uppercase tracking-widest mt-1">Gubat Disease Monitoring</p>
             </div>
         </div>
-    </div>
+        <a href="login.html" id="nav-login" class="ml-auto mr-6 lg:mr-20 bg-brand-blue text-white px-8 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all opacity-0 pointer-events-none shadow-md shadow-blue-100">
+            Login
+        </a>
+    </nav>
 
-    <div id="main-content" class="flex w-full min-h-screen">
-        <aside class="w-64 bg-white border-r border-gray-100 flex flex-col hidden md:flex">
-            <div class="p-6 border-b border-gray-50">
-                <div class="flex items-center gap-3">
-                    <div class="bg-brand-blue p-2 rounded-lg text-white font-bold text-xl">+</div>
-                    <div>
-                        <h1 class="font-bold text-navy leading-none text-sm">GUB-UP</h1>
-                        <p class="text-[10px] text-gray-400 uppercase font-semibold">Disease Monitoring</p>
+    <div id="main-wrapper">
+        <header class="hero-gradient flex flex-col items-center justify-center text-center px-6 py-24 md:py-32">
+            <div data-aos="fade-down" class="inline-flex items-center gap-2 bg-blue-100 text-brand-blue px-4 py-1.5 rounded-full text-sm font-bold mb-8">
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+                Official Health Portal
+            </div>
+            <h2 data-aos="fade-up" data-aos-delay="200" class="text-4xl md:text-7xl font-bold text-navy max-w-5xl mb-8 leading-[1.1]">
+                Health Monitoring for <br> <span class="text-brand-blue">Gubat, Sorsogon</span>
+            </h2>
+            <p data-aos="fade-up" data-aos-delay="400" class="text-gray-500 text-lg md:text-xl max-w-2xl mb-12 leading-relaxed">
+                A comprehensive web-based system to monitor diseases, track medicine availability across barangays, and provide quick access to emergency services.
+            </p>
+            <div data-aos="zoom-in" data-aos-delay="600" class="flex flex-col sm:flex-row gap-5">
+                <a href="login.html" class="bg-brand-blue text-white px-12 py-4 rounded-2xl font-bold shadow-xl shadow-blue-200 hover:bg-blue-700 transition-all hover:-translate-y-1">Get Started</a>
+                <a href="#features" class="bg-white text-brand-blue border-2 border-blue-600 px-12 py-4 rounded-2xl font-bold hover:bg-blue-50 transition-all text-center">Learn More</a>
+            </div>
+        </header>
+
+        <section id="features" class="py-32 px-6 md:px-20 max-w-7xl mx-auto">
+            <div class="text-center mb-20" data-aos="fade-up">
+                <h2 class="text-3xl md:text-5xl font-bold text-navy mb-5">Key Features</h2>
+                <p class="text-gray-500 text-lg">Smart tools designed for community health workers and citizens.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div data-aos="fade-up" data-aos-delay="100" class="p-10 border border-slate-100 rounded-[2rem] bg-white shadow-sm hover:shadow-xl hover:shadow-blue-50 transition-all group border-b-4 hover:border-b-brand-blue">
+                    <div class="w-14 h-14 bg-blue-50 text-brand-blue rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-brand-blue group-hover:text-white transition-all duration-300">
+                        <i data-lucide="trending-up" class="w-7 h-7"></i>
                     </div>
+                    <h3 class="text-2xl font-bold text-navy mb-4">Disease Monitoring</h3>
+                    <p class="text-gray-500 leading-relaxed">Track cases across Gubat with real-time data visualization and comprehensive digital records.</p>
+                </div>
+
+                <div data-aos="fade-up" data-aos-delay="200" class="p-10 border border-slate-100 rounded-[2rem] bg-white shadow-sm hover:shadow-xl hover:shadow-blue-50 transition-all group border-b-4 hover:border-b-brand-blue">
+                    <div class="w-14 h-14 bg-blue-50 text-brand-blue rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-brand-blue group-hover:text-white transition-all duration-300">
+                        <i data-lucide="package" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-navy mb-4">Medicine Inventory</h3>
+                    <p class="text-gray-500 leading-relaxed">Real-time stock tracking for every barangay health center. Always know what is available.</p>
+                </div>
+
+                <div data-aos="fade-up" data-aos-delay="300" class="p-10 border border-slate-100 rounded-[2rem] bg-white shadow-sm hover:shadow-xl hover:shadow-blue-50 transition-all group border-b-4 hover:border-b-brand-blue">
+                    <div class="w-14 h-14 bg-blue-50 text-brand-blue rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-brand-blue group-hover:text-white transition-all duration-300">
+                        <i data-lucide="phone" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-navy mb-4">Emergency Support</h3>
+                    <p class="text-gray-500 leading-relaxed">One-tap access to local emergency hotlines and medical response teams in your area.</p>
                 </div>
             </div>
-            <nav class="flex-1 p-4 space-y-2">
-                <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-4 py-3 rounded-xl font-medium shadow-lg shadow-blue-100">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
-                </a>
-                <a href="disease-cases.html" id="rhu-disease-link" class="hidden flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all font-semibold border border-transparent hover:border-blue-100">
-                    <i data-lucide="biohazard" class="w-5 h-5 text-red-500"></i> Disease Cases
-                </a>
-                <a href="worker-panel.html" id="worker-secret-link" class="hidden flex items-center gap-3 text-emerald-600 bg-emerald-50 border border-emerald-100 px-4 py-3 rounded-xl font-bold transition-all hover:bg-emerald-100">
-                    <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
-                </a>
-                <a href="#" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all">
-                    <i data-lucide="pill" class="w-5 h-5"></i> Medicines
-                </a>
-                <a href="#" class="flex items-center gap-3 text-gray-500 px-4 py-3 rounded-xl hover:bg-slate-50 transition-all">
-                    <i data-lucide="phone" class="w-5 h-5"></i> Hotlines
-                </a>
-            </nav>
-        </aside>
+        </section>
 
-        <main class="flex-1 overflow-y-auto">
-            <header class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
-                <h2 class="text-xl font-bold text-navy md:hidden">GUB-UP</h2>
-                <div class="flex items-center gap-4 ml-auto">
-                    <div class="flex items-center gap-2 bg-blue-50 text-brand-blue px-4 py-2 rounded-xl font-medium">
-                        <i data-lucide="user" class="w-4 h-4"></i>
-                        <span id="user-name-display">Loading...</span>
-                    </div>
-                    <button id="logout-btn" class="flex items-center gap-2 text-gray-500 hover:text-red-500 font-medium transition-colors">
-                        <i data-lucide="log-out" class="w-4 h-4"></i> Logout
-                    </button>
+        <footer class="bg-navy text-white py-20 px-6 md:px-20">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+                <div class="text-center md:text-left">
+                    <h2 class="text-2xl font-bold mb-2">GUB-UP</h2>
+                    <p class="text-blue-200/60 max-w-xs">Advancing public health through digital innovation in Gubat, Sorsogon.</p>
                 </div>
-            </header>
-
-            <div class="p-8">
-                <div class="bg-brand-blue rounded-[2.5rem] p-10 text-white mb-10 flex justify-between items-center relative overflow-hidden shadow-2xl shadow-blue-200">
-                    <div class="relative z-10">
-                        <h2 id="welcome-banner-text" class="text-3xl font-bold mb-2">Welcome!</h2>
-                        <p class="text-blue-100 opacity-90 font-medium">Monitoring Gubat, Sorsogon Health Status</p>
-                    </div>
-                    <div class="bg-white/10 p-5 rounded-3xl backdrop-blur-md relative z-10">
-                        <i data-lucide="activity" class="w-12 h-12"></i>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                        <div class="bg-red-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-red-200">
-                            <i data-lucide="biohazard" class="w-6 h-6"></i>
-                        </div>
-                        <p id="active-cases-count" class="text-4xl font-bold text-navy mb-1">0</p>
-                        <p class="text-gray-400 font-medium text-sm">Active Cases</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                        <div class="bg-green-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-green-200">
-                            <i data-lucide="pill" class="w-6 h-6"></i>
-                        </div>
-                        <p id="medicine-stock-count" class="text-4xl font-bold text-navy mb-1">0%</p>
-                        <p class="text-gray-400 font-medium text-sm">Medicine Stock</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                        <div class="bg-blue-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-blue-200">
-                            <i data-lucide="map-pin" class="w-6 h-6"></i>
-                        </div>
-                        <p class="text-4xl font-bold text-navy mb-1">42</p>
-                        <p class="text-gray-400 font-medium text-sm">Barangays</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-50">
-                        <div class="bg-purple-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-purple-200">
-                            <i data-lucide="file-text" class="w-6 h-6"></i>
-                        </div>
-                        <p id="reports-count" class="text-4xl font-bold text-navy mb-1">0</p>
-                        <p class="text-gray-400 font-medium text-sm">Reports</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-                    <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-50 min-h-[300px]">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-2xl font-bold text-navy">Recent Disease Cases</h3>
-                            <a href="disease-cases.html" id="view-all-disease" class="hidden text-brand-blue font-bold text-sm hover:underline">View All</a>
-                        </div>
-                        <div id="disease-dashboard-list" class="space-y-4">
-                            </div>
-                    </div>
-                    <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-50 min-h-[300px]">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-2xl font-bold text-navy">Low Stock Alerts</h3>
-                            <button class="text-brand-blue font-bold text-sm hover:underline">View All</button>
-                        </div>
-                        <div id="medicine-dashboard-list" class="space-y-4">
-                            </div>
-                    </div>
+                <div class="flex gap-8 font-semibold text-blue-100/80">
+                    <a href="#" class="hover:text-white transition">Privacy</a>
+                    <a href="#" class="hover:text-white transition">Terms</a>
+                    <a href="#" class="hover:text-white transition">Contact</a>
                 </div>
             </div>
-        </main>
+        </footer>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
-            authDomain: "gub-up.firebaseapp.com",
-            projectId: "gub-up",
-            storageBucket: "gub-up.firebasestorage.app",
-            messagingSenderId: "75119179497",
-            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278",
-            measurementId: "G-9MGFP3RC88"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // --- ANIMATION CONTROLLER ---
-        const hideLoader = () => {
-            document.getElementById('loader-overlay').classList.add('loaded');
-            document.body.classList.add('content-visible');
-        };
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                try {
-                    const userDoc = await getDoc(doc(db, "users", user.uid));
-                    if (userDoc.exists()) {
-                        const userData = userDoc.data();
-                        document.getElementById('user-name-display').innerText = userData.name;
-                        document.getElementById('welcome-banner-text').innerText = `Welcome back, ${userData.name}!`;
-                        
-                        if (userData.role === "rhu") {
-                            document.getElementById('rhu-disease-link').classList.remove('hidden');
-                            document.getElementById('view-all-disease').classList.remove('hidden');
-                        } else if (userData.role === "bhw") {
-                            document.getElementById('worker-secret-link').classList.remove('hidden');
-                        }
-                    }
-
-                    initDiseaseCounter();
-                    initDiseaseList();
-                    initInventoryStats();
-
-                    // Delay slightly so user sees the pulse, then transition
-                    setTimeout(hideLoader, 1500);
-
-                } catch (error) {
-                    console.error("Sync Error:", error);
-                    hideLoader();
-                }
-            } else {
-                window.location.href = "login.html";
-            }
-        });
-
-        // Firebase Functions (Counter, List, Inventory) remain exactly as in your original code...
-        function initDiseaseCounter() {
-            onSnapshot(collection(db, "disease_cases"), (s) => {
-                document.getElementById('active-cases-count').innerText = s.size;
-            });
-        }
-        
-        function initDiseaseList() {
-            const listContainer = document.getElementById('disease-dashboard-list');
-            onSnapshot(query(collection(db, "disease_cases"), limit(5)), (s) => {
-                listContainer.innerHTML = "";
-                s.forEach(doc => {
-                    const d = doc.data();
-                    listContainer.innerHTML += `<div class="p-4 rounded-2xl bg-slate-50 border border-gray-100 flex justify-between items-center"><p class="font-bold text-navy text-sm">${d.name}</p><span class="text-[10px] uppercase font-black px-2 py-1 bg-white rounded-lg shadow-sm border border-gray-100">${d.severity}</span></div>`;
-                });
-                lucide.createIcons();
-            });
-        }
-
-        function initInventoryStats() {
-            onSnapshot(collection(db, "inventory"), (qs) => {
-                let total = 0;
-                qs.forEach(doc => {
-                    Object.values(doc.data()).forEach(m => total += m.qty);
-                });
-                document.getElementById('medicine-stock-count').innerText = `${Math.min(Math.round((total / 50000) * 100), 100)}%`;
-            });
-        }
-
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            signOut(auth).then(() => { window.location.href = "login.html"; });
-        });
-
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
         lucide.createIcons();
+
+        window.addEventListener('load', () => {
+            const nav = document.getElementById('nav-container');
+            const login = document.getElementById('nav-login');
+            const body = document.body;
+
+            setTimeout(() => {
+                nav.classList.add('loaded');
+                body.classList.add('content-visible');
+
+                setTimeout(() => {
+                    login.style.opacity = '1';
+                    login.classList.remove('pointer-events-none');
+                }, 600);
+
+                setTimeout(() => {
+                    AOS.init({ duration: 1000, once: true, easing: 'ease-out-cubic' });
+                }, 400);
+
+            }, 1500); 
+        });
     </script>
 </body>
 </html>
