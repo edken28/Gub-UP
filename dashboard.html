@@ -24,6 +24,10 @@
         .loaded#loader-container { opacity: 0; pointer-events: none; visibility: hidden; }
         #main-layout { opacity: 0; transition: opacity 0.8s ease-out; }
         .content-visible #main-layout { opacity: 1; }
+        
+        /* Interactive feedback for specific roles only */
+        .role-clickable { cursor: pointer !important; transition: all 0.2s; }
+        .role-clickable:hover { transform: translateY(-4px); border-color: #2563eb; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
@@ -53,10 +57,10 @@
                     <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-100">
                         <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
                     </a>
-                    <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-red-100">
+                    <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-600 text-white px-5 py-4 rounded-2xl font-bold">
                         <i data-lucide="biohazard" class="w-5 h-5"></i> RHU Console
                     </a>
-                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-100">
+                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-600 text-white px-5 py-4 rounded-2xl font-bold">
                         <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
                     </a>
                 </nav>
@@ -70,40 +74,39 @@
 
         <main class="flex-1">
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between sticky top-0 z-40">
-                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Overview</h2>
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Live Monitoring Dashboard</h2>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
                     <div class="w-8 h-8 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center">
                         <i data-lucide="user" class="w-4 h-4"></i>
                     </div>
-                    <span id="user-name-display" class="font-bold text-navy text-sm">Guest</span>
+                    <span id="user-name-display" class="font-bold text-navy text-sm">Guest Citizen</span>
                 </div>
             </header>
 
             <div class="p-8 max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
+                    <div id="active-cases-card" data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
                         <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white">
-                            <i data-lucide="virus" class="w-6 h-6"></i>
-                        </div>
+                            <i data-lucide="virus" class="w-6 h-6"></i> </div>
                         <div>
                             <h3 id="total-active-cases" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Active Cases</p>
-                            <p class="text-xs text-red-500 mt-1 font-bold uppercase tracking-wider">Live System Feed</p>
+                            <p id="active-cases-subtext" class="text-xs text-red-500 mt-1 font-bold uppercase">Live System Data</p>
                         </div>
                     </div>
 
-                    <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
+                    <div id="medicine-stock-card" data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
                         <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="pill" class="w-6 h-6"></i>
                         </div>
                         <div>
                             <h3 id="avg-medicine-stock" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Medicine Stock</p>
-                            <p id="stock-status-text" class="text-xs mt-1 font-bold">Checking Inventory...</p>
+                            <p id="stock-status-text" class="text-xs mt-1 font-bold">Checking...</p>
                         </div>
                     </div>
 
-                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
+                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
                         <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="map-pin" class="w-6 h-6"></i>
                         </div>
@@ -119,10 +122,10 @@
                     <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100">
                         <div class="flex justify-between items-center mb-8">
                             <div>
-                                <h3 class="text-2xl font-bold text-navy">High Severity Cases</h3>
-                                <p class="text-xs text-red-500 font-bold uppercase tracking-tight">Top 10 Critical Reports</p>
+                                <h3 class="text-2xl font-bold text-navy">Disease Hotspots</h3>
+                                <p class="text-xs text-red-500 font-bold uppercase tracking-tight">Top 10 Rankings by Case Count</p>
                             </div>
-                            <i data-lucide="alert-circle" class="text-red-500 w-6 h-6"></i>
+                            <i data-lucide="trending-up" class="text-red-500 w-6 h-6"></i>
                         </div>
                         <div id="disease-dashboard-list" class="space-y-4"></div>
                     </div>
@@ -136,11 +139,10 @@
         </main>
     </div>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -154,17 +156,18 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- PUBLIC DATA LISTENERS (Always active for everyone) ---
+        // Run Global Data Fetching (Publicly Viewable)
         fetchGlobalActiveCases();
-        fetchHighSeverityCases(); 
+        fetchRankingCases(); // Fixed Ranking Logic
         fetchLowStock();
         fetchGlobalMedicineStock();
 
-        // --- AUTH & ROLE-BASED ACCESS ---
         onAuthStateChanged(auth, async (user) => {
             const rhuLink = document.getElementById('rhu-disease-link');
             const bhwLink = document.getElementById('worker-secret-link');
             const userDisplay = document.getElementById('user-name-display');
+            const activeCard = document.getElementById('active-cases-card');
+            const stockCard = document.getElementById('medicine-stock-card');
 
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -172,37 +175,28 @@
                     const userData = userDoc.data();
                     userDisplay.innerText = userData.name;
                     
-                    // Show link ONLY for RHU
                     if (userData.role === "rhu") {
                         rhuLink.classList.remove('hidden');
-                        bhwLink.classList.add('hidden');
-                    } 
-                    // Show link ONLY for BHW
-                    else if (userData.role === "bhw") {
+                        activeCard.classList.add('role-clickable');
+                        document.getElementById('active-cases-subtext').innerText = "Manage Active Cases →";
+                        activeCard.onclick = () => window.location.href = "rhu-console.html";
+                    } else if (userData.role === "bhw") {
                         bhwLink.classList.remove('hidden');
-                        rhuLink.classList.add('hidden');
-                    } 
-                    // Citizens see neither
-                    else {
-                        rhuLink.classList.add('hidden');
-                        bhwLink.classList.add('hidden');
+                        stockCard.classList.add('role-clickable');
+                        document.getElementById('stock-status-text').innerText += " • Manage →";
+                        stockCard.onclick = () => window.location.href = "bhw-console.html";
                     }
                 }
-            } else {
-                userDisplay.innerText = "Guest Citizen";
-                rhuLink.classList.add('hidden');
-                bhwLink.classList.add('hidden');
             }
 
-            // Standard Page Loading Sequence
             setTimeout(() => {
                 document.getElementById('loader-container').classList.add('loaded');
                 document.body.classList.add('content-visible');
+                lucide.createIcons();
                 AOS.init({ duration: 800, once: true });
             }, 1000);
         });
 
-        // --- DATA FUNCTIONS ---
         function fetchGlobalActiveCases() {
             onSnapshot(collection(db, "disease_cases"), (snapshot) => {
                 let total = 0;
@@ -211,55 +205,36 @@
             });
         }
 
-        function fetchGlobalMedicineStock() {
-            onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
-                let totalItems = 0, totalQuantity = 0;
-                const TARGET_STOCK = 100; 
-
-                if (snapshot.empty) {
-                    document.getElementById('avg-medicine-stock').innerText = "0%";
-                    return;
-                }
-
-                snapshot.forEach(doc => {
-                    totalQuantity += parseInt(doc.data().quantity || 0);
-                    totalItems++;
-                });
-
-                const finalPct = Math.min(Math.round((totalQuantity / (totalItems * TARGET_STOCK)) * 100), 100);
-                document.getElementById('avg-medicine-stock').innerText = `${finalPct}%`;
-                
-                const statusText = document.getElementById('stock-status-text');
-                if(finalPct < 30) {
-                    statusText.innerText = "Critical Supply Level";
-                    statusText.className = "text-xs mt-1 font-bold text-red-500";
-                } else if(finalPct < 70) {
-                    statusText.innerText = "Supply is Low";
-                    statusText.className = "text-xs mt-1 font-bold text-orange-500";
-                } else {
-                    statusText.innerText = "Adequate Supply";
-                    statusText.className = "text-xs mt-1 font-bold text-emerald-500";
-                }
-            });
-        }
-
-        function fetchHighSeverityCases() {
-            const q = query(collection(db, "disease_cases"), where("severity", "==", "High"), limit(10));
+        // FIXED: RANKING LOGIC (Highest counts first)
+        function fetchRankingCases() {
+            const q = query(collection(db, "disease_cases"), orderBy("count", "desc"), limit(10));
             onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('disease-dashboard-list');
-                list.innerHTML = snapshot.empty ? `<p class="text-slate-400 py-10 text-center">No high severity cases.</p>` : "";
+                list.innerHTML = "";
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     list.innerHTML += `
-                        <div class="flex items-center justify-between p-5 bg-red-50/50 rounded-2xl border border-red-100">
+                        <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
                             <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-red-500 text-white rounded-xl flex items-center justify-center font-bold">${data.count}</div>
-                                <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs text-slate-400 uppercase font-bold">${data.barangay}</p></div>
+                                <div class="w-10 h-10 bg-brand-blue text-white rounded-xl flex items-center justify-center font-bold shadow-sm">${data.count}</div>
+                                <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs text-slate-400 font-bold uppercase">${data.barangay}</p></div>
                             </div>
-                            <span class="text-[10px] font-black px-2 py-1 bg-red-600 text-white rounded-md">Critical</span>
+                            <span class="text-[10px] font-black uppercase px-2 py-1 ${data.severity === 'High' ? 'bg-red-500' : 'bg-orange-400'} text-white rounded-md">${data.severity}</span>
                         </div>`;
                 });
                 lucide.createIcons();
+            });
+        }
+
+        function fetchGlobalMedicineStock() {
+            onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
+                let totalItems = 0, totalQuantity = 0;
+                snapshot.forEach(doc => { totalQuantity += parseInt(doc.data().quantity || 0); totalItems++; });
+                const finalPct = Math.min(Math.round((totalQuantity / (totalItems * 100)) * 100), 100) || 0;
+                document.getElementById('avg-medicine-stock').innerText = `${finalPct}%`;
+                const status = document.getElementById('stock-status-text');
+                status.innerText = finalPct < 30 ? "Critical Level" : finalPct < 70 ? "Low Stock" : "Sufficient";
+                status.className = `text-xs mt-1 font-bold ${finalPct < 30 ? 'text-red-500' : finalPct < 70 ? 'text-orange-500' : 'text-emerald-500'}`;
             });
         }
 
@@ -267,17 +242,12 @@
             const q = query(collection(db, "medicine_inventory"), orderBy("quantity", "asc"), limit(5));
             onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('medicine-dashboard-list');
-                list.innerHTML = snapshot.empty ? "<p class='text-emerald-500 font-bold'>✓ All stocks sufficient.</p>" : "";
+                list.innerHTML = "";
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    const isLow = data.quantity < 10;
-                    list.innerHTML += `
-                        <div class="flex items-center justify-between p-5 ${isLow ? 'bg-orange-50' : 'bg-slate-50'} rounded-2xl border border-slate-100">
-                            <div class="flex items-center gap-4">
-                                <i data-lucide="${isLow ? 'alert-triangle' : 'package'}" class="w-5 h-5 ${isLow ? 'text-orange-500' : 'text-blue-500'}"></i>
-                                <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs font-bold ${isLow ? 'text-orange-600' : 'text-slate-400'}">${data.quantity} units - ${data.barangay}</p></div>
-                            </div>
-                        </div>`;
+                    list.innerHTML += `<div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="flex items-center gap-4"><i data-lucide="package" class="w-5 h-5 text-blue-500"></i>
+                        <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs font-bold text-slate-400">${data.quantity} units - ${data.barangay}</p></div></div></div>`;
                 });
                 lucide.createIcons();
             });
@@ -285,5 +255,6 @@
 
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
     </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </body>
 </html>
