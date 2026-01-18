@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        /* RHU Red Theme Overrides */
         .bg-rhu-red { background-color: #ef4444; }
         .text-rhu-red { color: #ef4444; }
         .text-navy { color: #1e3a8a; }
@@ -49,7 +48,7 @@
                     </a>
 
                     <a href="#" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all">
-                        <i data-lucide="pill" class="w-5 h-5 text-red-400"></i> Medicines
+                        <i data-lucide="phone" class="w-5 h-5 text-orange-400"></i> Hotlines
                     </a>
                 </nav>
             </div>
@@ -63,10 +62,7 @@
 
         <main class="flex-1">
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between sticky top-0 z-40">
-                <div>
-                    <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Case Management</h2>
-                </div>
-                
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Case Management</h2>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
                     <div class="w-8 h-8 bg-red-50 text-rhu-red rounded-full flex items-center justify-center">
                         <i data-lucide="user-cog" class="w-4 h-4"></i>
@@ -90,8 +86,7 @@
                             </select>
                         </div>
                     </div>
-                    
-                    <button onclick="openAddModal()" class="bg-rhu-red text-white px-10 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 hover:bg-red-600 shadow-xl shadow-red-100 transition-all hover:-translate-y-0.5">
+                    <button onclick="openAddModal()" class="bg-rhu-red text-white px-10 py-4 rounded-2xl font-bold text-sm flex items-center gap-3 hover:bg-red-600 shadow-xl shadow-red-100 transition-all">
                         <i data-lucide="plus-circle" class="w-5 h-5"></i> Add New Record
                     </button>
                 </div>
@@ -180,7 +175,6 @@
         });
 
         const barangays = ["Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
-        
         const filterBrgy = document.getElementById('filter-brgy');
         const formBrgy = document.getElementById('form-brgy');
         barangays.forEach(b => {
@@ -197,9 +191,7 @@
         function applyFilters() {
             const search = document.getElementById('disease-search').value.toLowerCase();
             const brgy = filterBrgy.value;
-            const filtered = allCases.filter(c => {
-                return (c.name.toLowerCase().includes(search)) && (brgy === "All" || c.barangay === brgy);
-            });
+            const filtered = allCases.filter(c => (c.name.toLowerCase().includes(search)) && (brgy === "All" || c.barangay === brgy));
             renderTable(filtered);
         }
 
@@ -258,9 +250,7 @@
             closeModal();
         };
 
-        window.deleteCase = async (id) => {
-            if(confirm("Delete this municipal record?")) await deleteDoc(doc(db, "disease_cases", id));
-        };
+        window.deleteCase = async (id) => { if(confirm("Delete record?")) await deleteDoc(doc(db, "disease_cases", id)); };
 
         document.getElementById('disease-search').oninput = applyFilters;
         filterBrgy.onchange = applyFilters;
