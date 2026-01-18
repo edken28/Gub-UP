@@ -16,85 +16,51 @@
         .text-navy { color: #1e3a8a; }
         .bg-navy { background-color: #1e3a8a; }
 
-        @keyframes logo-pulse {
-            0%, 100% { transform: scale(1); filter: brightness(1); }
-            50% { transform: scale(1.1); filter: brightness(1.1); }
-        }
-
         #loader-container {
-            position: fixed;
-            inset: 0;
-            background-color: var(--bg-gray-white);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: fixed; inset: 0; background-color: var(--bg-gray-white);
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        .dancing-logo { animation: logo-pulse 2s infinite ease-in-out; }
-
-        .loaded#loader-container {
-            opacity: 0;
-            pointer-events: none;
-            visibility: hidden;
-        }
-
-        #main-layout {
-            opacity: 0;
-            transition: opacity 0.8s ease-out;
-        }
+        .loaded#loader-container { opacity: 0; pointer-events: none; visibility: hidden; }
+        #main-layout { opacity: 0; transition: opacity 0.8s ease-out; }
         .content-visible #main-layout { opacity: 1; }
-        .content-visible { overflow-y: auto; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
 
     <div id="loader-container">
-        <div id="brand-morph" class="flex items-center gap-4">
-            <div class="w-16 h-16 flex-shrink-0 aspect-square bg-brand-blue rounded-full flex items-center justify-center text-white dancing-logo shadow-2xl">
+        <div class="flex items-center gap-4">
+            <div class="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-2xl animate-bounce">
                 <i data-lucide="plus" class="w-8 h-8"></i>
             </div>
-            <div>
-                <h1 class="text-3xl font-bold text-navy leading-none">GUB-UP</h1>
-                <p class="text-xs text-brand-blue font-bold uppercase tracking-widest mt-1">Initialising Dashboard</p>
-            </div>
+            <h1 class="text-3xl font-bold text-navy">GUB-UP</h1>
         </div>
     </div>
 
     <div id="main-layout" class="flex w-full min-h-screen">
-        
         <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
             <div class="p-8">
                 <div class="flex items-center gap-3 mb-10">
-                    <div class="w-10 h-10 flex-shrink-0 aspect-square bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                    <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white">
                         <i data-lucide="plus" class="w-5 h-5"></i>
                     </div>
                     <div>
-                        <h1 class="font-bold text-navy leading-none text-lg">GUB-UP</h1>
-                        <p class="text-[10px] text-brand-blue uppercase font-bold tracking-tighter mt-0.5">Disease Monitoring</p>
+                        <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
+                        <p class="text-[10px] text-brand-blue uppercase font-bold tracking-tighter">Disease Monitoring</p>
                     </div>
                 </div>
-
                 <nav class="space-y-2">
-                    <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-100 transition-all hover:scale-[1.02]">
+                    <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-100">
                         <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
                     </a>
-                    
-                    <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-red-100 transition-all hover:scale-[1.02] border border-red-500">
+                    <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-red-100">
                         <i data-lucide="biohazard" class="w-5 h-5"></i> RHU Console
                     </a>
-
-                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-100 transition-all hover:scale-[1.02] border border-emerald-500">
+                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-100">
                         <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
-                    </a>
-
-                    <a href="#" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-semibold hover:bg-slate-50 transition-all">
-                        <i data-lucide="phone" class="w-5 h-5 text-orange-400"></i> Hotlines
                     </a>
                 </nav>
             </div>
-
             <div class="mt-auto p-8 border-t border-slate-50">
                 <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
                     <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
@@ -104,34 +70,30 @@
 
         <main class="flex-1">
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between sticky top-0 z-40">
-                <div>
-                    <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest md:block hidden">Overview</h2>
-                </div>
-                
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
-                        <div class="w-8 h-8 flex-shrink-0 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center">
-                            <i data-lucide="user" class="w-4 h-4"></i>
-                        </div>
-                        <span id="user-name-display" class="font-bold text-navy text-sm">Loading...</span>
+                <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Overview</h2>
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
+                    <div class="w-8 h-8 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center">
+                        <i data-lucide="user" class="w-4 h-4"></i>
                     </div>
+                    <span id="user-name-display" class="font-bold text-navy text-sm">User</span>
                 </div>
             </header>
 
             <div class="p-8 max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
-                        <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white">
+                    
+                    <a href="rhu-console.html" data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 hover:border-red-200 transition-colors group">
+                        <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white group-hover:scale-110 transition-transform">
                             <i data-lucide="virus" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <h3 class="text-4xl font-bold text-navy">247</h3>
+                            <h3 id="total-active-cases" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Active Cases</p>
-                            <p class="text-xs text-slate-400 mt-1 font-semibold">+12 this week</p>
+                            <p class="text-xs text-red-500 mt-1 font-bold">Click to view details →</p>
                         </div>
-                    </div>
+                    </a>
 
-                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                    <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
                         <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="pill" class="w-6 h-6"></i>
                         </div>
@@ -142,32 +104,25 @@
                         </div>
                     </div>
 
-                    <div data-aos="fade-up" data-aos-delay="300" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
                         <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="map-pin" class="w-6 h-6"></i>
                         </div>
                         <div>
                             <h3 class="text-4xl font-bold text-navy">42</h3>
                             <p class="text-slate-500 font-medium">Barangays</p>
-                            <p class="text-xs text-slate-400 mt-1 font-semibold">All connected</p>
+                            <p class="text-xs text-slate-400 mt-1 font-semibold">Gubat, Sorsogon</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                    <div data-aos="fade-right" class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 min-h-[400px]">
-                        <div class="flex justify-between items-center mb-8">
-                            <h3 class="text-2xl font-bold text-navy">Recent Disease Cases</h3>
-                            <a href="#" class="text-brand-blue font-bold text-sm hover:underline">View All</a>
-                        </div>
+                    <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100">
+                        <h3 class="text-2xl font-bold text-navy mb-8">Recent Disease Cases</h3>
                         <div id="disease-dashboard-list" class="space-y-4"></div>
                     </div>
-
-                    <div data-aos="fade-left" class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 min-h-[400px]">
-                        <div class="flex justify-between items-center mb-8">
-                            <h3 class="text-2xl font-bold text-navy">Critical Stock Alerts</h3>
-                            <a href="#" class="text-brand-blue font-bold text-sm hover:underline">View All</a>
-                        </div>
+                    <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100">
+                        <h3 class="text-2xl font-bold text-navy mb-8">Critical Stock Alerts</h3>
                         <div id="medicine-dashboard-list" class="space-y-4"></div>
                     </div>
                 </div>
@@ -199,51 +154,50 @@
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
                     document.getElementById('user-name-display').innerText = userData.name;
-                    
-                    if (userData.role === "rhu") {
-                        document.getElementById('rhu-disease-link').classList.remove('hidden');
-                    } else if (userData.role === "bhw") {
-                        document.getElementById('worker-secret-link').classList.remove('hidden');
-                    }
+                    if (userData.role === "rhu") document.getElementById('rhu-disease-link').classList.remove('hidden');
+                    if (userData.role === "bhw") document.getElementById('worker-secret-link').classList.remove('hidden');
                 }
 
-                // Global data fetch so everyone can see the lists
+                // Initialise real-time listeners
+                fetchGlobalActiveCases();
                 fetchRecentCases();
                 fetchLowStock();
                 
                 setTimeout(() => {
                     document.getElementById('loader-container').classList.add('loaded');
                     document.body.classList.add('content-visible');
-                    setTimeout(() => {
-                        AOS.init({ duration: 800, once: true, easing: 'ease-out-quad' });
-                    }, 400);
-                }, 1500);
-
+                    AOS.init({ duration: 800, once: true });
+                }, 1000);
             } else {
                 window.location.href = "login.html";
             }
         });
 
+        // Sum up all "count" values from the disease_cases collection
+        function fetchGlobalActiveCases() {
+            onSnapshot(collection(db, "disease_cases"), (snapshot) => {
+                let total = 0;
+                snapshot.forEach(doc => {
+                    total += parseInt(doc.data().count || 0);
+                });
+                document.getElementById('total-active-cases').innerText = total;
+            });
+        }
+
         function fetchRecentCases() {
             const q = query(collection(db, "disease_cases"), orderBy("updatedAt", "desc"), limit(5));
             onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('disease-dashboard-list');
-                list.innerHTML = "";
-                if(snapshot.empty) list.innerHTML = "<p class='text-slate-400 font-medium'>No recent cases reported.</p>";
+                list.innerHTML = snapshot.empty ? "<p class='text-slate-400'>No data.</p>" : "";
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     list.innerHTML += `
                         <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
                             <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-red-100 text-red-500 rounded-xl flex items-center justify-center font-bold">${data.count || 0}</div>
-                                <div>
-                                    <p class="font-bold text-navy">${data.name}</p>
-                                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">${data.barangay}</p>
-                                </div>
+                                <div class="w-10 h-10 bg-red-100 text-red-500 rounded-xl flex items-center justify-center font-bold">${data.count}</div>
+                                <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs text-slate-400 font-semibold uppercase">${data.barangay}</p></div>
                             </div>
-                            <span class="text-[10px] font-black uppercase px-3 py-1 bg-white rounded-lg border border-slate-100 text-slate-400">${data.severity || 'Unknown'}</span>
-                        </div>
-                    `;
+                        </div>`;
                 });
             });
         }
@@ -252,33 +206,23 @@
             const q = query(collection(db, "medicine_inventory"), orderBy("quantity", "asc"), limit(5));
             onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('medicine-dashboard-list');
-                list.innerHTML = "";
-                if(snapshot.empty) list.innerHTML = "<p class='text-emerald-500 font-bold'>✓ All stocks are sufficient.</p>";
+                list.innerHTML = snapshot.empty ? "<p class='text-emerald-500 font-bold'>✓ All stocks sufficient.</p>" : "";
                 snapshot.forEach(doc => {
                     const data = doc.data();
                     const isLow = data.quantity < 10;
                     list.innerHTML += `
-                        <div class="flex items-center justify-between p-5 ${isLow ? 'bg-orange-50 border-orange-100' : 'bg-slate-50 border-slate-100'} rounded-2xl border">
+                        <div class="flex items-center justify-between p-5 ${isLow ? 'bg-orange-50' : 'bg-slate-50'} rounded-2xl border border-slate-100">
                             <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 ${isLow ? 'bg-white text-orange-500' : 'bg-white text-blue-500'} rounded-xl flex items-center justify-center">
-                                    <i data-lucide="${isLow ? 'alert-triangle' : 'package'}" class="w-5 h-5"></i>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-navy">${data.name}</p>
-                                    <p class="text-xs ${isLow ? 'text-orange-600' : 'text-slate-400'} font-bold">${data.quantity} units - ${data.barangay}</p>
-                                </div>
+                                <i data-lucide="${isLow ? 'alert-triangle' : 'package'}" class="w-5 h-5 ${isLow ? 'text-orange-500' : 'text-blue-500'}"></i>
+                                <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs font-bold ${isLow ? 'text-orange-600' : 'text-slate-400'}">${data.quantity} units - ${data.barangay}</p></div>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 });
                 lucide.createIcons();
             });
         }
 
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            signOut(auth).then(() => { window.location.href = "login.html"; });
-        });
-
+        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
         lucide.createIcons();
     </script>
 </body>
