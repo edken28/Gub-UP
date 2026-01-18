@@ -75,13 +75,12 @@
                     <div class="w-8 h-8 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center">
                         <i data-lucide="user" class="w-4 h-4"></i>
                     </div>
-                    <span id="user-name-display" class="font-bold text-navy text-sm">User</span>
+                    <span id="user-name-display" class="font-bold text-navy text-sm">Guest</span>
                 </div>
             </header>
 
             <div class="p-8 max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    
                     <div data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4 cursor-default">
                         <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white">
                             <i data-lucide="virus" class="w-6 h-6"></i>
@@ -155,50 +154,70 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // --- PUBLIC DATA LISTENERS (Always active for everyone) ---
+        fetchGlobalActiveCases();
+        fetchHighSeverityCases(); 
+        fetchLowStock();
+        fetchGlobalMedicineStock();
+
+        // --- AUTH & ROLE-BASED ACCESS ---
         onAuthStateChanged(auth, async (user) => {
+            const rhuLink = document.getElementById('rhu-disease-link');
+            const bhwLink = document.getElementById('worker-secret-link');
+            const userDisplay = document.getElementById('user-name-display');
+
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
-                    document.getElementById('user-name-display').innerText = userData.name;
-                    if (userData.role === "rhu") document.getElementById('rhu-disease-link').classList.remove('hidden');
-                    if (userData.role === "bhw") document.getElementById('worker-secret-link').classList.remove('hidden');
+                    userDisplay.innerText = userData.name;
+                    
+                    // Show link ONLY for RHU
+                    if (userData.role === "rhu") {
+                        rhuLink.classList.remove('hidden');
+                        bhwLink.classList.add('hidden');
+                    } 
+                    // Show link ONLY for BHW
+                    else if (userData.role === "bhw") {
+                        bhwLink.classList.remove('hidden');
+                        rhuLink.classList.add('hidden');
+                    } 
+                    // Citizens see neither
+                    else {
+                        rhuLink.classList.add('hidden');
+                        bhwLink.classList.add('hidden');
+                    }
                 }
-
-                fetchGlobalActiveCases();
-                fetchHighSeverityCases(); 
-                fetchLowStock();
-                fetchGlobalMedicineStock(); 
-                
-                setTimeout(() => {
-                    document.getElementById('loader-container').classList.add('loaded');
-                    document.body.classList.add('content-visible');
-                    AOS.init({ duration: 800, once: true });
-                }, 1000);
             } else {
-                window.location.href = "login.html";
+                userDisplay.innerText = "Guest Citizen";
+                rhuLink.classList.add('hidden');
+                bhwLink.classList.add('hidden');
             }
+
+            // Standard Page Loading Sequence
+            setTimeout(() => {
+                document.getElementById('loader-container').classList.add('loaded');
+                document.body.classList.add('content-visible');
+                AOS.init({ duration: 800, once: true });
+            }, 1000);
         });
 
+        // --- DATA FUNCTIONS ---
         function fetchGlobalActiveCases() {
             onSnapshot(collection(db, "disease_cases"), (snapshot) => {
                 let total = 0;
-                snapshot.forEach(doc => {
-                    total += parseInt(doc.data().count || 0);
-                });
+                snapshot.forEach(doc => total += parseInt(doc.data().count || 0));
                 document.getElementById('total-active-cases').innerText = total;
             });
         }
 
         function fetchGlobalMedicineStock() {
             onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
-                let totalItems = 0;
-                let totalQuantity = 0;
+                let totalItems = 0, totalQuantity = 0;
                 const TARGET_STOCK = 100; 
 
                 if (snapshot.empty) {
                     document.getElementById('avg-medicine-stock').innerText = "0%";
-                    document.getElementById('stock-status-text').innerText = "No Inventory Record";
                     return;
                 }
 
@@ -207,9 +226,7 @@
                     totalItems++;
                 });
 
-                const rawPercentage = (totalQuantity / (totalItems * TARGET_STOCK)) * 100;
-                const finalPct = Math.min(Math.round(rawPercentage), 100);
-
+                const finalPct = Math.min(Math.round((totalQuantity / (totalItems * TARGET_STOCK)) * 100), 100);
                 document.getElementById('avg-medicine-stock').innerText = `${finalPct}%`;
                 
                 const statusText = document.getElementById('stock-status-text');
@@ -227,44 +244,21 @@
         }
 
         function fetchHighSeverityCases() {
-            const q = query(
-                collection(db, "disease_cases"), 
-                where("severity", "==", "High"), 
-                orderBy("updatedAt", "desc"), 
-                limit(10)
-            );
-
+            const q = query(collection(db, "disease_cases"), where("severity", "==", "High"), limit(10));
             onSnapshot(q, (snapshot) => {
                 const list = document.getElementById('disease-dashboard-list');
-                list.innerHTML = "";
-
-                if (snapshot.empty) {
-                    list.innerHTML = `
-                        <div class="flex flex-col items-center justify-center py-10 opacity-50">
-                            <i data-lucide="shield-check" class="w-12 h-12 text-emerald-500 mb-2"></i>
-                            <p class="text-slate-400 font-medium">No high severity cases reported.</p>
-                        </div>
-                    `;
-                } else {
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        list.innerHTML += `
-                            <div class="flex items-center justify-between p-5 bg-red-50/50 rounded-2xl border border-red-100 group hover:bg-red-50 transition-colors">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 bg-red-500 text-white rounded-xl flex items-center justify-center font-bold shadow-lg shadow-red-200">
-                                        ${data.count}
-                                    </div>
-                                    <div>
-                                        <p class="font-bold text-navy">${data.name}</p>
-                                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">${data.barangay}</p>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-[10px] font-black uppercase px-2 py-1 bg-red-600 text-white rounded-md">Critical</span>
-                                </div>
-                            </div>`;
-                    });
-                }
+                list.innerHTML = snapshot.empty ? `<p class="text-slate-400 py-10 text-center">No high severity cases.</p>` : "";
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    list.innerHTML += `
+                        <div class="flex items-center justify-between p-5 bg-red-50/50 rounded-2xl border border-red-100">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-red-500 text-white rounded-xl flex items-center justify-center font-bold">${data.count}</div>
+                                <div><p class="font-bold text-navy">${data.name}</p><p class="text-xs text-slate-400 uppercase font-bold">${data.barangay}</p></div>
+                            </div>
+                            <span class="text-[10px] font-black px-2 py-1 bg-red-600 text-white rounded-md">Critical</span>
+                        </div>`;
+                });
                 lucide.createIcons();
             });
         }
@@ -290,7 +284,6 @@
         }
 
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
-        lucide.createIcons();
     </script>
 </body>
 </html>
