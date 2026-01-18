@@ -48,7 +48,23 @@
                     </div>
                     <span>Disease Reports</span>
                 </a>
+
+                <div class="pt-6 pb-2">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
+                    <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2">
+                        <i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console
+                    </a>
+                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-indigo-50 text-indigo-600 px-5 py-4 rounded-2xl font-bold hover:bg-indigo-600 hover:text-white transition-all">
+                        <i data-lucide="users" class="w-5 h-5"></i> BHW Console
+                    </a>
+                </div>
             </nav>
+        </div>
+
+        <div class="mt-auto p-8 border-t border-slate-50">
+            <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
+                <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
+            </button>
         </div>
     </aside>
 
@@ -76,15 +92,15 @@
                         <th class="px-8 py-5">Severity Level</th>
                     </tr>
                 </thead>
-                <tbody id="disease-table-body" class="divide-y divide-slate-50 text-navy font-medium">
-                    </tbody>
+                <tbody id="disease-table-body" class="divide-y divide-slate-50 text-navy font-medium"></tbody>
             </table>
         </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -96,13 +112,33 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
         lucide.createIcons();
 
         const tableBody = document.getElementById('disease-table-body');
         const searchInput = document.getElementById('disease-search');
+        const rhuLink = document.getElementById('rhu-disease-link');
+        const bhwLink = document.getElementById('worker-secret-link');
 
-        // Global Real-time Listener for Disease Cases
+        // Role Protection Logic
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    if (userData.role === "rhu") {
+                        rhuLink.classList.remove('hidden');
+                    } else if (userData.role === "bhw") {
+                        bhwLink.classList.remove('hidden');
+                    }
+                }
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // Real-time Disease Data
         onSnapshot(query(collection(db, "disease_cases"), orderBy("count", "desc")), (snapshot) => {
             renderTable(snapshot.docs);
         });
@@ -116,7 +152,6 @@
                 const cases = parseInt(data.count || 0);
                 
                 if(data.name.toLowerCase().includes(searchTerm) || data.barangay.toLowerCase().includes(searchTerm)) {
-                    
                     let severityClass = "bg-blue-100 text-blue-600";
                     if(data.severity === 'High') severityClass = "bg-red-500 text-white";
                     else if(data.severity === 'Medium') severityClass = "bg-orange-400 text-white";
@@ -132,25 +167,21 @@
                                     <span class="font-bold">${data.name}</span>
                                 </div>
                             </td>
-                            <td class="px-8 py-6 text-slate-500 font-bold uppercase text-xs tracking-tighter">${data.barangay}</td>
+                            <td class="px-8 py-6 text-slate-500 font-bold uppercase text-xs">${data.barangay}</td>
                             <td class="px-8 py-6 font-mono text-lg text-center font-black">${cases.toLocaleString()}</td>
                             <td class="px-8 py-6">
                                 <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${severityClass}">
                                     ${data.severity || 'Unrated'}
                                 </span>
                             </td>
-                        </tr>
-                    `;
+                        </tr>`;
                 }
             });
             lucide.createIcons();
         }
 
-        searchInput.addEventListener('input', () => {
-            // Triggered automatically by onSnapshot if needed, or simply re-filter local list
-            // For simplicity in this logic, the search updates on next sync or manual input event
-            const currentDocs = []; // Logic to persist docs can be added if offline search is needed
-        });
+        searchInput.addEventListener('input', () => { /* Filter logic inside renderTable */ });
+        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
     </script>
 </body>
 </html>
