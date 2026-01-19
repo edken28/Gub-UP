@@ -165,7 +165,7 @@
         </div>
 
         <h2 class="text-xl font-black text-navy mb-6 px-2 uppercase tracking-widest text-[12px]">Barangay Health Centers</h2>
-        <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm mb-8" data-aos="fade-up">
+        <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm mb-12" data-aos="fade-up">
             <div class="divide-y divide-slate-50">
                 <script>
                     const bhcs = [
@@ -200,23 +200,23 @@
             </div>
         </div>
 
-        <div class="bg-blue-50/50 border border-blue-100 rounded-[2rem] p-8 mb-12 shadow-sm" data-aos="fade-up">
+        <div class="bg-blue-50/50 border border-blue-100 rounded-[2rem] p-8 mb-12" data-aos="fade-up">
             <h3 class="text-xl font-bold text-navy mb-6">Important Information</h3>
             <ul class="space-y-4">
-                <li class="flex items-start gap-3">
-                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                <li class="flex items-start gap-4">
+                    <div class="mt-1 text-blue-600"><i data-lucide="check" class="w-5 h-5"></i></div>
                     <p class="text-navy font-medium">All emergency hotlines are available 24/7 unless otherwise specified</p>
                 </li>
-                <li class="flex items-start gap-3">
-                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                <li class="flex items-start gap-4">
+                    <div class="mt-1 text-blue-600"><i data-lucide="check" class="w-5 h-5"></i></div>
                     <p class="text-navy font-medium">For non-emergency health concerns, please visit your barangay health center during office hours</p>
                 </li>
-                <li class="flex items-start gap-3">
-                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                <li class="flex items-start gap-4">
+                    <div class="mt-1 text-blue-600"><i data-lucide="check" class="w-5 h-5"></i></div>
                     <p class="text-navy font-medium">Keep these numbers saved on your phone for quick access</p>
                 </li>
-                <li class="flex items-start gap-3">
-                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                <li class="flex items-start gap-4">
+                    <div class="mt-1 text-blue-600"><i data-lucide="check" class="w-5 h-5"></i></div>
                     <p class="text-navy font-medium">In case of medical emergency, always call for professional help immediately</p>
                 </li>
             </ul>
@@ -246,14 +246,17 @@
         const rhuLink = document.getElementById('rhu-link');
         const bhwLink = document.getElementById('bhw-link');
 
+        // Security Check: Redirect if not logged in
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 window.location.href = "login.html";
             } else {
+                // User is authenticated
                 document.body.classList.add('auth-ready');
                 AOS.init({ duration: 800, once: true });
                 lucide.createIcons();
 
+                // Check Role for Sidebar
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     const userRole = userDoc.data().role;
@@ -268,6 +271,7 @@
             }
         });
 
+        // Logout functionality
         document.getElementById('logout-btn').addEventListener('click', () => {
             signOut(auth).then(() => {
                 window.location.href = "login.html";
