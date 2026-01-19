@@ -14,6 +14,8 @@
         .text-brand-blue { color: #2563eb; }
         .bg-rhu-red { background-color: #ef4444; }
         .text-rhu-red { color: #ef4444; }
+        /* Solid Navy Class for Button Visibility */
+        .bg-navy-solid { background-color: #1e3a8a !important; }
         .text-navy { color: #1e3a8a; }
         
         #main-layout { display: none; }
@@ -46,28 +48,24 @@
                         </div>
                         <span>Dashboard</span>
                     </a>
-
                     <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
                         <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
                             <i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white transition-colors"></i>
                         </div>
                         <span>Medicine Stocks</span>
                     </a>
-
                     <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 hover:text-amber-600 transition-all group">
                         <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
                             <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white transition-colors"></i>
                         </div>
                         <span>Disease Reports</span>
                     </a>
-
                     <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:text-brand-blue transition-all group">
                         <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
                             <i data-lucide="phone-forwarded" class="w-4 h-4 text-brand-blue group-hover:text-white transition-colors"></i>
                         </div>
                         <span>Hotlines</span>
                     </a>
-
                     <div class="pt-6 pb-2">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
                         <a href="rhu-console.html" class="flex items-center gap-3 bg-rhu-red text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-red-200 transition-all scale-[1.02] mb-2">
@@ -79,7 +77,6 @@
                     </div>
                 </nav>
             </div>
-
             <div class="mt-auto p-8 border-t border-slate-50">
                 <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
                     <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
@@ -135,7 +132,6 @@
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
         
         <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all border border-white/20" data-aos="zoom-in" data-aos-duration="300">
-            
             <div class="bg-gradient-to-r from-red-600 to-red-500 p-8 text-white relative overflow-hidden">
                 <div class="relative z-10">
                     <h3 id="modal-title" class="text-2xl font-bold tracking-tight">Add New Entry</h3>
@@ -146,7 +142,6 @@
 
             <form id="case-form" class="p-10 space-y-6">
                 <input type="hidden" id="entry-id">
-                
                 <div class="space-y-4">
                     <div class="group">
                         <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Disease Name</label>
@@ -156,7 +151,6 @@
                                 class="w-full pl-14 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-4 ring-red-50 focus:bg-white focus:border-red-200 transition-all font-bold text-navy placeholder:text-slate-300">
                         </div>
                     </div>
-
                     <div class="group">
                         <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Affected Barangay</label>
                         <div class="relative">
@@ -165,7 +159,6 @@
                                 class="w-full pl-14 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-4 ring-red-50 focus:bg-white focus:border-red-200 transition-all font-bold text-navy placeholder:text-slate-300">
                         </div>
                     </div>
-
                     <div class="grid grid-cols-2 gap-5">
                         <div class="group">
                             <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Case Count</label>
@@ -175,7 +168,6 @@
                                     class="w-full pl-14 pr-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-4 ring-red-50 focus:bg-white focus:border-red-200 transition-all font-bold text-navy">
                             </div>
                         </div>
-
                         <div class="group">
                             <label class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 ml-1">Alert Level</label>
                             <div class="relative">
@@ -194,7 +186,7 @@
                     <button type="button" onclick="closeModal()" class="flex-1 px-6 py-4 rounded-2xl font-bold text-slate-400 hover:bg-slate-50 transition-all">
                         Cancel
                     </button>
-                    <button type="submit" id="save-btn" class="flex-[2] bg-navy text-white py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-xl shadow-navy/20 flex items-center justify-center gap-2">
+                    <button type="submit" id="save-btn" class="flex-[2] bg-navy-solid text-white py-4 rounded-2xl font-bold hover:brightness-110 transition-all shadow-xl shadow-blue-900/20 flex items-center justify-center gap-2">
                         <i data-lucide="check-circle" class="w-5 h-5"></i>
                         <span id="save-btn-text">Confirm & Save</span>
                     </button>
@@ -222,6 +214,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        let allCases = []; // Global store for search filtering
+
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -237,14 +231,30 @@
         function initData() {
             const q = query(collection(db, "disease_cases"), orderBy("count", "desc"));
             onSnapshot(q, (snapshot) => {
-                const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderTable(items);
+                allCases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderTable(allCases);
             });
         }
+
+        // SEARCH FUNCTIONALITY
+        document.getElementById('disease-search').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allCases.filter(item => 
+                item.name.toLowerCase().includes(term) || 
+                item.barangay.toLowerCase().includes(term)
+            );
+            renderTable(filtered);
+        });
 
         function renderTable(data) {
             const tbody = document.getElementById('disease-table-body');
             tbody.innerHTML = "";
+
+            if(data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-20 text-center text-slate-400 font-medium">No cases found...</td></tr>`;
+                return;
+            }
+
             data.forEach(item => {
                 let sevClass = item.severity === "High" ? "severity-high" : (item.severity === "Medium" ? "severity-medium" : "severity-low");
                 tbody.innerHTML += `
@@ -312,6 +322,7 @@
             
             // UI Loading State
             saveBtn.disabled = true;
+            saveBtn.style.opacity = "0.7";
             saveBtnText.innerText = "Saving...";
 
             const id = document.getElementById('entry-id').value;
@@ -333,6 +344,7 @@
                 alert("Error saving: " + error.message);
             } finally {
                 saveBtn.disabled = false;
+                saveBtn.style.opacity = "1";
                 saveBtnText.innerText = "Confirm & Save";
             }
         };
