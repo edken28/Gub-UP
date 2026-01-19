@@ -16,6 +16,10 @@
         .text-navy { color: #1e3a8a; }
         .bg-navy { background-color: #1e3a8a; }
 
+        /* Hide main layout initially to prevent flickering for non-logged users */
+        #main-layout { display: none; opacity: 0; transition: opacity 0.8s ease-out; }
+        .content-visible #main-layout { display: flex; opacity: 1; }
+
         #loader-container {
             position: fixed; inset: 0; background-color: var(--bg-gray-white);
             z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -23,7 +27,6 @@
             overflow: hidden;
         }
         
-        /* Floating Circles Background */
         .loader-bg-circle {
             position: absolute; background: #2563eb; border-radius: 50%; opacity: 0.05;
             animation: float 15s infinite alternate ease-in-out; z-index: -1;
@@ -33,7 +36,6 @@
             100% { transform: translateY(-100px) scale(1.2); }
         }
 
-        /* Loading Spinner */
         .spinner {
             width: 40px; height: 40px; border: 4px solid #e2e8f0;
             border-top: 4px solid #2563eb; border-radius: 50%;
@@ -42,8 +44,6 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .loaded#loader-container { opacity: 0; pointer-events: none; visibility: hidden; }
-        #main-layout { opacity: 0; transition: opacity 0.8s ease-out; }
-        .content-visible #main-layout { opacity: 1; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
@@ -217,38 +217,44 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        fetchGlobalActiveCases();
-        fetchRankingCases(); 
-        fetchLowStockAlerts();
-        fetchGlobalInventoryHealth();
-
         onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                // REDIRECT IF NOT LOGGED IN
+                window.location.href = "login.html";
+                return; 
+            }
+
+            // If user is logged in, load data
             const rhuLink = document.getElementById('rhu-disease-link');
             const bhwLink = document.getElementById('worker-secret-link');
             const userDisplay = document.getElementById('user-name-display');
             const welcomeNameDisplay = document.getElementById('welcome-user-name');
 
-            if (user) {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    userDisplay.innerText = userData.name;
-                    welcomeNameDisplay.innerText = userData.name;
-                    
-                    if (userData.role === "rhu") {
-                        rhuLink.classList.remove('hidden');
-                    } else if (userData.role === "bhw") {
-                        bhwLink.classList.remove('hidden');
-                    }
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                userDisplay.innerText = userData.name;
+                welcomeNameDisplay.innerText = userData.name;
+                
+                if (userData.role === "rhu") {
+                    rhuLink.classList.remove('hidden');
+                } else if (userData.role === "bhw") {
+                    bhwLink.classList.remove('hidden');
                 }
             }
 
+            fetchGlobalActiveCases();
+            fetchRankingCases(); 
+            fetchLowStockAlerts();
+            fetchGlobalInventoryHealth();
+
+            // Reveal content and hide loader after auth check is complete
             setTimeout(() => {
                 document.getElementById('loader-container').classList.add('loaded');
                 document.body.classList.add('content-visible');
                 lucide.createIcons();
                 AOS.init({ duration: 800, once: true });
-            }, 3000); // FIXED: 3 Seconds loading
+            }, 1000); 
         });
 
         function fetchGlobalActiveCases() {
