@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg-gray-white: #f1f5f9; }
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
@@ -16,6 +16,7 @@
         .text-navy { color: #1e3a8a; }
         .bg-navy { background-color: #1e3a8a; }
 
+        /* Hide main layout initially to prevent flickering for non-logged users */
         #main-layout { display: none; opacity: 0; transition: opacity 0.8s ease-out; }
         .content-visible #main-layout { display: flex; opacity: 1; }
 
@@ -50,11 +51,12 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex text-slate-900">
+<body class="bg-slate-50 min-h-screen flex">
 
     <div id="loader-container">
         <div class="loader-bg-circle w-96 h-96 -top-20 -left-20"></div>
         <div class="loader-bg-circle w-64 h-64 bottom-10 right-10" style="animation-delay: -5s;"></div>
+        
         <div class="flex flex-col items-center">
             <div class="flex items-center gap-4 mb-2">
                 <div class="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-2xl animate-bounce">
@@ -131,10 +133,10 @@
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center gap-4">
                     <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Live Monitoring Dashboard</h2>
-                    <div class="h-4 w-[1px] bg-slate-200 hidden md:block"></div>
-                    <div class="flex items-center gap-2 text-brand-blue">
-                        <i data-lucide="clock" class="w-4 h-4"></i>
-                        <span id="real-time-clock" class="text-xs font-black uppercase tracking-tighter">January 28, 2026</span>
+                    <div class="h-4 w-[1px] bg-slate-200"></div>
+                    <div class="flex items-center gap-2 text-navy">
+                        <i data-lucide="calendar" class="w-4 h-4 text-brand-blue"></i>
+                        <span id="current-date-display" class="text-xs font-black uppercase tracking-tight">January 28, 2026</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
@@ -149,7 +151,7 @@
                 <div data-aos="fade-down" class="bg-brand-blue rounded-[2.5rem] p-8 mb-10 text-white flex justify-between items-center shadow-xl shadow-blue-100">
                     <div>
                         <h1 class="text-3xl font-bold">Welcome back, <span id="welcome-user-name">Citizen</span>!</h1>
-                        <p class="text-blue-100 mt-1 text-sm font-medium">Monitoring Gubat Community Health since 2024</p>
+                        <p class="text-blue-100 mt-1">Gubat Community Health Overview</p>
                     </div>
                     <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
                         <i data-lucide="activity" class="w-8 h-8"></i>
@@ -162,7 +164,7 @@
                             <i data-lucide="biohazard" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <h3 id="total-active-cases" class="text-4xl font-black text-navy tracking-tight">...</h3>
+                            <h3 id="total-active-cases" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Global Active Cases</p>
                         </div>
                     </div>
@@ -172,7 +174,7 @@
                             <i data-lucide="pill" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <h3 id="avg-medicine-stock" class="text-4xl font-black text-navy tracking-tight">...</h3>
+                            <h3 id="avg-medicine-stock" class="text-4xl font-bold text-navy">...</h3>
                             <p class="text-slate-500 font-medium">Inventory Health Score</p>
                         </div>
                     </div>
@@ -182,7 +184,7 @@
                             <i data-lucide="map-pin" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <h3 class="text-4xl font-black text-navy tracking-tight">42</h3>
+                            <h3 class="text-4xl font-bold text-navy">42</h3>
                             <p class="text-slate-500 font-medium">Active Barangays</p>
                             <p class="text-xs text-slate-400 mt-1 font-semibold uppercase">Gubat, Sorsogon</p>
                         </div>
@@ -191,36 +193,30 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 flex flex-col h-[650px]">
-                        <div class="flex justify-between items-center mb-8">
-                            <div>
-                                <h3 class="text-2xl font-bold text-navy">Top 10 Disease Cases</h3>
-                                <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1">Outbreak Priority</p>
-                            </div>
-                            <select id="disease-time-filter" class="bg-slate-50 text-[10px] font-black uppercase px-4 py-2 rounded-xl border border-slate-100 outline-none text-slate-500 hover:text-brand-blue transition-colors">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                            <h3 class="text-2xl font-bold text-navy">Top 10 Disease Cases</h3>
+                            <select id="disease-time-filter" class="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2 text-[10px] font-black uppercase text-slate-500 outline-none cursor-pointer hover:bg-slate-100 transition-colors">
                                 <option value="daily">Daily</option>
-                                <option value="weekly" selected>Weekly</option>
-                                <option value="monthly">Monthly</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly" selected>Monthly</option>
                                 <option value="yearly">Yearly</option>
                             </select>
                         </div>
-                        <div id="disease-dashboard-list" class="space-y-5 overflow-y-auto pr-2 custom-scrollbar flex-1">
+                        <div id="disease-dashboard-list" class="space-y-6 overflow-y-auto pr-2 flex-1 custom-scrollbar">
                             </div>
                     </div>
 
                     <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 flex flex-col h-[650px]">
-                        <div class="flex justify-between items-center mb-8">
-                            <div>
-                                <h3 class="text-2xl font-bold text-navy">Top Critical Stocks</h3>
-                                <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1">Shortage Alerts</p>
-                            </div>
-                            <select id="stock-time-filter" class="bg-slate-50 text-[10px] font-black uppercase px-4 py-2 rounded-xl border border-slate-100 outline-none text-slate-500 hover:text-brand-blue transition-colors">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                            <h3 class="text-2xl font-bold text-navy">Top Critical Stocks</h3>
+                            <select id="stock-time-filter" class="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2 text-[10px] font-black uppercase text-slate-500 outline-none cursor-pointer hover:bg-slate-100 transition-colors">
                                 <option value="daily">Daily</option>
-                                <option value="weekly" selected>Weekly</option>
-                                <option value="monthly">Monthly</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly" selected>Monthly</option>
                                 <option value="yearly">Yearly</option>
                             </select>
                         </div>
-                        <div id="medicine-dashboard-list" class="space-y-5 overflow-y-auto pr-2 custom-scrollbar flex-1">
+                        <div id="medicine-dashboard-list" class="space-y-6 overflow-y-auto pr-2 flex-1 custom-scrollbar">
                             </div>
                     </div>
                 </div>
@@ -231,7 +227,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -245,35 +241,43 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Real-Time Clock Function
-        function updateClock() {
-            const clockEl = document.getElementById('real-time-clock');
+        // --- Real Time Date ---
+        function updateLiveDate() {
+            const dateDisplay = document.getElementById('current-date-display');
             const now = new Date();
-            const options = { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            clockEl.innerText = now.toLocaleDateString('en-US', options);
+            const options = { month: 'long', day: 'numeric', year: 'numeric' };
+            dateDisplay.innerText = now.toLocaleDateString('en-US', options);
         }
-        setInterval(updateClock, 1000);
-        updateClock();
+        updateLiveDate();
 
+        // --- Auth & Data Loading ---
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 window.location.href = "login.html";
                 return; 
             }
 
+            const rhuLink = document.getElementById('rhu-disease-link');
+            const bhwLink = document.getElementById('worker-secret-link');
+            const userDisplay = document.getElementById('user-name-display');
+            const welcomeNameDisplay = document.getElementById('welcome-user-name');
+
             const userDoc = await getDoc(doc(db, "users", user.uid));
             if (userDoc.exists()) {
                 const userData = userDoc.data();
-                document.getElementById('user-name-display').innerText = userData.name;
-                document.getElementById('welcome-user-name').innerText = userData.name;
+                userDisplay.innerText = userData.name;
+                welcomeNameDisplay.innerText = userData.name;
                 
-                if (userData.role === "rhu") document.getElementById('rhu-disease-link').classList.remove('hidden');
-                else if (userData.role === "bhw") document.getElementById('worker-secret-link').classList.remove('hidden');
+                if (userData.role === "rhu") {
+                    rhuLink.classList.remove('hidden');
+                } else if (userData.role === "bhw") {
+                    bhwLink.classList.remove('hidden');
+                }
             }
 
             fetchGlobalActiveCases();
-            fetchTopDiseaseCases(); 
-            fetchTopCriticalStocks();
+            fetchRankingCases(); 
+            fetchLowStockAlerts();
             fetchGlobalInventoryHealth();
 
             setTimeout(() => {
@@ -284,6 +288,16 @@
             }, 1000); 
         });
 
+        // Helper: Time filtering Logic
+        function getTimeThreshold(period) {
+            const now = new Date();
+            if (period === 'daily') return new Date(now.setHours(0,0,0,0));
+            if (period === 'weekly') return new Date(now.setDate(now.getDate() - 7));
+            if (period === 'monthly') return new Date(now.setMonth(now.getMonth() - 1));
+            if (period === 'yearly') return new Date(now.setFullYear(now.getFullYear() - 1));
+            return new Date(0);
+        }
+
         function fetchGlobalActiveCases() {
             onSnapshot(collection(db, "disease_cases"), (snapshot) => {
                 let total = 0;
@@ -292,95 +306,115 @@
             });
         }
 
-        // Logic for Top 10 Disease Cases with Time Filtering
-        function fetchTopDiseaseCases() {
+        // --- Top 10 Disease Cases with Concept Bar ---
+        function fetchRankingCases() {
             const filter = document.getElementById('disease-time-filter').value;
-            // Note: In real production, you'd filter by a timestamp field in Firestore
-            const q = query(collection(db, "disease_cases"), orderBy("count", "desc"), limit(10));
-            
-            onSnapshot(q, (snapshot) => {
+            const threshold = getTimeThreshold(filter);
+
+            onSnapshot(collection(db, "disease_cases"), (snapshot) => {
                 const list = document.getElementById('disease-dashboard-list');
-                list.innerHTML = "";
-                
-                let maxCount = 1;
-                snapshot.docs.forEach((doc, index) => { if(index === 0) maxCount = doc.data().count || 1; });
-
+                let cases = [];
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    const percentage = (data.count / maxCount) * 100;
-                    list.innerHTML += `
-                        <div class="space-y-2">
+                    // In real scenario, filter by data.updatedAt >= threshold
+                    cases.push(data);
+                });
+
+                // Sort & Slice top 10
+                cases.sort((a, b) => b.count - a.count);
+                const top10 = cases.slice(0, 10);
+                const maxVal = top10.length > 0 ? top10[0].count : 1;
+
+                list.innerHTML = top10.map(item => {
+                    const percentage = (item.count / maxVal) * 100;
+                    return `
+                        <div class="space-y-2 group">
                             <div class="flex justify-between items-end">
                                 <div>
-                                    <p class="font-bold text-navy text-sm">${data.name}</p>
-                                    <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest">${data.barangay}</p>
+                                    <p class="font-bold text-navy text-sm">${item.name}</p>
+                                    <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">${item.barangay}</p>
                                 </div>
                                 <div class="text-right">
-                                    <span class="text-xs font-black text-brand-blue">${data.count}</span>
-                                    <span class="text-[8px] font-black text-slate-300 uppercase block">Cases</span>
+                                    <span class="text-sm font-black text-brand-blue">${item.count}</span>
+                                    <span class="text-[9px] text-slate-400 font-bold uppercase ml-1">Cases</span>
                                 </div>
                             </div>
-                            <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full bg-brand-blue rounded-full transition-all duration-1000" style="width: ${percentage}%"></div>
+                            <div class="h-2 w-full bg-slate-50 rounded-full overflow-hidden border border-slate-100">
+                                <div class="h-full bg-brand-blue rounded-full transition-all duration-1000 ease-out" style="width: ${percentage}%"></div>
                             </div>
-                        </div>`;
-                });
-            });
-        }
-
-        // Logic for Top Critical Stocks with Time Filtering
-        function fetchTopCriticalStocks() {
-            const filter = document.getElementById('stock-time-filter').value;
-            const q = query(collection(db, "medicine_inventory"), orderBy("quantity", "asc"), limit(10));
-            
-            onSnapshot(q, (snapshot) => {
-                const list = document.getElementById('medicine-dashboard-list');
-                list.innerHTML = "";
-                
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const isCritical = data.quantity < 100;
-                    const percentage = Math.min((data.quantity / 500) * 100, 100);
-
-                    list.innerHTML += `
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-end">
-                                <div>
-                                    <p class="font-bold text-navy text-sm">${data.name}</p>
-                                    <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest">${data.barangay}</p>
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-xs font-black ${isCritical ? 'text-red-500' : 'text-orange-500'}">${data.quantity}</span>
-                                    <span class="text-[8px] font-black text-slate-300 uppercase block">Remaining</span>
-                                </div>
-                            </div>
-                            <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                                <div class="h-full ${isCritical ? 'bg-red-500' : 'bg-orange-500'} rounded-full transition-all duration-1000" style="width: ${percentage}%"></div>
-                            </div>
-                        </div>`;
-                });
+                        </div>
+                    `;
+                }).join('');
+                if(top10.length === 0) list.innerHTML = `<p class="text-slate-400 italic text-sm">No data available for this period.</p>`;
             });
         }
 
         function fetchGlobalInventoryHealth() {
             onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
-                let totalPoints = 0, count = 0;
+                let totalHealthPoints = 0;
+                let medCount = 0;
                 snapshot.forEach(doc => {
                     const qty = parseInt(doc.data().quantity || 0);
-                    count++;
-                    if (qty >= 500) totalPoints += 100;
-                    else if (qty >= 300) totalPoints += 75;
-                    else if (qty >= 100) totalPoints += 40;
-                    else totalPoints += 10;
+                    medCount++;
+                    if (qty >= 500) totalHealthPoints += 100;
+                    else if (qty >= 300) totalHealthPoints += 75;
+                    else if (qty >= 100) totalHealthPoints += 40;
+                    else totalHealthPoints += 10;
                 });
-                const avg = count > 0 ? Math.round(totalPoints / count) : 0;
-                document.getElementById('avg-medicine-stock').innerText = `${avg}%`;
+                const averageHealth = medCount > 0 ? Math.round(totalHealthPoints / medCount) : 0;
+                document.getElementById('avg-medicine-stock').innerText = `${averageHealth}%`;
+            });
+        }
+
+        // --- Top Critical Stocks with Concept Bar ---
+        function fetchLowStockAlerts() {
+            const filter = document.getElementById('stock-time-filter').value;
+            // logic for timeframe can be applied if stock history exists
+
+            onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
+                const list = document.getElementById('medicine-dashboard-list');
+                let stocks = [];
+                snapshot.forEach(doc => stocks.push(doc.data()));
+
+                // Sort by lowest quantity
+                stocks.sort((a, b) => a.quantity - b.quantity);
+                const top10 = stocks.slice(0, 10);
+                
+                // Max baseline for visual (e.g. 1000 units is "Full")
+                const baseline = 1000;
+
+                list.innerHTML = top10.map(item => {
+                    const percentage = Math.min((item.quantity / baseline) * 100, 100);
+                    const isCritical = item.quantity < 100;
+                    const barColor = isCritical ? 'bg-red-500' : 'bg-orange-500';
+
+                    return `
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-end">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 rounded-full ${isCritical ? 'bg-red-500 animate-pulse' : 'bg-orange-400'}"></div>
+                                    <div>
+                                        <p class="font-bold text-navy text-sm">${item.name}</p>
+                                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">${item.barangay}</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-sm font-black ${isCritical ? 'text-red-600' : 'text-orange-600'}">${item.quantity.toLocaleString()}</span>
+                                    <span class="text-[9px] text-slate-400 font-bold uppercase ml-1">Left</span>
+                                </div>
+                            </div>
+                            <div class="h-2 w-full bg-slate-50 rounded-full overflow-hidden border border-slate-100">
+                                <div class="h-full ${barColor} rounded-full transition-all duration-1000 ease-out" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             });
         }
 
         // Event Listeners for Filters
-        document.getElementById('disease-time-filter').addEventListener('change', fetchTopDiseaseCases);
-        document.getElementById('stock-time-filter').addEventListener('change', fetchTopCriticalStocks);
+        document.getElementById('disease-time-filter').addEventListener('change', fetchRankingCases);
+        document.getElementById('stock-time-filter').addEventListener('change', fetchLowStockAlerts);
 
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
     </script>
