@@ -14,6 +14,7 @@
         .text-brand-blue { color: #2563eb; }
         .bg-rhu-red { background-color: #ef4444; }
         .text-rhu-red { color: #ef4444; }
+        /* Solid Navy Class for Button Visibility */
         .bg-navy-solid { background-color: #1e3a8a !important; }
         .text-navy { color: #1e3a8a; }
         
@@ -129,6 +130,7 @@
 
     <div id="case-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        
         <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all border border-white/20" data-aos="zoom-in" data-aos-duration="300">
             <div class="bg-gradient-to-r from-red-600 to-red-500 p-8 text-white relative overflow-hidden">
                 <div class="relative z-10">
@@ -198,7 +200,17 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { 
-            getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc, getDoc, query, orderBy, serverTimestamp 
+            getFirestore, 
+            collection, 
+            onSnapshot, 
+            doc, 
+            addDoc, 
+            updateDoc, 
+            deleteDoc, 
+            getDoc, 
+            query, 
+            orderBy,
+            serverTimestamp // Added for time-based tracking
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -214,7 +226,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let allCases = []; 
+        let allCases = [];
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -229,8 +241,8 @@
         });
 
         function initData() {
-            // Updated Query: Order by the newest entry first for better management
-            const q = query(collection(db, "disease_cases"), orderBy("createdAt", "desc"));
+            // Keep current view ordered by count, but ensures data contains timestamps for the charts
+            const q = query(collection(db, "disease_cases"), orderBy("count", "desc"));
             onSnapshot(q, (snapshot) => {
                 allCases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderTable(allCases);
@@ -294,7 +306,9 @@
             lucide.createIcons();
         };
 
-        window.closeModal = () => modal.classList.add('hidden');
+        window.closeModal = () => {
+            modal.classList.add('hidden');
+        };
 
         window.editEntry = (id, name, barangay, count, severity) => {
             document.getElementById('entry-id').value = id;
@@ -320,29 +334,22 @@
             saveBtnText.innerText = "Saving...";
 
             const id = document.getElementById('entry-id').value;
-            const now = new Date();
             
-            // Structured data for easy Dashboard/Report filtering
+            // This object now includes the timestamp and metadata for filtering
             const data = {
                 name: document.getElementById('case-name').value,
                 barangay: document.getElementById('case-barangay').value,
                 count: parseInt(document.getElementById('case-count').value),
                 severity: document.getElementById('case-severity').value,
-                // Time Tracking Logic:
-                updatedAt: serverTimestamp(),
-                reportMonth: now.getMonth() + 1,
-                reportYear: now.getFullYear()
+                lastUpdated: serverTimestamp() // Updates date whenever edited
             };
-
-            // Only add createdAt if it's a new entry
-            if(!id) {
-                data.createdAt = serverTimestamp();
-            }
 
             try {
                 if(id) {
                     await updateDoc(doc(db, "disease_cases", id), data);
                 } else {
+                    // When adding new, we set the original createdAt date
+                    data.createdAt = serverTimestamp();
                     await addDoc(collection(db, "disease_cases"), data);
                 }
                 closeModal();
