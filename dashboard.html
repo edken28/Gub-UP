@@ -33,6 +33,32 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .loaded#loader-container { opacity: 0; pointer-events: none; visibility: hidden; }
 
+        /* Mobile Sidebar Transitions */
+        #sidebar {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                transform: translateX(-100%);
+                z-index: 50;
+            }
+            #sidebar.active { transform: translateX(0); }
+        }
+
+        /* Overlay */
+        #sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 45;
+        }
+        #sidebar-overlay.active { display: block; }
+
         /* Smooth List Hover Effect */
         .list-item-hover {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -51,7 +77,7 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex">
+<body class="bg-slate-50 min-h-screen">
 
     <div id="loader-container">
         <div class="flex flex-col items-center">
@@ -65,8 +91,22 @@
         </div>
     </div>
 
+    <div id="sidebar-overlay"></div>
+
+    <header class="md:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-brand-blue rounded-lg flex items-center justify-center text-white">
+                <i data-lucide="plus" class="w-5 h-5"></i>
+            </div>
+            <span class="font-bold text-navy">GUB-UP</span>
+        </div>
+        <button id="mobile-toggle" class="p-2 bg-slate-50 rounded-xl text-navy">
+            <i data-lucide="menu"></i>
+        </button>
+    </header>
+
     <div id="main-layout" class="flex w-full min-h-screen">
-        <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
+        <aside id="sidebar" class="w-72 bg-white border-r border-slate-100 flex flex-col h-screen sticky top-0">
             <div class="p-8">
                 <div class="flex items-center gap-3 mb-10">
                     <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg">
@@ -107,8 +147,8 @@
             </div>
         </aside>
 
-        <main class="flex-1">
-            <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 flex items-center justify-between sticky top-0 z-40">
+        <main class="flex-1 min-w-0">
+            <header class="hidden md:flex bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-5 items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center gap-4">
                     <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Live Monitoring Dashboard</h2>
                     <div class="h-4 w-[1px] bg-slate-200"></div>
@@ -123,57 +163,55 @@
                 </div>
             </header>
 
-            <div class="p-8 max-w-7xl mx-auto">
-                <div data-aos="fade-down" class="bg-brand-blue rounded-[2.5rem] p-8 mb-10 text-white flex justify-between items-center shadow-xl shadow-blue-100">
+            <div class="p-4 md:p-8 max-w-7xl mx-auto">
+                <div data-aos="fade-down" class="bg-brand-blue rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-8 mb-10 text-white flex justify-between items-center shadow-xl shadow-blue-100">
                     <div>
-                        <h1 class="text-3xl font-bold">Welcome back, <span id="welcome-user-name">Citizen</span>!</h1>
-                        <p class="text-blue-100 mt-1">Gubat Community Health Overview</p>
+                        <h1 class="text-xl md:text-3xl font-bold leading-tight">Welcome back, <br class="md:hidden"><span id="welcome-user-name">Citizen</span>!</h1>
+                        <p class="text-blue-100 mt-1 text-sm">Gubat Community Health Overview</p>
                     </div>
-                    <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm"><i data-lucide="activity" class="w-8 h-8"></i></div>
+                    <div class="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm"><i data-lucide="activity" class="w-6 h-6 md:w-8 md:h-8"></i></div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
-                        <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white"><i data-lucide="biohazard" class="w-6 h-6"></i></div>
-                        <div><h3 id="total-active-cases" class="text-4xl font-bold text-navy">...</h3><p class="text-slate-500 font-medium">Active Cases</p></div>
+                    <div class="bg-white p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-red-500 rounded-xl md:rounded-2xl flex items-center justify-center text-white"><i data-lucide="biohazard" class="w-5 h-5 md:w-6 md:h-6"></i></div>
+                        <div><h3 id="total-active-cases" class="text-3xl md:text-4xl font-bold text-navy">...</h3><p class="text-slate-500 text-sm font-medium">Active Cases</p></div>
                     </div>
-                    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
-                        <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white"><i data-lucide="pill" class="w-6 h-6"></i></div>
-                        <div><h3 id="avg-medicine-stock" class="text-4xl font-bold text-navy">...</h3><p class="text-slate-500 font-medium">Inventory Health Score</p></div>
+                    <div class="bg-white p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-emerald-500 rounded-xl md:rounded-2xl flex items-center justify-center text-white"><i data-lucide="pill" class="w-5 h-5 md:w-6 md:h-6"></i></div>
+                        <div><h3 id="avg-medicine-stock" class="text-3xl md:text-4xl font-bold text-navy">...</h3><p class="text-slate-500 text-sm font-medium">Inventory Health Score</p></div>
                     </div>
-                    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
-                        <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white"><i data-lucide="map-pin" class="w-6 h-6"></i></div>
-                        <div><h3 class="text-4xl font-bold text-navy">42</h3><p class="text-slate-500 font-medium">Active Barangays</p></div>
+                    <div class="bg-white p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
+                        <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-500 rounded-xl md:rounded-2xl flex items-center justify-center text-white"><i data-lucide="map-pin" class="w-5 h-5 md:w-6 md:h-6"></i></div>
+                        <div><h3 class="text-3xl md:text-4xl font-bold text-navy">42</h3><p class="text-slate-500 text-sm font-medium">Active Barangays</p></div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                    <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 flex flex-col h-[600px]">
-                        <div class="flex justify-between items-center mb-8">
-                            <h3 class="text-2xl font-bold text-navy">Top Disease Cases</h3>
-                            <select id="disease-time-filter" class="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2 text-[10px] font-black uppercase text-slate-500 outline-none cursor-pointer">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10">
+                    <div class="bg-white rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 shadow-sm border border-slate-100 flex flex-col h-[500px] md:h-[600px]">
+                        <div class="flex justify-between items-center mb-6 md:mb-8">
+                            <h3 class="text-xl md:text-2xl font-bold text-navy">Top Disease Cases</h3>
+                            <select id="disease-time-filter" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-1.5 text-[10px] font-black uppercase text-slate-500 outline-none cursor-pointer">
                                 <option value="daily">Daily</option>
                                 <option value="weekly">Weekly</option>
                                 <option value="monthly" selected>Monthly</option>
                                 <option value="yearly">Yearly</option>
                             </select>
                         </div>
-                        <div id="disease-dashboard-list" class="space-y-2 overflow-y-auto pr-2 flex-1 custom-scrollbar">
-                            </div>
+                        <div id="disease-dashboard-list" class="space-y-2 overflow-y-auto pr-2 flex-1 custom-scrollbar"></div>
                     </div>
 
-                    <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 flex flex-col h-[600px]">
-                        <div class="flex justify-between items-center mb-8">
-                            <h3 class="text-2xl font-bold text-navy">Critical Stock Alerts</h3>
-                            <select id="stock-time-filter" class="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2 text-[10px] font-black uppercase text-slate-500 outline-none cursor-pointer">
+                    <div class="bg-white rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 shadow-sm border border-slate-100 flex flex-col h-[500px] md:h-[600px]">
+                        <div class="flex justify-between items-center mb-6 md:mb-8">
+                            <h3 class="text-xl md:text-2xl font-bold text-navy">Critical Stock Alerts</h3>
+                            <select id="stock-time-filter" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-1.5 text-[10px] font-black uppercase text-slate-500 outline-none cursor-pointer">
                                 <option value="daily">Daily</option>
                                 <option value="weekly">Weekly</option>
                                 <option value="monthly" selected>Monthly</option>
                                 <option value="yearly">Yearly</option>
                             </select>
                         </div>
-                        <div id="medicine-dashboard-list" class="space-y-2 overflow-y-auto pr-2 flex-1 custom-scrollbar">
-                            </div>
+                        <div id="medicine-dashboard-list" class="space-y-2 overflow-y-auto pr-2 flex-1 custom-scrollbar"></div>
                     </div>
                 </div>
             </div>
@@ -197,9 +235,24 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // Sidebar Toggle Logic
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+
+        mobileToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
         // Date Display
         const updateDate = () => {
-            document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            const date = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            const display = document.getElementById('current-date-display');
+            if(display) display.innerText = date;
         }
         updateDate();
 
@@ -228,13 +281,12 @@
             }, 1000); 
         });
 
-        // HIGHEST TO LOWEST (Disease Cases)
+        // Data Fetching Logic (Keeping your original logic)
         function fetchRankingCases() {
             const list = document.getElementById('disease-dashboard-list');
             onSnapshot(collection(db, "disease_cases"), (snapshot) => {
                 let cases = snapshot.docs.map(doc => doc.data());
-                cases.sort((a, b) => b.count - a.count); // Highest to Lowest
-                
+                cases.sort((a, b) => b.count - a.count);
                 list.innerHTML = cases.slice(0, 10).map(item => `
                     <div class="flex justify-between items-center p-4 rounded-2xl list-item-hover border border-transparent">
                         <div>
@@ -250,13 +302,11 @@
             });
         }
 
-        // LOWEST TO HIGHEST (Critical Stocks)
         function fetchLowStockAlerts() {
             const list = document.getElementById('medicine-dashboard-list');
             onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
                 let stocks = snapshot.docs.map(doc => doc.data());
-                stocks.sort((a, b) => a.quantity - b.quantity); // Most critical first
-                
+                stocks.sort((a, b) => a.quantity - b.quantity);
                 list.innerHTML = stocks.slice(0, 10).map(item => {
                     const isCritical = item.quantity < 100;
                     return `
@@ -297,7 +347,6 @@
             });
         }
 
-        // Filters re-trigger fetches
         document.getElementById('disease-time-filter').addEventListener('change', fetchRankingCases);
         document.getElementById('stock-time-filter').addEventListener('change', fetchLowStockAlerts);
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
