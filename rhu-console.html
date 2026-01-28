@@ -129,7 +129,6 @@
 
     <div id="case-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
-        
         <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all border border-white/20" data-aos="zoom-in" data-aos-duration="300">
             <div class="bg-gradient-to-r from-red-600 to-red-500 p-8 text-white relative overflow-hidden">
                 <div class="relative z-10">
@@ -198,8 +197,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        // ADDED serverTimestamp to imports
-        import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc, getDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { 
+            getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc, getDoc, query, orderBy, serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -214,7 +214,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let allCases = [];
+        let allCases = []; 
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -229,7 +229,7 @@
         });
 
         function initData() {
-            // Updated query to order by latest creation time
+            // Updated Query: Order by the newest entry first for better management
             const q = query(collection(db, "disease_cases"), orderBy("createdAt", "desc"));
             onSnapshot(q, (snapshot) => {
                 allCases = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -294,9 +294,7 @@
             lucide.createIcons();
         };
 
-        window.closeModal = () => {
-            modal.classList.add('hidden');
-        };
+        window.closeModal = () => modal.classList.add('hidden');
 
         window.editEntry = (id, name, barangay, count, severity) => {
             document.getElementById('entry-id').value = id;
@@ -324,22 +322,25 @@
             const id = document.getElementById('entry-id').value;
             const now = new Date();
             
-            // CONSTRUCT UPDATED DATA OBJECT
+            // Structured data for easy Dashboard/Report filtering
             const data = {
                 name: document.getElementById('case-name').value,
                 barangay: document.getElementById('case-barangay').value,
                 count: parseInt(document.getElementById('case-count').value),
                 severity: document.getElementById('case-severity').value,
-                // CRITICAL FOR UPDATES SYSTEM:
-                createdAt: serverTimestamp(),
-                reportMonth: now.getMonth() + 1, // 1-12
-                reportYear: now.getFullYear()    // 2026
+                // Time Tracking Logic:
+                updatedAt: serverTimestamp(),
+                reportMonth: now.getMonth() + 1,
+                reportYear: now.getFullYear()
             };
+
+            // Only add createdAt if it's a new entry
+            if(!id) {
+                data.createdAt = serverTimestamp();
+            }
 
             try {
                 if(id) {
-                    // When editing, we might want to keep the original timestamp, 
-                    // but for trends, we usually track the 'last updated' or just treat it as a new data point.
                     await updateDoc(doc(db, "disease_cases", id), data);
                 } else {
                     await addDoc(collection(db, "disease_cases"), data);
