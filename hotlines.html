@@ -265,9 +265,8 @@
             <div class="divide-y divide-slate-50">
                 <script>
                     const bhcs = [
-                        { name: "Thomas", location: "Paradijon, Gubat", phone: "0912-345-6789" },
-                        { name: "San Ignacio BHC", location: "San Ignacio, Gubat", phone: "0998-765-4321" },
-                        { name: "Luna BHC", location: "Luna, Gubat", phone: "0945-111-2233" }
+                        { name: "Thomas", location: "Paradijon, Gubat", phone: "-" },
+                        { name: "DavidC", location: "Manapao, Gubat", phone: "-" }
                     ];
 
                     document.write(bhcs.map(bhc => `
@@ -303,6 +302,12 @@
                 <li class="flex items-start gap-3">
                     <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600 shrink-0"></i>
                     <p class="text-slate-600 font-medium text-sm md:text-base">For non-emergency health concerns, visit your health center during office hours.</p>
+                </li>
+                <p class="text-[#1e40af] font-medium">Keep these numbers saved on your phone for quick access</p>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                    <p class="text-[#1e40af] font-medium">In case of medical emergency, always call for professional help immediately</p>
                 </li>
             </ul>
         </div>
