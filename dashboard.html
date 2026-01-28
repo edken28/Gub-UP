@@ -43,6 +43,16 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .loaded#loader-container { opacity: 0; pointer-events: none; visibility: hidden; }
+
+        /* Custom style for the internal filter dropdowns */
+        .dash-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 0.8em;
+            padding-right: 1.5rem;
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
@@ -128,9 +138,9 @@
                 <div class="flex items-center gap-4">
                     <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Live Monitoring Dashboard</h2>
                     <div class="h-4 w-[1px] bg-slate-200"></div>
-                    <div class="flex items-center gap-2 text-navy font-bold text-xs bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
-                        <i data-lucide="clock" class="w-3.5 h-3.5 text-brand-blue"></i>
-                        <span id="real-time-clock">--:--:--</span>
+                    <div class="flex items-center gap-2 text-brand-blue font-bold text-xs">
+                        <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                        <span id="live-clock">--:--:--</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
@@ -142,19 +152,14 @@
             </header>
 
             <div class="p-8 max-w-7xl mx-auto">
-                <div data-aos="fade-down" class="bg-brand-blue rounded-[2.5rem] p-8 mb-10 text-white flex justify-between items-center shadow-xl shadow-blue-100 relative overflow-hidden">
-                    <div class="relative z-10">
+                <div data-aos="fade-down" class="bg-brand-blue rounded-[2.5rem] p-8 mb-10 text-white flex justify-between items-center shadow-xl shadow-blue-100">
+                    <div>
                         <h1 class="text-3xl font-bold">Welcome back, <span id="welcome-user-name">Citizen</span>!</h1>
-                        <p class="text-blue-100 mt-1 flex items-center gap-2">
-                            Gubat Community Health Overview 
-                            <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span class="text-[10px] uppercase font-black tracking-tighter opacity-80" id="last-updated-text">Synced just now</span>
-                        </p>
+                        <p class="text-blue-100 mt-1">Gubat Community Health Overview</p>
                     </div>
-                    <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm relative z-10">
+                    <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
                         <i data-lucide="activity" class="w-8 h-8"></i>
                     </div>
-                    <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/5 rounded-full"></div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -192,11 +197,24 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100">
-                        <div class="flex justify-between items-center mb-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                             <h3 class="text-2xl font-bold text-navy">Top Disease Alerts</h3>
-                            <i data-lucide="alert-circle" class="text-red-500 w-6 h-6"></i>
+                            
+                            <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
+                                <select id="dash-brgy-filter" class="dash-select bg-transparent text-[10px] font-black uppercase pl-3 pr-6 py-1 outline-none text-slate-400 cursor-pointer hover:text-brand-blue">
+                                    <option value="all">Global</option>
+                                    <option value="Ariman">Ariman</option><option value="Bagacay">Bagacay</option><option value="Cogon">Cogon</option>
+                                    <option value="Manook">Manook</option><option value="Paradijon">Paradijon</option><option value="Villareal">Villareal</option>
+                                </select>
+                                <div class="h-3 w-[1px] bg-slate-200"></div>
+                                <select id="dash-time-filter" class="dash-select bg-transparent text-[10px] font-black uppercase pl-3 pr-6 py-1 outline-none text-slate-400 cursor-pointer hover:text-brand-blue">
+                                    <option value="all">All Time</option>
+                                    <option value="today">Today</option>
+                                    <option value="week">Weekly</option>
+                                </select>
+                            </div>
                         </div>
-                        <div id="disease-dashboard-list" class="space-y-4"></div>
+                        <div id="disease-dashboard-list" class="space-y-6"></div>
                     </div>
 
                     <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100">
@@ -228,20 +246,13 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- TIME INTEGRATION LOGIC ---
-        function updateClock() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            document.getElementById('real-time-clock').innerText = timeStr;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        function setLastUpdated() {
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('last-updated-text').innerText = `Last updated: ${dateStr} at ${timeStr}`;
+        // Clock Function
+        function startClock() {
+            const clockEl = document.getElementById('live-clock');
+            setInterval(() => {
+                const now = new Date();
+                clockEl.innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            }, 1000);
         }
 
         onAuthStateChanged(auth, async (user) => {
@@ -268,11 +279,11 @@
                 }
             }
 
+            startClock();
             fetchGlobalActiveCases();
             fetchRankingCases(); 
             fetchLowStockAlerts();
             fetchGlobalInventoryHealth();
-            setLastUpdated();
 
             setTimeout(() => {
                 document.getElementById('loader-container').classList.add('loaded');
@@ -287,29 +298,54 @@
                 let total = 0;
                 snapshot.forEach(doc => total += parseInt(doc.data().count || 0));
                 document.getElementById('total-active-cases').innerText = total.toLocaleString();
-                setLastUpdated();
             });
         }
 
+        // Updated Ranking Cases with Bar Design and Filters
         function fetchRankingCases() {
-            const q = query(collection(db, "disease_cases"), orderBy("count", "desc"), limit(6));
-            onSnapshot(q, (snapshot) => {
+            onSnapshot(collection(db, "disease_cases"), (snapshot) => {
+                const brgyFilter = document.getElementById('dash-brgy-filter').value;
+                const timeFilter = document.getElementById('dash-time-filter').value;
                 const list = document.getElementById('disease-dashboard-list');
-                list.innerHTML = "";
-                snapshot.forEach(doc => {
-                    const data = doc.data();
+                
+                let items = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+
+                // Apply Filters
+                if(brgyFilter !== "all") items = items.filter(i => i.barangay === brgyFilter);
+                
+                // Sort by count
+                items.sort((a, b) => b.count - a.count);
+                
+                const topItems = items.slice(0, 5);
+                const maxCount = topItems.length > 0 ? topItems[0].count : 1;
+
+                list.innerHTML = topItems.length ? "" : '<p class="text-slate-400 italic text-sm">No cases found for this filter.</p>';
+                
+                topItems.forEach(data => {
+                    const percentage = (data.count / maxCount) * 100;
                     list.innerHTML += `
-                        <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-brand-blue text-white rounded-xl flex items-center justify-center font-bold">${data.count}</div>
-                                <div><p class="font-bold text-navy">${data.name}</p><p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">${data.barangay}</p></div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <p class="font-bold text-navy leading-none">${data.name}</p>
+                                    <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest mt-1">${data.barangay}</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-sm font-black text-brand-blue">${data.count.toLocaleString()}</span>
+                                    <span class="text-[9px] font-bold text-slate-300 uppercase ml-1">Cases</span>
+                                </div>
                             </div>
-                            <span class="text-[9px] font-black uppercase px-2 py-1 ${data.severity === 'High' ? 'bg-red-500' : 'bg-orange-400'} text-white rounded-md">${data.severity}</span>
+                            <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-brand-blue rounded-full transition-all duration-1000 shadow-sm shadow-blue-200" style="width: ${percentage}%"></div>
+                            </div>
                         </div>`;
                 });
-                lucide.createIcons();
             });
         }
+
+        // Re-fetch when filters change
+        document.getElementById('dash-brgy-filter').addEventListener('change', fetchRankingCases);
+        document.getElementById('dash-time-filter').addEventListener('change', fetchRankingCases);
 
         function fetchGlobalInventoryHealth() {
             onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
