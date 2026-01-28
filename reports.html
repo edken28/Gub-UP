@@ -13,7 +13,6 @@
         .bg-brand-blue { background-color: #2563eb; }
         .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
-        /* Smooth row appearance */
         #disease-table-body tr { transition: all 0.3s ease; }
     </style>
 </head>
@@ -62,11 +61,9 @@
 
                 <div class="pt-6 pb-2" data-aos="fade-up" data-aos-delay="400">
                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                    
                     <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2">
                         <i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console
                     </a>
-
                     <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:text-white transition-all">
                         <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
                     </a>
@@ -102,6 +99,7 @@
                         <th class="px-8 py-5">Disease Name</th>
                         <th class="px-8 py-5">Barangay</th>
                         <th class="px-8 py-5 text-center">Active Cases</th>
+                        <th class="px-8 py-5">Last Updated</th>
                         <th class="px-8 py-5">Severity Level</th>
                     </tr>
                 </thead>
@@ -116,12 +114,7 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, query, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            once: true,
-            easing: 'ease-out-quart'
-        });
+        AOS.init({ duration: 800, once: true, easing: 'ease-out-quart' });
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -135,7 +128,6 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        lucide.createIcons();
 
         const tableBody = document.getElementById('disease-table-body');
         const searchInput = document.getElementById('disease-search');
@@ -147,20 +139,20 @@
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
-                    if (userData.role === "rhu") {
-                        rhuLink.classList.remove('hidden');
-                    } else if (userData.role === "bhw") {
-                        bhwLink.classList.remove('hidden');
-                    }
+                    if (userData.role === "rhu") rhuLink.classList.remove('hidden');
+                    else if (userData.role === "bhw") bhwLink.classList.remove('hidden');
                 }
+                initSnapshot();
             } else {
                 window.location.href = "login.html";
             }
         });
 
-        onSnapshot(query(collection(db, "disease_cases"), orderBy("count", "desc")), (snapshot) => {
-            renderTable(snapshot.docs);
-        });
+        function initSnapshot() {
+            onSnapshot(query(collection(db, "disease_cases"), orderBy("count", "desc")), (snapshot) => {
+                renderTable(snapshot.docs);
+            });
+        }
 
         function renderTable(docs) {
             const searchTerm = searchInput.value.toLowerCase();
@@ -170,11 +162,24 @@
                 const data = doc.data();
                 const cases = parseInt(data.count || 0);
                 
+                // --- Time Integration ---
+                let timeString = "Recently";
+                if (data.updatedAt) {
+                    const date = data.updatedAt.toDate();
+                    timeString = date.toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                    }) + " • " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                }
+
                 if(data.name.toLowerCase().includes(searchTerm) || data.barangay.toLowerCase().includes(searchTerm)) {
                     let severityClass = "bg-blue-100 text-blue-600";
-                    if(data.severity === 'High') severityClass = "bg-red-500 text-white";
-                    else if(data.severity === 'Medium') severityClass = "bg-orange-400 text-white";
-                    else if(data.severity === 'Low') severityClass = "bg-emerald-500 text-white";
+                    let severityLabel = data.severity || 'Low';
+
+                    // Auto-calculate severity if not explicitly set
+                    if(cases > 50) { severityClass = "bg-red-500 text-white"; severityLabel = "High"; }
+                    else if(cases > 20) { severityClass = "bg-orange-400 text-white"; severityLabel = "Medium"; }
+                    else { severityClass = "bg-emerald-500 text-white"; severityLabel = "Low"; }
 
                     tableBody.innerHTML += `
                         <tr class="hover:bg-slate-50 transition-colors">
@@ -188,9 +193,10 @@
                             </td>
                             <td class="px-8 py-6 text-slate-500 font-bold uppercase text-xs">${data.barangay}</td>
                             <td class="px-8 py-6 font-mono text-lg text-center font-black">${cases.toLocaleString()}</td>
+                            <td class="px-8 py-6 text-slate-400 text-xs font-semibold">${timeString}</td>
                             <td class="px-8 py-6">
                                 <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${severityClass}">
-                                    ${data.severity || 'Unrated'}
+                                    ${severityLabel}
                                 </span>
                             </td>
                         </tr>`;
@@ -199,12 +205,7 @@
             lucide.createIcons();
         }
 
-        searchInput.addEventListener('input', () => {
-            onSnapshot(query(collection(db, "disease_cases"), orderBy("count", "desc")), (snapshot) => {
-                renderTable(snapshot.docs);
-            });
-        });
-
+        searchInput.addEventListener('input', () => initSnapshot());
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
     </script>
 </body>
