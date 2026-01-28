@@ -15,47 +15,40 @@
         .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
         .bg-navy { background-color: #1e3a8a; }
-        
-        /* Prevent flickering */
+
         #main-layout { display: none; opacity: 0; transition: opacity 0.8s ease-out; }
         .content-visible #main-layout { display: flex; opacity: 1; }
 
-        /* Loader Styles */
         #loader-container {
             position: fixed; inset: 0; background-color: var(--bg-gray-white);
             z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid #e2e8f0;
+            border-top: 4px solid #2563eb; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-top: 2rem;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .loaded#loader-container { opacity: 0; pointer-events: none; visibility: hidden; }
 
-        /* Mobile Sidebar Logic */
-        @media (max-width: 768px) {
-            #sidebar {
-                position: fixed;
-                left: -100%;
-                top: 0;
-                bottom: 0;
-                z-index: 50;
-                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                box-shadow: 20px 0 50px rgba(0,0,0,0.1);
-            }
-            #sidebar.active { left: 0; }
-            #sidebar-overlay {
-                display: none;
-                position: fixed;
-                inset: 0;
-                background: rgba(30, 58, 138, 0.4);
-                backdrop-filter: blur(4px);
-                z-index: 45;
-            }
-            #sidebar-overlay.active { display: block; }
+        /* Smooth List Hover Effect */
+        .list-item-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .list-item-hover:hover {
+            background-color: #f8fafc;
+            transform: translateX(8px);
+            border-left: 4px solid #2563eb;
+        }
+        .critical-hover:hover {
+            border-left: 4px solid #ef4444;
         }
 
-        /* List Hover Effects */
-        .list-item-hover { transition: all 0.3s ease; border-left: 4px solid transparent; }
-        .list-item-hover:hover { 
-            background-color: #f8fafc; 
-            transform: translateX(8px); 
-            border-left-color: #2563eb;
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
