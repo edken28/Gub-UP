@@ -13,8 +13,15 @@
         .bg-brand-blue { background-color: #2563eb; }
         .text-navy { color: #1e3a8a; }
         .text-brand-blue { color: #2563eb; }
-        /* Smooth transition for table rows when searching */
         #inventory-table-body tr { transition: all 0.3s ease; }
+        
+        .filter-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
@@ -62,11 +69,9 @@
 
                 <div class="pt-6 pb-2" data-aos="fade-up" data-aos-delay="400">
                     <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                    
                     <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2">
                         <i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console
                     </a>
-                    
                     <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:text-white transition-all">
                         <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
                     </a>
@@ -82,18 +87,60 @@
     </aside>
 
     <main class="flex-1 p-8">
-        <header class="flex justify-between items-center mb-10" data-aos="fade-down" data-aos-duration="800">
+        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10" data-aos="fade-down" data-aos-duration="800">
             <div>
                 <h1 class="text-3xl font-extrabold text-navy">Global Medicine Inventory</h1>
                 <p class="text-slate-500">Real-time stock monitoring across all Gubat Barangays</p>
             </div>
             
-            <div class="relative w-96">
+            <div class="relative w-full lg:w-96">
                 <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5"></i>
-                <input type="text" id="med-search" placeholder="Search medicine or barangay..." 
+                <input type="text" id="med-search" placeholder="Search medicine..." 
                     class="w-full pl-12 pr-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all">
             </div>
         </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-2">Location</label>
+                <select id="filter-brgy" class="filter-select w-full px-5 py-3 rounded-2xl border border-slate-200 bg-white font-bold text-navy outline-none">
+                    <option value="all">All Barangays</option>
+                    <option value="Ariman">Ariman</option><option value="Bagacay">Bagacay</option><option value="Balud Del Norte">Balud Del Norte</option>
+                    <option value="Balud Del Sur">Balud Del Sur</option><option value="Benguet">Benguet</option><option value="Bentuco">Bentuco</option>
+                    <option value="Beriran">Beriran</option><option value="Buenavista">Buenavista</option><option value="Bulacao">Bulacao</option>
+                    <option value="Cabigaan">Cabigaan</option><option value="Cabiguhan">Cabiguhan</option><option value="Carriedo">Carriedo</option>
+                    <option value="Casili">Casili</option><option value="Cogon">Cogon</option><option value="Cota Na Daco">Cota Na Daco</option>
+                    <option value="Dita">Dita</option><option value="Jupi">Jupi</option><option value="Lapinig">Lapinig</option>
+                    <option value="Luna-Candol">Luna-Candol</option><option value="Manapao">Manapao</option><option value="Manook">Manook</option>
+                    <option value="Naagtan">Naagtan</option><option value="Nato">Nato</option><option value="Nazareno">Nazareno</option>
+                    <option value="Ogao">Ogao</option><option value="Paco">Paco</option><option value="Panganiban">Panganiban</option>
+                    <option value="Paradijon">Paradijon</option><option value="Patag">Patag</option><option value="Payawin">Payawin</option>
+                    <option value="Pinontingan">Pinontingan</option><option value="Rizal">Rizal</option><option value="San Ignacio">San Ignacio</option>
+                    <option value="Sangat">Sangat</option><option value="Santa Ana">Santa Ana</option><option value="Tabi">Tabi</option>
+                    <option value="Tagaytay">Tagaytay</option><option value="Tigkiw">Tigkiw</option><option value="Tiris">Tiris</option>
+                    <option value="Togawe">Togawe</option><option value="Union">Union</option><option value="Villareal">Villareal</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-2">Stock Level</label>
+                <select id="filter-level" class="filter-select w-full px-5 py-3 rounded-2xl border border-slate-200 bg-white font-bold text-navy outline-none">
+                    <option value="all">All Levels</option>
+                    <option value="critical">Critical (< 100)</option>
+                    <option value="low">Low (100-300)</option>
+                    <option value="stable">Stable (> 300)</option>
+                </select>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-2">Sort By</label>
+                <select id="filter-sort" class="filter-select w-full px-5 py-3 rounded-2xl border border-slate-200 bg-white font-bold text-navy outline-none">
+                    <option value="name-asc">Alphabetical (A-Z)</option>
+                    <option value="qty-asc">Lowest Stock First</option>
+                    <option value="qty-desc">Highest Stock First</option>
+                </select>
+            </div>
+        </div>
 
         <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden" data-aos="fade-up" data-aos-delay="200">
             <table class="w-full text-left">
@@ -101,8 +148,8 @@
                     <tr>
                         <th class="px-8 py-5">Medicine Name</th>
                         <th class="px-8 py-5">Barangay</th>
-                        <th class="px-8 py-5">Current Quantity</th>
-                        <th class="px-8 py-5">Status</th>
+                        <th class="px-8 py-5 text-center">Quantity</th>
+                        <th class="px-8 py-5">Stock Status</th>
                     </tr>
                 </thead>
                 <tbody id="inventory-table-body" class="divide-y divide-slate-50 text-navy font-medium"></tbody>
@@ -116,12 +163,7 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, query, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            once: true,
-            easing: 'ease-out-quart'
-        });
+        AOS.init({ duration: 800, once: true, easing: 'ease-out-quart' });
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -135,69 +177,98 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        lucide.createIcons();
-
-        // Elements
+        
         const tableBody = document.getElementById('inventory-table-body');
         const searchInput = document.getElementById('med-search');
-        const rhuLink = document.getElementById('rhu-disease-link');
-        const bhwLink = document.getElementById('worker-secret-link');
+        const filterBrgy = document.getElementById('filter-brgy');
+        const filterLevel = document.getElementById('filter-level');
+        const filterSort = document.getElementById('filter-sort');
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
-                    if (userData.role === "rhu") {
-                        rhuLink.classList.remove('hidden');
-                    } else if (userData.role === "bhw") {
-                        bhwLink.classList.remove('hidden');
-                    }
+                    if (userData.role === "rhu") document.getElementById('rhu-disease-link').classList.remove('hidden');
+                    else if (userData.role === "bhw") document.getElementById('worker-secret-link').classList.remove('hidden');
+                    loadInventory();
                 }
-            } else {
-                window.location.href = "login.html"; 
-            }
+            } else { window.location.href = "login.html"; }
         });
 
-        onSnapshot(query(collection(db, "medicine_inventory"), orderBy("name", "asc")), (snapshot) => {
-            renderTable(snapshot.docs);
-        });
+        function loadInventory() {
+            onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
+                renderTable(snapshot.docs);
+            });
+        }
 
         function renderTable(docs) {
             const searchTerm = searchInput.value.toLowerCase();
-            tableBody.innerHTML = "";
-            docs.forEach(doc => {
-                const data = doc.data();
-                const qty = parseInt(data.quantity || 0);
-                if(data.name.toLowerCase().includes(searchTerm) || data.barangay.toLowerCase().includes(searchTerm)) {
-                    let statusClass = "bg-emerald-100 text-emerald-600";
-                    let statusText = "Stable";
-                    if(qty < 100) { statusClass = "bg-red-100 text-red-600"; statusText = "Critical"; }
-                    else if (qty < 300) { statusClass = "bg-orange-100 text-orange-600"; statusText = "Low Stock"; }
+            const brgyValue = filterBrgy.value;
+            const levelValue = filterLevel.value;
+            const sortValue = filterSort.value;
 
-                    tableBody.innerHTML += `
-                        <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="px-8 py-6 flex items-center gap-3">
-                                <div class="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center">
-                                    <i data-lucide="pill" class="w-4 h-4 text-emerald-500"></i>
+            tableBody.innerHTML = "";
+            let items = docs.map(d => ({ id: d.id, ...d.data() }));
+
+            // 1. Search & Barangay Filter
+            items = items.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm);
+                const matchesBrgy = brgyValue === "all" || item.barangay === brgyValue;
+                
+                const qty = parseInt(item.quantity || 0);
+                let matchesLevel = true;
+                if (levelValue === 'critical') matchesLevel = qty < 100;
+                else if (levelValue === 'low') matchesLevel = qty >= 100 && qty < 300;
+                else if (levelValue === 'stable') matchesLevel = qty >= 300;
+
+                return matchesSearch && matchesBrgy && matchesLevel;
+            });
+
+            // 2. Sorting
+            items.sort((a, b) => {
+                if (sortValue === 'qty-asc') return a.quantity - b.quantity;
+                if (sortValue === 'qty-desc') return b.quantity - a.quantity;
+                return a.name.localeCompare(b.name);
+            });
+
+            if (items.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-slate-400 font-medium">No inventory items found matching your filters.</td></tr>`;
+                return;
+            }
+
+            items.forEach(data => {
+                const qty = parseInt(data.quantity || 0);
+                let statusClass = "bg-emerald-100 text-emerald-600";
+                let statusText = "Stable";
+                if(qty < 100) { statusClass = "bg-red-500 text-white"; statusText = "Critical"; }
+                else if (qty < 300) { statusClass = "bg-orange-400 text-white"; statusText = "Low Stock"; }
+
+                tableBody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-8 py-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                                    <i data-lucide="pill" class="w-4 h-4"></i>
                                 </div>
                                 <span class="font-bold">${data.name}</span>
-                            </td>
-                            <td class="px-8 py-6 text-slate-500 font-bold uppercase text-xs">${data.barangay}</td>
-                            <td class="px-8 py-6 font-mono text-lg">${qty.toLocaleString()}</td>
-                            <td class="px-8 py-6">
-                                <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${statusClass}">${statusText}</span>
-                            </td>
-                        </tr>`;
-                }
+                            </div>
+                        </td>
+                        <td class="px-8 py-6 text-slate-500 font-bold uppercase text-xs">${data.barangay}</td>
+                        <td class="px-8 py-6 font-mono text-lg text-center font-black">${qty.toLocaleString()}</td>
+                        <td class="px-8 py-6">
+                            <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${statusClass}">
+                                ${statusText}
+                            </span>
+                        </td>
+                    </tr>`;
             });
             lucide.createIcons();
         }
 
-        searchInput.addEventListener('input', () => {
-            onSnapshot(query(collection(db, "medicine_inventory"), orderBy("name", "asc")), (snapshot) => {
-                renderTable(snapshot.docs);
-            });
+        [searchInput, filterBrgy, filterLevel, filterSort].forEach(el => {
+            el.addEventListener('input', () => loadInventory());
+            el.addEventListener('change', () => loadInventory());
         });
 
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
