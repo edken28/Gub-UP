@@ -18,10 +18,10 @@
         /* Custom Select Styling */
         .filter-select {
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-position: right 1rem center;
-            background-size: 1em;
+            background-size: 1rem;
         }
     </style>
 </head>
@@ -87,47 +87,41 @@
         </div>
     </aside>
 
-    <main class="flex-1 p-8 overflow-y-auto">
-        <header class="flex justify-between items-center mb-6" data-aos="fade-down" data-aos-duration="800">
+    <main class="flex-1 p-8">
+        <header class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6 mb-10" data-aos="fade-down" data-aos-duration="800">
             <div>
                 <h1 class="text-3xl font-extrabold text-navy">Global Disease Reports</h1>
                 <p class="text-slate-500">Live outbreak monitoring across all Gubat Barangays</p>
             </div>
             
-            <div class="relative w-96">
-                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5"></i>
-                <input type="text" id="disease-search" placeholder="Search disease name..." 
-                    class="w-full pl-12 pr-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all">
+            <div class="flex flex-wrap items-center gap-3">
+                <select id="filter-brgy" class="filter-select pl-4 pr-10 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all font-bold text-navy text-sm bg-white">
+                    <option value="All">All Barangays</option>
+                    <option value="Manook">Manook</option>
+                    <option value="Paradijon">Paradijon</option>
+                    <option value="Pinontingan">Pinontingan</option>
+                    </select>
+
+                <select id="filter-time" class="filter-select pl-4 pr-10 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all font-bold text-navy text-sm bg-white">
+                    <option value="all">All Time</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                </select>
+
+                <select id="filter-sort" class="filter-select pl-4 pr-10 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all font-bold text-navy text-sm bg-white">
+                    <option value="desc">Newest First</option>
+                    <option value="asc">Oldest First</option>
+                </select>
+
+                <div class="relative min-w-[250px]">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4"></i>
+                    <input type="text" id="disease-search" placeholder="Search disease..." 
+                        class="w-full pl-10 pr-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all text-sm font-medium">
+                </div>
             </div>
         </header>
-
-        <div class="flex flex-wrap gap-4 mb-8" data-aos="fade-up" data-aos-delay="150">
-            <select id="filter-barangay" class="filter-select bg-white border border-slate-200 px-6 py-3 rounded-2xl font-bold text-navy outline-none focus:ring-4 focus:ring-amber-500/10 min-w-[200px]">
-                <option value="All">All Barangays</option>
-                <option value="Ariman">Ariman</option>
-                <option value="Bagacay">Bagacay</option>
-                <option value="Bentuco">Bentuco</option>
-                <option value="Bulacao">Bulacao</option>
-                <option value="Cota Na Daco">Cota Na Daco</option>
-                <option value="Manook">Manook</option>
-                <option value="Paradijon">Paradijon</option>
-                <option value="Poblacion">Poblacion</option>
-                <option value="Tigkiw">Tigkiw</option>
-            </select>
-
-            <select id="filter-time" class="filter-select bg-white border border-slate-200 px-6 py-3 rounded-2xl font-bold text-navy outline-none focus:ring-4 focus:ring-amber-500/10">
-                <option value="all">All Time</option>
-                <option value="daily">Daily Cases</option>
-                <option value="weekly">Weekly Cases</option>
-                <option value="monthly">Monthly Cases</option>
-                <option value="yearly">Yearly Cases</option>
-            </select>
-
-            <select id="filter-sort" class="filter-select bg-white border border-slate-200 px-6 py-3 rounded-2xl font-bold text-navy outline-none focus:ring-4 focus:ring-amber-500/10">
-                <option value="desc">Newest First</option>
-                <option value="asc">Oldest First</option>
-            </select>
-        </div>
 
         <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden" data-aos="fade-up" data-aos-delay="200">
             <table class="w-full text-left">
@@ -135,8 +129,8 @@
                     <tr>
                         <th class="px-8 py-5">Disease Name</th>
                         <th class="px-8 py-5">Barangay</th>
-                        <th class="px-8 py-5">Date Reported</th>
                         <th class="px-8 py-5 text-center">Active Cases</th>
+                        <th class="px-8 py-5">Date Reported</th>
                         <th class="px-8 py-5">Severity Level</th>
                     </tr>
                 </thead>
@@ -149,7 +143,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, doc, getDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, getDoc, where, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         AOS.init({ duration: 800, once: true, easing: 'ease-out-quart' });
 
@@ -169,7 +163,7 @@
 
         const tableBody = document.getElementById('disease-table-body');
         const searchInput = document.getElementById('disease-search');
-        const brgyFilter = document.getElementById('filter-barangay');
+        const brgyFilter = document.getElementById('filter-brgy');
         const timeFilter = document.getElementById('filter-time');
         const sortFilter = document.getElementById('filter-sort');
 
@@ -180,17 +174,19 @@
                     const userData = userDoc.data();
                     if (userData.role === "rhu") document.getElementById('rhu-disease-link').classList.remove('hidden');
                     else if (userData.role === "bhw") document.getElementById('worker-secret-link').classList.remove('hidden');
-                    fetchData();
                 }
+                fetchData();
             } else { window.location.href = "login.html"; }
         });
 
         function fetchData() {
-            // Note: In Firestore, it's easier to filter by date locally or use where queries if the field exists.
-            // For full functionality, ensure your "disease_cases" collection has a "createdAt" timestamp field.
-            const q = query(collection(db, "disease_cases"), orderBy("createdAt", sortFilter.value));
+            let q = collection(db, "disease_cases");
+            const sortOrder = sortFilter.value;
             
-            onSnapshot(q, (snapshot) => {
+            // Build the fundamental query with ordering
+            const finalQuery = query(q, orderBy("createdAt", sortOrder));
+
+            onSnapshot(finalQuery, (snapshot) => {
                 renderTable(snapshot.docs);
             });
         }
@@ -198,37 +194,43 @@
         function renderTable(docs) {
             const searchTerm = searchInput.value.toLowerCase();
             const selectedBrgy = brgyFilter.value;
-            const timeRange = timeFilter.value;
-            const now = new Date();
-            
+            const selectedTime = timeFilter.value;
             tableBody.innerHTML = "";
+
+            const now = new Date();
 
             docs.forEach(doc => {
                 const data = doc.data();
+                const timestamp = data.createdAt ? data.createdAt.toDate() : new Date();
                 const cases = parseInt(data.count || 0);
-                const createdAt = data.createdAt ? data.createdAt.toDate() : new Date();
                 
-                // 1. Search filter
-                const matchesSearch = data.name.toLowerCase().includes(searchTerm);
+                // --- APPLY FILTERS IN JS ---
                 
-                // 2. Barangay filter
+                // Search Filter
+                const matchesSearch = data.name.toLowerCase().includes(searchTerm) || data.barangay.toLowerCase().includes(searchTerm);
+                
+                // Barangay Filter
                 const matchesBrgy = selectedBrgy === "All" || data.barangay === selectedBrgy;
                 
-                // 3. Time filter logic
+                // Time Filter Logic
                 let matchesTime = true;
-                const diffTime = Math.abs(now - createdAt);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                if (selectedTime !== 'all') {
+                    const diffTime = Math.abs(now - timestamp);
+                    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+                    
+                    if (selectedTime === 'daily' && diffDays > 1) matchesTime = false;
+                    else if (selectedTime === 'weekly' && diffDays > 7) matchesTime = false;
+                    else if (selectedTime === 'monthly' && diffDays > 30) matchesTime = false;
+                    else if (selectedTime === 'yearly' && diffDays > 365) matchesTime = false;
+                }
 
-                if (timeRange === 'daily' && diffDays > 1) matchesTime = false;
-                if (timeRange === 'weekly' && diffDays > 7) matchesTime = false;
-                if (timeRange === 'monthly' && diffDays > 30) matchesTime = false;
-                if (timeRange === 'yearly' && diffDays > 365) matchesTime = false;
-
-                if (matchesSearch && matchesBrgy && matchesTime) {
+                if(matchesSearch && matchesBrgy && matchesTime) {
                     let severityClass = "bg-blue-100 text-blue-600";
                     if(data.severity === 'High') severityClass = "bg-red-500 text-white";
                     else if(data.severity === 'Medium') severityClass = "bg-orange-400 text-white";
                     else if(data.severity === 'Low') severityClass = "bg-emerald-500 text-white";
+
+                    const dateString = timestamp.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
                     tableBody.innerHTML += `
                         <tr class="hover:bg-slate-50 transition-colors">
@@ -241,8 +243,8 @@
                                 </div>
                             </td>
                             <td class="px-8 py-6 text-slate-500 font-bold uppercase text-xs">${data.barangay}</td>
-                            <td class="px-8 py-6 text-slate-400 text-sm font-semibold">${createdAt.toLocaleDateString()}</td>
                             <td class="px-8 py-6 font-mono text-lg text-center font-black">${cases.toLocaleString()}</td>
+                            <td class="px-8 py-6 text-slate-400 text-sm font-semibold">${dateString}</td>
                             <td class="px-8 py-6">
                                 <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${severityClass}">
                                     ${data.severity || 'Unrated'}
@@ -254,10 +256,10 @@
             lucide.createIcons();
         }
 
-        // Listeners for filters
+        // Event Listeners for Live Refresh
         [searchInput, brgyFilter, timeFilter, sortFilter].forEach(el => {
             el.addEventListener('change', fetchData);
-            if(el === searchInput) el.addEventListener('input', fetchData);
+            el.addEventListener('input', fetchData);
         });
 
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
