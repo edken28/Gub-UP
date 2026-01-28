@@ -16,7 +16,6 @@
         .text-navy { color: #1e3a8a; }
         .bg-navy { background-color: #1e3a8a; }
 
-        /* Hide main layout initially to prevent flickering for non-logged users */
         #main-layout { display: none; opacity: 0; transition: opacity 0.8s ease-out; }
         .content-visible #main-layout { display: flex; opacity: 1; }
 
@@ -24,39 +23,34 @@
             position: fixed; inset: 0; background-color: var(--bg-gray-white);
             z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            overflow: hidden;
         }
         
-        .loader-bg-circle {
-            position: absolute; background: #2563eb; border-radius: 50%; opacity: 0.05;
-            animation: float 15s infinite alternate ease-in-out; z-index: -1;
-        }
-        @keyframes float {
-            0% { transform: translateY(0) scale(1); }
-            100% { transform: translateY(-100px) scale(1.2); }
-        }
-
         .spinner {
             width: 40px; height: 40px; border: 4px solid #e2e8f0;
             border-top: 4px solid #2563eb; border-radius: 50%;
             animation: spin 1s linear infinite; margin-top: 2rem;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         .loaded#loader-container { opacity: 0; pointer-events: none; visibility: hidden; }
         
         /* Custom Scrollbar */
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+        /* Hover Effect for List Items */
+        .list-item-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .list-item-hover:hover {
+            transform: translateX(8px);
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex">
 
     <div id="loader-container">
-        <div class="loader-bg-circle w-96 h-96 -top-20 -left-20"></div>
-        <div class="loader-bg-circle w-64 h-64 bottom-10 right-10" style="animation-delay: -5s;"></div>
-        
         <div class="flex flex-col items-center">
             <div class="flex items-center gap-4 mb-2">
                 <div class="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-2xl animate-bounce">
@@ -80,48 +74,27 @@
                         <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
                     </div>
                 </div>
-
                 <nav class="space-y-3">
-                    <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-200 transition-all hover:scale-[1.02]">
+                    <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-200 transition-all">
                         <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                             <i data-lucide="layout-dashboard" class="w-4 h-4 text-white"></i>
                         </div>
                         <span>Dashboard</span>
                     </a>
-
                     <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
                         <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
                             <i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white transition-colors"></i>
                         </div>
                         <span>Medicine Stocks</span>
                     </a>
-
                     <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 hover:text-amber-600 transition-all group">
                         <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
                             <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white transition-colors"></i>
                         </div>
                         <span>Disease Reports</span>
                     </a>
-
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:text-blue-600 transition-all group">
-                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white transition-colors"></i>
-                        </div>
-                        <span>Hotlines</span>
-                    </a>
-
-                    <div class="pt-6 pb-2">
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                        <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2">
-                            <i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console
-                        </a>
-                        <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:text-white transition-all">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
-                        </a>
-                    </div>
                 </nav>
             </div>
-
             <div class="mt-auto p-8 border-t border-slate-50">
                 <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
                     <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
@@ -136,7 +109,7 @@
                     <div class="h-4 w-[1px] bg-slate-200"></div>
                     <div class="flex items-center gap-2 text-navy">
                         <i data-lucide="calendar" class="w-4 h-4 text-brand-blue"></i>
-                        <span id="current-date-display" class="text-xs font-black uppercase tracking-tight">January 28, 2026</span>
+                        <span id="current-date-display" class="text-xs font-black uppercase tracking-tight">...</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
@@ -148,75 +121,56 @@
             </header>
 
             <div class="p-8 max-w-7xl mx-auto">
-                <div data-aos="fade-down" class="bg-brand-blue rounded-[2.5rem] p-8 mb-10 text-white flex justify-between items-center shadow-xl shadow-blue-100">
-                    <div>
-                        <h1 class="text-3xl font-bold">Welcome back, <span id="welcome-user-name">Citizen</span>!</h1>
-                        <p class="text-blue-100 mt-1">Gubat Community Health Overview</p>
-                    </div>
-                    <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                        <i data-lucide="activity" class="w-8 h-8"></i>
-                    </div>
-                </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
-                        <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white">
+                    <div data-aos="fade-up" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
+                        <div class="w-12 h-12 bg-red-500 rounded-2xl flex items-center justify-center text-white mb-4">
                             <i data-lucide="biohazard" class="w-6 h-6"></i>
                         </div>
-                        <div>
-                            <h3 id="total-active-cases" class="text-4xl font-bold text-navy">...</h3>
-                            <p class="text-slate-500 font-medium">Global Active Cases</p>
-                        </div>
+                        <h3 id="total-active-cases" class="text-4xl font-bold text-navy">...</h3>
+                        <p class="text-slate-500 font-medium">Global Active Cases</p>
                     </div>
-
-                    <div id="medicine-stock-card" data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
-                        <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white">
+                    <div data-aos="fade-up" data-aos-delay="100" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
+                        <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white mb-4">
                             <i data-lucide="pill" class="w-6 h-6"></i>
                         </div>
-                        <div>
-                            <h3 id="avg-medicine-stock" class="text-4xl font-bold text-navy">...</h3>
-                            <p class="text-slate-500 font-medium">Inventory Health Score</p>
-                        </div>
+                        <h3 id="avg-medicine-stock" class="text-4xl font-bold text-navy">...</h3>
+                        <p class="text-slate-500 font-medium">Inventory Health Score</p>
                     </div>
-
-                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-4">
-                        <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white">
+                    <div data-aos="fade-up" data-aos-delay="200" class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
+                        <div class="w-12 h-12 bg-blue-500 rounded-2xl flex items-center justify-center text-white mb-4">
                             <i data-lucide="map-pin" class="w-6 h-6"></i>
                         </div>
-                        <div>
-                            <h3 class="text-4xl font-bold text-navy">42</h3>
-                            <p class="text-slate-500 font-medium">Active Barangays</p>
-                            <p class="text-xs text-slate-400 mt-1 font-semibold uppercase">Gubat, Sorsogon</p>
-                        </div>
+                        <h3 class="text-4xl font-bold text-navy">42</h3>
+                        <p class="text-slate-500 font-medium">Active Barangays</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 flex flex-col h-[650px]">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                        <div class="flex justify-between items-center mb-8">
                             <h3 class="text-2xl font-bold text-navy">Top 10 Disease Cases</h3>
-                            <select id="disease-time-filter" class="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2 text-[10px] font-black uppercase text-slate-500 outline-none cursor-pointer hover:bg-slate-100 transition-colors">
+                            <select id="disease-time-filter" class="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2 text-[10px] font-black uppercase text-slate-500 outline-none cursor-pointer">
                                 <option value="daily">Daily</option>
                                 <option value="weekly">Weekly</option>
                                 <option value="monthly" selected>Monthly</option>
                                 <option value="yearly">Yearly</option>
                             </select>
                         </div>
-                        <div id="disease-dashboard-list" class="space-y-6 overflow-y-auto pr-2 flex-1 custom-scrollbar">
+                        <div id="disease-dashboard-list" class="space-y-3 overflow-y-auto pr-2 flex-1 custom-scrollbar">
                             </div>
                     </div>
 
                     <div class="bg-white rounded-[3rem] p-10 shadow-sm border border-slate-100 flex flex-col h-[650px]">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                        <div class="flex justify-between items-center mb-8">
                             <h3 class="text-2xl font-bold text-navy">Top Critical Stocks</h3>
-                            <select id="stock-time-filter" class="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2 text-[10px] font-black uppercase text-slate-500 outline-none cursor-pointer hover:bg-slate-100 transition-colors">
+                            <select id="stock-time-filter" class="bg-slate-50 border border-slate-100 rounded-xl px-4 py-2 text-[10px] font-black uppercase text-slate-500 outline-none cursor-pointer">
                                 <option value="daily">Daily</option>
                                 <option value="weekly">Weekly</option>
                                 <option value="monthly" selected>Monthly</option>
                                 <option value="yearly">Yearly</option>
                             </select>
                         </div>
-                        <div id="medicine-dashboard-list" class="space-y-6 overflow-y-auto pr-2 flex-1 custom-scrollbar">
+                        <div id="medicine-dashboard-list" class="space-y-3 overflow-y-auto pr-2 flex-1 custom-scrollbar">
                             </div>
                     </div>
                 </div>
@@ -227,7 +181,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, query, limit, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -245,34 +199,16 @@
         function updateLiveDate() {
             const dateDisplay = document.getElementById('current-date-display');
             const now = new Date();
-            const options = { month: 'long', day: 'numeric', year: 'numeric' };
-            dateDisplay.innerText = now.toLocaleDateString('en-US', options);
+            dateDisplay.innerText = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
         }
         updateLiveDate();
 
-        // --- Auth & Data Loading ---
         onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                window.location.href = "login.html";
-                return; 
-            }
-
-            const rhuLink = document.getElementById('rhu-disease-link');
-            const bhwLink = document.getElementById('worker-secret-link');
-            const userDisplay = document.getElementById('user-name-display');
-            const welcomeNameDisplay = document.getElementById('welcome-user-name');
-
+            if (!user) { window.location.href = "login.html"; return; }
+            
             const userDoc = await getDoc(doc(db, "users", user.uid));
             if (userDoc.exists()) {
-                const userData = userDoc.data();
-                userDisplay.innerText = userData.name;
-                welcomeNameDisplay.innerText = userData.name;
-                
-                if (userData.role === "rhu") {
-                    rhuLink.classList.remove('hidden');
-                } else if (userData.role === "bhw") {
-                    bhwLink.classList.remove('hidden');
-                }
+                document.getElementById('user-name-display').innerText = userDoc.data().name;
             }
 
             fetchGlobalActiveCases();
@@ -288,16 +224,6 @@
             }, 1000); 
         });
 
-        // Helper: Time filtering Logic
-        function getTimeThreshold(period) {
-            const now = new Date();
-            if (period === 'daily') return new Date(now.setHours(0,0,0,0));
-            if (period === 'weekly') return new Date(now.setDate(now.getDate() - 7));
-            if (period === 'monthly') return new Date(now.setMonth(now.getMonth() - 1));
-            if (period === 'yearly') return new Date(now.setFullYear(now.getFullYear() - 1));
-            return new Date(0);
-        }
-
         function fetchGlobalActiveCases() {
             onSnapshot(collection(db, "disease_cases"), (snapshot) => {
                 let total = 0;
@@ -306,115 +232,75 @@
             });
         }
 
-        // --- Top 10 Disease Cases with Concept Bar ---
         function fetchRankingCases() {
-            const filter = document.getElementById('disease-time-filter').value;
-            const threshold = getTimeThreshold(filter);
-
             onSnapshot(collection(db, "disease_cases"), (snapshot) => {
                 const list = document.getElementById('disease-dashboard-list');
                 let cases = [];
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    // In real scenario, filter by data.updatedAt >= threshold
-                    cases.push(data);
-                });
-
-                // Sort & Slice top 10
+                snapshot.forEach(doc => cases.push(doc.data()));
                 cases.sort((a, b) => b.count - a.count);
-                const top10 = cases.slice(0, 10);
-                const maxVal = top10.length > 0 ? top10[0].count : 1;
 
-                list.innerHTML = top10.map(item => {
-                    const percentage = (item.count / maxVal) * 100;
-                    return `
-                        <div class="space-y-2 group">
-                            <div class="flex justify-between items-end">
-                                <div>
-                                    <p class="font-bold text-navy text-sm">${item.name}</p>
-                                    <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">${item.barangay}</p>
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-sm font-black text-brand-blue">${item.count}</span>
-                                    <span class="text-[9px] text-slate-400 font-bold uppercase ml-1">Cases</span>
-                                </div>
+                list.innerHTML = cases.slice(0, 10).map(item => `
+                    <div class="list-item-hover p-5 border border-slate-100 rounded-2xl flex justify-between items-center bg-white shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-blue-50 text-brand-blue rounded-xl flex items-center justify-center font-bold">
+                                <i data-lucide="activity" class="w-5 h-5"></i>
                             </div>
-                            <div class="h-2 w-full bg-slate-50 rounded-full overflow-hidden border border-slate-100">
-                                <div class="h-full bg-brand-blue rounded-full transition-all duration-1000 ease-out" style="width: ${percentage}%"></div>
+                            <div>
+                                <p class="font-bold text-navy text-sm">${item.name}</p>
+                                <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">${item.barangay}</p>
                             </div>
                         </div>
-                    `;
-                }).join('');
-                if(top10.length === 0) list.innerHTML = `<p class="text-slate-400 italic text-sm">No data available for this period.</p>`;
+                        <div class="text-right">
+                            <span class="text-sm font-black text-brand-blue">${item.count}</span>
+                            <span class="text-[9px] text-slate-400 font-bold uppercase ml-1">Cases</span>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            });
+        }
+
+        function fetchLowStockAlerts() {
+            onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
+                const list = document.getElementById('medicine-dashboard-list');
+                let stocks = [];
+                snapshot.forEach(doc => stocks.push(doc.data()));
+                stocks.sort((a, b) => a.quantity - b.quantity);
+
+                list.innerHTML = stocks.slice(0, 10).map(item => `
+                    <div class="list-item-hover p-5 border border-slate-100 rounded-2xl flex justify-between items-center bg-white shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 ${item.quantity < 100 ? 'bg-red-50 text-red-600' : 'bg-orange-50 text-orange-600'} rounded-xl flex items-center justify-center">
+                                <i data-lucide="package" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-navy text-sm">${item.name}</p>
+                                <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">${item.barangay}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-sm font-black ${item.quantity < 100 ? 'text-red-600' : 'text-orange-600'}">${item.quantity.toLocaleString()}</span>
+                            <span class="text-[9px] text-slate-400 font-bold uppercase ml-1">Left</span>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
             });
         }
 
         function fetchGlobalInventoryHealth() {
             onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
-                let totalHealthPoints = 0;
-                let medCount = 0;
+                let totalHealthPoints = 0, medCount = 0;
                 snapshot.forEach(doc => {
                     const qty = parseInt(doc.data().quantity || 0);
                     medCount++;
                     if (qty >= 500) totalHealthPoints += 100;
-                    else if (qty >= 300) totalHealthPoints += 75;
                     else if (qty >= 100) totalHealthPoints += 40;
                     else totalHealthPoints += 10;
                 });
-                const averageHealth = medCount > 0 ? Math.round(totalHealthPoints / medCount) : 0;
-                document.getElementById('avg-medicine-stock').innerText = `${averageHealth}%`;
+                document.getElementById('avg-medicine-stock').innerText = medCount > 0 ? `${Math.round(totalHealthPoints / medCount)}%` : "0%";
             });
         }
-
-        // --- Top Critical Stocks with Concept Bar ---
-        function fetchLowStockAlerts() {
-            const filter = document.getElementById('stock-time-filter').value;
-            // logic for timeframe can be applied if stock history exists
-
-            onSnapshot(collection(db, "medicine_inventory"), (snapshot) => {
-                const list = document.getElementById('medicine-dashboard-list');
-                let stocks = [];
-                snapshot.forEach(doc => stocks.push(doc.data()));
-
-                // Sort by lowest quantity
-                stocks.sort((a, b) => a.quantity - b.quantity);
-                const top10 = stocks.slice(0, 10);
-                
-                // Max baseline for visual (e.g. 1000 units is "Full")
-                const baseline = 1000;
-
-                list.innerHTML = top10.map(item => {
-                    const percentage = Math.min((item.quantity / baseline) * 100, 100);
-                    const isCritical = item.quantity < 100;
-                    const barColor = isCritical ? 'bg-red-500' : 'bg-orange-500';
-
-                    return `
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-end">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-2 h-2 rounded-full ${isCritical ? 'bg-red-500 animate-pulse' : 'bg-orange-400'}"></div>
-                                    <div>
-                                        <p class="font-bold text-navy text-sm">${item.name}</p>
-                                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">${item.barangay}</p>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-sm font-black ${isCritical ? 'text-red-600' : 'text-orange-600'}">${item.quantity.toLocaleString()}</span>
-                                    <span class="text-[9px] text-slate-400 font-bold uppercase ml-1">Left</span>
-                                </div>
-                            </div>
-                            <div class="h-2 w-full bg-slate-50 rounded-full overflow-hidden border border-slate-100">
-                                <div class="h-full ${barColor} rounded-full transition-all duration-1000 ease-out" style="width: ${percentage}%"></div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            });
-        }
-
-        // Event Listeners for Filters
-        document.getElementById('disease-time-filter').addEventListener('change', fetchRankingCases);
-        document.getElementById('stock-time-filter').addEventListener('change', fetchLowStockAlerts);
 
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
     </script>
