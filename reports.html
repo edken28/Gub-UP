@@ -9,13 +9,12 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .bg-brand-blue { background-color: #2563eb; }
         .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
         #disease-table-body tr { transition: all 0.3s ease; }
         
-        /* Custom Select Styling */
         .filter-select {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
@@ -23,142 +22,184 @@
             background-position: right 1rem center;
             background-size: 1em;
         }
+
+        /* Mobile Sidebar Transitions */
+        #sidebar {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                transform: translateX(-100%);
+                z-index: 50;
+            }
+            #sidebar.active { transform: translateX(0); }
+        }
+
+        /* Overlay */
+        #sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 45;
+        }
+        #sidebar-overlay.active { display: block; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex">
+<body class="bg-slate-50 min-h-screen">
 
-    <aside class="w-72 bg-white border-r border-slate-100 flex flex-col hidden md:flex sticky top-0 h-screen">
-        <div class="p-8">
-            <div class="flex items-center gap-3 mb-10" data-aos="fade-right">
-                <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg">
-                    <i data-lucide="plus" class="w-6 h-6"></i>
+    <div id="sidebar-overlay"></div>
+
+    <header class="md:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-brand-blue rounded-lg flex items-center justify-center text-white">
+                <i data-lucide="plus" class="w-5 h-5"></i>
+            </div>
+            <span class="font-bold text-navy">GUB-UP</span>
+        </div>
+        <button id="mobile-toggle" class="p-2 bg-slate-50 rounded-xl text-navy">
+            <i data-lucide="menu"></i>
+        </button>
+    </header>
+
+    <div class="flex w-full min-h-screen">
+        <aside id="sidebar" class="w-72 bg-white border-r border-slate-100 flex flex-col h-screen sticky top-0">
+            <div class="p-8">
+                <div class="flex items-center gap-3 mb-10" data-aos="fade-right">
+                    <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg">
+                        <i data-lucide="plus" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
+                        <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
+                    </div>
                 </div>
+
+                <nav class="space-y-3">
+                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all group">
+                        <div class="w-8 h-8 bg-slate-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <span>Dashboard</span>
+                    </a>
+
+                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
+                        <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <span>Medicine Stocks</span>
+                    </a>
+
+                    <a href="reports.html" class="flex items-center gap-3 bg-amber-500 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-amber-100 transition-all scale-[1.02]">
+                        <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                            <i data-lucide="file-bar-chart" class="w-4 h-4 text-white"></i>
+                        </div>
+                        <span>Disease Reports</span>
+                    </a>
+
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:text-blue-600 transition-all group">
+                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <span>Hotlines</span>
+                    </a>
+
+                    <div class="pt-6 pb-2">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
+                        <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2">
+                            <i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console
+                        </a>
+                        <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:text-white transition-all">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="mt-auto p-8 border-t border-slate-50">
+                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
+                    <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 p-4 md:p-8 min-w-0">
+            <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10" data-aos="fade-down">
                 <div>
-                    <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
-                    <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-navy">Global Disease Reports</h1>
+                    <p class="text-slate-500 text-sm">Live outbreak monitoring across all Gubat Barangays</p>
+                </div>
+                
+                <div class="relative w-full lg:w-96">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5"></i>
+                    <input type="text" id="disease-search" placeholder="Search disease..." 
+                        class="w-full pl-12 pr-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all">
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" data-aos="fade-up">
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-2">Barangay Location</label>
+                    <select id="filter-brgy" class="filter-select w-full px-5 py-3 rounded-2xl border border-slate-200 bg-white font-bold text-navy outline-none">
+                        <option value="all">All Barangays</option>
+                        <option value="Ariman">Ariman</option><option value="Bagacay">Bagacay</option><option value="Balud Del Norte">Balud Del Norte</option>
+                        <option value="Balud Del Sur">Balud Del Sur</option><option value="Benguet">Benguet</option><option value="Bentuco">Bentuco</option>
+                        <option value="Beriran">Beriran</option><option value="Buenavista">Buenavista</option><option value="Bulacao">Bulacao</option>
+                        <option value="Cabigaan">Cabigaan</option><option value="Cabiguhan">Cabiguhan</option><option value="Carriedo">Carriedo</option>
+                        <option value="Casili">Casili</option><option value="Cogon">Cogon</option><option value="Cota Na Daco">Cota Na Daco</option>
+                        <option value="Dita">Dita</option><option value="Jupi">Jupi</option><option value="Lapinig">Lapinig</option>
+                        <option value="Luna-Candol">Luna-Candol</option><option value="Manapao">Manapao</option><option value="Manook">Manook</option>
+                        <option value="Naagtan">Naagtan</option><option value="Nato">Nato</option><option value="Nazareno">Nazareno</option>
+                        <option value="Ogao">Ogao</option><option value="Paco">Paco</option><option value="Panganiban">Panganiban</option>
+                        <option value="Paradijon">Paradijon</option><option value="Patag">Patag</option><option value="Payawin">Payawin</option>
+                        <option value="Pinontingan">Pinontingan</option><option value="Rizal">Rizal</option><option value="San Ignacio">San Ignacio</option>
+                        <option value="Sangat">Sangat</option><option value="Santa Ana">Santa Ana</option><option value="Tabi">Tabi</option>
+                        <option value="Tagaytay">Tagaytay</option><option value="Tigkiw">Tigkiw</option><option value="Tiris">Tiris</option>
+                        <option value="Togawe">Togawe</option><option value="Union">Union</option><option value="Villareal">Villareal</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-2">Time Range</label>
+                    <select id="filter-time" class="filter-select w-full px-5 py-3 rounded-2xl border border-slate-200 bg-white font-bold text-navy outline-none">
+                        <option value="all">Total Cases (All Time)</option>
+                        <option value="daily">Today's Reports</option>
+                        <option value="weekly">This Week</option>
+                        <option value="monthly">This Month</option>
+                        <option value="yearly">This Year</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-2">Sort Order</label>
+                    <select id="filter-sort" class="filter-select w-full px-5 py-3 rounded-2xl border border-slate-200 bg-white font-bold text-navy outline-none">
+                        <option value="desc">Newest First</option>
+                        <option value="asc">Oldest First</option>
+                        <option value="high">Highest Cases</option>
+                    </select>
                 </div>
             </div>
 
-            <nav class="space-y-3">
-                <a href="dashboard.html" data-aos="fade-right" data-aos-delay="100" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all group">
-                    <div class="w-8 h-8 bg-slate-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
-                        <i data-lucide="layout-dashboard" class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <span>Dashboard</span>
-                </a>
-
-                <a href="stock.html" data-aos="fade-right" data-aos-delay="200" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
-                    <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
-                        <i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <span>Medicine Stocks</span>
-                </a>
-
-                <a href="reports.html" data-aos="fade-right" data-aos-delay="300" class="flex items-center gap-3 bg-amber-500 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-amber-100 transition-all scale-[1.02]">
-                    <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                        <i data-lucide="file-bar-chart" class="w-4 h-4 text-white"></i>
-                    </div>
-                    <span>Disease Reports</span>
-                </a>
-
-                <a href="hotlines.html" data-aos="fade-right" data-aos-delay="350" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:text-blue-600 transition-all group">
-                    <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
-                        <i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <span>Hotlines</span>
-                </a>
-
-                <div class="pt-6 pb-2" data-aos="fade-up" data-aos-delay="400">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                    <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2">
-                        <i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console
-                    </a>
-                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:text-white transition-all">
-                        <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
-                    </a>
-                </div>
-            </nav>
-        </div>
-
-        <div class="mt-auto p-8 border-t border-slate-50" data-aos="fade-up" data-aos-delay="500">
-            <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
-                <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
-            </button>
-        </div>
-    </aside>
-
-    <main class="flex-1 p-8">
-        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10" data-aos="fade-down" data-aos-duration="800">
-            <div>
-                <h1 class="text-3xl font-extrabold text-navy">Global Disease Reports</h1>
-                <p class="text-slate-500">Live outbreak monitoring across all Gubat Barangays</p>
+            <div class="bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-sm border border-slate-100 overflow-x-auto" data-aos="fade-up">
+                <table class="w-full text-left min-w-[700px]">
+                    <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 text-[10px] md:text-xs font-black uppercase tracking-widest">
+                        <tr>
+                            <th class="px-6 md:px-8 py-5">Disease Identity</th>
+                            <th class="px-6 md:px-8 py-5">Barangay</th>
+                            <th class="px-6 md:px-8 py-5 text-center">Cases</th>
+                            <th class="px-6 md:px-8 py-5">Date Reported</th>
+                            <th class="px-6 md:px-8 py-5">Severity</th>
+                        </tr>
+                    </thead>
+                    <tbody id="disease-table-body" class="divide-y divide-slate-50 text-navy font-medium text-sm md:text-base"></tbody>
+                </table>
             </div>
-            
-            <div class="relative w-full lg:w-96">
-                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5"></i>
-                <input type="text" id="disease-search" placeholder="Search disease..." 
-                    class="w-full pl-12 pr-4 py-3 rounded-2xl border border-slate-200 focus:outline-none focus:ring-4 focus:ring-amber-500/10 transition-all">
-            </div>
-        </header>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8" data-aos="fade-up" data-aos-delay="100">
-            <div class="flex flex-col gap-1.5">
-                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-2">Barangay Location</label>
-                <select id="filter-brgy" class="filter-select w-full px-5 py-3 rounded-2xl border border-slate-200 bg-white font-bold text-navy outline-none focus:ring-4 focus:ring-brand-blue/5">
-                    <option value="all">All Barangays</option>
-                    <option value="Ariman">Ariman</option><option value="Bagacay">Bagacay</option><option value="Balud Del Norte">Balud Del Norte</option>
-                    <option value="Balud Del Sur">Balud Del Sur</option><option value="Benguet">Benguet</option><option value="Bentuco">Bentuco</option>
-                    <option value="Beriran">Beriran</option><option value="Buenavista">Buenavista</option><option value="Bulacao">Bulacao</option>
-                    <option value="Cabigaan">Cabigaan</option><option value="Cabiguhan">Cabiguhan</option><option value="Carriedo">Carriedo</option>
-                    <option value="Casili">Casili</option><option value="Cogon">Cogon</option><option value="Cota Na Daco">Cota Na Daco</option>
-                    <option value="Dita">Dita</option><option value="Jupi">Jupi</option><option value="Lapinig">Lapinig</option>
-                    <option value="Luna-Candol">Luna-Candol</option><option value="Manapao">Manapao</option><option value="Manook">Manook</option>
-                    <option value="Naagtan">Naagtan</option><option value="Nato">Nato</option><option value="Nazareno">Nazareno</option>
-                    <option value="Ogao">Ogao</option><option value="Paco">Paco</option><option value="Panganiban">Panganiban</option>
-                    <option value="Paradijon">Paradijon</option><option value="Patag">Patag</option><option value="Payawin">Payawin</option>
-                    <option value="Pinontingan">Pinontingan</option><option value="Rizal">Rizal</option><option value="San Ignacio">San Ignacio</option>
-                    <option value="Sangat">Sangat</option><option value="Santa Ana">Santa Ana</option><option value="Tabi">Tabi</option>
-                    <option value="Tagaytay">Tagaytay</option><option value="Tigkiw">Tigkiw</option><option value="Tiris">Tiris</option>
-                    <option value="Togawe">Togawe</option><option value="Union">Union</option><option value="Villareal">Villareal</option>
-                </select>
-            </div>
-
-            <div class="flex flex-col gap-1.5">
-                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-2">Time Range</label>
-                <select id="filter-time" class="filter-select w-full px-5 py-3 rounded-2xl border border-slate-200 bg-white font-bold text-navy outline-none focus:ring-4 focus:ring-brand-blue/5">
-                    <option value="all">Total Cases (All Time)</option>
-                    <option value="daily">Today's Reports</option>
-                    <option value="weekly">This Week</option>
-                    <option value="monthly">This Month</option>
-                    <option value="yearly">This Year</option>
-                </select>
-            </div>
-
-            <div class="flex flex-col gap-1.5">
-                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-2">Sort Order</label>
-                <select id="filter-sort" class="filter-select w-full px-5 py-3 rounded-2xl border border-slate-200 bg-white font-bold text-navy outline-none focus:ring-4 focus:ring-brand-blue/5">
-                    <option value="desc">Newest First</option>
-                    <option value="asc">Oldest First</option>
-                    <option value="high">Highest Cases</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden" data-aos="fade-up" data-aos-delay="200">
-            <table class="w-full text-left">
-                <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 text-xs font-black uppercase tracking-widest">
-                    <tr>
-                        <th class="px-8 py-5">Disease Identity</th>
-                        <th class="px-8 py-5">Barangay</th>
-                        <th class="px-8 py-5 text-center">Cases</th>
-                        <th class="px-8 py-5">Date Reported</th>
-                        <th class="px-8 py-5">Severity</th>
-                    </tr>
-                </thead>
-                <tbody id="disease-table-body" class="divide-y divide-slate-50 text-navy font-medium"></tbody>
-            </table>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script type="module">
@@ -187,6 +228,19 @@
         const filterTime = document.getElementById('filter-time');
         const filterSort = document.getElementById('filter-sort');
 
+        // Responsive Sidebar Toggle
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+
+        mobileToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -200,7 +254,6 @@
         });
 
         function loadData() {
-            // Using disease_cases collection as per your base code
             onSnapshot(collection(db, "disease_cases"), (snapshot) => {
                 renderTable(snapshot.docs);
             });
@@ -213,20 +266,11 @@
             const sortValue = filterSort.value;
 
             tableBody.innerHTML = "";
-
             let dataList = docs.map(d => ({ id: d.id, ...d.data() }));
 
-            // 1. Barangay Filter
-            if (brgyValue !== "all") {
-                dataList = dataList.filter(item => item.barangay === brgyValue);
-            }
+            if (brgyValue !== "all") dataList = dataList.filter(item => item.barangay === brgyValue);
+            if (searchTerm) dataList = dataList.filter(item => item.name.toLowerCase().includes(searchTerm));
 
-            // 2. Search Filter
-            if (searchTerm) {
-                dataList = dataList.filter(item => item.name.toLowerCase().includes(searchTerm));
-            }
-
-            // 3. Time Filter Logic
             const now = new Date();
             if (timeValue !== "all") {
                 dataList = dataList.filter(item => {
@@ -234,7 +278,6 @@
                     const reportDate = item.createdAt.toDate();
                     const diffTime = Math.abs(now - reportDate);
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
                     if (timeValue === 'daily') return diffDays <= 1;
                     if (timeValue === 'weekly') return diffDays <= 7;
                     if (timeValue === 'monthly') return diffDays <= 30;
@@ -243,7 +286,6 @@
                 });
             }
 
-            // 4. Sorting
             dataList.sort((a, b) => {
                 if (sortValue === 'high') return b.count - a.count;
                 const dateA = a.createdAt ? a.createdAt.toDate() : 0;
@@ -266,20 +308,20 @@
                 else if(data.severity === 'Low') severityClass = "bg-emerald-500 text-white";
 
                 tableBody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-8 py-6">
+                    <tr class="hover:bg-slate-50 transition-colors text-sm md:text-base">
+                        <td class="px-6 md:px-8 py-6">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center">
+                                <div class="w-8 h-8 bg-amber-50 text-amber-600 rounded-lg flex items-center justify-center flex-shrink-0">
                                     <i data-lucide="alert-circle" class="w-4 h-4"></i>
                                 </div>
-                                <span class="font-bold">${data.name}</span>
+                                <span class="font-bold whitespace-nowrap">${data.name}</span>
                             </div>
                         </td>
-                        <td class="px-8 py-6 text-slate-500 font-bold uppercase text-xs">${data.barangay}</td>
-                        <td class="px-8 py-6 font-mono text-lg text-center font-black">${cases.toLocaleString()}</td>
-                        <td class="px-8 py-6 text-slate-400 text-xs font-bold uppercase">${dateStr}</td>
-                        <td class="px-8 py-6">
-                            <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${severityClass}">
+                        <td class="px-6 md:px-8 py-6 text-slate-500 font-bold uppercase text-[10px] md:text-xs">${data.barangay}</td>
+                        <td class="px-6 md:px-8 py-6 font-mono text-base md:text-lg text-center font-black">${cases.toLocaleString()}</td>
+                        <td class="px-6 md:px-8 py-6 text-slate-400 text-[10px] md:text-xs font-bold uppercase whitespace-nowrap">${dateStr}</td>
+                        <td class="px-6 md:px-8 py-6">
+                            <span class="px-3 md:px-4 py-1.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest ${severityClass} whitespace-nowrap">
                                 ${data.severity || 'Unrated'}
                             </span>
                         </td>
@@ -288,7 +330,6 @@
             lucide.createIcons();
         }
 
-        // Event Listeners for Live Refresh
         [searchInput, filterBrgy, filterTime, filterSort].forEach(el => {
             el.addEventListener('change', () => loadData());
             el.addEventListener('input', () => loadData());
