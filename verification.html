@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Identity | GUB-UP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        .otp-input:focus { border-color: #2563eb; ring: 4px; ring-color: #eff6ff; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: slideIn 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-md w-full bg-white rounded-[2.5rem] shadow-2xl p-8 md:p-12 animate-in">
+        <div class="text-center mb-8">
+            <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="shield-check" class="w-8 h-8 text-brand-blue"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-navy">Enter Verification Code</h2>
+            <p class="text-slate-500 text-sm mt-2">We sent a 4-digit code to your email. Please enter it below to continue.</p>
+        </div>
+
+        <form id="otp-form" class="space-y-6">
+            <div class="flex justify-center gap-3">
+                <input type="text" maxlength="1" class="otp-field w-14 h-16 text-center text-2xl font-bold border-2 border-slate-200 rounded-2xl focus:border-blue-500 outline-none transition-all">
+                <input type="text" maxlength="1" class="otp-field w-14 h-16 text-center text-2xl font-bold border-2 border-slate-200 rounded-2xl focus:border-blue-500 outline-none transition-all">
+                <input type="text" maxlength="1" class="otp-field w-14 h-16 text-center text-2xl font-bold border-2 border-slate-200 rounded-2xl focus:border-blue-500 outline-none transition-all">
+                <input type="text" maxlength="1" class="otp-field w-14 h-16 text-center text-2xl font-bold border-2 border-slate-200 rounded-2xl focus:border-blue-500 outline-none transition-all">
+            </div>
+
+            <button type="submit" id="verifyBtn" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">
+                Verify Account
+            </button>
+        </form>
+
+        <div class="mt-8 text-center">
+            <button id="resendBtn" class="text-sm font-bold text-blue-600 hover:underline">Resend Code</button>
+        </div>
+    </div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = { /* YOUR CONFIG */ };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    lucide.createIcons();
+
+    // Auto-focus logic for OTP inputs
+    const inputs = document.querySelectorAll('.otp-field');
+    inputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+            if (e.target.value && index < inputs.length - 1) inputs[index + 1].focus();
+        });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !e.target.value && index > 0) inputs[index - 1].focus();
+        });
+    });
+
+    document.getElementById('otp-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const enteredCode = Array.from(inputs).map(i => i.value).join('');
+        const user = auth.currentUser;
+
+        if (!user) {
+            alert("Session expired. Please register again.");
+            return;
+        }
+
+        try {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            const correctCode = userDoc.data().verificationCode;
+            const role = userDoc.data().role;
+
+            if (enteredCode === correctCode.toString()) {
+                // Mark as verified in Firestore
+                await updateDoc(doc(db, "users", user.uid), {
+                    isEmailVerified: true,
+                    verificationCode: null // Clear code for security
+                });
+
+                if (role === 'citizen') {
+                    alert("Account verified! Welcome to GUB-UP.");
+                    window.location.href = "dashboard.html";
+                } else {
+                    // STAFF LOGIC (processing-rhu or processing-bhw)
+                    // 1. Notify Admin (Using EmailJS)
+                    emailjs.send("YOUR_SERVICE_ID", "YOUR_ADMIN_NOTIFY_TEMPLATE", {
+                        admin_email: "edwardhorken@gmail.com",
+                        user_name: userDoc.data().name,
+                        requested_role: role
+                    });
+
+                    alert("Thank you! Your staff account is now being processed. An admin will review your credentials.");
+                    window.location.href = "dashboard.html"; // They go here but see "Pending" screen
+                }
+            } else {
+                alert("Invalid code. Please try again.");
+            }
+        } catch (error) {
+            alert("Error: " + error.message);
+        }
+    });
+</script>
+</body>
+</html>
