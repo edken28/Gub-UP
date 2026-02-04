@@ -14,7 +14,6 @@
         .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
 
-        /* ANIMATIONS */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -27,11 +26,9 @@
         .animate-fade-up { animation: fadeInUp 0.6s ease-out forwards; }
         .animate-float { animation: float 4s ease-in-out infinite; }
 
-        /* BACK BUTTON HOVER */
         .back-btn:hover i { transform: translateX(-4px); }
         .back-btn i { transition: transform 0.2s ease; }
 
-        /* CUSTOM RADIO STYLING */
         input[type="radio"]:checked + .role-card {
             border-color: #2563eb;
             background-color: #eff6ff;
@@ -71,11 +68,10 @@
                             <i data-lucide="check-circle-2" class="w-4 h-4"></i> Duplicate Name Protection
                         </div>
                         <div class="flex items-center gap-3 text-xs bg-white/10 p-3 rounded-xl border border-white/10">
-                            <i data-lucide="mail-check" class="w-4 h-4"></i> 4-Digit Code Verification
+                            <i data-lucide="mail-check" class="w-4 h-4"></i> OTP Code Verification
                         </div>
                     </div>
                 </div>
-                <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
             </div>
 
             <div class="w-full md:w-[65%] p-8 md:p-12">
@@ -160,11 +156,6 @@
                         class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-blue-100 hover:bg-blue-700 active:scale-[0.98] transition-all flex items-center justify-center gap-3">
                         Create Account
                     </button>
-                    
-                    <p class="text-center text-sm text-slate-500 font-medium">
-                        Already have an account? 
-                        <a href="login.html" class="text-brand-blue font-bold hover:underline">Login</a>
-                    </p>
                 </form>
             </div>
         </div>
@@ -172,11 +163,15 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // Initialize EmailJS with your Public Key
-    emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); 
+    // 1. Final Keys Setup
+    const PUBLIC_KEY = "qwA5GyR0JwylFMYXm";
+    const SERVICE_ID = "service_bmhrqyo";
+    const TEMPLATE_ID = "template_vhz6fts";
+
+    emailjs.init(PUBLIC_KEY);
 
     const firebaseConfig = {
         apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -192,11 +187,10 @@
     const db = getFirestore(app);
     lucide.createIcons();
 
-    const toggleBtn = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('password');
-    const eyeIcon = document.getElementById('eyeIcon');
-
-    toggleBtn.addEventListener('click', () => {
+    // Toggle Password Visibility
+    document.getElementById('togglePassword').addEventListener('click', () => {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
         const isPassword = passwordInput.type === 'password';
         passwordInput.type = isPassword ? 'text' : 'password';
         eyeIcon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
@@ -213,47 +207,51 @@
         const selectedRole = document.querySelector('input[name="role"]:checked').value;
 
         submitBtn.disabled = true;
-        submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Processing...`;
+        submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Sending OTP...`;
         lucide.createIcons();
 
         try {
+            // Duplicate Name Check
             const q = query(collection(db, "users"), where("name", "==", fullName));
             const nameSnap = await getDocs(q);
             if (!nameSnap.empty) throw new Error("This name is already registered.");
 
-            // 1. Create Auth Account
+            // Create Firebase User
             const userCred = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCred.user;
 
-            // 2. Generate 4-Digit OTP
+            // Generate 4-Digit OTP and Expiry Time (for your template)
             const otpCode = Math.floor(1000 + Math.random() * 9000).toString();
+            const now = new Date();
+            const expiryTime = new Date(now.getTime() + 15 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            // 3. Save to Firestore (Initially Unverified)
+            // Set final role
             let finalRole = (selectedRole === "citizen") ? "citizen" : `processing-${selectedRole}`;
-            
+
+            // Save to Firestore
             await setDoc(doc(db, "users", user.uid), {
                 name: fullName,
                 email: email,
                 barangay: barangay,
                 role: finalRole,
-                isApproved: false, // Everyone starts as false until OTP/Admin check
+                isApproved: (selectedRole === "citizen"),
                 otpCode: otpCode,
-                createdAt: new Date()
+                createdAt: now
             });
 
-            // 4. Send OTP via EmailJS
-            await emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+            // 2. Send the Email using your template variables: {{passcode}} and {{time}}
+            await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
                 to_name: fullName,
                 to_email: email,
-                otp: otpCode
+                passcode: otpCode,
+                time: expiryTime
             });
 
-            // 5. Success - Proceed to Verification
-            // Note: We don't sign out yet so the verification page can identify the user
+            // Redirect to verification page
             window.location.href = `verification.html?uid=${user.uid}`;
 
         } catch (error) {
-            alert(error.message);
+            alert(error.message || "An unexpected error occurred.");
             submitBtn.disabled = false;
             submitBtn.innerText = "Create Account";
             lucide.createIcons();
