@@ -33,9 +33,10 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
         }
-        input[type="radio"]:checked + .role-card i { color: #2563eb; }
+        input[type="radio"]:checked + .role-card i { color: #2563eb; stroke-width: 2.5px; }
         input[type="radio"]:checked + .role-card span { color: #2563eb; }
 
+        /* Mobile Zoom Fix */
         input, select { font-size: 16px !important; } 
     </style>
 </head>
@@ -50,49 +51,53 @@
                         <i data-lucide="shield-plus" class="w-8 h-8 text-white"></i>
                     </div>
                     <h1 class="text-3xl font-bold mb-2">GUB-UP</h1>
-                    <p class="text-blue-100 text-sm mb-8 opacity-90 leading-relaxed">Join our secure health network for Gubat, Sorsogon.</p>
+                    <p class="text-blue-100 text-sm mb-8 opacity-90 leading-relaxed">Join the secure health monitoring network for Gubat, Sorsogon.</p>
                     
                     <div class="space-y-4">
-                        <div class="flex items-center gap-3 text-xs bg-white/10 p-3 rounded-xl">
-                            <i data-lucide="fingerprint" class="w-4 h-4"></i> Identity Protection
+                        <div class="flex items-center gap-3 text-xs bg-white/10 p-3 rounded-xl border border-white/10">
+                            <i data-lucide="check-circle-2" class="w-4 h-4"></i> Duplicate Name Protection
                         </div>
-                        <div class="flex items-center gap-3 text-xs bg-white/10 p-3 rounded-xl">
-                            <i data-lucide="mail-check" class="w-4 h-4"></i> Verified Access
+                        <div class="flex items-center gap-3 text-xs bg-white/10 p-3 rounded-xl border border-white/10">
+                            <i data-lucide="mail-check" class="w-4 h-4"></i> Email Verification Required
+                        </div>
+                        <div class="flex items-center gap-3 text-xs bg-white/10 p-3 rounded-xl border border-white/10">
+                            <i data-lucide="lock-keyhole" class="w-4 h-4"></i> Admin Approval for Staff
                         </div>
                     </div>
                 </div>
                 <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+                <div class="absolute -top-10 -left-10 w-32 h-32 bg-blue-400/20 rounded-full blur-2xl"></div>
             </div>
 
             <div class="w-full md:w-[65%] p-8 md:p-12 lg:p-14">
                 <header class="mb-8">
                     <h3 class="text-3xl font-extrabold text-navy mb-1">Create Account</h3>
-                    <p class="text-slate-400 font-medium text-sm">Fill in your details to get started.</p>
+                    <p class="text-slate-400 font-medium text-sm">Please use your real, legal name for records.</p>
                 </header>
 
                 <form id="registrationForm" class="space-y-5">
                     <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">I am a...</label>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Identify your role</label>
                         <div class="grid grid-cols-3 gap-3">
                             <label class="cursor-pointer group">
                                 <input type="radio" name="role" value="citizen" class="hidden" checked>
                                 <div class="role-card border-2 border-slate-100 p-4 rounded-2xl text-center transition-all hover:border-blue-200 flex flex-col items-center gap-2">
                                     <i data-lucide="user" class="w-6 h-6 text-slate-400 transition-colors"></i>
-                                    <span class="block text-[11px] font-bold text-slate-600 uppercase tracking-tight">Citizen</span>
+                                    <span class="block text-[10px] md:text-[11px] font-bold text-slate-600 uppercase tracking-tight">Citizen</span>
                                 </div>
                             </label>
                             <label class="cursor-pointer group">
                                 <input type="radio" name="role" value="bhw" class="hidden">
                                 <div class="role-card border-2 border-slate-100 p-4 rounded-2xl text-center transition-all hover:border-blue-200 flex flex-col items-center gap-2">
                                     <i data-lucide="stethoscope" class="w-6 h-6 text-slate-400 transition-colors"></i>
-                                    <span class="block text-[11px] font-bold text-slate-600 uppercase tracking-tight">BHW</span>
+                                    <span class="block text-[10px] md:text-[11px] font-bold text-slate-600 uppercase tracking-tight">BHW</span>
                                 </div>
                             </label>
                             <label class="cursor-pointer group">
                                 <input type="radio" name="role" value="rhu" class="hidden">
                                 <div class="role-card border-2 border-slate-100 p-4 rounded-2xl text-center transition-all hover:border-blue-200 flex flex-col items-center gap-2">
                                     <i data-lucide="building-2" class="w-6 h-6 text-slate-400 transition-colors"></i>
-                                    <span class="block text-[11px] font-bold text-slate-600 uppercase tracking-tight">RHU Staff</span>
+                                    <span class="block text-[10px] md:text-[11px] font-bold text-slate-600 uppercase tracking-tight">RHU Staff</span>
                                 </div>
                             </label>
                         </div>
@@ -175,7 +180,7 @@
     const db = getFirestore(app);
     lucide.createIcons();
 
-    // Password Toggle
+    // Show/Hide Password Toggle
     const toggleBtn = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
     const eyeIcon = document.getElementById('eyeIcon');
@@ -187,7 +192,7 @@
         lucide.createIcons();
     });
 
-    // Registration Process
+    // Main Registration Logic
     document.getElementById('registrationForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const submitBtn = document.getElementById('submitBtn');
@@ -197,39 +202,45 @@
         const barangay = document.getElementById('barangay').value;
         const selectedRole = document.querySelector('input[name="role"]:checked').value;
 
+        // UI Loading State
         submitBtn.disabled = true;
-        submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Processing...`;
+        submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Validating...`;
         lucide.createIcons();
 
         try {
-            // Duplicate Name Check
+            // 1. DUPLICATE NAME CHECK
             const q = query(collection(db, "users"), where("name", "==", fullName));
             const nameSnap = await getDocs(q);
-            if (!nameSnap.empty) throw new Error("This name is already registered. Use your full legal name.");
+            if (!nameSnap.empty) {
+                throw new Error("This name is already registered. Please contact Admin if you think this is a mistake.");
+            }
 
-            // Signup
+            // 2. CREATE FIREBASE AUTH ACCOUNT
             const userCred = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCred.user;
 
-            // Role assignment logic
-            let finalRole = (selectedRole === "citizen") ? "citizen" : "processing";
+            // 3. ROLE LOGIC (Processing for BHW/RHU)
+            let finalRole = (selectedRole === "citizen") ? "citizen" : `processing-${selectedRole}`;
 
+            // 4. SAVE USER TO FIRESTORE
             await setDoc(doc(db, "users", user.uid), {
                 name: fullName,
                 email: email,
                 barangay: barangay,
                 role: finalRole,
-                requestedRole: selectedRole,
-                isApproved: (finalRole === "citizen"),
+                isApproved: (finalRole === "citizen"), // Citizens are pre-approved, others need manual admin action
                 createdAt: new Date()
             });
 
+            // 5. EMAIL VERIFICATION & LOGOUT
             await sendEmailVerification(user);
-            await signOut(auth);
+            await signOut(auth); // Sign out so they must log in after verification
 
+            // 6. REDIRECT TO VERIFICATION PAGE
             window.location.href = "verification.html";
 
         } catch (error) {
+            console.error("Registration Error:", error);
             alert(error.message);
             submitBtn.disabled = false;
             submitBtn.innerText = "Create Account";
