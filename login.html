@@ -6,125 +6,117 @@
     <title>Login | GUB-UP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; overflow-x: hidden; position: relative; }
+        body { font-family: 'Inter', sans-serif; overflow: hidden; position: relative; }
         .bg-brand-blue { background-color: #2563eb; }
         .text-brand-blue { color: #2563eb; }
-        .text-navy { color: #1e3a8a; }
-
+        
         /* FLOATING BACKGROUND ORBS */
         .orb {
             position: fixed;
             border-radius: 50%;
-            filter: blur(80px);
+            filter: blur(60px);
             z-index: -1;
             opacity: 0.3;
             animation: drift 15s infinite alternate ease-in-out;
         }
-        .orb-1 { width: 300px; height: 300px; background: #cbd5e1; top: -10%; left: -5%; }
-        .orb-2 { width: 400px; height: 400px; background: #94a3b8; bottom: -10%; right: -5%; animation-delay: -5s; }
+        .orb-1 { width: 200px; height: 200px; background: #cbd5e1; top: -5%; left: -5%; }
+        .orb-2 { width: 300px; height: 300px; background: #94a3b8; bottom: -5%; right: -5%; animation-delay: -5s; }
 
         @keyframes drift {
             from { transform: translate(0, 0); }
-            to { transform: translate(30px, 50px); }
+            to { transform: translate(20px, 30px); }
         }
 
-        .login-card { transition: transform 0.3s ease; }
-        
-        /* Ensures the container doesn't feel too long on mobile */
-        @media (max-width: 768px) {
-            .mobile-header-height { min-height: 200px; }
-            .mobile-overlap { margin-top: -40px; }
+        /* Mobile specific scaling to keep the "Mini Desktop" look */
+        @media (max-width: 640px) {
+            .login-card {
+                flex-direction: row !important; /* Forces side-by-side even on tiny screens */
+                height: 450px;
+                width: 95vw;
+            }
+            .branding-side { width: 35% !important; padding: 1rem !important; }
+            .form-side { width: 65% !important; padding: 1.5rem !important; }
+            .hide-mobile { display: none; }
+            .text-mini { font-size: 0.65rem; }
+            .title-mini { font-size: 1rem; }
         }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col items-center justify-start md:justify-center p-0 md:p-6">
+<body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center p-2">
 
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
 
-    <div class="max-w-4xl w-full relative z-10">
-        <div class="hidden md:block mb-6" data-aos="fade-right">
-            <a href="index.html" class="inline-flex items-center gap-2 text-brand-blue font-bold hover:gap-4 transition-all group">
-                <i data-lucide="arrow-left" class="w-5 h-5 transition-transform group-hover:-translate-x-1"></i> 
-                Back to Home
-            </a>
+    <div class="mb-4 w-full max-w-2xl px-4">
+        <a href="index.html" class="inline-flex items-center gap-1 text-brand-blue font-bold text-sm hover:gap-2 transition-all">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Home
+        </a>
+    </div>
+
+    <div class="login-card bg-white/90 backdrop-blur-sm rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl flex flex-row overflow-hidden w-full max-w-4xl min-h-[400px] md:min-h-[550px]">
+        
+        <div class="branding-side bg-brand-blue w-[40%] p-6 md:p-10 text-white flex flex-col justify-center relative">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-12 -mt-12"></div>
+            
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 mb-4 md:mb-8">
+                    <div class="bg-white p-1.5 rounded-lg shadow-md">
+                        <div class="w-5 h-5 md:w-8 md:h-8 text-brand-blue flex items-center justify-center font-bold text-lg md:text-2xl">+</div>
+                    </div>
+                    <div>
+                        <h1 class="text-sm md:text-2xl font-bold leading-none">GUB-UP</h1>
+                        <p class="text-[7px] md:text-[10px] opacity-80 uppercase tracking-widest font-semibold">Health</p>
+                    </div>
+                </div>
+                <h2 class="title-mini md:text-3xl font-bold mb-2">Welcome</h2>
+                <p class="text-blue-100 text-[9px] md:text-sm opacity-90 leading-tight hide-mobile">Access your community health portal for Gubat, Sorsogon.</p>
+            </div>
         </div>
 
-        <div class="login-card bg-white/90 backdrop-blur-sm md:rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row overflow-hidden min-h-screen md:min-h-[550px]" 
-             data-aos="zoom-in">
-            
-            <div class="bg-brand-blue w-full md:w-[42%] p-8 md:p-10 text-white flex flex-col justify-center relative overflow-hidden mobile-header-height">
-                <a href="index.html" class="md:hidden absolute top-6 left-6 z-20 bg-white/20 p-2 rounded-lg">
-                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
-                </a>
+        <div class="form-side w-[60%] p-6 md:p-14 flex flex-col justify-center bg-white">
+            <div class="mb-4 md:mb-8">
+                <h3 class="text-xl md:text-3xl font-bold text-navy mb-1">Login</h3>
+                <p class="text-gray-400 font-medium text-[10px] md:text-base">Enter credentials</p>
+            </div>
 
-                <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+            <form id="loginForm" class="space-y-3 md:space-y-5">
+                <div>
+                    <label class="block text-[9px] md:text-xs font-bold text-navy mb-1 uppercase tracking-wider">Email</label>
+                    <div class="relative">
+                        <i data-lucide="mail" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="email" id="email" placeholder="Email" required 
+                            class="w-full pl-9 pr-3 py-2 md:py-3.5 text-sm rounded-lg md:rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-50 focus:border-brand-blue transition-all">
+                    </div>
+                </div>
                 
-                <div class="relative z-10 text-center md:text-left mt-4 md:mt-0">
-                    <div class="flex items-center justify-center md:justify-start gap-3 mb-4 md:mb-8">
-                        <div class="bg-white p-2 rounded-xl shadow-lg">
-                            <div class="w-6 h-6 md:w-8 md:h-8 text-brand-blue flex items-center justify-center font-bold text-xl md:text-2xl">+</div>
-                        </div>
-                        <div class="text-left">
-                            <h1 class="text-xl md:text-2xl font-bold leading-none tracking-tight">GUB-UP</h1>
-                            <p class="text-[9px] md:text-[10px] opacity-80 uppercase tracking-widest font-semibold mt-1">Health Portal</p>
-                        </div>
+                <div>
+                    <label class="block text-[9px] md:text-xs font-bold text-navy mb-1 uppercase tracking-wider">Password</label>
+                    <div class="relative">
+                        <i data-lucide="lock" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="password" id="password" placeholder="••••" required 
+                            class="w-full pl-9 pr-3 py-2 md:py-3.5 text-sm rounded-lg md:rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-blue-50 focus:border-brand-blue transition-all">
                     </div>
-                    <h2 class="text-xl md:text-3xl font-bold mb-2">Welcome Back</h2>
-                    <p class="text-blue-100 text-xs md:text-sm opacity-90 leading-relaxed hidden md:block">Access your municipality health account for Gubat, Sorsogon.</p>
-                </div>
-            </div>
-
-            <div class="w-full md:w-[58%] p-8 md:p-14 flex flex-col justify-center bg-white rounded-t-[2.5rem] md:rounded-t-none mobile-overlap">
-                <div class="text-center md:text-left mb-6">
-                    <h3 class="text-2xl md:text-3xl font-bold text-navy mb-1">Login</h3>
-                    <p class="text-gray-400 font-medium text-sm">Enter your credentials to continue</p>
                 </div>
 
-                <form id="loginForm" class="space-y-4 md:space-y-5">
-                    <div class="group">
-                        <label class="block text-[10px] md:text-xs font-bold text-navy mb-1 md:mb-2 uppercase tracking-wider">Email Address</label>
-                        <div class="relative">
-                            <i data-lucide="mail" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors"></i>
-                            <input type="email" id="email" placeholder="name@email.com" required 
-                                class="w-full pl-12 pr-4 py-3 md:py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
-                        </div>
-                    </div>
+                <div class="pt-2">
+                    <button type="submit" id="loginBtn" class="w-full bg-brand-blue text-white py-2.5 md:py-4 rounded-lg md:rounded-xl font-bold text-sm md:text-lg shadow-lg hover:bg-blue-700 transition-all active:scale-95 flex justify-center items-center gap-2">
+                        <span>Sign In</span>
+                        <i data-lucide="log-in" class="w-4 h-4 md:w-5 md:h-5"></i>
+                    </button>
                     
-                    <div class="group">
-                        <label class="block text-[10px] md:text-xs font-bold text-navy mb-1 md:mb-2 uppercase tracking-wider">Password</label>
-                        <div class="relative">
-                            <i data-lucide="lock" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors"></i>
-                            <input type="password" id="password" placeholder="••••••••" required 
-                                class="w-full pl-12 pr-4 py-3 md:py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
-                        </div>
-                    </div>
-
-                    <div class="pt-2">
-                        <button type="submit" id="loginBtn" class="w-full bg-brand-blue text-white py-3.5 md:py-4 rounded-xl font-bold text-base md:text-lg shadow-xl hover:bg-blue-700 transition-all active:scale-95 flex justify-center items-center gap-2 mb-6">
-                            <span>Sign In</span>
-                            <i data-lucide="log-in" class="w-5 h-5"></i>
-                        </button>
-                        
-                        <p class="text-center text-sm text-gray-500 font-medium">
-                            Don't have an account? <br class="md:hidden">
-                            <a href="register.html" class="text-brand-blue font-bold hover:underline underline-offset-4 ml-1">Register here</a>
-                        </p>
-                    </div>
-                </form>
-            </div>
+                    <p class="text-center text-[10px] md:text-sm text-gray-500 font-medium mt-4">
+                        No account? <a href="register.html" class="text-brand-blue font-bold hover:underline">Register</a>
+                    </p>
+                </div>
+            </form>
         </div>
     </div>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        AOS.init({ duration: 800, once: true });
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -145,15 +137,15 @@
             const password = document.getElementById('password').value;
 
             loginBtn.disabled = true;
-            loginBtn.innerHTML = `<span class="animate-pulse">Signing in...</span>`;
+            loginBtn.innerHTML = `<span class="animate-pulse">...</span>`;
 
             try {
                 await signInWithEmailAndPassword(auth, email, password);
                 window.location.href = "dashboard.html";
             } catch (error) {
                 loginBtn.disabled = false;
-                loginBtn.innerHTML = `<span>Sign In</span> <i data-lucide="log-in" class="w-5 h-5"></i>`;
-                alert("Login failed: " + error.message);
+                loginBtn.innerHTML = `<span>Sign In</span>`;
+                alert("Error: " + error.message);
             }
         });
         
