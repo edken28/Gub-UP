@@ -13,7 +13,7 @@
         .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
 
-        /* FLOATING BACKGROUND ORBS (Same as Register) */
+        /* FLOATING BACKGROUND ORBS - Exact match to Register.html */
         .orb {
             position: fixed;
             border-radius: 50%;
@@ -24,13 +24,14 @@
         }
         .orb-1 { width: 300px; height: 300px; background: #e2e8f0; top: -10%; left: -5%; }
         .orb-2 { width: 400px; height: 400px; background: #cbd5e1; bottom: -10%; right: -5%; animation-delay: -5s; }
+        .orb-3 { width: 250px; height: 250px; background: #f1f5f9; top: 40%; right: 10%; animation-delay: -2s; }
 
         @keyframes drift {
             from { transform: translate(0, 0) rotate(0deg); }
             to { transform: translate(40px, 60px) rotate(10deg); }
         }
 
-        /* ANIMATIONS */
+        /* ANIMATIONS - Exact match to Register.html */
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -53,6 +54,7 @@
 
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
 
     <div class="max-w-4xl w-full relative z-10">
         <div class="mb-4 md:mb-6 animate-slide-up">
@@ -67,24 +69,31 @@
             <div class="bg-brand-blue w-full md:w-[38%] p-8 md:p-10 text-white flex flex-col justify-center relative overflow-hidden">
                 <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-float"></div>
                 
-                <div class="flex items-center gap-3 mb-4 md:mb-8 relative z-10 animate-float">
+                <div class="flex items-center gap-3 mb-6 md:mb-8 relative z-10 animate-float">
                     <div class="bg-white p-2 rounded-xl shadow-lg">
-                        <div class="w-7 h-7 md:w-8 md:h-8 text-brand-blue flex items-center justify-center font-bold text-xl md:text-2xl">+</div>
+                        <div class="w-8 h-8 text-brand-blue flex items-center justify-center font-bold text-2xl">+</div>
                     </div>
                     <div>
-                        <h1 class="text-xl md:text-2xl font-bold leading-none tracking-tight">GUB-UP</h1>
-                        <p class="text-[9px] md:text-[10px] opacity-80 uppercase tracking-widest font-semibold mt-1">Health Portal</p>
+                        <h1 class="text-2xl font-bold leading-none tracking-tight">GUB-UP</h1>
+                        <p class="text-[10px] opacity-80 uppercase tracking-widest font-semibold mt-1">Gubat Health Portal</p>
                     </div>
                 </div>
 
-                <h2 class="text-xl md:text-3xl font-bold mb-2 md:mb-4 relative z-10 leading-tight">Welcome Back</h2>
-                <p class="text-blue-100 text-xs md:text-sm opacity-90 relative z-10">Sign in to access your local health monitoring tools.</p>
+                <h2 class="text-2xl md:text-3xl font-bold mb-4 relative z-10 leading-tight">Welcome Back</h2>
+                <p class="text-blue-100 text-sm mb-2 md:mb-10 opacity-90 relative z-10">Access your local health monitoring tools and records.</p>
+                
+                <div class="space-y-6 hidden md:block relative z-10">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-white/20 p-2 rounded-lg mt-1"><i data-lucide="lock" class="w-5 h-5"></i></div>
+                        <div><h4 class="font-bold text-sm">Secure Login</h4><p class="text-xs text-blue-100 opacity-70">Protected by Firebase Authentication.</p></div>
+                    </div>
+                </div>
             </div>
 
             <div class="w-full md:w-[62%] p-8 md:p-14 flex flex-col justify-center">
                 <div class="animate-slide-up delay-2 text-center md:text-left">
                     <h3 class="text-2xl md:text-3xl font-bold text-navy mb-1">Login</h3>
-                    <p class="text-gray-400 mb-6 md:mb-8 font-medium text-sm md:text-base">Enter your credentials to continue</p>
+                    <p class="text-gray-400 mb-8 font-medium text-sm md:text-base">Please enter your credentials</p>
                 </div>
 
                 <form id="loginForm" class="space-y-4 md:space-y-5 animate-slide-up delay-2">
@@ -98,20 +107,23 @@
                         <div class="relative group">
                             <i data-lucide="lock" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors"></i>
                             <input type="password" id="password" placeholder="Password" required 
-                                class="w-full pl-12 pr-4 py-3 md:py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
+                                class="w-full pl-12 pr-12 py-3 md:py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
+                            <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-blue transition-colors">
+                                <i data-lucide="eye" class="w-5 h-5"></i>
+                            </button>
                         </div>
                     </div>
 
                     <div class="pt-2">
                         <button type="submit" id="loginBtn" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold text-lg shadow-xl hover:bg-blue-700 transition-all active:scale-95 flex items-center justify-center gap-2 mb-4">
                             <span>Sign In</span>
-                            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                            <i data-lucide="log-in" class="w-5 h-5"></i>
                         </button>
                         
                         <div class="text-center">
                             <p class="text-gray-500 text-sm font-medium">
                                 Don't have an account? 
-                                <a href="register.html" class="text-brand-blue font-bold hover:underline underline-offset-4 ml-1">Register here</a>
+                                <a href="register.html" class="text-brand-blue font-bold hover:underline underline-offset-4 ml-1">Create Account</a>
                             </p>
                         </div>
                     </div>
@@ -137,6 +149,16 @@
         const auth = getAuth(app);
         lucide.createIcons();
 
+        // Password Toggle Logic (same as Register)
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passInput = document.getElementById('password');
+            const isPass = passInput.type === 'password';
+            passInput.type = isPass ? 'text' : 'password';
+            this.innerHTML = `<i data-lucide="${isPass ? 'eye-off' : 'eye'}" class="w-5 h-5"></i>`;
+            lucide.createIcons();
+        });
+
+        // Login Logic
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
@@ -144,7 +166,7 @@
             const password = document.getElementById('password').value;
 
             btn.disabled = true;
-            btn.innerHTML = `<span class="animate-pulse">Signing in...</span>`;
+            btn.innerHTML = `<span class="animate-pulse">Authenticating...</span>`;
 
             try {
                 await signInWithEmailAndPassword(auth, email, password);
@@ -152,7 +174,7 @@
             } catch (err) {
                 alert("Login Error: " + err.message);
                 btn.disabled = false;
-                btn.innerHTML = `<span>Sign In</span> <i data-lucide="chevron-right" class="w-5 h-5"></i>`;
+                btn.innerHTML = `<span>Sign In</span> <i data-lucide="log-in" class="w-5 h-5"></i>`;
                 lucide.createIcons();
             }
         });
