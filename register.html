@@ -26,6 +26,10 @@
         .animate-fade-up { animation: fadeInUp 0.6s ease-out forwards; }
         .animate-float { animation: float 4s ease-in-out infinite; }
 
+        /* BACK BUTTON HOVER */
+        .back-btn:hover i { transform: translateX(-4px); }
+        .back-btn i { transition: transform 0.2s ease; }
+
         /* CUSTOM RADIO STYLING */
         input[type="radio"]:checked + .role-card {
             border-color: #2563eb;
@@ -42,13 +46,15 @@
 <body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center p-4 relative">
 
     <div class="absolute top-6 left-6 z-50">
-        <a href="index.html" class="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-md border border-slate-200 rounded-full text-slate-600 font-bold text-sm shadow-sm hover:text-brand-blue hover:border-brand-blue transition-all group">
-            <i data-lucide="arrow-left" class="w-4 h-4 transition-transform group-hover:-translate-x-1"></i>
-            Back to Home
+        <a href="index.html" class="back-btn flex items-center gap-2 text-slate-500 hover:text-brand-blue font-semibold transition-colors group">
+            <div class="bg-white p-2 rounded-full shadow-md border border-slate-100 group-hover:border-brand-blue/30">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </div>
+            <span class="hidden md:block">Back to Home</span>
         </a>
     </div>
 
-    <div class="max-w-4xl w-full animate-fade-up">
+    <div class="max-w-4xl w-full animate-fade-up mt-12 md:mt-0">
         <div class="bg-white rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row overflow-hidden border border-slate-100">
             
             <div class="bg-brand-blue w-full md:w-[35%] p-10 text-white flex flex-col justify-center relative overflow-hidden">
@@ -66,19 +72,15 @@
                         <div class="flex items-center gap-3 text-xs bg-white/10 p-3 rounded-xl border border-white/10">
                             <i data-lucide="mail-check" class="w-4 h-4"></i> Email Verification Required
                         </div>
-                        <div class="flex items-center gap-3 text-xs bg-white/10 p-3 rounded-xl border border-white/10">
-                            <i data-lucide="lock-keyhole" class="w-4 h-4"></i> Admin Approval for Staff
-                        </div>
                     </div>
                 </div>
                 <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
-                <div class="absolute -top-10 -left-10 w-32 h-32 bg-blue-400/20 rounded-full blur-2xl"></div>
             </div>
 
-            <div class="w-full md:w-[65%] p-8 md:p-12 lg:p-14">
+            <div class="w-full md:w-[65%] p-8 md:p-12">
                 <header class="mb-8">
                     <h3 class="text-3xl font-extrabold text-navy mb-1">Create Account</h3>
-                    <p class="text-slate-400 font-medium text-sm">Please use your real, legal name for records.</p>
+                    <p class="text-slate-400 font-medium text-sm">Please use your real, legal name.</p>
                 </header>
 
                 <form id="registrationForm" class="space-y-5">
@@ -89,21 +91,21 @@
                                 <input type="radio" name="role" value="citizen" class="hidden" checked>
                                 <div class="role-card border-2 border-slate-100 p-4 rounded-2xl text-center transition-all hover:border-blue-200 flex flex-col items-center gap-2">
                                     <i data-lucide="user" class="w-6 h-6 text-slate-400 transition-colors"></i>
-                                    <span class="block text-[10px] md:text-[11px] font-bold text-slate-600 uppercase tracking-tight">Citizen</span>
+                                    <span class="block text-[10px] font-bold text-slate-600 uppercase">Citizen</span>
                                 </div>
                             </label>
                             <label class="cursor-pointer group">
                                 <input type="radio" name="role" value="bhw" class="hidden">
                                 <div class="role-card border-2 border-slate-100 p-4 rounded-2xl text-center transition-all hover:border-blue-200 flex flex-col items-center gap-2">
                                     <i data-lucide="stethoscope" class="w-6 h-6 text-slate-400 transition-colors"></i>
-                                    <span class="block text-[10px] md:text-[11px] font-bold text-slate-600 uppercase tracking-tight">BHW</span>
+                                    <span class="block text-[10px] font-bold text-slate-600 uppercase">BHW</span>
                                 </div>
                             </label>
                             <label class="cursor-pointer group">
                                 <input type="radio" name="role" value="rhu" class="hidden">
                                 <div class="role-card border-2 border-slate-100 p-4 rounded-2xl text-center transition-all hover:border-blue-200 flex flex-col items-center gap-2">
                                     <i data-lucide="building-2" class="w-6 h-6 text-slate-400 transition-colors"></i>
-                                    <span class="block text-[10px] md:text-[11px] font-bold text-slate-600 uppercase tracking-tight">RHU Staff</span>
+                                    <span class="block text-[10px] font-bold text-slate-600 uppercase">RHU Staff</span>
                                 </div>
                             </label>
                         </div>
@@ -111,7 +113,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div class="md:col-span-2">
-                            <label class="block text-[10px] font-black text-slate-400 mb-1.5 uppercase tracking-widest">Full Name (Legal)</label>
+                            <label class="block text-[10px] font-black text-slate-400 mb-1.5 uppercase tracking-widest">Full Name</label>
                             <input type="text" id="fullName" placeholder="Juan Dela Cruz" required 
                                 class="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:ring-4 focus:ring-blue-50 focus:border-brand-blue outline-none transition-all">
                         </div>
@@ -168,8 +170,81 @@
     </div>
 
 <script type="module">
-    // ... (Your Firebase logic remains exactly the same as provided in the previous step)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
+        authDomain: "gub-up.firebaseapp.com",
+        projectId: "gub-up",
+        storageBucket: "gub-up.firebasestorage.app",
+        messagingSenderId: "75119179497",
+        appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
     lucide.createIcons();
+
+    // Show/Hide Password Toggle
+    const toggleBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    toggleBtn.addEventListener('click', () => {
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        eyeIcon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+        lucide.createIcons();
+    });
+
+    // Main Registration Logic
+    document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submitBtn');
+        const fullName = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const barangay = document.getElementById('barangay').value;
+        const selectedRole = document.querySelector('input[name="role"]:checked').value;
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Validating...`;
+        lucide.createIcons();
+
+        try {
+            const q = query(collection(db, "users"), where("name", "==", fullName));
+            const nameSnap = await getDocs(q);
+            if (!nameSnap.empty) throw new Error("This name is already registered.");
+
+            const userCred = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCred.user;
+
+            let finalRole = (selectedRole === "citizen") ? "citizen" : `processing-${selectedRole}`;
+
+            await setDoc(doc(db, "users", user.uid), {
+                name: fullName,
+                email: email,
+                barangay: barangay,
+                role: finalRole,
+                isApproved: (finalRole === "citizen"),
+                createdAt: new Date()
+            });
+
+            await sendEmailVerification(user);
+            await signOut(auth);
+
+            window.location.href = "verification.html";
+
+        } catch (error) {
+            alert(error.message);
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Create Account";
+            lucide.createIcons();
+        }
+    });
 </script>
 </body>
 </html>
