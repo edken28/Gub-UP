@@ -11,65 +11,23 @@
     <style>
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         .bg-brand-blue { background-color: #2563eb; }
-        .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-up { animation: fadeInUp 0.6s ease-out forwards; }
-        .animate-float { animation: float 4s ease-in-out infinite; }
-
-        .back-btn:hover i { transform: translateX(-4px); }
-        .back-btn i { transition: transform 0.2s ease; }
-
-        input[type="radio"]:checked + .role-card {
-            border-color: #2563eb;
-            background-color: #eff6ff;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
-        }
-        input[type="radio"]:checked + .role-card i { color: #2563eb; stroke-width: 2.5px; }
-        input[type="radio"]:checked + .role-card span { color: #2563eb; }
-
-        input, select { font-size: 16px !important; } 
+        input[type="radio"]:checked + .role-card { border-color: #2563eb; background-color: #eff6ff; }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center p-4 relative">
+<body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <div class="absolute top-6 left-6 z-50">
-        <a href="index.html" class="back-btn flex items-center gap-2 text-slate-500 hover:text-brand-blue font-semibold transition-colors group">
-            <div class="bg-white p-2 rounded-full shadow-md border border-slate-100 group-hover:border-brand-blue/30">
-                <i data-lucide="arrow-left" class="w-5 h-5"></i>
-            </div>
-            <span class="hidden md:block">Back to Home</span>
-        </a>
-    </div>
-
-    <div class="max-w-4xl w-full animate-fade-up mt-12 md:mt-0">
+    <div class="max-w-4xl w-full animate-fade-up">
         <div class="bg-white rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row overflow-hidden border border-slate-100">
             
-            <div class="bg-brand-blue w-full md:w-[35%] p-10 text-white flex flex-col justify-center relative overflow-hidden">
-                <div class="relative z-10 animate-float">
-                    <div class="bg-white/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md">
-                        <i data-lucide="shield-plus" class="w-8 h-8 text-white"></i>
-                    </div>
-                    <h1 class="text-3xl font-bold mb-2">GUB-UP</h1>
-                    <p class="text-blue-100 text-sm mb-8 opacity-90 leading-relaxed">Join the secure health monitoring network for Gubat, Sorsogon.</p>
-                    
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-3 text-xs bg-white/10 p-3 rounded-xl border border-white/10">
-                            <i data-lucide="check-circle-2" class="w-4 h-4"></i> Duplicate Name Protection
-                        </div>
-                        <div class="flex items-center gap-3 text-xs bg-white/10 p-3 rounded-xl border border-white/10">
-                            <i data-lucide="mail-check" class="w-4 h-4"></i> OTP Code Verification
-                        </div>
+            <div class="bg-brand-blue w-full md:w-[35%] p-10 text-white flex flex-col justify-center relative">
+                <h1 class="text-3xl font-bold mb-2">GUB-UP</h1>
+                <p class="text-blue-100 text-sm mb-8 opacity-90">Join the secure health monitoring network for Gubat, Sorsogon.</p>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 text-xs bg-white/10 p-3 rounded-xl border border-white/10">
+                        <i data-lucide="mail-check" class="w-4 h-4"></i> OTP Verification Required
                     </div>
                 </div>
             </div>
@@ -77,83 +35,48 @@
             <div class="w-full md:w-[65%] p-8 md:p-12">
                 <header class="mb-8">
                     <h3 class="text-3xl font-extrabold text-navy mb-1">Create Account</h3>
-                    <p class="text-slate-400 font-medium text-sm">Please use your real, legal name.</p>
+                    <p class="text-slate-400 text-sm">Fill in your details to receive your 4-digit code.</p>
                 </header>
 
                 <form id="registrationForm" class="space-y-5">
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Identify your role</label>
-                        <div class="grid grid-cols-3 gap-3">
-                            <label class="cursor-pointer group">
-                                <input type="radio" name="role" value="citizen" class="hidden" checked>
-                                <div class="role-card border-2 border-slate-100 p-4 rounded-2xl text-center transition-all hover:border-blue-200 flex flex-col items-center gap-2">
-                                    <i data-lucide="user" class="w-6 h-6 text-slate-400 transition-colors"></i>
-                                    <span class="block text-[10px] font-bold text-slate-600 uppercase">Citizen</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer group">
-                                <input type="radio" name="role" value="bhw" class="hidden">
-                                <div class="role-card border-2 border-slate-100 p-4 rounded-2xl text-center transition-all hover:border-blue-200 flex flex-col items-center gap-2">
-                                    <i data-lucide="stethoscope" class="w-6 h-6 text-slate-400 transition-colors"></i>
-                                    <span class="block text-[10px] font-bold text-slate-600 uppercase">BHW</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer group">
-                                <input type="radio" name="role" value="rhu" class="hidden">
-                                <div class="role-card border-2 border-slate-100 p-4 rounded-2xl text-center transition-all hover:border-blue-200 flex flex-col items-center gap-2">
-                                    <i data-lucide="building-2" class="w-6 h-6 text-slate-400 transition-colors"></i>
-                                    <span class="block text-[10px] font-bold text-slate-600 uppercase">RHU Staff</span>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div class="md:col-span-2">
-                            <label class="block text-[10px] font-black text-slate-400 mb-1.5 uppercase tracking-widest">Full Name</label>
-                            <input type="text" id="fullName" placeholder="Juan Dela Cruz" required 
-                                class="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:ring-4 focus:ring-blue-50 focus:border-brand-blue outline-none transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 mb-1.5 uppercase tracking-widest">Email Address</label>
-                            <input type="email" id="email" placeholder="name@email.com" required 
-                                class="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:ring-4 focus:ring-blue-50 focus:border-brand-blue outline-none transition-all">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 mb-1.5 uppercase tracking-widest">Password</label>
-                            <div class="relative">
-                                <input type="password" id="password" placeholder="••••••••" required 
-                                    class="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:ring-4 focus:ring-blue-50 focus:border-brand-blue outline-none transition-all">
-                                <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-brand-blue transition-colors">
-                                    <i data-lucide="eye" id="eyeIcon" class="w-5 h-5"></i>
-                                </button>
+                    <div class="grid grid-cols-3 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="role" value="citizen" class="hidden" checked>
+                            <div class="role-card border-2 border-slate-100 p-4 rounded-2xl text-center flex flex-col items-center gap-2">
+                                <i data-lucide="user" class="w-6 h-6 text-slate-400"></i>
+                                <span class="text-[10px] font-bold uppercase">Citizen</span>
                             </div>
-                        </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="role" value="bhw" class="hidden">
+                            <div class="role-card border-2 border-slate-100 p-4 rounded-2xl text-center flex flex-col items-center gap-2">
+                                <i data-lucide="stethoscope" class="w-6 h-6 text-slate-400"></i>
+                                <span class="text-[10px] font-bold uppercase">BHW</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="role" value="rhu" class="hidden">
+                            <div class="role-card border-2 border-slate-100 p-4 rounded-2xl text-center flex flex-col items-center gap-2">
+                                <i data-lucide="building-2" class="w-6 h-6 text-slate-400"></i>
+                                <span class="text-[10px] font-bold uppercase">RHU</span>
+                            </div>
+                        </label>
                     </div>
 
-                    <div>
-                        <label class="block text-[10px] font-black text-slate-400 mb-1.5 uppercase tracking-widest">Barangay Residence</label>
-                        <select id="barangay" required class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white outline-none focus:ring-4 focus:ring-blue-50 cursor-pointer">
-                            <option value="" disabled selected>Select your location</option>
+                    <div class="space-y-4">
+                        <input type="text" id="fullName" placeholder="Full Name" required class="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:border-brand-blue outline-none">
+                        <input type="email" id="email" placeholder="Email Address" required class="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:border-brand-blue outline-none">
+                        <input type="password" id="password" placeholder="Password (Min. 6 characters)" required class="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:border-brand-blue outline-none">
+                        
+                        <select id="barangay" required class="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white">
+                            <option value="" disabled selected>Select Barangay</option>
                             <option>Ariman</option><option>Bagacay</option><option>Balud Del Norte</option>
                             <option>Balud Del Sur</option><option>Benguet</option><option>Bentuco</option>
-                            <option>Beriran</option><option>Buenavista</option><option>Bulacao</option>
-                            <option>Cabigaan</option><option>Cabiguhan</option><option>Carriedo</option>
-                            <option>Casili</option><option>Cogon</option><option>Cota Na Daco</option>
-                            <option>Dita</option><option>Jupi</option><option>Lapinig</option>
-                            <option>Luna-Candol</option><option>Manapao</option><option>Manook</option>
-                            <option>Naagtan</option><option>Nato</option><option>Nazareno</option>
-                            <option>Ogao</option><option>Paco</option><option>Panganiban</option>
-                            <option>Paradijon</option><option>Patag</option><option>Payawin</option>
-                            <option>Pinontingan</option><option>Rizal</option><option>San Ignacio</option>
-                            <option>Sangat</option><option>Santa Ana</option><option>Tabi</option>
-                            <option>Tagaytay</option><option>Tigkiw</option><option>Tiris</option>
-                            <option>Togawe</option><option>Union</option><option>Villareal</option>
-                        </select>
+                            <option>Manook</option><option>Panganiban</option><option>Paradijon</option>
+                            </select>
                     </div>
 
-                    <button type="submit" id="submitBtn" 
-                        class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-blue-100 hover:bg-blue-700 active:scale-[0.98] transition-all flex items-center justify-center gap-3">
+                    <button type="submit" id="submitBtn" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-3">
                         Create Account
                     </button>
                 </form>
@@ -166,7 +89,7 @@
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // 1. Final Keys Setup
+    // EmailJS Credentials
     const PUBLIC_KEY = "qwA5GyR0JwylFMYXm";
     const SERVICE_ID = "service_bmhrqyo";
     const TEMPLATE_ID = "template_vhz6fts";
@@ -187,16 +110,6 @@
     const db = getFirestore(app);
     lucide.createIcons();
 
-    // Toggle Password Visibility
-    document.getElementById('togglePassword').addEventListener('click', () => {
-        const passwordInput = document.getElementById('password');
-        const eyeIcon = document.getElementById('eyeIcon');
-        const isPassword = passwordInput.type === 'password';
-        passwordInput.type = isPassword ? 'text' : 'password';
-        eyeIcon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
-        lucide.createIcons();
-    });
-
     document.getElementById('registrationForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const submitBtn = document.getElementById('submitBtn');
@@ -206,55 +119,52 @@
         const barangay = document.getElementById('barangay').value;
         const selectedRole = document.querySelector('input[name="role"]:checked').value;
 
+        // Visual feedback
         submitBtn.disabled = true;
-        submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Sending OTP...`;
-        lucide.createIcons();
+        submitBtn.innerHTML = `Processing...`;
 
         try {
-            // Duplicate Name Check
+            // 1. Check for Duplicate Name
             const q = query(collection(db, "users"), where("name", "==", fullName));
             const nameSnap = await getDocs(q);
             if (!nameSnap.empty) throw new Error("This name is already registered.");
 
-            // Create Firebase User
+            // 2. Create Firebase User
             const userCred = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCred.user;
 
-            // Generate 4-Digit OTP and Expiry Time (for your template)
+            // 3. Generate OTP & Time
             const otpCode = Math.floor(1000 + Math.random() * 9000).toString();
             const now = new Date();
             const expiryTime = new Date(now.getTime() + 15 * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-            // Set final role
-            let finalRole = (selectedRole === "citizen") ? "citizen" : `processing-${selectedRole}`;
-
-            // Save to Firestore
+            // 4. Save to Firestore
             await setDoc(doc(db, "users", user.uid), {
                 name: fullName,
                 email: email,
                 barangay: barangay,
-                role: finalRole,
+                role: (selectedRole === "citizen") ? "citizen" : `processing-${selectedRole}`,
                 isApproved: (selectedRole === "citizen"),
                 otpCode: otpCode,
                 createdAt: now
             });
 
-            // 2. Send the Email using your template variables: {{passcode}} and {{time}}
+            // 5. Send Email via EmailJS
             await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
                 to_name: fullName,
                 to_email: email,
-                passcode: otpCode,
-                time: expiryTime
+                passcode: otpCode, // Variable in your template
+                time: expiryTime   // Variable in your template
             });
 
-            // Redirect to verification page
+            // 6. Success - Redirect
             window.location.href = `verification.html?uid=${user.uid}`;
 
         } catch (error) {
-            alert(error.message || "An unexpected error occurred.");
+            console.error(error);
+            alert("Error: " + error.message);
             submitBtn.disabled = false;
             submitBtn.innerText = "Create Account";
-            lucide.createIcons();
         }
     });
 </script>
