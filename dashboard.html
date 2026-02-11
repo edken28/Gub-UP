@@ -16,21 +16,16 @@
         .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
         .bg-navy { background-color: #1e3a8a; }
-
         #main-layout { display: none; opacity: 0; transition: opacity 0.8s ease-out; }
         .content-visible #main-layout { display: flex; opacity: 1; }
-
         @media (max-width: 768px) {
             .sidebar-closed { transform: translateX(-100%); }
             .sidebar-open { transform: translateX(0); }
         }
-
         #loader-container {
             position: fixed; inset: 0; background-color: var(--bg-gray-white);
             z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
         .spinner {
             width: 40px; height: 40px; border: 4px solid #e2e8f0;
             border-top: 4px solid #2563eb; border-radius: 50%;
@@ -38,18 +33,7 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .loaded#loader-container { opacity: 0; pointer-events: none; visibility: hidden; }
-
-        /* Chart Container Styling */
-        .chart-card {
-            background: white;
-            border-radius: 2.5rem;
-            padding: 1.5rem;
-            border: 1px solid #f1f5f9;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        }
-        @media (max-width: 640px) {
-            .chart-card { border-radius: 1.5rem; padding: 1rem; }
-        }
+        .chart-card { background: white; border-radius: 2.5rem; padding: 1.5rem; border: 1px solid #f1f5f9; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col md:flex-row">
@@ -66,143 +50,97 @@
         </div>
     </div>
 
-    <div class="md:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center text-white">
-                <i data-lucide="plus" class="w-5 h-5"></i>
+    <aside id="sidebar" class="fixed md:sticky top-0 left-0 z-[60] w-72 bg-white border-r border-slate-100 flex flex-col h-screen transition-transform duration-300 sidebar-closed md:translate-x-0 md:flex">
+        <div class="p-8">
+            <div class="flex items-center justify-between mb-10">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg"><i data-lucide="plus" class="w-6 h-6"></i></div>
+                    <div><h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1><p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p></div>
+                </div>
+                <button class="md:hidden p-2 text-slate-400" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
             </div>
-            <span class="font-bold text-navy">GUB-UP</span>
+            <nav class="space-y-3">
+                <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-200">
+                    <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center"><i data-lucide="layout-dashboard" class="w-4 h-4"></i></div>
+                    <span>Dashboard</span>
+                </a>
+                <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
+                    <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center"><i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white"></i></div>
+                    <span>Medicine Stocks</span>
+                </a>
+                <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 hover:text-amber-600 transition-all group">
+                    <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center"><i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white"></i></div>
+                    <span>Disease Reports</span>
+                </a>
+                <div id="internal-consoles-section" class="pt-6 pb-2 hidden">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
+                    <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2"><i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console</a>
+                    <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:text-white transition-all"><i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console</a>
+                </div>
+            </nav>
         </div>
-        <button onclick="toggleSidebar()" class="p-2 text-slate-600 bg-slate-50 rounded-xl">
-            <i data-lucide="menu"></i>
-        </button>
-    </div>
+        <div class="mt-auto p-8 border-t border-slate-50">
+            <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors"><i data-lucide="log-out" class="w-5 h-5"></i> Logout</button>
+        </div>
+    </aside>
 
-    <div id="main-layout" class="flex flex-col md:flex-row w-full min-h-screen">
-        
-        <div id="sidebar-overlay" class="fixed inset-0 bg-navy/40 backdrop-blur-sm z-[55] hidden md:hidden" onclick="toggleSidebar()"></div>
-
-        <aside id="sidebar" class="fixed md:sticky top-0 left-0 z-[60] w-72 bg-white border-r border-slate-100 flex flex-col h-screen transition-transform duration-300 sidebar-closed md:translate-x-0 md:flex">
-            <div class="p-8">
-                <div class="flex items-center justify-between mb-10">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg">
-                            <i data-lucide="plus" class="w-6 h-6"></i>
-                        </div>
-                        <div>
-                            <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
-                            <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
-                        </div>
-                    </div>
-                    <button class="md:hidden p-2 text-slate-400" onclick="toggleSidebar()">
-                        <i data-lucide="x"></i>
-                    </button>
-                </div>
-
-                <nav class="space-y-3">
-                    <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-200">
-                        <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center"><i data-lucide="layout-dashboard" class="w-4 h-4"></i></div>
-                        <span>Dashboard</span>
-                    </a>
-                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
-                        <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center"><i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white"></i></div>
-                        <span>Medicine Stocks</span>
-                    </a>
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 hover:text-amber-600 transition-all group">
-                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center"><i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white"></i></div>
-                        <span>Disease Reports</span>
-                    </a>
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:text-blue-600 transition-all group">
-                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center"><i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white"></i></div>
-                        <span>Hotlines</span>
-                    </a>
-                </nav>
+    <main id="main-layout" class="flex-1 overflow-x-hidden">
+        <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
+            <h2 class="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Health Analytics Dashboard</h2>
+            <div id="user-display" class="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-2xl">
+                <span id="user-name-display" class="font-bold text-navy text-xs">Guest</span>
             </div>
-            <div class="mt-auto p-8 border-t border-slate-50">
-                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors"><i data-lucide="log-out" class="w-5 h-5"></i> Logout</button>
-            </div>
-        </aside>
+        </header>
 
-        <main class="flex-1 overflow-x-hidden">
-            <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 md:px-8 py-5 flex flex-col md:flex-row md:items-center justify-between sticky top-0 z-40 gap-4">
-                <div class="flex items-center gap-4">
-                    <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Live Tracking</h2>
-                    <div class="h-4 w-[1px] bg-slate-200 hidden sm:block"></div>
-                    <div class="flex items-center gap-2 text-navy">
-                        <i data-lucide="calendar" class="w-4 h-4 text-brand-blue"></i>
-                        <span id="current-date-display" class="text-[10px] md:text-xs font-black uppercase tracking-tight"></span>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl self-start md:self-auto">
-                    <div class="w-8 h-8 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
-                    <span id="user-name-display" class="font-bold text-navy text-sm">Guest</span>
-                </div>
-            </header>
-
-            <div class="p-4 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8">
-                <div data-aos="fade-down" class="bg-brand-blue rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 text-white flex flex-col md:flex-row justify-between items-start md:items-center shadow-xl shadow-blue-100 gap-4">
+        <div class="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
+            <div class="chart-card">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                     <div>
-                        <h1 class="text-2xl md:text-3xl font-bold">Welcome back, <span id="welcome-user-name">Citizen</span>!</h1>
-                        <p class="text-blue-100 mt-1">Real-time health & stock analytics.</p>
+                        <h3 class="text-xl font-bold text-red-600">Active Disease Cases</h3>
+                        <p class="text-xs text-slate-400">Monthly trend monitoring</p>
                     </div>
-                    <div class="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm"><i data-lucide="trending-up" class="w-6 h-6 md:w-8 md:h-8"></i></div>
-                </div>
-
-                <div class="chart-card">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                        <div>
-                            <h3 class="text-xl font-bold text-navy">Disease Active Cases</h3>
-                            <p class="text-xs text-slate-400">Trend analysis by category</p>
-                        </div>
-                        <div class="flex flex-wrap gap-2">
-                            <select id="disease-category" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
-                                <option value="Dengue">Dengue</option>
-                                <option value="Flu">Common Flu</option>
-                                <option value="Hypertension">Hypertension</option>
-                                <option value="COVID-19">COVID-19</option>
-                            </select>
-                            <select id="disease-year" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
-                                <option value="2026">2026</option>
-                                <option value="2025">2025</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="h-[300px] md:h-[400px] w-full">
-                        <canvas id="diseaseChart"></canvas>
+                    <div class="flex flex-wrap gap-2">
+                        <select id="disease-brgy" class="bg-slate-50 border rounded-xl px-2 py-2 text-[10px] font-bold text-navy brgy-list"></select>
+                        <select id="disease-cat" class="bg-slate-50 border rounded-xl px-2 py-2 text-[10px] font-bold text-navy">
+                            <option value="Dengue">Dengue</option>
+                            <option value="Flu">Flu</option>
+                            <option value="COVID-19">COVID-19</option>
+                        </select>
+                        <select id="disease-year" class="bg-slate-50 border rounded-xl px-2 py-2 text-[10px] font-bold text-navy">
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                        </select>
                     </div>
                 </div>
-
-                <div class="chart-card">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                        <div>
-                            <h3 class="text-xl font-bold text-navy">Medicine Inventory Level</h3>
-                            <p class="text-xs text-slate-400">Stock availability tracking</p>
-                        </div>
-                        <div class="flex flex-wrap gap-2">
-                            <select id="medicine-category" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
-                                <option value="Paracetamol">Paracetamol</option>
-                                <option value="Amoxicillin">Amoxicillin</option>
-                                <option value="Vitamin C">Vitamin C</option>
-                            </select>
-                            <select id="stock-year" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
-                                <option value="2026">2026</option>
-                                <option value="2025">2025</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="h-[300px] md:h-[400px] w-full">
-                        <canvas id="stockChart"></canvas>
-                    </div>
-                </div>
-
+                <div class="h-[300px] w-full"><canvas id="diseaseChart"></canvas></div>
             </div>
-        </main>
-    </div>
+
+            <div class="chart-card">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-emerald-600">Medicine Inventory</h3>
+                        <p class="text-xs text-slate-400">Stock level tracking</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <select id="stock-brgy" class="bg-slate-50 border rounded-xl px-2 py-2 text-[10px] font-bold text-navy brgy-list"></select>
+                        <select id="stock-cat" class="bg-slate-50 border rounded-xl px-2 py-2 text-[10px] font-bold text-navy">
+                            <option value="Paracetamol">Paracetamol</option>
+                            <option value="Amoxicillin">Amoxicillin</option>
+                        </select>
+                        <select id="stock-year" class="bg-slate-50 border rounded-xl px-2 py-2 text-[10px] font-bold text-navy">
+                            <option value="2026">2026</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="h-[300px] w-full"><canvas id="stockChart"></canvas></div>
+            </div>
+        </div>
+    </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -216,90 +154,60 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // UI Controls
-        window.toggleSidebar = () => {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('sidebar-closed');
-            sidebar.classList.toggle('sidebar-open');
-            overlay.classList.toggle('hidden');
-        };
-
-        document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
-        // --- CHART INITIALIZATION ---
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const barangays = ["Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
         
-        // Disease Chart
-        const ctxDisease = document.getElementById('diseaseChart').getContext('2d');
-        let diseaseChart = new Chart(ctxDisease, {
-            type: 'line',
-            data: {
-                labels: months,
-                datasets: [{
-                    label: 'Active Cases',
-                    data: [12, 19, 3, 5, 2, 3, 15, 22, 10, 8, 4, 12], // Dummy data - replace with Firebase fetch
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#2563eb'
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        // Populate Dropdowns
+        document.querySelectorAll('.brgy-list').forEach(select => {
+            select.innerHTML = `<option value="All">All Barangays</option>` + barangays.map(b => `<option value="${b}">${b}</option>`).join('');
         });
 
-        // Stock Chart
-        const ctxStock = document.getElementById('stockChart').getContext('2d');
-        let stockChart = new Chart(ctxStock, {
+        // Setup Charts
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const diseaseCtx = document.getElementById('diseaseChart').getContext('2d');
+        const stockCtx = document.getElementById('stockChart').getContext('2d');
+
+        let diseaseChart = new Chart(diseaseCtx, {
             type: 'line',
-            data: {
-                labels: months,
-                datasets: [{
-                    label: 'Stock Quantity',
-                    data: [500, 450, 400, 380, 600, 550, 500, 480, 420, 390, 350, 300], // Dummy data
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#10b981'
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            data: { labels: months, datasets: [{ label: 'Cases', borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', fill: true, tension: 0.4, data: Array(12).fill(0) }] },
+            options: { responsive: true, maintainAspectRatio: false }
         });
 
-        // Handle Auth and Display
+        let stockChart = new Chart(stockCtx, {
+            type: 'line',
+            data: { labels: months, datasets: [{ label: 'Stock', borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4, data: Array(12).fill(0) }] },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // Role-based Access & Initialization
         onAuthStateChanged(auth, async (user) => {
             if (!user) { window.location.href = "login.html"; return; }
-            
             const userDoc = await getDoc(doc(db, "users", user.uid));
             if (userDoc.exists()) {
                 const userData = userDoc.data();
                 document.getElementById('user-name-display').innerText = userData.name;
-                document.getElementById('welcome-user-name').innerText = userData.name;
+                if (userData.role === "rhu" || userData.role === "bhw") {
+                    document.getElementById('internal-consoles-section').classList.remove('hidden');
+                    if (userData.role === "rhu") document.getElementById('rhu-disease-link').classList.remove('hidden');
+                    if (userData.role === "bhw") document.getElementById('worker-secret-link').classList.remove('hidden');
+                }
             }
-
-            setTimeout(() => {
-                document.getElementById('loader-container').classList.add('loaded');
-                document.body.classList.add('content-visible');
-                lucide.createIcons();
-                AOS.init({ once: true });
-            }, 1000); 
+            document.getElementById('loader-container').classList.add('loaded');
+            document.body.classList.add('content-visible');
+            lucide.createIcons();
+            loadDiseaseData();
+            loadStockData();
         });
 
-        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
+        // Function to Fetch Real Data (Adjust field names to match your Firestore)
+        function loadDiseaseData() {
+            const brgy = document.getElementById('disease-brgy').value;
+            const category = document.getElementById('disease-cat').value;
+            // logic to update diseaseChart.data.datasets[0].data goes here based on Firestore snapshot
+        }
 
-        // Placeholder for filter logic - You can link this to your Firebase queries
-        document.querySelectorAll('select').forEach(select => {
-            select.addEventListener('change', () => {
-                console.log("Filter changed. Fetching new data...");
-                // Here you would run: updateChartData(chart, newData)
-            });
-        });
-
+        function loadStockData() {
+            // similar logic for stocks
+        }
     </script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </body>
 </html>
