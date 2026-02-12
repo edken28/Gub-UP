@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BHW Console | GUB-UP</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +13,6 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
         .text-navy { color: #1e3a8a; }
         .bg-bhw-emerald { background-color: #10b981; }
-        
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
 
@@ -25,26 +24,20 @@
         .dropdown-list {
             display: none;
             position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 1.25rem;
-            max-height: 250px;
-            overflow-y: auto;
-            z-index: 200;
+            top: 100%; left: 0; right: 0;
+            background: white; border: 1px solid #e2e8f0;
+            border-radius: 1.25rem; max-height: 250px;
+            overflow-y: auto; z-index: 200;
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
         .dropdown-list.active { display: block; }
         .dropdown-item { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; }
         .dropdown-item:hover { background-color: #f0fdf4; color: #10b981; }
-
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen overflow-x-hidden">
+<body class="min-h-screen">
 
     <div id="main-layout" class="w-full min-h-screen flex flex-col md:flex-row">
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 sidebar-closed md:relative md:translate-x-0 md:flex">
@@ -61,26 +54,42 @@
                 </div>
 
                 <nav class="space-y-3">
-                    <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-200">
-                        <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center"><i data-lucide="layout-dashboard" class="w-4 h-4"></i></div>
+                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all group">
+                        <div class="w-8 h-8 bg-slate-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4 group-hover:text-white"></i>
+                        </div>
                         <span>Dashboard</span>
                     </a>
+                    
                     <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 transition-all group">
-                        <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center"><i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white"></i></div>
+                        <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white"></i>
+                        </div>
                         <span>Medicine Stocks</span>
                     </a>
+
                     <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 transition-all group">
-                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center"><i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white"></i></div>
+                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white"></i>
+                        </div>
                         <span>Disease Reports</span>
                     </a>
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 transition-all group">
-                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center"><i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white"></i></div>
+
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:text-blue-600 transition-all group">
+                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white transition-colors"></i>
+                        </div>
                         <span>Hotlines</span>
                     </a>
-                    <div id="internal-consoles-section" class="pt-6 pb-2 hidden">
+
+                    <div class="pt-6 pb-2">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                        <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold mb-2"><i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console</a>
-                        <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold"><i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console</a>
+                        <a href="bhw-console.html" class="flex items-center gap-3 bg-bhw-emerald text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-200 transition-all">
+                            <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                                <i data-lucide="shield-check" class="w-4 h-4 text-white"></i>
+                            </div>
+                            <span>BHW Console</span>
+                        </a>
                     </div>
                 </nav>
             </div>
@@ -89,14 +98,13 @@
                     <i data-lucide="log-out" class="w-5 h-5"></i> Logout
                 </button>
             </div>
-            
         </aside>
 
         <main class="flex-1 w-full overflow-y-auto">
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center gap-3">
                     <button onclick="toggleSidebar()" class="md:hidden p-2 bg-slate-100 rounded-xl text-navy"><i data-lucide="menu"></i></button>
-                    <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">BHW Inventory</h2>
+                    <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">BHW Console</h2>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-3 md:px-4 py-2 rounded-2xl">
                     <div class="w-8 h-8 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
@@ -108,21 +116,21 @@
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
                     <div class="relative flex-1 w-full">
                         <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                        <input type="text" id="main-search" placeholder="Quick search..." class="w-full pl-14 pr-4 py-4 bg-white border border-slate-100 rounded-2xl outline-none focus:ring-2 ring-emerald-100 shadow-sm font-semibold text-navy">
+                        <input type="text" id="main-search" placeholder="Search pharmacy inventory..." class="w-full pl-14 pr-4 py-4 bg-white border border-slate-100 rounded-2xl outline-none focus:ring-2 ring-emerald-100 shadow-sm font-semibold text-navy">
                     </div>
-                    <button onclick="openAddModal()" class="w-full md:w-auto bg-bhw-emerald text-white px-10 py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-emerald-600 shadow-xl shadow-emerald-100 transition-all">
-                        <i data-lucide="plus-circle" class="w-5 h-5"></i> Add Stock
+                    <button onclick="openAddModal()" class="w-full md:w-auto bg-bhw-emerald text-white px-10 py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-emerald-600 shadow-xl shadow-emerald-100 transition-all active:scale-95">
+                        <i data-lucide="plus-circle" class="w-5 h-5"></i> Add Stock Entry
                     </button>
                 </div>
 
-                <div class="bg-white rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden" data-aos="fade-up">
+                <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden" data-aos="fade-up">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left whitespace-nowrap">
                             <thead class="bg-slate-50/50">
                                 <tr class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
-                                    <th class="px-10 py-6">Item Identity</th>
-                                    <th class="px-8 py-6">Expiry</th>
-                                    <th class="px-8 py-6 text-center">Stock</th>
+                                    <th class="px-10 py-6">Medicine Identity</th>
+                                    <th class="px-8 py-6">Expiration</th>
+                                    <th class="px-8 py-6 text-center">In-Stock</th>
                                     <th class="px-8 py-6">Recorded</th>
                                     <th class="px-10 py-6 text-right">Actions</th>
                                 </tr>
@@ -141,23 +149,23 @@
             <div class="absolute top-0 left-0 w-full h-2 bg-bhw-emerald"></div>
             <div class="p-8 pb-0">
                 <h3 class="text-2xl font-bold text-navy">Medicine Entry</h3>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">BHW Inventory Log</p>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Inventory Management</p>
             </div>
             <form id="item-form" class="p-8 space-y-5">
                 <input type="hidden" id="entry-id">
                 <div class="relative">
-                    <label class="block text-[11px] font-black text-slate-400 uppercase mb-2 ml-1">Select Medicine</label>
-                    <input type="text" id="medicine-input" autocomplete="off" placeholder="Search..." class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none focus:ring-2 ring-emerald-100">
+                    <label class="block text-[11px] font-black text-slate-400 uppercase mb-2">Search Medicine</label>
+                    <input type="text" id="medicine-input" autocomplete="off" placeholder="Start typing..." class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none focus:ring-2 ring-emerald-100">
                     <div id="medicine-dropdown" class="dropdown-list custom-scrollbar"></div>
                     <input type="hidden" id="med-name" required>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[11px] font-black text-slate-400 uppercase mb-2 ml-1">Qty</label>
+                        <label class="block text-[11px] font-black text-slate-400 uppercase mb-2">Quantity</label>
                         <input type="number" id="med-count" required min="1" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-black text-slate-400 uppercase mb-2 ml-1">Unit</label>
+                        <label class="block text-[11px] font-black text-slate-400 uppercase mb-2">Unit</label>
                         <select id="med-unit" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none">
                             <option value="Bottles">Bottles</option>
                             <option value="Boxes">Boxes</option>
@@ -166,12 +174,11 @@
                             <option value="Sachets">Sachets</option>
                             <option value="Tubes">Tubes</option>
                             <option value="Vials">Vials</option>
-                            <option value="Units">Units</option>
                         </select>
                     </div>
                 </div>
                 <div>
-                    <label class="block text-[11px] font-black text-slate-400 uppercase mb-2 ml-1">Expiry</label>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase mb-2">Expiration Date</label>
                     <input type="date" id="med-expiry" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none">
                 </div>
                 <div class="flex gap-4 pt-4">
@@ -199,7 +206,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // MEDICINE LIST RETAINED EXACTLY
+        // FULL MEDICINE LIST UNTOUCHED
         const medicineList = ["Paracetamol (Acetaminophen)", "Ibuprofen", "Mefenamic acid", "Aspirin", "Naproxen", "Diclofenac", "Celecoxib", "Ketoprofen", "Phenylephrine", "Pseudoephedrine", "Chlorphenamine", "Diphenhydramine", "Cetirizine", "Loratadine", "Carbocisteine", "Ambroxol", "Guaifenesin", "Dextromethorphan", "Salbutamol inhaler", "Oxymetazoline nasal spray", "Steam inhalation solutions", "Fexofenadine", "Levocetirizine", "Hydrocortisone cream", "Antacids (Aluminum hydroxide, Magnesium hydroxide)", "Sodium bicarbonate", "Omeprazole", "Lansoprazole", "Pantoprazole", "Esomeprazole", "Loperamide", "Oral Rehydration Salts (ORS)", "Simethicone", "Domperidone", "Metoclopramide", "Hyoscine butylbromide", "Povidone iodine", "Hydrogen peroxide", "Mupirocin ointment", "Clotrimazole cream", "Ketoconazole cream", "Calamine lotion", "Zinc oxide", "Permethrin", "Acyclovir cream", "Amoxicillin", "Amoxicillin + Clavulanic acid", "Azithromycin", "Clarithromycin", "Cefuroxime", "Ceftriaxone", "Ciprofloxacin", "Levofloxacin", "Doxycycline", "Metronidazole", "Co-trimoxazole", "Isoniazid", "Rifampicin", "Pyrazinamide", "Ethambutol", "Fixed-dose TB combinations", "Amlodipine", "Losartan", "Telmisartan", "Captopril", "Enalapril", "Metoprolol", "Atenolol", "Hydrochlorothiazide", "Metformin", "Glimepiride", "Gliclazide", "Insulin (Regular, NPH, Glargine)", "Sitagliptin", "Empagliflozin", "Atorvastatin", "Simvastatin", "Rosuvastatin", "Budesonide inhaler", "Fluticasone", "Ipratropium bromide", "Fluoxetine", "Sertraline", "Escitalopram", "Amitriptyline", "Risperidone", "Quetiapine", "Alprazolam", "Diazepam", "Vitamin A", "Vitamin B1 (Thiamine)", "Vitamin B6", "Vitamin B12", "Vitamin C", "Vitamin D3", "Vitamin E", "Vitamin K", "B-complex capsules", "B1 + B6 + B12 combinations", "Iron (Ferrous sulfate)", "Calcium carbonate", "Calcium + Vitamin D", "Magnesium", "Zinc", "Potassium supplements", "Adult multivitamins", "Children’s multivitamins", "Prenatal vitamins", "Senior vitamins", "Probiotics", "Fish oil (Omega-3)", "Glutathione", "Antiseptic alcohol", "Hand sanitizer", "Thermometer", "Blood pressure monitor", "Glucometer", "Nebulizer solution", "Activated charcoal", "Epinephrine injection"];
 
         const mInput = document.getElementById('medicine-input');
@@ -214,8 +221,7 @@
         });
 
         window.selectMedicine = (n) => {
-            mInput.value = n;
-            hInput.value = n;
+            mInput.value = n; hInput.value = n;
             mDrop.classList.remove('active');
         };
 
@@ -230,6 +236,8 @@
                     document.getElementById('user-name-display').innerText = docSnap.data().name;
                     document.body.classList.add('auth-ready');
                     AOS.init({ duration: 800, once: true });
+                    // Initial Icon Render
+                    lucide.createIcons();
                     init();
                 } else { window.location.href = "dashboard.html"; }
             } else { window.location.href = "login.html"; }
@@ -266,14 +274,13 @@
                         </div>
                     </td>
                 </tr>`).join('');
-            lucide.createIcons();
+            lucide.createIcons(); // RE-RENDER ICONS IN TABLE
         }
 
         window.openAddModal = () => {
             document.getElementById('item-form').reset();
             document.getElementById('entry-id').value = "";
-            mInput.value = "";
-            hInput.value = "";
+            mInput.value = ""; hInput.value = "";
             document.getElementById('item-modal').classList.remove('hidden');
         };
 
@@ -282,15 +289,14 @@
         window.editEntry = (id) => {
             const item = allItems.find(c => c.id === id);
             document.getElementById('entry-id').value = id;
-            mInput.value = item.name;
-            hInput.value = item.name;
+            mInput.value = item.name; hInput.value = item.name;
             document.getElementById('med-count').value = item.count;
             document.getElementById('med-unit').value = item.unit;
             document.getElementById('med-expiry').value = item.expiryDate;
             document.getElementById('item-modal').classList.remove('hidden');
         };
 
-        window.deleteEntry = async (id) => { if(confirm("Delete this record?")) await deleteDoc(doc(db, "medicine_inventory", id)); };
+        window.deleteEntry = async (id) => { if(confirm("Delete?")) await deleteDoc(doc(db, "medicine_inventory", id)); };
 
         document.getElementById('item-form').onsubmit = async (e) => {
             e.preventDefault();
@@ -318,6 +324,14 @@
         };
 
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
+    </script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
     </script>
 </body>
 </html>
