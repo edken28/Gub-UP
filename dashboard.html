@@ -13,17 +13,23 @@
         :root { --bg-gray-white: #f1f5f9; }
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .bg-brand-blue { background-color: #2563eb; }
+        .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
+        .bg-navy { background-color: #1e3a8a; }
+
         #main-layout { display: none; opacity: 0; transition: opacity 0.8s ease-out; }
         .content-visible #main-layout { display: flex; opacity: 1; }
+
         @media (max-width: 768px) {
             .sidebar-closed { transform: translateX(-100%); }
             .sidebar-open { transform: translateX(0); }
         }
+
         #loader-container {
             position: fixed; inset: 0; background-color: var(--bg-gray-white);
             z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
+        
         .spinner {
             width: 40px; height: 40px; border: 4px solid #e2e8f0;
             border-top: 4px solid #2563eb; border-radius: 50%;
@@ -31,7 +37,14 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .loaded#loader-container { opacity: 0; pointer-events: none; visibility: hidden; }
-        .chart-card { background: white; border-radius: 2.5rem; padding: 2rem; border: 1px solid #f1f5f9; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+
+        .chart-card {
+            background: white;
+            border-radius: 2.5rem;
+            padding: 1.5rem;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col md:flex-row">
@@ -50,27 +63,37 @@
 
     <div class="md:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center text-white"><i data-lucide="plus" class="w-5 h-5"></i></div>
+            <div class="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center text-white">
+                <i data-lucide="plus" class="w-5 h-5"></i>
+            </div>
             <span class="font-bold text-navy">GUB-UP</span>
         </div>
-        <button onclick="toggleSidebar()" class="p-2 text-slate-600 bg-slate-50 rounded-xl"><i data-lucide="menu"></i></button>
+        <button onclick="toggleSidebar()" class="p-2 text-slate-600 bg-slate-50 rounded-xl">
+            <i data-lucide="menu"></i>
+        </button>
     </div>
 
     <div id="main-layout" class="flex flex-col md:flex-row w-full min-h-screen">
+        
         <div id="sidebar-overlay" class="fixed inset-0 bg-navy/40 backdrop-blur-sm z-[55] hidden md:hidden" onclick="toggleSidebar()"></div>
 
         <aside id="sidebar" class="fixed md:sticky top-0 left-0 z-[60] w-72 bg-white border-r border-slate-100 flex flex-col h-screen transition-transform duration-300 sidebar-closed md:translate-x-0 md:flex">
             <div class="p-8">
                 <div class="flex items-center justify-between mb-10">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg"><i data-lucide="plus" class="w-6 h-6"></i></div>
+                        <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg">
+                            <i data-lucide="plus" class="w-6 h-6"></i>
+                        </div>
                         <div>
                             <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
                             <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
                         </div>
                     </div>
-                    <button class="md:hidden p-2 text-slate-400" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
+                    <button class="md:hidden p-2 text-slate-400" onclick="toggleSidebar()">
+                        <i data-lucide="x"></i>
+                    </button>
                 </div>
+
                 <nav class="space-y-3">
                     <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-200">
                         <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center"><i data-lucide="layout-dashboard" class="w-4 h-4"></i></div>
@@ -116,31 +139,31 @@
                 </div>
             </header>
 
-            <div class="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
+            <div class="p-4 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-10">
                 <div data-aos="fade-down" class="bg-brand-blue rounded-[2.5rem] p-8 text-white flex flex-col md:flex-row justify-between items-center shadow-xl shadow-blue-100 gap-4">
                     <div>
-                        <h1 class="text-2xl md:text-3xl font-bold">Welcome, <span id="welcome-user-name">Citizen</span>!</h1>
+                        <h1 class="text-2xl md:text-3xl font-bold">Welcome back, <span id="welcome-user-name">Citizen</span>!</h1>
                         <p class="text-blue-100 mt-1">Gubat Community Health Overview</p>
                     </div>
                     <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm"><i data-lucide="activity" class="w-8 h-8"></i></div>
                 </div>
 
                 <div class="chart-card">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                         <div>
                             <h3 class="text-xl md:text-2xl font-bold text-navy">Disease Active Cases</h3>
-                            <p class="text-xs text-slate-400 uppercase font-black tracking-widest">Real-time Stats</p>
+                            <p class="text-xs text-slate-400 uppercase font-black tracking-widest mt-1">Live Trends</p>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <select id="disease-view" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy">
-                                <option value="monthly">Monthly View</option>
-                                <option value="weekly">Weekly View</option>
-                                <option value="yearly">Yearly View</option>
+                            <select id="disease-view" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
+                                <option value="monthly">Monthly</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="yearly">Yearly</option>
                             </select>
-                            <select id="disease-brgy" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy"></select>
-                            <select id="disease-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy">
+                            <select id="disease-brgy" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none"></select>
+                            <select id="disease-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
                                 <option value="Dengue">Dengue</option>
-                                <option value="Flu">Flu</option>
+                                <option value="Flu">Common Flu</option>
                                 <option value="COVID-19">COVID-19</option>
                             </select>
                         </div>
@@ -149,19 +172,19 @@
                 </div>
 
                 <div class="chart-card">
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                         <div>
                             <h3 class="text-xl md:text-2xl font-bold text-navy">Medicine Stock Level</h3>
-                            <p class="text-xs text-slate-400 uppercase font-black tracking-widest">Inventory Balance</p>
+                            <p class="text-xs text-slate-400 uppercase font-black tracking-widest mt-1">Inventory Tracking</p>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <select id="stock-view" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy">
-                                <option value="monthly">Monthly View</option>
-                                <option value="weekly">Weekly View</option>
-                                <option value="yearly">Yearly View</option>
+                            <select id="stock-view" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
+                                <option value="monthly">Monthly</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="yearly">Yearly</option>
                             </select>
-                            <select id="stock-brgy" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy"></select>
-                            <select id="stock-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy">
+                            <select id="stock-brgy" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none"></select>
+                            <select id="stock-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
                                 <option value="Paracetamol">Paracetamol</option>
                                 <option value="Amoxicillin">Amoxicillin</option>
                             </select>
@@ -176,7 +199,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -195,77 +218,83 @@
         document.getElementById('disease-brgy').innerHTML = brgyOptions;
         document.getElementById('stock-brgy').innerHTML = brgyOptions;
 
-        // --- CHART ENGINE ---
+        // Chart Helpers
         const getLabels = (view) => {
             if (view === 'weekly') return ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
-            if (view === 'yearly') return ['2023', '2024', '2025', '2026'];
+            if (view === 'yearly') return ['2024', '2025', '2026'];
             return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         };
 
-        const chartConfig = (color) => ({
+        const createChart = (canvasId, color) => new Chart(document.getElementById(canvasId), {
             type: 'line',
-            data: { labels: getLabels('monthly'), datasets: [{ data: [], borderColor: color, backgroundColor: color + '1A', fill: true, tension: 0.4, pointRadius: 5 }] },
+            data: { labels: getLabels('monthly'), datasets: [{ data: [], borderColor: color, backgroundColor: color + '1A', fill: true, tension: 0.4, pointRadius: 4 }] },
             options: { 
                 responsive: true, maintainAspectRatio: false, 
+                plugins: { legend: { display: false } },
                 scales: { 
-                    y: { beginAtZero: true, ticks: { stepSize: 1, font: { weight: 'bold' } }, grid: { display: false } },
+                    y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { precision: 0 } },
                     x: { grid: { display: false } }
-                },
-                plugins: { legend: { display: false } }
+                }
             }
         });
 
-        const dChart = new Chart(document.getElementById('diseaseChart'), chartConfig('#ef4444'));
-        const sChart = new Chart(document.getElementById('stockChart'), chartConfig('#10b981'));
+        const dChart = createChart('diseaseChart', '#ef4444');
+        const sChart = createChart('stockChart', '#10b981');
 
-        // --- DATA SYNCING ---
-        function syncData() {
-            // Disease Sync
-            const dView = document.getElementById('disease-view').value;
-            const dBrgy = document.getElementById('disease-brgy').value;
-            const dCat = document.getElementById('disease-cat').value;
+        function updateCharts() {
+            const dv = document.getElementById('disease-view').value;
+            const db_sel = document.getElementById('disease-brgy').value;
+            const dc = document.getElementById('disease-cat').value;
 
             onSnapshot(collection(db, "disease_cases"), (snap) => {
-                const results = new Array(getLabels(dView).length).fill(0);
+                const results = new Array(getLabels(dv).length).fill(0);
                 snap.forEach(doc => {
                     const r = doc.data();
-                    const date = r.createdAt?.toDate ? r.createdAt.toDate() : new Date();
-                    if ((dBrgy === "All" || r.barangay === dBrgy) && r.name === dCat) {
-                        let idx = date.getMonth(); // Default Monthly
-                        if (dView === 'weekly') idx = Math.floor((date.getDate() - 1) / 7);
-                        if (dView === 'yearly') idx = date.getFullYear() - 2023;
+                    const timestamp = r.createdAt || r.lastUpdated; // Try both
+                    if (!timestamp) return;
+                    const date = timestamp.toDate();
+                    
+                    if ((db_sel === "All" || r.barangay === db_sel) && r.name === dc) {
+                        let idx = -1;
+                        if (dv === 'monthly') idx = date.getMonth();
+                        else if (dv === 'weekly' && date.getMonth() === new Date().getMonth()) idx = Math.floor((date.getDate() - 1) / 7);
+                        else if (dv === 'yearly') idx = date.getFullYear() - 2024;
+                        
                         if (idx >= 0 && idx < results.length) results[idx] += parseInt(r.count || 0);
                     }
                 });
-                dChart.data.labels = getLabels(dView);
+                dChart.data.labels = getLabels(dv);
                 dChart.data.datasets[0].data = results;
                 dChart.update();
             });
 
-            // Stock Sync
-            const sView = document.getElementById('stock-view').value;
-            const sBrgy = document.getElementById('stock-brgy').value;
-            const sCat = document.getElementById('stock-cat').value;
+            const sv = document.getElementById('stock-view').value;
+            const sb_sel = document.getElementById('stock-brgy').value;
+            const sc = document.getElementById('stock-cat').value;
 
             onSnapshot(collection(db, "medicine_inventory"), (snap) => {
-                const results = new Array(getLabels(sView).length).fill(0);
+                const results = new Array(getLabels(sv).length).fill(0);
                 snap.forEach(doc => {
                     const r = doc.data();
-                    const date = r.updatedAt?.toDate ? r.updatedAt.toDate() : new Date();
-                    if ((sBrgy === "All" || r.barangay === sBrgy) && r.name === sCat) {
-                        let idx = date.getMonth();
-                        if (sView === 'weekly') idx = Math.floor((date.getDate() - 1) / 7);
-                        if (sView === 'yearly') idx = date.getFullYear() - 2023;
+                    const timestamp = r.updatedAt;
+                    if (!timestamp) return;
+                    const date = timestamp.toDate();
+
+                    if ((sb_sel === "All" || r.barangay === sb_sel) && r.name === sc) {
+                        let idx = -1;
+                        if (sv === 'monthly') idx = date.getMonth();
+                        else if (sv === 'weekly' && date.getMonth() === new Date().getMonth()) idx = Math.floor((date.getDate() - 1) / 7);
+                        else if (sv === 'yearly') idx = date.getFullYear() - 2024;
+
                         if (idx >= 0 && idx < results.length) results[idx] = parseInt(r.quantity || 0);
                     }
                 });
-                sChart.data.labels = getLabels(sView);
+                sChart.data.labels = getLabels(sv);
                 sChart.data.datasets[0].data = results;
                 sChart.update();
             });
         }
 
-        // --- AUTH & INITIALIZE ---
         window.toggleSidebar = () => {
             const s = document.getElementById('sidebar');
             document.getElementById('sidebar-overlay').classList.toggle('hidden');
@@ -287,7 +316,7 @@
                     if (d.role === "bhw") document.getElementById('worker-secret-link').classList.remove('hidden');
                 }
             }
-            syncData();
+            updateCharts();
             setTimeout(() => {
                 document.getElementById('loader-container').classList.add('loaded');
                 document.body.classList.add('content-visible');
@@ -296,7 +325,7 @@
             }, 800);
         });
 
-        document.querySelectorAll('select').forEach(s => s.addEventListener('change', syncData));
+        document.querySelectorAll('select').forEach(s => s.addEventListener('change', updateCharts));
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
     </script>
 </body>
