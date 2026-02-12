@@ -22,6 +22,7 @@
             .sidebar-open { transform: translateX(0); }
         }
 
+        /* RHU-Style Searchable Dropdown */
         .dropdown-list {
             display: none;
             position: absolute;
@@ -31,16 +32,16 @@
             background: white;
             border: 1px solid #e2e8f0;
             border-radius: 1.25rem;
-            max-height: 300px;
+            max-height: 280px;
             overflow-y: auto;
             z-index: 200;
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
         .dropdown-list.active { display: block; }
-        .dropdown-item { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; }
+        .dropdown-item { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; color: #1e3a8a; }
         .dropdown-item:hover { background-color: #f0fdf4; color: #10b981; }
 
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
@@ -104,7 +105,7 @@
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center gap-3">
                     <button onclick="toggleSidebar()" class="md:hidden p-2 bg-slate-100 rounded-xl text-navy"><i data-lucide="menu"></i></button>
-                    <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Inventory Management</h2>
+                    <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Barangay Inventory</h2>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-3 md:px-4 py-2 rounded-2xl">
                     <div class="w-8 h-8 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
@@ -116,10 +117,10 @@
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-8" data-aos="fade-down">
                     <div class="relative flex-1 w-full">
                         <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                        <input type="text" id="main-search" placeholder="Search medicines by name..." class="w-full pl-14 pr-4 py-4 bg-white border border-slate-100 rounded-2xl outline-none focus:ring-2 ring-emerald-100 shadow-sm font-semibold text-navy">
+                        <input type="text" id="main-search" placeholder="Quick search inventory..." class="w-full pl-14 pr-4 py-4 bg-white border border-slate-100 rounded-2xl outline-none focus:ring-2 ring-emerald-100 shadow-sm font-semibold text-navy">
                     </div>
                     <button onclick="openAddModal()" class="w-full md:w-auto bg-bhw-emerald text-white px-10 py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-emerald-600 shadow-xl shadow-emerald-100 transition-all">
-                        <i data-lucide="plus-circle" class="w-5 h-5"></i> Add Stock Entry
+                        <i data-lucide="plus-circle" class="w-5 h-5"></i> Add New Stock
                     </button>
                 </div>
 
@@ -129,9 +130,9 @@
                             <thead class="bg-slate-50/50">
                                 <tr class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
                                     <th class="px-10 py-6">Medicine Identity</th>
-                                    <th class="px-8 py-6">Expiry Date</th>
-                                    <th class="px-8 py-6 text-center">Stock Level</th>
-                                    <th class="px-8 py-6">Date Recorded</th>
+                                    <th class="px-8 py-6">Expiration</th>
+                                    <th class="px-8 py-6 text-center">In-Stock</th>
+                                    <th class="px-8 py-6">Last Entry</th>
                                     <th class="px-10 py-6 text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -148,16 +149,16 @@
         <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col scale-95 transition-all duration-300" id="modal-container">
             <div class="absolute top-0 left-0 w-full h-2 bg-bhw-emerald"></div>
             <div class="p-8 pb-0">
-                <h3 id="modal-title" class="text-2xl font-bold text-navy">Stock Entry</h3>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Official Inventory Log</p>
+                <h3 id="modal-title" class="text-2xl font-bold text-navy tracking-tight">Medicine Stock Entry</h3>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">BHW Official Inventory Log</p>
             </div>
             
             <form id="item-form" class="p-8 space-y-5 overflow-y-auto custom-scrollbar">
                 <input type="hidden" id="entry-id">
                 
                 <div class="relative">
-                    <label class="block text-[11px] font-black text-slate-400 uppercase mb-2">Search Medicine Name</label>
-                    <input type="text" id="medicine-input" autocomplete="off" placeholder="Type medicine name..." class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none focus:ring-2 ring-emerald-100 transition-all">
+                    <label class="block text-[11px] font-black text-slate-400 uppercase mb-2">Search Medicine</label>
+                    <input type="text" id="medicine-input" autocomplete="off" placeholder="Start typing name (e.g. Paracetamol)..." class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none focus:ring-2 ring-emerald-100 transition-all">
                     <div id="medicine-dropdown" class="dropdown-list custom-scrollbar"></div>
                     <input type="hidden" id="med-name" required>
                 </div>
@@ -211,17 +212,17 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // FULL UPDATED MEDICINE LIST
+        // COMPLETE MEDICINE LIST AS REQUESTED
         const medicineList = [
             "Paracetamol (Acetaminophen)", "Ibuprofen", "Mefenamic acid", "Aspirin", "Naproxen", "Diclofenac", "Celecoxib", "Ketoprofen",
             "Phenylephrine", "Pseudoephedrine", "Chlorphenamine", "Diphenhydramine", "Cetirizine", "Loratadine", "Carbocisteine", "Ambroxol", "Guaifenesin", "Dextromethorphan", "Salbutamol inhaler", "Oxymetazoline nasal spray", "Steam inhalation solutions",
             "Fexofenadine", "Levocetirizine", "Hydrocortisone cream",
-            "Antacids (Alum/Magnesium Hydroxide)", "Sodium bicarbonate", "Omeprazole", "Lansoprazole", "Pantoprazole", "Esomeprazole", "Loperamide", "Oral Rehydration Salts (ORS)", "Simethicone", "Domperidone", "Metoclopramide", "Hyoscine butylbromide",
+            "Antacids (Aluminum hydroxide, Magnesium hydroxide)", "Sodium bicarbonate", "Omeprazole", "Lansoprazole", "Pantoprazole", "Esomeprazole", "Loperamide", "Oral Rehydration Salts (ORS)", "Simethicone", "Domperidone", "Metoclopramide", "Hyoscine butylbromide",
             "Povidone iodine", "Hydrogen peroxide", "Mupirocin ointment", "Clotrimazole cream", "Ketoconazole cream", "Calamine lotion", "Zinc oxide", "Permethrin", "Acyclovir cream",
             "Amoxicillin", "Amoxicillin + Clavulanic acid", "Azithromycin", "Clarithromycin", "Cefuroxime", "Ceftriaxone", "Ciprofloxacin", "Levofloxacin", "Doxycycline", "Metronidazole", "Co-trimoxazole",
             "Isoniazid", "Rifampicin", "Pyrazinamide", "Ethambutol", "Fixed-dose TB combinations",
             "Amlodipine", "Losartan", "Telmisartan", "Captopril", "Enalapril", "Metoprolol", "Atenolol", "Hydrochlorothiazide",
-            "Metformin", "Glimepiride", "Gliclazide", "Insulin (Regular)", "Insulin (NPH)", "Insulin (Glargine)", "Sitagliptin", "Empagliflozin",
+            "Metformin", "Glimepiride", "Gliclazide", "Insulin (Regular, NPH, Glargine)", "Sitagliptin", "Empagliflozin",
             "Atorvastatin", "Simvastatin", "Rosuvastatin",
             "Budesonide inhaler", "Fluticasone", "Ipratropium bromide",
             "Fluoxetine", "Sertraline", "Escitalopram", "Amitriptyline", "Risperidone", "Quetiapine", "Alprazolam", "Diazepam",
@@ -287,8 +288,8 @@
                             </div>
                         </div>
                     </td>
-                    <td class="px-8 py-7 text-slate-500 font-bold text-sm">${item.expiryDate || 'N/A'}</td>
-                    <td class="px-8 py-7 text-center font-black text-navy text-xl">${(item.count || 0).toLocaleString()}</td>
+                    <td class="px-8 py-7 text-slate-500 font-bold text-sm">${item.expiryDate}</td>
+                    <td class="px-8 py-7 text-center font-black text-navy text-xl">${item.count.toLocaleString()}</td>
                     <td class="px-8 py-7 text-slate-400 text-xs">${item.createdAt?.toDate ? item.createdAt.toDate().toLocaleDateString() : 'Just now'}</td>
                     <td class="px-10 py-7 text-right">
                         <div class="flex justify-end gap-3">
@@ -323,7 +324,7 @@
             document.getElementById('item-modal').classList.remove('hidden');
         };
 
-        window.deleteEntry = async (id) => { if(confirm("Remove this medicine record?")) await deleteDoc(doc(db, "medicine_inventory", id)); };
+        window.deleteEntry = async (id) => { if(confirm("Remove this stock record?")) await deleteDoc(doc(db, "medicine_inventory", id)); };
 
         document.getElementById('item-form').onsubmit = async (e) => {
             e.preventDefault();
