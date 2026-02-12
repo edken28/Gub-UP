@@ -13,6 +13,7 @@
         :root { --bg-gray-white: #f1f5f9; }
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .bg-brand-blue { background-color: #2563eb; }
+        .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
         .bg-navy { background-color: #1e3a8a; }
 
@@ -27,6 +28,7 @@
         #loader-container {
             position: fixed; inset: 0; background-color: var(--bg-gray-white);
             z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
         
         .spinner {
@@ -40,7 +42,7 @@
         .chart-card {
             background: white;
             border-radius: 2.5rem;
-            padding: 1.5rem;
+            padding: 2rem;
             border: 1px solid #f1f5f9;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
@@ -62,10 +64,14 @@
 
     <div class="md:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center text-white"><i data-lucide="plus" class="w-5 h-5"></i></div>
+            <div class="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center text-white">
+                <i data-lucide="plus" class="w-5 h-5"></i>
+            </div>
             <span class="font-bold text-navy">GUB-UP</span>
         </div>
-        <button onclick="toggleSidebar()" class="p-2 text-slate-600 bg-slate-50 rounded-xl"><i data-lucide="menu"></i></button>
+        <button onclick="toggleSidebar()" class="p-2 text-slate-600 bg-slate-50 rounded-xl">
+            <i data-lucide="menu"></i>
+        </button>
     </div>
 
     <div id="main-layout" class="flex flex-col md:flex-row w-full min-h-screen">
@@ -75,28 +81,39 @@
             <div class="p-8">
                 <div class="flex items-center justify-between mb-10">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg"><i data-lucide="plus" class="w-6 h-6"></i></div>
+                        <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg">
+                            <i data-lucide="plus" class="w-6 h-6"></i>
+                        </div>
                         <div>
                             <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
                             <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
                         </div>
                     </div>
-                    <button class="md:hidden p-2 text-slate-400" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
+                    <button class="md:hidden p-2 text-slate-400" onclick="toggleSidebar()">
+                        <i data-lucide="x"></i>
+                    </button>
                 </div>
-
                 <nav class="space-y-3">
                     <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-200">
                         <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center"><i data-lucide="layout-dashboard" class="w-4 h-4"></i></div>
                         <span>Dashboard</span>
                     </a>
-                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 transition-all">
-                        <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center"><i data-lucide="package" class="w-4 h-4 text-emerald-600"></i></div>
+                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
+                        <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center"><i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white"></i></div>
                         <span>Medicine Stocks</span>
+                    </a>
+                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 hover:text-amber-600 transition-all group">
+                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center"><i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white"></i></div>
+                        <span>Disease Reports</span>
+                    </a>
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:text-blue-600 transition-all group">
+                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center"><i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white"></i></div>
+                        <span>Hotlines</span>
                     </a>
                     <div id="internal-consoles-section" class="pt-6 pb-2 hidden">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                        <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold mb-2"><i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console</a>
-                        <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold"><i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console</a>
+                        <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2"><i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console</a>
+                        <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:text-white transition-all"><i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console</a>
                     </div>
                 </nav>
             </div>
@@ -109,35 +126,36 @@
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 md:px-8 py-5 flex flex-col md:flex-row md:items-center justify-between sticky top-0 z-40 gap-4">
                 <div class="flex items-center gap-4">
                     <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Live Monitoring</h2>
+                    <div class="h-4 w-[1px] bg-slate-200 hidden sm:block"></div>
                     <div class="flex items-center gap-2 text-navy">
                         <i data-lucide="calendar" class="w-4 h-4 text-brand-blue"></i>
                         <span id="current-date-display" class="text-[10px] md:text-xs font-black uppercase tracking-tight"></span>
                     </div>
                 </div>
-                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl self-start md:self-auto">
                     <div class="w-8 h-8 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
                     <span id="user-name-display" class="font-bold text-navy text-sm">Guest</span>
                 </div>
             </header>
 
-            <div class="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
+            <div class="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
                 <div class="chart-card">
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                         <div>
-                            <h3 class="text-xl font-bold text-navy">Disease Active Cases</h3>
-                            <p class="text-xs text-slate-400 uppercase font-black tracking-widest mt-1">Gubat Health Trends</p>
+                            <h3 class="text-xl md:text-2xl font-bold text-navy">Disease Active Cases</h3>
+                            <p class="text-xs text-slate-400 uppercase font-black tracking-widest mt-1">Real-time Trends</p>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <select id="disease-brgy" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[10px] font-bold outline-none"></select>
-                            <select id="disease-cat" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[10px] font-bold outline-none">
-                                <option value="Dengue">Dengue</option>
-                                <option value="Flu">Common Flu</option>
-                                <option value="COVID-19">COVID-19</option>
-                            </select>
-                            <select id="disease-time" class="bg-navy text-white rounded-xl px-3 py-2 text-[10px] font-bold outline-none">
+                            <select id="disease-range" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy">
                                 <option value="weekly">Weekly</option>
                                 <option value="monthly" selected>Monthly</option>
                                 <option value="yearly">Yearly</option>
+                            </select>
+                            <select id="disease-brgy" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy"></select>
+                            <select id="disease-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy">
+                                <option value="Dengue">Dengue</option>
+                                <option value="Flu">Common Flu</option>
+                                <option value="COVID-19">COVID-19</option>
                             </select>
                         </div>
                     </div>
@@ -145,22 +163,22 @@
                 </div>
 
                 <div class="chart-card">
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                         <div>
-                            <h3 class="text-xl font-bold text-navy">Medicine Inventory</h3>
-                            <p class="text-xs text-slate-400 uppercase font-black tracking-widest mt-1">Stock Availability</p>
+                            <h3 class="text-xl md:text-2xl font-bold text-navy">Medicine Stock Level</h3>
+                            <p class="text-xs text-slate-400 uppercase font-black tracking-widest mt-1">Inventory Balance</p>
                         </div>
                         <div class="flex flex-wrap gap-2">
-                            <select id="stock-brgy" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[10px] font-bold outline-none"></select>
-                            <select id="stock-cat" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[10px] font-bold outline-none">
-                                <option value="Paracetamol">Paracetamol</option>
-                                <option value="Amoxicillin">Amoxicillin</option>
-                                <option value="Vitamin C">Vitamin C</option>
-                            </select>
-                            <select id="stock-time" class="bg-emerald-600 text-white rounded-xl px-3 py-2 text-[10px] font-bold outline-none">
+                            <select id="stock-range" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy">
                                 <option value="weekly">Weekly</option>
                                 <option value="monthly" selected>Monthly</option>
                                 <option value="yearly">Yearly</option>
+                            </select>
+                            <select id="stock-brgy" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy"></select>
+                            <select id="stock-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy">
+                                <option value="Paracetamol">Paracetamol</option>
+                                <option value="Amoxicillin">Amoxicillin</option>
+                                <option value="Vitamin C">Vitamin C</option>
                             </select>
                         </div>
                     </div>
@@ -173,7 +191,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -188,90 +206,69 @@
         const db = getFirestore(app);
 
         const barangays = ["Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
-        
         const brgyOptions = `<option value="All">All Barangays</option>` + barangays.map(b => `<option value="${b}">${b}</option>`).join('');
         document.getElementById('disease-brgy').innerHTML = brgyOptions;
         document.getElementById('stock-brgy').innerHTML = brgyOptions;
 
-        // Chart Configs
-        const commonOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: { beginAtZero: true, grid: { display: false }, ticks: { font: { weight: 'bold' } } },
-                x: { grid: { display: false }, ticks: { font: { size: 10 } } }
-            },
-            plugins: { legend: { display: false } }
+        // --- CHART CONFIG ---
+        const getLabels = (range) => {
+            if(range === 'weekly') return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            if(range === 'yearly') return ['2022', '2023', '2024', '2025', '2026'];
+            return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         };
 
-        const dChart = new Chart(document.getElementById('diseaseChart'), {
+        const chartConfig = (color) => ({
             type: 'line',
-            data: { labels: [], datasets: [{ borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', fill: true, tension: 0.4, data: [] }] },
-            options: commonOptions
-        });
-
-        const sChart = new Chart(document.getElementById('stockChart'), {
-            type: 'line',
-            data: { labels: [], datasets: [{ borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4, data: [] }] },
-            options: commonOptions
-        });
-
-        // Data Processing Logic
-        function updateSync() {
-            const dBrgy = document.getElementById('disease-brgy').value;
-            const dCat = document.getElementById('disease-cat').value;
-            const dTime = document.getElementById('disease-time').value;
-
-            onSnapshot(collection(db, "disease_cases"), (snap) => {
-                const results = processFirestoreData(snap, dBrgy, dCat, dTime, 'createdAt');
-                dChart.data.labels = results.labels;
-                dChart.data.datasets[0].data = results.values;
-                dChart.update();
-            });
-
-            const sBrgy = document.getElementById('stock-brgy').value;
-            const sCat = document.getElementById('stock-cat').value;
-            const sTime = document.getElementById('stock-time').value;
-
-            onSnapshot(collection(db, "medicine_inventory"), (snap) => {
-                const results = processFirestoreData(snap, sBrgy, sCat, sTime, 'updatedAt');
-                sChart.data.labels = results.labels;
-                sChart.data.datasets[0].data = results.values;
-                sChart.update();
-            });
-        }
-
-        function processFirestoreData(snap, brgy, cat, timeframe, dateField) {
-            let labels = [];
-            let counts = {};
-
-            // Determine Time labels
-            if (timeframe === 'monthly') labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            else if (timeframe === 'weekly') labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            else labels = ['2024', '2025', '2026', '2027'];
-
-            let values = new Array(labels.length).fill(0);
-
-            snap.forEach(doc => {
-                const data = doc.data();
-                if ((brgy === "All" || data.barangay === brgy) && data.name === cat) {
-                    const date = data[dateField]?.toDate ? data[dateField].toDate() : new Date();
-                    let index = -1;
-
-                    if (timeframe === 'monthly') index = date.getMonth();
-                    else if (timeframe === 'weekly') index = (date.getDay() + 6) % 7;
-                    else index = labels.indexOf(date.getFullYear().toString());
-
-                    if (index !== -1) {
-                        // For medicine we take the most recent value, for diseases we sum them
-                        if (dateField === 'updatedAt') values[index] = parseInt(data.quantity || 0);
-                        else values[index] += parseInt(data.count || 0);
-                    }
+            data: { labels: getLabels('monthly'), datasets: [{ data: [], borderColor: color, backgroundColor: color + '1A', fill: true, tension: 0.4, pointRadius: 5 }] },
+            options: { 
+                responsive: true, maintainAspectRatio: false, 
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { beginAtZero: true, ticks: { stepSize: 1, font: { weight: 'bold' } }, grid: { display: false } },
+                    x: { grid: { display: false } }
                 }
+            }
+        });
+
+        const dChart = new Chart(document.getElementById('diseaseChart'), chartConfig('#ef4444'));
+        const sChart = new Chart(document.getElementById('stockChart'), chartConfig('#10b981'));
+
+        // --- DATA LOGIC ---
+        function syncData(chart, collectionName, dateField, brgyId, catId, rangeId) {
+            const brgy = document.getElementById(brgyId).value;
+            const cat = document.getElementById(catId).value;
+            const range = document.getElementById(rangeId).value;
+
+            onSnapshot(collection(db, collectionName), (snap) => {
+                let counts = new Array(getLabels(range).length).fill(0);
+                chart.data.labels = getLabels(range);
+
+                snap.forEach(doc => {
+                    const r = doc.data();
+                    if ((brgy === "All" || r.barangay === brgy) && r.name === cat) {
+                        const date = r[dateField] ? r[dateField].toDate() : new Date();
+                        let index = 0;
+                        if(range === 'weekly') index = (date.getDay() + 6) % 7; 
+                        else if(range === 'yearly') index = date.getFullYear() - 2022;
+                        else index = date.getMonth();
+
+                        if(index >= 0 && index < counts.length) {
+                            counts[index] += parseInt(r.count || r.quantity || 0);
+                        }
+                    }
+                });
+
+                chart.data.datasets[0].data = counts;
+                chart.update();
             });
-            return { labels, values };
         }
 
+        const updateAll = () => {
+            syncData(dChart, "disease_cases", "createdAt", "disease-brgy", "disease-cat", "disease-range");
+            syncData(sChart, "medicine_inventory", "updatedAt", "stock-brgy", "stock-cat", "stock-range");
+        };
+
+        // --- AUTH & INIT ---
         onAuthStateChanged(auth, async (user) => {
             if (!user) { window.location.href = "login.html"; return; }
             document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -280,26 +277,19 @@
             if (userDoc.exists()) {
                 const userData = userDoc.data();
                 document.getElementById('user-name-display').innerText = userData.name;
-                if (userData.role === "rhu" || userData.role === "bhw") {
+                document.getElementById('welcome-user-name').innerText = userData.name;
+                if (["rhu", "bhw"].includes(userData.role)) {
                     document.getElementById('internal-consoles-section').classList.remove('hidden');
                     if (userData.role === "rhu") document.getElementById('rhu-disease-link').classList.remove('hidden');
                     if (userData.role === "bhw") document.getElementById('worker-secret-link').classList.remove('hidden');
                 }
             }
-            updateSync();
-            setTimeout(() => {
-                document.getElementById('loader-container').classList.add('loaded');
-                document.body.classList.add('content-visible');
-                lucide.createIcons();
-            }, 1000);
+            updateAll();
+            setTimeout(() => { document.getElementById('loader-container').classList.add('loaded'); document.body.classList.add('content-visible'); lucide.createIcons(); AOS.init(); }, 1000);
         });
 
-        document.querySelectorAll('select').forEach(s => s.addEventListener('change', updateSync));
-        window.toggleSidebar = () => {
-            document.getElementById('sidebar').classList.toggle('sidebar-closed');
-            document.getElementById('sidebar').classList.toggle('sidebar-open');
-            document.getElementById('sidebar-overlay').classList.toggle('hidden');
-        };
+        document.querySelectorAll('select').forEach(s => s.addEventListener('change', updateAll));
+        window.toggleSidebar = () => { document.getElementById('sidebar').classList.toggle('sidebar-closed'); document.getElementById('sidebar').classList.toggle('sidebar-open'); document.getElementById('sidebar-overlay').classList.toggle('hidden'); };
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
     </script>
 </body>
