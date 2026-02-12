@@ -23,7 +23,6 @@
         .status-low { background-color: #fffbeb; color: #f59e0b; border: 1px solid #fef3c7; }
         .status-stable { background-color: #f0fdf4; color: #22c55e; border: 1px solid #dcfce7; }
 
-        /* Mobile Sidebar Transitions */
         @media (max-width: 768px) {
             .sidebar-closed { transform: translateX(-100%); }
             .sidebar-open { transform: translateX(0); }
@@ -45,38 +44,21 @@
                             <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
                         </div>
                     </div>
-                    <button class="md:hidden p-2 text-slate-400" onclick="toggleSidebar()">
-                        <i data-lucide="x"></i>
-                    </button>
                 </div>
 
                 <nav class="space-y-3">
-                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all group">
+                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 group">
                         <div class="w-8 h-8 bg-slate-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
                             <i data-lucide="layout-dashboard" class="w-4 h-4 group-hover:text-white"></i>
                         </div>
                         <span>Dashboard</span>
                     </a>
-                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 transition-all group">
+                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 group">
                         <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
                             <i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white"></i>
                         </div>
                         <span>Medicine Stocks</span>
                     </a>
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 transition-all group">
-                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white"></i>
-                        </div>
-                        <span>Disease Reports</span>
-                    </a>
-
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:text-blue-600 transition-all group">
-                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white transition-colors"></i>
-                        </div>
-                        <span>Hotlines</span>
-                    </a>
-
                     <div class="pt-6 pb-2">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
                         <a href="bhw-console.html" class="flex items-center gap-3 bg-bhw-emerald text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-200 transition-all">
@@ -88,11 +70,6 @@
                     </div>
                 </nav>
             </div>
-            <div class="mt-auto p-8 border-t border-slate-50">
-                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full">
-                    <i data-lucide="log-out" class="w-5 h-5"></i> Logout
-                </button>
-            </div>
         </aside>
 
         <main class="flex-1 w-full overflow-y-auto">
@@ -101,14 +78,10 @@
                     <button onclick="toggleSidebar()" class="md:hidden p-2 bg-slate-100 rounded-xl text-navy">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
-                    <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest truncate">BHW Stock Management</h2>
+                    <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">BHW Stock Management</h2>
                 </div>
-                
-                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-3 md:px-4 py-2 rounded-2xl">
-                    <div class="w-8 h-8 bg-emerald-50 text-bhw-emerald rounded-full flex items-center justify-center">
-                        <i data-lucide="shield-check" class="w-4 h-4"></i>
-                    </div>
-                    <span id="user-name-display" class="font-bold text-navy text-xs md:text-sm truncate max-w-[100px] md:max-w-none">BHW Worker</span>
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-3 py-2 rounded-2xl">
+                    <span id="user-name-display" class="font-bold text-navy text-xs md:text-sm">BHW Worker</span>
                 </div>
             </header>
 
@@ -116,23 +89,23 @@
                 <div data-aos="fade-up" class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                     <div class="relative flex-1">
                         <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                        <input type="text" id="med-search" placeholder="Search Medicine Inventory..." class="w-full pl-14 pr-4 py-4 bg-white border border-slate-100 rounded-2xl outline-none focus:ring-2 ring-emerald-100 shadow-sm font-semibold text-navy">
+                        <input type="text" id="med-search" placeholder="Search Inventory..." class="w-full pl-14 pr-4 py-4 bg-white border border-slate-100 rounded-2xl outline-none focus:ring-2 ring-emerald-100 shadow-sm font-semibold">
                     </div>
-                    <button onclick="openAddModal()" class="bg-bhw-emerald text-white w-full md:w-auto px-10 py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-emerald-600 shadow-xl shadow-emerald-100 transition-all">
+                    <button onclick="openAddModal()" class="bg-bhw-emerald text-white px-10 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-emerald-600 shadow-xl shadow-emerald-100 transition-all">
                         <i data-lucide="plus-circle" class="w-5 h-5"></i> Add New Medicine
                     </button>
                 </div>
 
-                <div data-aos="fade-up" data-aos-delay="100" class="bg-white rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden min-h-[400px]">
+                <div data-aos="fade-up" data-aos-delay="100" class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden min-h-[400px]">
                     <div class="hidden md:block overflow-x-auto">
                         <table class="w-full text-left">
-                            <thead class="bg-slate-50/50 border-b border-slate-50">
+                            <thead class="bg-slate-50/50 border-b">
                                 <tr class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
                                     <th class="px-10 py-6">Medicine Identity</th>
                                     <th class="px-8 py-6">Barangay</th>
                                     <th class="px-8 py-6 text-center">Quantity</th>
                                     <th class="px-8 py-6">Stock Status</th>
-                                    <th class="px-10 py-6 text-right">Admin Control</th>
+                                    <th class="px-10 py-6 text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="inventory-table-body" class="divide-y divide-slate-50"></tbody>
@@ -146,18 +119,157 @@
 
     <div id="item-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-navy/40 backdrop-blur-md" onclick="closeModal()"></div>
-        <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
+        <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
             <div class="absolute top-0 left-0 w-full h-2 bg-bhw-emerald"></div>
-            <div class="p-8 pb-0">
+            <div class="p-8 pb-4">
                 <h3 id="modal-title" class="text-2xl font-bold text-navy">Medicine Entry</h3>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">GUB-UP Inventory System</p>
             </div>
             
-            <form id="item-form" class="p-8 space-y-5">
+            <form id="item-form" class="p-8 pt-0 space-y-5 overflow-y-auto">
                 <input type="hidden" id="item-id">
                 <div>
                     <label class="block text-[11px] font-black text-slate-400 uppercase mb-2">Medicine Name</label>
-                    <input type="text" id="form-name" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none focus:ring-2 ring-emerald-100">
+                    <input list="medicine-list" id="form-name" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none focus:ring-2 ring-emerald-100" placeholder="Type or select medicine">
+                    <datalist id="medicine-list">
+                        <option value="Paracetamol (Acetaminophen)">
+                        <option value="Ibuprofen">
+                        <option value="Mefenamic acid">
+                        <option value="Aspirin">
+                        <option value="Naproxen">
+                        <option value="Diclofenac">
+                        <option value="Celecoxib">
+                        <option value="Ketoprofen">
+                        <option value="Phenylephrine">
+                        <option value="Pseudoephedrine">
+                        <option value="Chlorphenamine">
+                        <option value="Diphenhydramine">
+                        <option value="Cetirizine">
+                        <option value="Loratadine">
+                        <option value="Carbocisteine">
+                        <option value="Ambroxol">
+                        <option value="Guaifenesin">
+                        <option value="Dextromethorphan">
+                        <option value="Salbutamol (inhaler)">
+                        <option value="Oxymetazoline nasal spray">
+                        <option value="Steam inhalation solutions">
+                        <option value="Fexofenadine">
+                        <option value="Levocetirizine">
+                        <option value="Hydrocortisone cream">
+                        <option value="Antacids (Alum/Magnesium)">
+                        <option value="Sodium bicarbonate">
+                        <option value="Omeprazole">
+                        <option value="Lansoprazole">
+                        <option value="Pantoprazole">
+                        <option value="Esomeprazole">
+                        <option value="Ranitidine">
+                        <option value="Loperamide">
+                        <option value="Oral Rehydration Salts (ORS)">
+                        <option value="Simethicone">
+                        <option value="Domperidone">
+                        <option value="Metoclopramide">
+                        <option value="Hyoscine butylbromide">
+                        <option value="Betadine (Povidone iodine)">
+                        <option value="Hydrogen peroxide">
+                        <option value="Mupirocin ointment">
+                        <option value="Clotrimazole cream">
+                        <option value="Ketoconazole cream">
+                        <option value="Calamine lotion">
+                        <option value="Zinc oxide">
+                        <option value="Permethrin">
+                        <option value="Acyclovir cream">
+                        <option value="Amoxicillin">
+                        <option value="Amoxicillin + Clavulanic acid">
+                        <option value="Azithromycin">
+                        <option value="Clarithromycin">
+                        <option value="Cefuroxime">
+                        <option value="Ceftriaxone">
+                        <option value="Ciprofloxacin">
+                        <option value="Levofloxacin">
+                        <option value="Doxycycline">
+                        <option value="Metronidazole">
+                        <option value="Co-trimoxazole">
+                        <option value="Isoniazid">
+                        <option value="Rifampicin">
+                        <option value="Pyrazinamide">
+                        <option value="Ethambulol">
+                        <option value="Fixed-dose TB combinations">
+                        <option value="Amlodipine">
+                        <option value="Losartan">
+                        <option value="Telmisartan">
+                        <option value="Captopril">
+                        <option value="Enalapril">
+                        <option value="Metoprolol">
+                        <option value="Atenolol">
+                        <option value="Hydrochlorothiazide">
+                        <option value="Metformin">
+                        <option value="Glimepiride">
+                        <option value="Gliclazide">
+                        <option value="Insulin (Regular, NPH, Glargine)">
+                        <option value="Sitagliptin">
+                        <option value="Empagliflozin">
+                        <option value="Atorvastatin">
+                        <option value="Simvastatin">
+                        <option value="Rosuvastatin">
+                        <option value="Budesonide inhaler">
+                        <option value="Fluticasone">
+                        <option value="Ipratropium bromide">
+                        <option value="Fluoxetine">
+                        <option value="Sertraline">
+                        <option value="Escitalopram">
+                        <option value="Amitriptyline">
+                        <option value="Risperidone">
+                        <option value="Quetiapine">
+                        <option value="Alprazolam">
+                        <option value="Diazepam">
+                        <option value="Vitamin A">
+                        <option value="Vitamin B1 (Thiamine)">
+                        <option value="Vitamin B6">
+                        <option value="Vitamin B12">
+                        <option value="Vitamin C">
+                        <option value="Vitamin D3">
+                        <option value="Vitamin E">
+                        <option value="Vitamin K">
+                        <option value="B-complex capsules">
+                        <option value="Neurobion (B1, B6, B12 combo)">
+                        <option value="Iron (Ferrous sulfate)">
+                        <option value="Calcium carbonate">
+                        <option value="Calcium + Vitamin D">
+                        <option value="Magnesium">
+                        <option value="Zinc">
+                        <option value="Potassium supplements">
+                        <option value="Adult multivitamins">
+                        <option value="Children’s multivitamins">
+                        <option value="Prenatal vitamins">
+                        <option value="Senior vitamins">
+                        <option value="Vitamin C + Zinc">
+                        <option value="Sodium ascorbate">
+                        <option value="Probiotics">
+                        <option value="Fish oil (Omega-3)">
+                        <option value="Glutathione">
+                        <option value="Oral contraceptive pills">
+                        <option value="Injectable contraceptives">
+                        <option value="Folic acid">
+                        <option value="Iron + Folic acid">
+                        <option value="Clomiphene">
+                        <option value="Tranexamic acid">
+                        <option value="Pediatric paracetamol">
+                        <option value="Pediatric ibuprofen">
+                        <option value="Zinc syrup">
+                        <option value="Pediatric multivitamins">
+                        <option value="ORS sachets">
+                        <option value="Chlorhexidine mouthwash">
+                        <option value="Fluoride toothpaste">
+                        <option value="Lidocaine gel">
+                        <option value="Antiseptic alcohol">
+                        <option value="Hand sanitizer">
+                        <option value="Thermometers">
+                        <option value="Blood pressure monitors">
+                        <option value="Glucometer">
+                        <option value="Nebulizer solution">
+                        <option value="Activated charcoal">
+                        <option value="Epinephrine">
+                    </datalist>
                 </div>
                 <div>
                     <label class="block text-[11px] font-black text-slate-400 uppercase mb-2">Stock Quantity</label>
@@ -167,9 +279,9 @@
                     <label class="block text-[11px] font-black text-slate-400 uppercase mb-2">Your Barangay</label>
                     <input type="text" id="form-brgy" readonly class="w-full p-4 bg-slate-100 border border-slate-200 rounded-2xl font-bold text-slate-500">
                 </div>
-                <div class="flex gap-4 pt-4">
+                <div class="flex gap-4 pt-4 sticky bottom-0 bg-white">
                     <button type="button" onclick="closeModal()" class="flex-1 font-bold text-slate-400">Discard</button>
-                    <button type="submit" class="flex-[2] py-4 bg-bhw-emerald text-white font-bold rounded-2xl shadow-xl shadow-emerald-100">Save Changes</button>
+                    <button type="submit" class="flex-[2] py-4 bg-bhw-emerald text-white font-bold rounded-2xl shadow-xl">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -196,12 +308,6 @@
 
         let userBrgy = "";
         let allItems = [];
-
-        window.toggleSidebar = () => {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('sidebar-closed');
-            sidebar.classList.toggle('sidebar-open');
-        }
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -234,13 +340,6 @@
             tbody.innerHTML = "";
             mobileList.innerHTML = "";
 
-            if(filtered.length === 0) {
-                const emptyMsg = `<div class="py-20 text-center text-slate-400 font-medium">No results found for "${userBrgy}".</div>`;
-                tbody.innerHTML = `<tr><td colspan="5">${emptyMsg}</td></tr>`;
-                mobileList.innerHTML = emptyMsg;
-                return;
-            }
-
             filtered.forEach(item => {
                 const qty = parseInt(item.quantity || 0);
                 let status = "Stable";
@@ -248,7 +347,6 @@
                 if(qty < 100) { status = "Critical"; statusClass = "status-critical"; }
                 else if(qty < 300) { status = "Low Stock"; statusClass = "status-low"; }
 
-                // Desktop View
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50 transition-all">
                         <td class="px-10 py-7">
@@ -272,7 +370,6 @@
                         </td>
                     </tr>`;
 
-                // Mobile View
                 mobileList.innerHTML += `
                     <div class="p-5 flex flex-col gap-4">
                         <div class="flex justify-between items-start">
@@ -300,8 +397,6 @@
             });
             lucide.createIcons();
         }
-
-        document.getElementById('med-search').oninput = () => renderUI(allItems);
 
         window.openAddModal = () => {
             document.getElementById('item-form').reset();
@@ -338,7 +433,13 @@
             if(confirm("Permanently remove this medicine?")) await deleteDoc(doc(db, "medicine_inventory", id)); 
         };
 
+        document.getElementById('med-search').oninput = () => renderUI(allItems);
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
+        window.toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('sidebar-closed');
+            sidebar.classList.toggle('sidebar-open');
+        }
     </script>
 </body>
 </html>
