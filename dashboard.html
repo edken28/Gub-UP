@@ -48,14 +48,6 @@
         </div>
     </div>
 
-    <div class="md:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-50">
-        <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center text-white"><i data-lucide="plus" class="w-5 h-5"></i></div>
-            <span class="font-bold text-navy">GUB-UP</span>
-        </div>
-        <button onclick="toggleSidebar()" class="p-2 text-slate-600 bg-slate-50 rounded-xl"><i data-lucide="menu"></i></button>
-    </div>
-
     <div id="main-layout" class="flex flex-col md:flex-row w-full min-h-screen">
         <div id="sidebar-overlay" class="fixed inset-0 bg-navy/40 backdrop-blur-sm z-[55] hidden md:hidden" onclick="toggleSidebar()"></div>
 
@@ -90,8 +82,8 @@
                     </a>
                     <div id="internal-consoles-section" class="pt-6 pb-2 hidden">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                        <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold mb-2"><i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console</a>
-                        <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold"><i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console</a>
+                        <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold mb-2 transition-all hover:bg-red-100"><i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console</a>
+                        <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold transition-all hover:bg-emerald-100"><i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console</a>
                     </div>
                 </nav>
             </div>
@@ -101,63 +93,67 @@
         </aside>
 
         <main class="flex-1 overflow-x-hidden">
-            <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 md:px-8 py-5 flex flex-col md:flex-row md:items-center justify-between sticky top-0 z-40 gap-4">
+            <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center gap-4">
-                    <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Live Monitoring Dashboard</h2>
-                    <div class="h-4 w-[1px] bg-slate-200 hidden sm:block"></div>
-                    <div class="flex items-center gap-2 text-navy">
-                        <i data-lucide="calendar" class="w-4 h-4 text-brand-blue"></i>
-                        <span id="current-date-display" class="text-[10px] md:text-xs font-black uppercase tracking-tight"></span>
-                    </div>
+                    <button onclick="toggleSidebar()" class="md:hidden p-2 bg-slate-100 rounded-xl text-navy"><i data-lucide="menu"></i></button>
+                    <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Live Research Dashboard</h2>
                 </div>
-                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl self-start md:self-auto">
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
                     <div class="w-8 h-8 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
-                    <span id="user-name-display" class="font-bold text-navy text-sm">Guest</span>
+                    <span id="user-name-display" class="font-bold text-navy text-sm italic">Guest</span>
                 </div>
             </header>
 
             <div class="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
-                <div data-aos="fade-down" class="bg-brand-blue rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 mb-8 md:mb-10 text-white flex flex-col md:flex-row justify-between items-start md:items-center shadow-xl shadow-blue-100 gap-4">
+                <div data-aos="fade-down" class="bg-brand-blue rounded-[2.5rem] p-8 text-white flex justify-between items-center shadow-xl shadow-blue-100">
                     <div>
-                        <h1 class="text-2xl md:text-3xl font-bold">Welcome back, <span id="welcome-user-name">Citizen</span>!</h1>
-                        <p class="text-blue-100 mt-1">Gubat Community Health Overview</p>
+                        <h1 class="text-3xl font-bold">Welcome back, <span id="welcome-user-name">Citizen</span>!</h1>
+                        <p class="text-blue-100 mt-1" id="current-date-display"></p>
                     </div>
-                    <div class="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm"><i data-lucide="activity" class="w-6 h-6 md:w-8 md:h-8"></i></div>
+                    <i data-lucide="activity" class="w-12 h-12 opacity-50"></i>
                 </div>
 
-                <div class="chart-card">
+                <div class="chart-card" data-aos="fade-up">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                        <div><h3 class="text-xl md:text-2xl font-bold text-navy">Disease Active Cases</h3></div>
+                        <h3 class="text-xl font-bold text-navy">Disease Trends</h3>
                         <div class="flex flex-wrap gap-2">
-                            <select id="disease-view" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy">
-                                <option value="monthly">Monthly View</option>
-                                <option value="weekly">Weekly View</option>
-                                <option value="yearly">Yearly View</option>
+                            <select id="disease-view" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
+                                <option value="monthly">Monthly</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="yearly">Yearly</option>
                             </select>
-                            <select id="disease-brgy" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy"></select>
-                            <select id="disease-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy">
+                            <select id="disease-brgy" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none"></select>
+                            <select id="disease-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
+                                <option value="All">All Diseases</option>
                                 <option value="Dengue">Dengue</option>
-                                <option value="Flu">Flu</option>
+                                <option value="Flu">Flu (Influenza)</option>
                                 <option value="COVID-19">COVID-19</option>
+                                <option value="Tuberculosis">Tuberculosis</option>
+                                <option value="Diarrhea">Diarrhea</option>
+                                <option value="Pneumonia">Pneumonia</option>
                             </select>
                         </div>
                     </div>
                     <div class="h-[350px]"><canvas id="diseaseChart"></canvas></div>
                 </div>
 
-                <div class="chart-card">
+                <div class="chart-card" data-aos="fade-up">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                        <div><h3 class="text-xl md:text-2xl font-bold text-navy">Medicine Stock Level</h3></div>
+                        <h3 class="text-xl font-bold text-navy">Medicine Inventory</h3>
                         <div class="flex flex-wrap gap-2">
-                            <select id="stock-view" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy">
-                                <option value="monthly">Monthly View</option>
-                                <option value="weekly">Weekly View</option>
+                            <select id="stock-view" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
+                                <option value="monthly">Monthly</option>
+                                <option value="weekly">Weekly</option>
                             </select>
-                            <select id="stock-brgy" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy"></select>
-                            <select id="stock-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy">
-                                <option value="Paracetamol (Acetaminophen)">Paracetamol</option>
+                            <select id="stock-brgy" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none"></select>
+                            <select id="stock-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
+                                <option value="All">All Medicines</option>
+                                <option value="Paracetamol">Paracetamol</option>
+                                <option value="Ibuprofen">Ibuprofen</option>
                                 <option value="Amoxicillin">Amoxicillin</option>
                                 <option value="Vitamin C">Vitamin C</option>
+                                <option value="Cetirizine">Cetirizine</option>
+                                <option value="Metformin">Metformin</option>
                             </select>
                         </div>
                     </div>
@@ -170,7 +166,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -195,14 +191,14 @@
             return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         };
 
-        const createChart = (canvasId, color) => new Chart(document.getElementById(canvasId), {
+        const createChart = (canvasId, color, label) => new Chart(document.getElementById(canvasId), {
             type: 'line',
-            data: { labels: getLabels('monthly'), datasets: [{ label: 'Data', data: [], borderColor: color, backgroundColor: color + '1A', fill: true, tension: 0.4 }] },
+            data: { labels: getLabels('monthly'), datasets: [{ label: label, data: [], borderColor: color, backgroundColor: color + '1A', fill: true, tension: 0.4, pointRadius: 4 }] },
             options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
         });
 
-        const dChart = createChart('diseaseChart', '#ef4444');
-        const sChart = createChart('stockChart', '#10b981');
+        const dChart = createChart('diseaseChart', '#ef4444', 'Cases');
+        const sChart = createChart('stockChart', '#10b981', 'Stock');
 
         function sync() {
             // SYNC DISEASES
@@ -214,7 +210,11 @@
                 const results = new Array(getLabels(dv).length).fill(0);
                 snap.forEach(doc => {
                     const r = doc.data();
-                    if ((dbry === "All" || r.barangay === dbry) && r.name === dcat) {
+                    // FIXED MATCHING LOGIC
+                    const nameMatch = (dcat === "All" || r.name.toLowerCase().includes(dcat.toLowerCase()));
+                    const brgyMatch = (dbry === "All" || r.barangay === dbry);
+
+                    if (nameMatch && brgyMatch) {
                         const date = r.createdAt?.toDate ? r.createdAt.toDate() : new Date();
                         let i = -1;
                         if (dv === 'monthly') i = date.getMonth();
@@ -228,7 +228,7 @@
                 dChart.update();
             });
 
-            // SYNC STOCKS (FIXED FIELD MAPPING)
+            // SYNC STOCKS
             const sv = document.getElementById('stock-view').value;
             const sbry = document.getElementById('stock-brgy').value;
             const scat = document.getElementById('stock-cat').value;
@@ -237,14 +237,16 @@
                 const results = new Array(getLabels(sv).length).fill(0);
                 snap.forEach(doc => {
                     const r = doc.data();
-                    // We check r.name against our selector and r.barangay
-                    if ((sbry === "All" || r.barangay === sbry) && r.name.includes(scat)) {
+                    const nameMatch = (scat === "All" || r.name.toLowerCase().includes(scat.toLowerCase()));
+                    const brgyMatch = (sbry === "All" || r.barangay === sbry);
+
+                    if (nameMatch && brgyMatch) {
                         const date = r.createdAt?.toDate ? r.createdAt.toDate() : new Date();
                         let i = -1;
                         if (sv === 'monthly') i = date.getMonth();
                         if (sv === 'weekly' && date.getMonth() === new Date().getMonth()) i = Math.floor((date.getDate()-1)/7);
-                        // FIXED: Using 'count' because that's what BHW Console saves
-                        if (i >= 0 && i < results.length) results[i] = parseInt(r.count || 0);
+                        // Using count for BHW data
+                        if (i >= 0 && i < results.length) results[i] += parseInt(r.count || 0);
                     }
                 });
                 sChart.data.labels = getLabels(sv);
@@ -277,8 +279,7 @@
         });
 
         document.querySelectorAll('select').forEach(s => s.addEventListener('change', sync));
-        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => window.location.href = "login.html"));
-        
+        document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
         window.toggleSidebar = () => {
             const s = document.getElementById('sidebar');
             document.getElementById('sidebar-overlay').classList.toggle('hidden');
