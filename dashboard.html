@@ -96,11 +96,11 @@
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center gap-4">
                     <button onclick="toggleSidebar()" class="md:hidden p-2 bg-slate-100 rounded-xl text-navy"><i data-lucide="menu"></i></button>
-                    <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Live Research Dashboard</h2>
+                    <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Live Research Monitoring</h2>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
                     <div class="w-8 h-8 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
-                    <span id="user-name-display" class="font-bold text-navy text-sm italic">Guest</span>
+                    <span id="user-name-display" class="font-bold text-navy text-sm">Guest</span>
                 </div>
             </header>
 
@@ -113,48 +113,31 @@
                     <i data-lucide="activity" class="w-12 h-12 opacity-50"></i>
                 </div>
 
-                <div class="chart-card" data-aos="fade-up">
+                <div class="chart-card">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                         <h3 class="text-xl font-bold text-navy">Disease Trends</h3>
                         <div class="flex flex-wrap gap-2">
                             <select id="disease-view" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
-                                <option value="monthly">Monthly</option>
-                                <option value="weekly">Weekly</option>
-                                <option value="yearly">Yearly</option>
+                                <option value="monthly">Monthly View</option>
+                                <option value="weekly">Weekly View</option>
                             </select>
                             <select id="disease-brgy" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none"></select>
-                            <select id="disease-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
-                                <option value="All">All Diseases</option>
-                                <option value="Dengue">Dengue</option>
-                                <option value="Flu">Flu (Influenza)</option>
-                                <option value="COVID-19">COVID-19</option>
-                                <option value="Tuberculosis">Tuberculosis</option>
-                                <option value="Diarrhea">Diarrhea</option>
-                                <option value="Pneumonia">Pneumonia</option>
-                            </select>
+                            <select id="disease-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none"></select>
                         </div>
                     </div>
                     <div class="h-[350px]"><canvas id="diseaseChart"></canvas></div>
                 </div>
 
-                <div class="chart-card" data-aos="fade-up">
+                <div class="chart-card">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                        <h3 class="text-xl font-bold text-navy">Medicine Inventory</h3>
+                        <h3 class="text-xl font-bold text-navy">Medicine Inventory Level</h3>
                         <div class="flex flex-wrap gap-2">
                             <select id="stock-view" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
-                                <option value="monthly">Monthly</option>
-                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly View</option>
+                                <option value="weekly">Weekly View</option>
                             </select>
                             <select id="stock-brgy" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none"></select>
-                            <select id="stock-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
-                                <option value="All">All Medicines</option>
-                                <option value="Paracetamol">Paracetamol</option>
-                                <option value="Ibuprofen">Ibuprofen</option>
-                                <option value="Amoxicillin">Amoxicillin</option>
-                                <option value="Vitamin C">Vitamin C</option>
-                                <option value="Cetirizine">Cetirizine</option>
-                                <option value="Metformin">Metformin</option>
-                            </select>
+                            <select id="stock-cat" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none"></select>
                         </div>
                     </div>
                     <div class="h-[350px]"><canvas id="stockChart"></canvas></div>
@@ -166,7 +149,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -180,28 +163,41 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // DATA LISTS
         const barangays = ["Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
-        const brgyOptions = `<option value="All">All Barangays</option>` + barangays.map(b => `<option value="${b}">${b}</option>`).join('');
-        document.getElementById('disease-brgy').innerHTML = brgyOptions;
-        document.getElementById('stock-brgy').innerHTML = brgyOptions;
+        const diseases = ["Dengue", "Flu", "COVID-19", "Tuberculosis", "Pneumonia", "Hypertension", "Diabetes", "Asthma", "Diarrhea", "Measles", "Chickenpox"];
+        const medicines = ["Paracetamol (Acetaminophen)", "Ibuprofen", "Mefenamic acid", "Amoxicillin", "Amoxicillin + Clavulanic acid", "Azithromycin", "Vitamin C", "Vitamin B-complex", "Metformin", "Amlodipine", "Losartan", "Cetirizine", "Loratadine"];
 
+        // POPULATE DROPDOWNS
+        const populateSelect = (id, list, addAll = true) => {
+            const el = document.getElementById(id);
+            let html = addAll ? '<option value="All">All Categories/Areas</option>' : '';
+            html += list.map(item => `<option value="${item}">${item}</option>`).join('');
+            el.innerHTML = html;
+        };
+
+        populateSelect('disease-brgy', barangays);
+        populateSelect('stock-brgy', barangays);
+        populateSelect('disease-cat', diseases, false);
+        populateSelect('stock-cat', medicines, false);
+
+        // CHART CONFIG
         const getLabels = (view) => {
             if (view === 'weekly') return ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
-            if (view === 'yearly') return ['2024', '2025', '2026'];
             return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         };
 
         const createChart = (canvasId, color, label) => new Chart(document.getElementById(canvasId), {
             type: 'line',
-            data: { labels: getLabels('monthly'), datasets: [{ label: label, data: [], borderColor: color, backgroundColor: color + '1A', fill: true, tension: 0.4, pointRadius: 4 }] },
+            data: { labels: getLabels('monthly'), datasets: [{ label: label, data: [], borderColor: color, backgroundColor: color + '1A', fill: true, tension: 0.4 }] },
             options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
         });
 
-        const dChart = createChart('diseaseChart', '#ef4444', 'Cases');
-        const sChart = createChart('stockChart', '#10b981', 'Stock');
+        const dChart = createChart('diseaseChart', '#ef4444', 'Active Cases');
+        const sChart = createChart('stockChart', '#10b981', 'Inventory Count');
 
         function sync() {
-            // SYNC DISEASES
+            // DISEASE SYNC
             const dv = document.getElementById('disease-view').value;
             const dbry = document.getElementById('disease-brgy').value;
             const dcat = document.getElementById('disease-cat').value;
@@ -210,16 +206,11 @@
                 const results = new Array(getLabels(dv).length).fill(0);
                 snap.forEach(doc => {
                     const r = doc.data();
-                    // FIXED MATCHING LOGIC
-                    const nameMatch = (dcat === "All" || r.name.toLowerCase().includes(dcat.toLowerCase()));
-                    const brgyMatch = (dbry === "All" || r.barangay === dbry);
-
-                    if (nameMatch && brgyMatch) {
+                    if ((dbry === "All" || r.barangay === dbry) && r.name === dcat) {
                         const date = r.createdAt?.toDate ? r.createdAt.toDate() : new Date();
                         let i = -1;
                         if (dv === 'monthly') i = date.getMonth();
                         if (dv === 'weekly' && date.getMonth() === new Date().getMonth()) i = Math.floor((date.getDate()-1)/7);
-                        if (dv === 'yearly') i = date.getFullYear() - 2024;
                         if (i >= 0 && i < results.length) results[i] += parseInt(r.count || 0);
                     }
                 });
@@ -228,7 +219,7 @@
                 dChart.update();
             });
 
-            // SYNC STOCKS
+            // STOCK SYNC
             const sv = document.getElementById('stock-view').value;
             const sbry = document.getElementById('stock-brgy').value;
             const scat = document.getElementById('stock-cat').value;
@@ -237,16 +228,13 @@
                 const results = new Array(getLabels(sv).length).fill(0);
                 snap.forEach(doc => {
                     const r = doc.data();
-                    const nameMatch = (scat === "All" || r.name.toLowerCase().includes(scat.toLowerCase()));
-                    const brgyMatch = (sbry === "All" || r.barangay === sbry);
-
-                    if (nameMatch && brgyMatch) {
+                    if ((sbry === "All" || r.barangay === sbry) && r.name === scat) {
                         const date = r.createdAt?.toDate ? r.createdAt.toDate() : new Date();
                         let i = -1;
                         if (sv === 'monthly') i = date.getMonth();
                         if (sv === 'weekly' && date.getMonth() === new Date().getMonth()) i = Math.floor((date.getDate()-1)/7);
-                        // Using count for BHW data
-                        if (i >= 0 && i < results.length) results[i] += parseInt(r.count || 0);
+                        // FIXED: Using 'count' to match BHW Console saving logic
+                        if (i >= 0 && i < results.length) results[i] = parseInt(r.count || 0);
                     }
                 });
                 sChart.data.labels = getLabels(sv);
@@ -258,6 +246,7 @@
         onAuthStateChanged(auth, async (user) => {
             if (!user) { window.location.href = "login.html"; return; }
             document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            
             const userDoc = await getDoc(doc(db, "users", user.uid));
             if (userDoc.exists()) {
                 const d = userDoc.data();
@@ -280,6 +269,7 @@
 
         document.querySelectorAll('select').forEach(s => s.addEventListener('change', sync));
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
+        
         window.toggleSidebar = () => {
             const s = document.getElementById('sidebar');
             document.getElementById('sidebar-overlay').classList.toggle('hidden');
