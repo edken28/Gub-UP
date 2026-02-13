@@ -13,6 +13,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
         .text-navy { color: #1e3a8a; }
+        .bg-brand-blue { background-color: #2563eb; }
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
 
@@ -21,21 +22,21 @@
             .sidebar-open { transform: translateX(0); }
         }
 
-        .dropdown-list {
-            display: none; position: absolute;
+        /* Searchable Dropdown Styling */
+        .search-results {
+            display: none;
+            position: absolute;
             top: 100%; left: 0; right: 0;
             background: white; border: 1px solid #e2e8f0;
-            border-radius: 1rem; max-height: 200px;
-            overflow-y: auto; z-index: 50;
+            border-radius: 1.25rem; max-height: 250px;
+            overflow-y: auto; z-index: 200;
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
-        .dropdown-list.active { display: block; }
-        .dropdown-item { padding: 10px 15px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; }
-        .dropdown-item:hover { background-color: #f0fdf4; color: #10b981; }
+        .search-results.active { display: block; }
+        .search-item { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; }
+        .search-item:hover { background-color: #f0fdf4; color: #2563eb; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        
-        .chart-card { background: white; border-radius: 2rem; border: 1px solid #f1f5f9; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
     </style>
 </head>
 <body class="min-h-screen">
@@ -56,7 +57,9 @@
 
                 <nav class="space-y-3">
                     <a href="dashboard.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-100 transition-all">
-                        <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center"><i data-lucide="layout-dashboard" class="w-4 h-4 text-white"></i></div>
+                        <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                        </div>
                         <span>Dashboard</span>
                     </a>
                     
@@ -74,20 +77,20 @@
                         <span>Disease Reports</span>
                     </a>
 
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 transition-all group">
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 hover:text-blue-600 transition-all group">
                         <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
                             <i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white"></i>
                         </div>
                         <span>Hotlines</span>
                     </a>
 
-                    <div id="internal-consoles" class="pt-6 pb-2 hidden">
+                    <div id="internal-section" class="pt-6 pb-2 hidden">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                        <a href="rhu-console.html" id="rhu-link" class="hidden items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold mb-2 transition-all">
-                            <i data-lucide="shield-alert" class="w-5 h-5"></i><span>RHU Console</span>
+                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 mb-2">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console
                         </a>
-                        <a href="bhw-console.html" id="bhw-link" class="hidden items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold transition-all">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i><span>BHW Console</span>
+                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-50">
+                            <i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console
                         </a>
                     </div>
                 </nav>
@@ -105,54 +108,63 @@
                     <button onclick="toggleSidebar()" class="md:hidden p-2 bg-slate-100 rounded-xl text-navy"><i data-lucide="menu"></i></button>
                     <h2 class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest">Research Monitoring</h2>
                 </div>
-                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-3 md:px-4 py-2 rounded-2xl">
                     <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
-                    <span id="user-name-display" class="font-bold text-navy text-xs md:text-sm">Guest</span>
+                    <span id="user-name-display" class="font-bold text-navy text-xs md:text-sm">User</span>
                 </div>
             </header>
 
             <div class="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
                 
-                <div class="chart-card" data-aos="fade-up">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-6 md:p-10" data-aos="fade-up">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
                         <div>
-                            <h3 class="text-xl font-black text-navy">Disease Cases</h3>
-                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Total Found: <span id="d-total" class="text-blue-600">0</span></p>
+                            <h3 class="text-2xl font-bold text-navy">Disease Cases</h3>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">
+                                <span id="d-label" class="text-blue-600">Dengue fever</span> • Total: <span id="d-total" class="text-navy">0</span>
+                            </p>
                         </div>
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 w-full md:w-auto">
-                            <select id="d-year" class="p-3 bg-slate-50 border-none rounded-xl text-[11px] font-black text-navy outline-none">
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full md:w-auto">
+                            <select id="d-year" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-blue-100">
                                 <option value="2025">2025</option><option value="2026">2026</option>
                             </select>
-                            <select id="d-brgy" class="p-3 bg-slate-50 border-none rounded-xl text-[11px] font-black text-navy outline-none"></select>
-                            <div class="relative col-span-2">
-                                <input type="text" id="d-search" placeholder="Search Disease..." class="w-full p-3 bg-slate-50 border-none rounded-xl text-[11px] font-black text-navy outline-none">
-                                <div id="d-drop" class="dropdown-list custom-scrollbar"></div>
+                            <select id="d-brgy" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-blue-100"></select>
+                            <select id="d-view" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-blue-100">
+                                <option value="monthly">Monthly</option><option value="weekly">Weekly</option>
+                            </select>
+                            <div class="relative">
+                                <input type="text" id="d-search" placeholder="Search Disease..." class="w-full p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-blue-100">
+                                <div id="d-results" class="search-results custom-scrollbar"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="h-[350px]"><canvas id="diseaseChart"></canvas></div>
+                    <div class="h-[350px] w-full"><canvas id="diseaseChart"></canvas></div>
                 </div>
 
-                <div class="chart-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-6 md:p-10" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
                         <div>
-                            <h3 class="text-xl font-black text-navy">Medicine Stocks</h3>
-                            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest">Latest Stock: <span id="m-total" class="text-emerald-500">0</span></p>
+                            <h3 class="text-2xl font-bold text-navy">Medicine Stocks</h3>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">
+                                <span id="m-label" class="text-emerald-500">Vitamin A</span> • Level: <span id="m-total" class="text-navy">0</span>
+                            </p>
                         </div>
-                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 w-full md:w-auto">
-                            <select id="m-year" class="p-3 bg-slate-50 border-none rounded-xl text-[11px] font-black text-navy outline-none">
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full md:w-auto">
+                            <select id="m-year" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-emerald-100">
                                 <option value="2025">2025</option><option value="2026">2026</option>
                             </select>
-                            <select id="m-brgy" class="p-3 bg-slate-50 border-none rounded-xl text-[11px] font-black text-navy outline-none"></select>
-                            <div class="relative col-span-2">
-                                <input type="text" id="m-search" placeholder="Search Medicine..." class="w-full p-3 bg-slate-50 border-none rounded-xl text-[11px] font-black text-navy outline-none">
-                                <div id="m-drop" class="dropdown-list custom-scrollbar"></div>
+                            <select id="m-brgy" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-emerald-100"></select>
+                            <select id="m-view" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-emerald-100">
+                                <option value="monthly">Monthly</option><option value="weekly">Weekly</option>
+                            </select>
+                            <div class="relative">
+                                <input type="text" id="m-search" placeholder="Search Medicine..." class="w-full p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-emerald-100">
+                                <div id="m-results" class="search-results custom-scrollbar"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="h-[350px]"><canvas id="stockChart"></canvas></div>
+                    <div class="h-[350px] w-full"><canvas id="stockChart"></canvas></div>
                 </div>
-
             </div>
         </main>
     </div>
@@ -175,44 +187,51 @@
         const db = getFirestore(app);
 
         const barangays = ["All Areas", "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
-        const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Measles", "Mumps", "Stroke", "Hypertension", "Diabetes", "Asthma", "Tuberculosis", "Pneumonia", "Diarrhea", "STIs"]; 
-        const medicines = ["Paracetamol (Acetaminophen)", "Ibuprofen", "Mefenamic acid", "Amoxicillin", "Vitamin A", "Vitamin C", "Amlodipine", "Losartan", "Metformin"];
+        const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Measles", "Stroke", "Hypertension", "Diabetes", "Asthma", "Tuberculosis", "Pneumonia", "Diarrhea", "STIs"];
+        const medicines = ["Vitamin A", "Paracetamol (Acetaminophen)", "Ibuprofen", "Mefenamic acid", "Amoxicillin", "Vitamin C", "Amlodipine", "Losartan", "Metformin", "Insulin"];
 
-        let activeDisease = "Dengue fever";
-        let activeMedicine = "Vitamin A";
+        let curD = "Dengue fever";
+        let curM = "Vitamin A";
 
         // Setup Dropdowns
         const fill = (id, list) => document.getElementById(id).innerHTML = list.map(i => `<option value="${i}">${i}</option>`).join('');
         fill('d-brgy', barangays); fill('m-brgy', barangays);
 
         // Search Setup
-        const setupSearch = (inputId, dropId, list, type) => {
+        const searchUI = (inputId, resId, list, type) => {
             const input = document.getElementById(inputId);
-            const drop = document.getElementById(dropId);
-            input.oninput = () => {
+            const res = document.getElementById(resId);
+            input.onfocus = () => {
                 const val = input.value.toLowerCase();
                 const filtered = list.filter(m => m.toLowerCase().includes(val));
-                drop.innerHTML = filtered.map(m => `<div class="dropdown-item">${m}</div>`).join('');
-                drop.classList.toggle('active', val.length > 0);
-                drop.querySelectorAll('.dropdown-item').forEach(el => el.onclick = () => {
-                    input.value = el.innerText;
-                    if(type === 'd') activeDisease = el.innerText; else activeMedicine = el.innerText;
-                    drop.classList.remove('active'); sync();
+                res.innerHTML = filtered.map(m => `<div class="search-item">${m}</div>`).join('');
+                res.classList.add('active');
+                
+                res.querySelectorAll('.search-item').forEach(el => {
+                    el.onclick = () => {
+                        input.value = el.innerText;
+                        res.classList.remove('active');
+                        if(type === 'd') curD = el.innerText; else curM = el.innerText;
+                        sync();
+                    };
                 });
             };
+            input.oninput = input.onfocus;
+            document.addEventListener('click', e => { if(!input.contains(e.target)) res.classList.remove('active'); });
         };
-        setupSearch('d-search', 'd-drop', diseases, 'd');
-        setupSearch('m-search', 'm-drop', medicines, 'm');
+        searchUI('d-search', 'd-results', diseases, 'd');
+        searchUI('m-search', 'm-results', medicines, 'm');
 
         // Charts
         const createChart = (id, label, color) => new Chart(document.getElementById(id), {
             type: 'line',
             data: { labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], 
-            datasets: [{ label: label, data: [], borderColor: color, backgroundColor: color+'15', fill: true, tension: 0.4, borderWeight: 3 }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true } } }
+            datasets: [{ label: label, data: [], borderColor: color, backgroundColor: color+'11', fill: true, tension: 0.4, borderWeight: 3 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
         });
-        const dChart = createChart('diseaseChart', activeDisease, '#2563eb');
-        const mChart = createChart('stockChart', activeMedicine, '#10b981');
+
+        const dChart = createChart('diseaseChart', curD, '#2563eb');
+        const mChart = createChart('stockChart', curM, '#10b981');
 
         function sync() {
             const dy = parseInt(document.getElementById('d-year').value);
@@ -220,15 +239,16 @@
             const my = parseInt(document.getElementById('m-year').value);
             const mbry = document.getElementById('m-brgy').value;
 
-            dChart.data.datasets[0].label = activeDisease;
-            mChart.data.datasets[0].label = activeMedicine;
+            document.getElementById('d-label').innerText = curD;
+            document.getElementById('m-label').innerText = curM;
 
+            // Disease Sync
             onSnapshot(collection(db, "disease_cases"), (snap) => {
                 const res = new Array(12).fill(0); let total = 0;
                 snap.forEach(doc => {
                     const r = doc.data();
                     const d = r.createdAt?.toDate ? r.createdAt.toDate() : null;
-                    if(d && d.getFullYear() === dy && r.name === activeDisease && (dbry === "All Areas" || r.barangay === dbry)) {
+                    if(d && d.getFullYear() === dy && r.name === curD && (dbry === "All Areas" || r.barangay === dbry)) {
                         res[d.getMonth()] += Number(r.count || 0); total += Number(r.count || 0);
                     }
                 });
@@ -236,12 +256,13 @@
                 dChart.data.datasets[0].data = res; dChart.update();
             });
 
+            // Stock Sync
             onSnapshot(collection(db, "medicine_inventory"), (snap) => {
                 const res = new Array(12).fill(0); let last = 0;
                 snap.forEach(doc => {
                     const r = doc.data();
                     const d = r.createdAt?.toDate ? r.createdAt.toDate() : null;
-                    if(d && d.getFullYear() === my && r.name === activeMedicine && (mbry === "All Areas" || r.barangay === mbry)) {
+                    if(d && d.getFullYear() === my && r.name === curM && (mbry === "All Areas" || r.barangay === mbry)) {
                         res[d.getMonth()] = Number(r.count || 0); last = Number(r.count || 0);
                     }
                 });
@@ -251,26 +272,30 @@
         }
 
         onAuthStateChanged(auth, async (user) => {
-            if(!user) { window.location.href="login.html"; return; }
-            const uDoc = await getDoc(doc(db, "users", user.uid));
-            if(uDoc.exists()){
-                const d = uDoc.data();
-                document.getElementById('user-name-display').innerText = d.name;
-                if(d.role === 'rhu' || d.role === 'bhw'){
-                    document.getElementById('internal-consoles').classList.remove('hidden');
-                    if(d.role === 'rhu') document.getElementById('rhu-link').classList.add('flex');
-                    if(d.role === 'bhw') document.getElementById('bhw-link').classList.add('flex');
+            if (user) {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists()) {
+                    const d = snap.data();
+                    document.getElementById('user-name-display').innerText = d.name;
+                    if(d.role === "rhu" || d.role === "bhw") {
+                        document.getElementById('internal-section').classList.remove('hidden');
+                        if(d.role === "rhu") document.getElementById('rhu-link').classList.remove('hidden');
+                        if(d.role === "bhw") document.getElementById('bhw-link').classList.remove('hidden');
+                    }
                 }
-            }
-            document.body.classList.add('auth-ready');
-            AOS.init({ duration: 800, once: true });
-            lucide.createIcons();
-            sync();
+                document.body.classList.add('auth-ready');
+                AOS.init({ duration: 800, once: true });
+                lucide.createIcons();
+                sync();
+            } else { window.location.href = "login.html"; }
         });
 
         document.querySelectorAll('select').forEach(s => s.onchange = sync);
-        window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('sidebar-closed');
-        document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href="login.html");
+        document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
+        window.toggleSidebar = () => {
+            const s = document.getElementById('sidebar');
+            s.classList.toggle('sidebar-closed'); s.classList.toggle('sidebar-open');
+        };
     </script>
 </body>
 </html>
