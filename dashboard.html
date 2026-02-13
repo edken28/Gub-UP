@@ -61,7 +61,6 @@
                             <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
                         </div>
                     </div>
-                    <button class="md:hidden p-2 text-slate-400" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
                 </div>
                 <nav class="space-y-3">
                     <a href="dashboard.html" class="flex items-center gap-3 bg-brand-blue text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-200">
@@ -69,21 +68,17 @@
                         <span>Dashboard</span>
                     </a>
                     <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 transition-all group">
-                        <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center"><i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white"></i></div>
+                        <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center"><i data-lucide="package" class="w-4 h-4 text-emerald-600"></i></div>
                         <span>Medicine Stocks</span>
                     </a>
                     <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 transition-all group">
-                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center"><i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white"></i></div>
+                        <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center"><i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600"></i></div>
                         <span>Disease Reports</span>
-                    </a>
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 transition-all group">
-                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center"><i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white"></i></div>
-                        <span>Hotlines</span>
                     </a>
                     <div id="internal-consoles-section" class="pt-6 pb-2 hidden">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                        <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold mb-2 transition-all hover:bg-red-100"><i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console</a>
-                        <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold transition-all hover:bg-emerald-100"><i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console</a>
+                        <a href="rhu-console.html" id="rhu-disease-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold mb-2"><i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console</a>
+                        <a href="bhw-console.html" id="worker-secret-link" class="hidden flex items-center gap-3 bg-emerald-50 text-emerald-600 px-5 py-4 rounded-2xl font-bold"><i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console</a>
                     </div>
                 </nav>
             </div>
@@ -105,14 +100,6 @@
             </header>
 
             <div class="p-4 md:p-8 max-w-7xl mx-auto space-y-8">
-                <div data-aos="fade-down" class="bg-brand-blue rounded-[2.5rem] p-8 text-white flex justify-between items-center shadow-xl shadow-blue-100">
-                    <div>
-                        <h1 class="text-3xl font-bold">Welcome back, <span id="welcome-user-name">Citizen</span>!</h1>
-                        <p class="text-blue-100 mt-1" id="current-date-display"></p>
-                    </div>
-                    <i data-lucide="activity" class="w-12 h-12 opacity-50"></i>
-                </div>
-
                 <div class="chart-card">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                         <h3 class="text-xl font-bold text-navy">Disease Trends</h3>
@@ -130,7 +117,7 @@
 
                 <div class="chart-card">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                        <h3 class="text-xl font-bold text-navy">Medicine Inventory Level</h3>
+                        <h3 class="text-xl font-bold text-navy">Medicine Inventory</h3>
                         <div class="flex flex-wrap gap-2">
                             <select id="stock-view" class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2 text-[10px] font-bold text-navy outline-none">
                                 <option value="monthly">Monthly View</option>
@@ -163,41 +150,32 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // DATA LISTS
         const barangays = ["Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
         const diseases = ["Dengue", "Flu", "COVID-19", "Tuberculosis", "Pneumonia", "Hypertension", "Diabetes", "Asthma", "Diarrhea", "Measles", "Chickenpox"];
         const medicines = ["Paracetamol (Acetaminophen)", "Ibuprofen", "Mefenamic acid", "Amoxicillin", "Amoxicillin + Clavulanic acid", "Azithromycin", "Vitamin C", "Vitamin B-complex", "Metformin", "Amlodipine", "Losartan", "Cetirizine", "Loratadine"];
 
-        // POPULATE DROPDOWNS
-        const populateSelect = (id, list, addAll = true) => {
+        const populate = (id, list, all = true) => {
             const el = document.getElementById(id);
-            let html = addAll ? '<option value="All">All Categories/Areas</option>' : '';
-            html += list.map(item => `<option value="${item}">${item}</option>`).join('');
-            el.innerHTML = html;
+            el.innerHTML = (all ? '<option value="All">All Areas</option>' : '') + list.map(i => `<option value="${i}">${i}</option>`).join('');
         };
 
-        populateSelect('disease-brgy', barangays);
-        populateSelect('stock-brgy', barangays);
-        populateSelect('disease-cat', diseases, false);
-        populateSelect('stock-cat', medicines, false);
+        populate('disease-brgy', barangays);
+        populate('stock-brgy', barangays);
+        populate('disease-cat', diseases, false);
+        populate('stock-cat', medicines, false);
 
-        // CHART CONFIG
-        const getLabels = (view) => {
-            if (view === 'weekly') return ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
-            return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        };
-
-        const createChart = (canvasId, color, label) => new Chart(document.getElementById(canvasId), {
+        const getLabels = (v) => v === 'weekly' ? ['W1', 'W2', 'W3', 'W4'] : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        const createChart = (id, color) => new Chart(document.getElementById(id), {
             type: 'line',
-            data: { labels: getLabels('monthly'), datasets: [{ label: label, data: [], borderColor: color, backgroundColor: color + '1A', fill: true, tension: 0.4 }] },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+            data: { labels: getLabels('monthly'), datasets: [{ data: [], borderColor: color, backgroundColor: color + '1A', fill: true, tension: 0.4 }] },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
         });
 
-        const dChart = createChart('diseaseChart', '#ef4444', 'Active Cases');
-        const sChart = createChart('stockChart', '#10b981', 'Inventory Count');
+        const dChart = createChart('diseaseChart', '#ef4444');
+        const sChart = createChart('stockChart', '#10b981');
 
         function sync() {
-            // DISEASE SYNC
             const dv = document.getElementById('disease-view').value;
             const dbry = document.getElementById('disease-brgy').value;
             const dcat = document.getElementById('disease-cat').value;
@@ -208,9 +186,7 @@
                     const r = doc.data();
                     if ((dbry === "All" || r.barangay === dbry) && r.name === dcat) {
                         const date = r.createdAt?.toDate ? r.createdAt.toDate() : new Date();
-                        let i = -1;
-                        if (dv === 'monthly') i = date.getMonth();
-                        if (dv === 'weekly' && date.getMonth() === new Date().getMonth()) i = Math.floor((date.getDate()-1)/7);
+                        let i = dv === 'monthly' ? date.getMonth() : Math.floor((date.getDate()-1)/7);
                         if (i >= 0 && i < results.length) results[i] += parseInt(r.count || 0);
                     }
                 });
@@ -219,7 +195,6 @@
                 dChart.update();
             });
 
-            // STOCK SYNC
             const sv = document.getElementById('stock-view').value;
             const sbry = document.getElementById('stock-brgy').value;
             const scat = document.getElementById('stock-cat').value;
@@ -230,10 +205,7 @@
                     const r = doc.data();
                     if ((sbry === "All" || r.barangay === sbry) && r.name === scat) {
                         const date = r.createdAt?.toDate ? r.createdAt.toDate() : new Date();
-                        let i = -1;
-                        if (sv === 'monthly') i = date.getMonth();
-                        if (sv === 'weekly' && date.getMonth() === new Date().getMonth()) i = Math.floor((date.getDate()-1)/7);
-                        // FIXED: Using 'count' to match BHW Console saving logic
+                        let i = sv === 'monthly' ? date.getMonth() : Math.floor((date.getDate()-1)/7);
                         if (i >= 0 && i < results.length) results[i] = parseInt(r.count || 0);
                     }
                 });
@@ -245,13 +217,11 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (!user) { window.location.href = "login.html"; return; }
-            document.getElementById('current-date-display').innerText = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-            
-            const userDoc = await getDoc(doc(db, "users", user.uid));
+            const docRef = doc(db, "users", user.uid);
+            const userDoc = await getDoc(docRef);
             if (userDoc.exists()) {
                 const d = userDoc.data();
                 document.getElementById('user-name-display').innerText = d.name;
-                document.getElementById('welcome-user-name').innerText = d.name;
                 if (d.role === "rhu" || d.role === "bhw") {
                     document.getElementById('internal-consoles-section').classList.remove('hidden');
                     if (d.role === "rhu") document.getElementById('rhu-disease-link').classList.remove('hidden');
@@ -269,7 +239,6 @@
 
         document.querySelectorAll('select').forEach(s => s.addEventListener('change', sync));
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
-        
         window.toggleSidebar = () => {
             const s = document.getElementById('sidebar');
             document.getElementById('sidebar-overlay').classList.toggle('hidden');
