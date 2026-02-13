@@ -12,7 +12,6 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
         .text-navy { color: #1e3a8a; }
         
-        /* Mobile Sidebar Transitions */
         #sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         @media (max-width: 768px) {
             #sidebar { position: fixed; left: 0; top: 0; transform: translateX(-100%); z-index: 60; }
@@ -35,11 +34,15 @@
 
     <div id="sidebar-overlay"></div>
 
-    <header class="md:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-50">
-        <button id="mobile-toggle" class="p-2 bg-slate-50 rounded-xl text-navy"><i data-lucide="menu"></i></button>
+    <header class="md:hidden bg-white border-b border-slate-100 p-4 flex items-center sticky top-0 z-50">
+        <button id="mobile-toggle" class="p-2 bg-slate-50 rounded-xl text-navy mr-auto">
+            <i data-lucide="menu"></i>
+        </button>
         
         <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white"><i data-lucide="plus" class="w-5 h-5"></i></div>
+            <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                <i data-lucide="plus" class="w-5 h-5"></i>
+            </div>
             <span class="font-bold text-navy">GUB-UP</span>
         </div>
     </header>
@@ -168,7 +171,6 @@
 
         let masterData = [];
 
-        // SIDEBAR TOGGLE
         window.toggleSidebar = () => {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('sidebar-overlay').classList.toggle('active');
@@ -231,7 +233,6 @@
                 return matchesSearch && matchesBrgy && matchesYear && matchesMonth;
             });
 
-            // Sorting
             filtered.sort((a, b) => {
                 if (sortValue === 'high') return (b.count || 0) - (a.count || 0);
                 const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : 0;
@@ -277,7 +278,6 @@
             lucide.createIcons();
         }
 
-        // Listeners
         ['disease-search', 'filter-brgy', 'filter-year', 'filter-time', 'filter-sort'].forEach(id => {
             const el = document.getElementById(id);
             el.addEventListener('input', applyFilters);
