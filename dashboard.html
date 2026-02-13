@@ -81,8 +81,8 @@
 
                     <div id="internal-section" class="pt-6 pb-2 hidden">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 mb-2"><i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console</a>
-                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-50"><i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console</a>
+                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 mb-2"><i data-lucide="user-cog" class="w-5 h-5"></i> BHW Console</a>
+                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-50"><i data-lucide="shield" class="w-5 h-5"></i> RHU Console</a>
                     </div>
                 </nav>
             </div>
@@ -103,10 +103,6 @@
                     <div id="live-clock" class="text-[9px] md:text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mb-1">Loading...</div>
                     <h1 class="text-navy font-bold text-xl md:text-2xl leading-none">Welcome, <span id="welcome-name">User</span>!</h1>
                 </div>
-                <div class="hidden md:flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
-                    <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
-                    <span id="user-display-name" class="font-bold text-navy text-sm">Guest</span>
-                </div>
             </header>
 
             <div class="p-4 md:p-10 max-w-7xl mx-auto space-y-8">
@@ -118,7 +114,8 @@
                                 <span id="d-label">All Diseases</span> • Total: <span id="d-total">0</span>
                             </p>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full md:w-auto">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 w-full md:w-auto">
+                            <select id="d-category" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"><option value="monthly">Monthly</option><option value="weekly">Weekly</option></select>
                             <select id="d-year" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"><option value="2025">2025</option><option value="2026">2026</option></select>
                             <select id="d-brgy" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"></select>
                             <div class="relative col-span-1 sm:col-span-2">
@@ -138,7 +135,8 @@
                                 <span id="m-label">All Medicines</span> • Total: <span id="m-total">0</span>
                             </p>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full md:w-auto">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 w-full md:w-auto">
+                            <select id="m-category" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"><option value="monthly">Monthly</option><option value="weekly">Weekly</option></select>
                             <select id="m-year" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"><option value="2025">2025</option><option value="2026" selected>2026</option></select>
                             <select id="m-brgy" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"></select>
                             <div class="relative col-span-1 sm:col-span-2">
@@ -204,9 +202,16 @@
         searchUI('d-search', 'd-results', diseases, 'd');
         searchUI('m-search', 'm-results', medicines, 'm');
 
+        function getWeekNumber(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+        }
+
         const createChart = (id, color) => new Chart(document.getElementById(id), {
             type: 'line',
-            data: { labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], datasets: [{ data: [], borderColor: color, backgroundColor: color+'11', fill: true, tension: 0.4 }] },
+            data: { labels: [], datasets: [{ data: [], borderColor: color, backgroundColor: color+'11', fill: true, tension: 0.4 }] },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
         const dChart = createChart('diseaseChart', '#ef4444');
@@ -215,33 +220,39 @@
         function sync() {
             const dy = parseInt(document.getElementById('d-year').value);
             const dbry = document.getElementById('d-brgy').value;
+            const dCat = document.getElementById('d-category').value;
             const my = parseInt(document.getElementById('m-year').value);
             const mbry = document.getElementById('m-brgy').value;
-            document.getElementById('d-label').innerText = curD || "All Diseases";
-            document.getElementById('m-label').innerText = curM || "All Medicines";
+            const mCat = document.getElementById('m-category').value;
 
             onSnapshot(collection(db, "disease_cases"), snap => {
-                const res = new Array(12).fill(0); let total = 0;
+                let counts = dCat === 'monthly' ? new Array(12).fill(0) : new Array(53).fill(0);
+                let labels = dCat === 'monthly' ? ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] : Array.from({length: 53}, (_, i) => `W${i+1}`);
+                let total = 0;
                 snap.forEach(doc => {
                     const r = doc.data(); const d = r.createdAt?.toDate();
                     if(d && d.getFullYear() === dy && (curD === "" || r.name === curD) && (dbry === "All Areas" || r.barangay === dbry)) {
-                        res[d.getMonth()] += Number(r.count || 0); total += Number(r.count || 0);
+                        const idx = dCat === 'monthly' ? d.getMonth() : getWeekNumber(d) - 1;
+                        counts[idx] += Number(r.count || 0); total += Number(r.count || 0);
                     }
                 });
                 document.getElementById('d-total').innerText = total;
-                dChart.data.datasets[0].data = res; dChart.update();
+                dChart.data.labels = labels; dChart.data.datasets[0].data = counts; dChart.update();
             });
 
             onSnapshot(collection(db, "medicine_inventory"), snap => {
-                const res = new Array(12).fill(0); let total = 0;
+                let counts = mCat === 'monthly' ? new Array(12).fill(0) : new Array(53).fill(0);
+                let labels = mCat === 'monthly' ? ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] : Array.from({length: 53}, (_, i) => `W${i+1}`);
+                let total = 0;
                 snap.forEach(doc => {
                     const r = doc.data(); const d = r.createdAt?.toDate();
                     if(d && d.getFullYear() === my && (curM === "" || r.name === curM) && (mbry === "All Areas" || r.barangay === mbry)) {
-                        res[d.getMonth()] += Number(r.count || 0); total += Number(r.count || 0);
+                        const idx = mCat === 'monthly' ? d.getMonth() : getWeekNumber(d) - 1;
+                        counts[idx] += Number(r.count || 0); total += Number(r.count || 0);
                     }
                 });
                 document.getElementById('m-total').innerText = total;
-                mChart.data.datasets[0].data = res; mChart.update();
+                mChart.data.labels = labels; mChart.data.datasets[0].data = counts; mChart.update();
             });
         }
 
@@ -251,7 +262,6 @@
                 if (snap.exists()) {
                     const d = snap.data();
                     document.getElementById('welcome-name').innerText = d.name;
-                    document.getElementById('user-display-name').innerText = d.name;
                     if(d.role === "rhu" || d.role === "bhw") {
                         document.getElementById('internal-section').classList.remove('hidden');
                         if(d.role === "rhu") document.getElementById('rhu-link').classList.remove('hidden');
