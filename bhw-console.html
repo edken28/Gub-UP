@@ -21,18 +21,15 @@
             .sidebar-open { transform: translateX(0); }
         }
 
-        /* Modern Scrollbar */
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-        /* Row Entrance Animation */
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-row { animation: slideIn 0.4s ease forwards; }
 
-        /* Low Stock Pulse */
         .pulse-red { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
 
@@ -77,6 +74,20 @@
                         <span>Medicine Stocks</span>
                     </a>
 
+                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 transition-all group">
+                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white"></i>
+                        </div>
+                        <span>Disease Reports</span>
+                    </a>
+
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-sky-50 transition-all group">
+                        <div class="w-8 h-8 bg-sky-100 group-hover:bg-sky-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="phone" class="w-4 h-4 text-sky-600 group-hover:text-white"></i>
+                        </div>
+                        <span>Hotlines</span>
+                    </a>
+
                     <div class="pt-6 pb-2">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
                         <a href="bhw-console.html" class="flex items-center gap-3 bg-bhw-emerald text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-200 transition-all">
@@ -105,6 +116,7 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-3 md:px-4 py-2 rounded-2xl">
+                    <div class="w-8 h-8 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
                     <span id="user-name-display" class="font-bold text-navy text-xs md:text-sm">BHW User</span>
                 </div>
             </header>
@@ -131,8 +143,7 @@
                                     <th class="px-10 py-6 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="inventory-table-body" class="divide-y divide-slate-50">
-                                </tbody>
+                            <tbody id="inventory-table-body" class="divide-y divide-slate-50"></tbody>
                         </table>
                     </div>
                 </div>
@@ -210,8 +221,6 @@
             } else { window.location.href = "login.html"; }
         });
 
-        // FIXED QUERY: Removing orderBy initially to avoid index errors, 
-        // we will sort manually in JavaScript to ensure the list always shows.
         function init() {
             const q = query(collection(db, "medicine_inventory"), where("barangay", "==", userBrgy));
             onSnapshot(q, (snap) => {
@@ -224,45 +233,31 @@
         function renderTable(data) {
             const body = document.getElementById('inventory-table-body');
             if (data.length === 0) {
-                body.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-slate-400 font-bold">No inventory records found for ${userBrgy}.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-slate-400 font-bold">No records found for ${userBrgy}.</td></tr>`;
                 return;
             }
-
-            body.innerHTML = data.map((item, index) => {
-                const isLow = item.count < 10;
-                return `
+            body.innerHTML = data.map((item, index) => `
                 <tr class="hover:bg-slate-50 transition-all animate-row" style="animation-delay: ${index * 0.05}s">
                     <td class="px-10 py-7">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
-                                <i data-lucide="pill" class="w-5 h-5"></i>
-                            </div>
+                            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
                             <div>
                                 <span class="font-bold text-navy text-lg leading-tight block">${item.name}</span>
                                 <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">${item.unit}</span>
                             </div>
                         </div>
                     </td>
-                    <td class="px-8 py-7">
-                        <span class="px-3 py-1 bg-slate-100 rounded-full text-slate-600 font-bold text-xs">${item.expiryDate || 'N/A'}</span>
-                    </td>
+                    <td class="px-8 py-7"><span class="px-3 py-1 bg-slate-100 rounded-full text-slate-600 font-bold text-xs">${item.expiryDate || 'N/A'}</span></td>
                     <td class="px-8 py-7 text-center">
-                        <span class="font-black text-2xl ${isLow ? 'text-red-500 pulse-red' : 'text-navy'}">
-                            ${(item.count || 0).toLocaleString()}
-                        </span>
+                        <span class="font-black text-2xl ${item.count < 10 ? 'text-red-500 pulse-red' : 'text-navy'}">${(item.count || 0).toLocaleString()}</span>
                     </td>
                     <td class="px-10 py-7 text-right">
                         <div class="flex justify-end gap-2">
-                            <button onclick="editEntry('${item.id}')" class="p-2.5 bg-white border border-slate-100 text-slate-400 rounded-xl hover:bg-blue-500 hover:text-white transition-all shadow-sm">
-                                <i data-lucide="edit-3" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="deleteEntry('${item.id}')" class="p-2.5 bg-white border border-slate-100 text-slate-400 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
+                            <button onclick="editEntry('${item.id}')" class="p-2.5 bg-white border border-slate-100 text-slate-400 rounded-xl hover:bg-blue-500 hover:text-white transition-all shadow-sm"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                            <button onclick="deleteEntry('${item.id}')" class="p-2.5 bg-white border border-slate-100 text-slate-400 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </div>
                     </td>
-                </tr>`;
-            }).join('');
+                </tr>`).join('');
             lucide.createIcons();
         }
 
@@ -278,17 +273,8 @@
             mDrop.classList.toggle('active', filtered.length > 0 && q.length > 0);
         };
 
-        window.selectMedicine = (n) => {
-            mInput.value = n; hInput.value = n;
-            mDrop.classList.remove('active');
-        };
-
-        window.openAddModal = () => {
-            document.getElementById('item-form').reset();
-            document.getElementById('entry-id').value = "";
-            document.getElementById('item-modal').classList.remove('hidden');
-        };
-
+        window.selectMedicine = (n) => { mInput.value = n; hInput.value = n; mDrop.classList.remove('active'); };
+        window.openAddModal = () => { document.getElementById('item-form').reset(); document.getElementById('entry-id').value = ""; document.getElementById('item-modal').classList.remove('hidden'); };
         window.closeModal = () => { document.getElementById('item-modal').classList.add('hidden'); };
 
         window.editEntry = (id) => {
@@ -306,28 +292,13 @@
         document.getElementById('item-form').onsubmit = async (e) => {
             e.preventDefault();
             const id = document.getElementById('entry-id').value;
-            const data = {
-                name: hInput.value || mInput.value,
-                count: parseInt(document.getElementById('med-count').value),
-                unit: document.getElementById('med-unit').value,
-                expiryDate: document.getElementById('med-expiry').value,
-                barangay: userBrgy,
-                createdAt: Timestamp.now()
-            };
+            const data = { name: hInput.value || mInput.value, count: parseInt(document.getElementById('med-count').value), unit: document.getElementById('med-unit').value, expiryDate: document.getElementById('med-expiry').value, barangay: userBrgy, createdAt: Timestamp.now() };
             id ? await updateDoc(doc(db, "medicine_inventory", id), data) : await addDoc(collection(db, "medicine_inventory"), data);
             closeModal();
         };
 
-        window.toggleSidebar = () => {
-            const s = document.getElementById('sidebar');
-            s.classList.toggle('sidebar-closed'); s.classList.toggle('sidebar-open');
-        };
-
-        document.getElementById('main-search').oninput = (e) => {
-            const t = e.target.value.toLowerCase();
-            renderTable(allItems.filter(c => c.name.toLowerCase().includes(t)));
-        };
-
+        window.toggleSidebar = () => { const s = document.getElementById('sidebar'); s.classList.toggle('sidebar-closed'); s.classList.toggle('sidebar-open'); };
+        document.getElementById('main-search').oninput = (e) => { const t = e.target.value.toLowerCase(); renderTable(allItems.filter(c => c.name.toLowerCase().includes(t))); };
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
     </script>
 </body>
