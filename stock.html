@@ -65,11 +65,11 @@
                         <span>Hotlines</span>
                     </a>
 
-                    <div id="staff-only-nav" class="pt-6 pb-2 hidden">
+                    <div id="internal-console-section" class="pt-6 pb-2 hidden">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                        <a href="bhw-console.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 transition-all group">
+                        <a id="console-link" href="#" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 transition-all group">
                             <i data-lucide="user-cog" class="w-5 h-5 text-emerald-500"></i>
-                            <span>BHW Console</span>
+                            <span id="console-label">Console</span>
                         </a>
                     </div>
                 </nav>
@@ -198,9 +198,15 @@
                     const ud = docSnap.data();
                     document.getElementById('user-name-display').innerText = ud.name;
                     
-                    // RESTORED LOGIC: Show if role is BHW OR RHU
-                    if(ud.role === 'bhw' || ud.role === 'rhu') {
-                        document.getElementById('staff-only-nav').classList.remove('hidden');
+                    // FIXED LOGIC: Correct labelling based on role
+                    if(ud.role === 'rhu') {
+                        document.getElementById('internal-console-section').classList.remove('hidden');
+                        document.getElementById('console-label').innerText = "RHU Console";
+                        document.getElementById('console-link').href = "rhu-console.html";
+                    } else if (ud.role === 'bhw') {
+                        document.getElementById('internal-console-section').classList.remove('hidden');
+                        document.getElementById('console-label').innerText = "BHW Console";
+                        document.getElementById('console-link').href = "bhw-console.html";
                     }
                 }
             }
