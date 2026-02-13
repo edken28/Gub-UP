@@ -16,7 +16,7 @@
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
 
-        /* Sidebar Sticky Fix */
+        /* Sidebar Sticky - Stays stuck while content scrolls */
         #sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; }
 
         @media (max-width: 768px) {
@@ -87,9 +87,9 @@
 
         <main class="flex-1 w-full">
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
-                <div>
-                    <h2 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Research Monitoring</h2>
-                    <h1 class="text-navy font-bold text-lg">Welcome, <span id="welcome-name">User</span>!</h1>
+                <div class="flex flex-col">
+                    <div id="live-clock" class="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mb-1">Loading DateTime...</div>
+                    <h1 class="text-navy font-bold text-lg leading-none">Welcome, <span id="welcome-name">User</span>!</h1>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
                     <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
@@ -112,7 +112,7 @@
                             <select id="d-brgy" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"></select>
                             <select id="d-view" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"><option value="monthly">Monthly</option><option value="weekly">Weekly</option></select>
                             <div class="relative">
-                                <input type="text" id="d-search" placeholder="Search Disease (Empty = All)" class="w-full p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-blue-100">
+                                <input type="text" id="d-search" placeholder="Search Disease..." class="w-full p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-blue-100">
                                 <div id="d-results" class="search-results custom-scrollbar"></div>
                             </div>
                         </div>
@@ -133,7 +133,7 @@
                             <select id="m-brgy" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"></select>
                             <select id="m-view" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"><option value="monthly">Monthly</option><option value="weekly">Weekly</option></select>
                             <div class="relative">
-                                <input type="text" id="m-search" placeholder="Search Medicine (Empty = All)" class="w-full p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-emerald-100">
+                                <input type="text" id="m-search" placeholder="Search Medicine..." class="w-full p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-emerald-100">
                                 <div id="m-results" class="search-results custom-scrollbar"></div>
                             </div>
                         </div>
@@ -161,18 +161,27 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Your lists remain untouched
+        // Constants - untouched
         const barangays = ["All Areas", "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
         const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Avian influenza", "Measles", "Mumps", "Rubella", "Chickenpox (Varicella)", "Hand, foot and mouth disease", "Hepatitis A", "Hepatitis B", "Hepatitis C", "Hepatitis E", "Rabies", "HIV infection", "AIDS", "Chikungunya", "Japanese encephalitis", "Zika virus infection", "Rotavirus infection", "Norovirus infection", "Poliomyelitis", "Human papillomavirus (HPV) infection", "Cytomegalovirus infection", "Epstein-Barr virus infection", "Viral gastroenteritis", "Viral meningitis", "Viral pneumonia", "Tuberculosis (Pulmonary TB)", "Extrapulmonary tuberculosis", "Multidrug-resistant TB", "Pneumonia (bacterial)", "Typhoid fever", "Paratyphoid fever", "Leptospirosis", "Cholera", "Shigellosis", "Diphtheria", "Pertussis (Whooping cough)", "Tetanus", "Neonatal tetanus", "Meningococcal meningitis", "Bacterial meningitis", "Urinary tract infection", "Gonorrhea", "Syphilis", "Chlamydia", "Bacterial skin infections", "Cellulitis", "Impetigo", "Rheumatic fever", "Rheumatic heart disease", "Scarlet fever", "Sepsis", "Anthrax", "Helicobacter pylori infection", "Malaria", "Schistosomiasis", "Ascariasis", "Trichuriasis", "Hookworm infection", "Filariasis", "Amebiasis", "Giardiasis", "Toxoplasmosis", "Strongyloidiasis", "Taeniasis (Tapeworm)", "Cysticercosis", "Cryptosporidiosis", "Candidiasis", "Tinea (Ringworm)", "Athlete’s foot", "Onychomycosis", "Aspergillosis", "Histoplasmosis", "Cryptococcosis", "Hypertension", "Coronary artery disease", "Myocardial infarction (Heart attack)", "Stroke", "Heart failure", "Arrhythmia", "Cardiomyopathy", "Peripheral artery disease", "Type 1 diabetes", "Type 2 diabetes", "Prediabetes", "Dyslipidemia", "Obesity", "Metabolic syndrome", "Hyperthyroidism", "Hypothyroidism", "Goiter", "Polycystic ovary syndrome (PCOS)", "Asthma", "COPD", "Chronic bronchitis", "Emphysema", "Allergic rhinitis", "Sinusitis", "Pulmonary fibrosis", "Breast cancer", "Lung cancer", "Liver cancer", "Colorectal cancer", "Cervical cancer", "Prostate cancer", "Stomach cancer", "Nasopharyngeal cancer", "Ovarian cancer", "Pancreatic cancer", "Leukemia", "Lymphoma", "Thyroid cancer", "Skin cancer", "Depression", "Anxiety disorders", "Bipolar disorder", "Schizophrenia", "Epilepsy", "Migraine", "Alzheimer’s disease", "Parkinson’s disease", "Dementia", "Stroke-related neurological deficits", "Malnutrition", "Stunting", "Wasting", "Vitamin A deficiency", "Iron deficiency anemia", "Iodine deficiency disorder", "Rickets", "Kwashiorkor", "Marasmus", "Acute gastroenteritis", "Flood-related leptospirosis", "Skin fungal infections (post-flood)", "Conjunctivitis", "Diarrheal diseases", "Kidney stones", "Chronic kidney disease", "Urinary tract stones", "Gallstones", "Peptic ulcer disease", "Gastroesophageal reflux disease (GERD)", "Arthritis", "Osteoarthritis", "Rheumatoid arthritis", "Gout", "Osteoporosis", "Back pain", "Scoliosis", "Hernia", "Hemorrhoids", "Appendicitis", "Gallbladder disease", "Dental caries", "Periodontal disease", "Acne", "Eczema", "Psoriasis", "Scabies", "Contact dermatitis", "Heat rash (Prickly heat)", "Urticaria (Hives)", "Keloids", "Alcohol use disorder", "Liver cirrhosis", "Fatty liver disease", "Drug dependence", "Nicotine dependence", "Substance-induced psychosis", "Endometriosis", "Uterine fibroids", "Pelvic inflammatory disease", "Ectopic pregnancy", "Pre-eclampsia", "Gestational diabetes", "Infertility", "STIs"];
         const medicines = ["Paracetamol (Acetaminophen)", "Ibuprofen", "Mefenamic acid", "Aspirin", "Naproxen", "Diclofenac", "Celecoxib", "Ketoprofen", "Phenylephrine", "Pseudoephedrine", "Chlorphenamine", "Diphenhydramine", "Cetirizine", "Loratadine", "Carbocisteine", "Ambroxol", "Guaifenesin", "Dextromethorphan", "Salbutamol inhaler", "Oxymetazoline nasal spray", "Steam inhalation solutions", "Fexofenadine", "Levocetirizine", "Hydrocortisone cream", "Antacids (Aluminum hydroxide, Magnesium hydroxide)", "Sodium bicarbonate", "Omeprazole", "Lansoprazole", "Pantoprazole", "Esomeprazole", "Loperamide", "Oral Rehydration Salts (ORS)", "Simethicone", "Domperidone", "Metoclopramide", "Hyoscine butylbromide", "Povidone iodine", "Hydrogen peroxide", "Mupirocin ointment", "Clotrimazole cream", "Ketoconazole cream", "Calamine lotion", "Zinc oxide", "Permethrin", "Acyclovir cream", "Amoxicillin", "Amoxicillin + Clavulanic acid", "Azithromycin", "Clarithromycin", "Cefuroxime", "Ceftriaxone", "Ciprofloxacin", "Levofloxacin", "Doxycycline", "Metronidazole", "Co-trimoxazole", "Isoniazid", "Rifampicin", "Pyrazinamide", "Ethambutol", "Fixed-dose TB combinations", "Amlodipine", "Losartan", "Telmisartan", "Captopril", "Enalapril", "Metoprolol", "Atenolol", "Hydrochlorothiazide", "Metformin", "Glimepiride", "Gliclazide", "Insulin (Regular, NPH, Glargine)", "Sitagliptin", "Empagliflozin", "Atorvastatin", "Simvastatin", "Rosuvastatin", "Budesonide inhaler", "Fluticasone", "Ipratropium bromide", "Fluoxetine", "Sertraline", "Escitalopram", "Amitriptyline", "Risperidone", "Quetiapine", "Alprazolam", "Diazepam", "Vitamin A", "Vitamin B1 (Thiamine)", "Vitamin B6", "Vitamin B12", "Vitamin C", "Vitamin D3", "Vitamin E", "Vitamin K", "B-complex capsules", "B1 + B6 + B12 combinations", "Iron (Ferrous sulfate)", "Calcium carbonate", "Calcium + Vitamin D", "Magnesium", "Zinc", "Potassium supplements", "Adult multivitamins", "Children’s multivitamins", "Prenatal vitamins", "Senior vitamins", "Probiotics", "Fish oil (Omega-3)", "Glutathione", "Antiseptic alcohol", "Hand sanitizer", "Thermometer", "Blood pressure monitor", "Glucometer", "Nebulizer solution", "Activated charcoal", "Epinephrine injection"];
 
-        let curD = ""; // Empty = All
-        let curM = ""; // Empty = All
+        let curD = ""; // Default to All
+        let curM = ""; // Default to All
 
         document.getElementById('d-brgy').innerHTML = barangays.map(b => `<option value="${b}">${b}</option>`).join('');
         document.getElementById('m-brgy').innerHTML = barangays.map(b => `<option value="${b}">${b}</option>`).join('');
 
-        const setupSearch = (id, resId, list, type) => {
+        // Live Clock logic
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('live-clock').innerText = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        const searchUI = (id, resId, list, type) => {
             const input = document.getElementById(id);
             const res = document.getElementById(resId);
             input.onfocus = () => {
@@ -190,11 +199,11 @@
                 });
             };
             input.oninput = input.onfocus;
-            input.onblur = () => { if(input.value === "") { if(type==='d') curD = ""; else curM = ""; sync(); } };
+            input.onblur = () => setTimeout(() => { if(input.value === "") { if(type==='d') curD = ""; else curM = ""; sync(); } }, 200);
             document.addEventListener('click', e => { if(!input.contains(e.target)) res.classList.remove('active'); });
         };
-        setupSearch('d-search', 'd-results', diseases, 'd');
-        setupSearch('m-search', 'm-results', medicines, 'm');
+        searchUI('d-search', 'd-results', diseases, 'd');
+        searchUI('m-search', 'm-results', medicines, 'm');
 
         const createChart = (id, color) => new Chart(document.getElementById(id), {
             type: 'line',
