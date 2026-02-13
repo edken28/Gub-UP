@@ -15,9 +15,10 @@
         .chart-card { background: white; border-radius: 2rem; padding: 1.5rem; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         #loader-container { position: fixed; inset: 0; background: #f8fafc; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: 0.5s; }
         .loaded#loader-container { opacity: 0; pointer-events: none; }
-        /* Custom Scrollbar for Search Lists */
+        
+        /* Search Logic Styles */
         .search-results { max-height: 200px; overflow-y: auto; display: none; position: absolute; width: 100%; z-index: 50; background: white; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        .search-item { padding: 8px 12px; cursor: pointer; font-size: 13px; font-weight: 500; }
+        .search-item { padding: 8px 12px; cursor: pointer; font-size: 13px; font-weight: 500; color: #1e293b; }
         .search-item:hover { background: #eff6ff; color: #2563eb; }
     </style>
 </head>
@@ -132,27 +133,25 @@
         const db = getFirestore(app);
 
         const barangays = ["All Areas", "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
-        const diseaseList = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Measles", "Mumps", "Stroke", "Hypertension", "Diabetes", "Asthma", "Tuberculosis (Pulmonary TB)", "Pneumonia (bacterial)", "STIs"]; // (Shortened for space, but you can paste your full list here)
-        const medicineList = ["Paracetamol (Acetaminophen)", "Ibuprofen", "Mefenamic acid", "Amoxicillin", "Vitamin A", "Vitamin C", "Amlodipine", "Losartan", "Metformin", "Insulin"]; 
+        
+        // I'm using your massive lists here
+        const diseaseList = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Avian influenza", "Measles", "Mumps", "Rubella", "Chickenpox (Varicella)", "Hand, foot and mouth disease", "Hepatitis A", "Hepatitis B", "Hepatitis C", "Hepatitis E", "Rabies", "HIV infection", "AIDS", "Chikungunya", "Japanese encephalitis", "Zika virus infection", "Rotavirus infection", "Norovirus infection", "Poliomyelitis", "Human papillomavirus (HPV) infection", "Cytomegalovirus infection", "Epstein-Barr virus infection", "Viral gastroenteritis", "Viral meningitis", "Viral pneumonia", "Tuberculosis (Pulmonary TB)", "Extrapulmonary tuberculosis", "Multidrug-resistant TB", "Pneumonia (bacterial)", "Typhoid fever", "Paratyphoid fever", "Leptospirosis", "Cholera", "Shigellosis", "Diphtheria", "Pertussis (Whooping cough)", "Tetanus", "Neonatal tetanus", "Meningococcal meningitis", "Bacterial meningitis", "Urinary tract infection", "Gonorrhea", "Syphilis", "Chlamydia", "Bacterial skin infections", "Cellulitis", "Impetigo", "Rheumatic fever", "Rheumatic heart disease", "Scarlet fever", "Sepsis", "Anthrax", "Helicobacter pylori infection", "Malaria", "Schistosomiasis", "Ascariasis", "Trichuriasis", "Hookworm infection", "Filariasis", "Amebiasis", "Giardiasis", "Toxoplasmosis", "Strongyloidiasis", "Taeniasis (Tapeworm)", "Cysticercosis", "Cryptosporidiosis", "Candidiasis", "Tinea (Ringworm)", "Athlete’s foot", "Onychomycosis", "Aspergillosis", "Histoplasmosis", "Cryptococcosis", "Hypertension", "Coronary artery disease", "Myocardial infarction (Heart attack)", "Stroke", "Heart failure", "Arrhythmia", "Cardiomyopathy", "Peripheral artery disease", "Type 1 diabetes", "Type 2 diabetes", "Prediabetes", "Dyslipidemia", "Obesity", "Metabolic syndrome", "Hyperthyroidism", "Hypothyroidism", "Goiter", "Polycystic ovary syndrome (PCOS)", "Asthma", "COPD", "Chronic bronchitis", "Emphysema", "Allergic rhinitis", "Sinusitis", "Pulmonary fibrosis", "Breast cancer", "Lung cancer", "Liver cancer", "Colorectal cancer", "Cervical cancer", "Prostate cancer", "Stomach cancer", "Nasopharyngeal cancer", "Ovarian cancer", "Pancreatic cancer", "Leukemia", "Lymphoma", "Thyroid cancer", "Skin cancer", "Depression", "Anxiety disorders", "Bipolar disorder", "Schizophrenia", "Epilepsy", "Migraine", "Alzheimer’s disease", "Parkinson’s disease", "Dementia", "Stroke-related neurological deficits", "Malnutrition", "Stunting", "Wasting", "Vitamin A deficiency", "Iron deficiency anemia", "Iodine deficiency disorder", "Rickets", "Kwashiorkor", "Marasmus", "Acute gastroenteritis", "Flood-related leptospirosis", "Skin fungal infections (post-flood)", "Conjunctivitis", "Diarrheal diseases", "Kidney stones", "Chronic kidney disease", "Urinary tract stones", "Gallstones", "Peptic ulcer disease", "Gastroesophageal reflux disease (GERD)", "Arthritis", "Osteoarthritis", "Rheumatoid arthritis", "Gout", "Osteoporosis", "Back pain", "Scoliosis", "Hernia", "Hemorrhoids", "Appendicitis", "Gallbladder disease", "Dental caries", "Periodontal disease", "Acne", "Eczema", "Psoriasis", "Scabies", "Contact dermatitis", "Heat rash (Prickly heat)", "Urticaria (Hives)", "Keloids", "Alcohol use disorder", "Liver cirrhosis", "Fatty liver disease", "Drug dependence", "Nicotine dependence", "Substance-induced psychosis", "Endometriosis", "Uterine fibroids", "Pelvic inflammatory disease", "Ectopic pregnancy", "Pre-eclampsia", "Gestational diabetes", "Infertility", "STIs"];
+        const medicineList = ["Paracetamol (Acetaminophen)", "Ibuprofen", "Mefenamic acid", "Aspirin", "Naproxen", "Diclofenac", "Celecoxib", "Ketoprofen", "Phenylephrine", "Pseudoephedrine", "Chlorphenamine", "Diphenhydramine", "Cetirizine", "Loratadine", "Carbocisteine", "Ambroxol", "Guaifenesin", "Dextromethorphan", "Salbutamol inhaler", "Oxymetazoline nasal spray", "Steam inhalation solutions", "Fexofenadine", "Levocetirizine", "Hydrocortisone cream", "Antacids (Aluminum hydroxide, Magnesium hydroxide)", "Sodium bicarbonate", "Omeprazole", "Lansoprazole", "Pantoprazole", "Esomeprazole", "Loperamide", "Oral Rehydration Salts (ORS)", "Simethicone", "Domperidone", "Metoclopramide", "Hyoscine butylbromide", "Povidone iodine", "Hydrogen peroxide", "Mupirocin ointment", "Clotrimazole cream", "Ketoconazole cream", "Calamine lotion", "Zinc oxide", "Permethrin", "Acyclovir cream", "Amoxicillin", "Amoxicillin + Clavulanic acid", "Azithromycin", "Clarithromycin", "Cefuroxime", "Ceftriaxone", "Ciprofloxacin", "Levofloxacin", "Doxycycline", "Metronidazole", "Co-trimoxazole", "Isoniazid", "Rifampicin", "Pyrazinamide", "Ethambutol", "Fixed-dose TB combinations", "Amlodipine", "Losartan", "Telmisartan", "Captopril", "Enalapril", "Metoprolol", "Atenolol", "Hydrochlorothiazide", "Metformin", "Glimepiride", "Gliclazide", "Insulin (Regular, NPH, Glargine)", "Sitagliptin", "Empagliflozin", "Atorvastatin", "Simvastatin", "Rosuvastatin", "Budesonide inhaler", "Fluticasone", "Ipratropium bromide", "Fluoxetine", "Sertraline", "Escitalopram", "Amitriptyline", "Risperidone", "Quetiapine", "Alprazolam", "Diazepam", "Vitamin A", "Vitamin B1 (Thiamine)", "Vitamin B6", "Vitamin B12", "Vitamin C", "Vitamin D3", "Vitamin E", "Vitamin K", "B-complex capsules", "B1 + B6 + B12 combinations", "Iron (Ferrous sulfate)", "Calcium carbonate", "Calcium + Vitamin D", "Magnesium", "Zinc", "Potassium supplements", "Adult multivitamins", "Children’s multivitamins", "Prenatal vitamins", "Senior vitamins", "Probiotics", "Fish oil (Omega-3)", "Glutathione", "Antiseptic alcohol", "Hand sanitizer", "Thermometer", "Blood pressure monitor", "Glucometer", "Nebulizer solution", "Activated charcoal", "Epinephrine injection"];
 
         let selectedDisease = "Dengue fever";
         let selectedMedicine = "Vitamin A";
 
-        // Fill Barangay Dropdowns
         const fillBrgy = (id) => {
-            const el = document.getElementById(id);
-            el.innerHTML = barangays.map(b => `<option value="${b}">${b}</option>`).join('');
+            document.getElementById(id).innerHTML = barangays.map(b => `<option value="${b}">${b}</option>`).join('');
         };
         fillBrgy('d-brgy'); fillBrgy('m-brgy');
 
-        // Search Functionality
+        // Search Setup
         const setupSearch = (inputId, resultsId, list, type) => {
             const input = document.getElementById(inputId);
             const res = document.getElementById(resultsId);
-            
             input.onfocus = () => { res.style.display = 'block'; filter(); };
             input.oninput = filter;
-            
             function filter() {
                 const val = input.value.toLowerCase();
                 const filtered = list.filter(i => i.toLowerCase().includes(val));
@@ -172,7 +171,6 @@
         setupSearch('d-search', 'd-results', diseaseList, 'd');
         setupSearch('m-search', 'm-results', medicineList, 'm');
 
-        // Charts
         const createChart = (id, label, color) => new Chart(document.getElementById(id), {
             type: 'line',
             data: { labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], 
@@ -191,8 +189,6 @@
 
             document.getElementById('d-name-label').innerText = selectedDisease;
             document.getElementById('m-name-label').innerText = selectedMedicine;
-
-            // Update Legends (Removing "undefined")
             dChart.data.datasets[0].label = selectedDisease;
             mChart.data.datasets[0].label = selectedMedicine;
 
