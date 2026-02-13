@@ -75,6 +75,15 @@
                     <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 group">
                         <i data-lucide="file-bar-chart" class="w-5 h-5 text-amber-500"></i><span>Disease Reports</span>
                     </a>
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-sky-50 group">
+                        <i data-lucide="phone" class="w-5 h-5 text-sky-500"></i><span>Hotlines</span>
+                    </a>
+
+                    <div id="internal-section" class="pt-6 pb-2 hidden">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
+                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 mb-2"><i data-lucide="shield-check" class="w-5 h-5"></i> BHW Console</a>
+                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-50"><i data-lucide="shield-alert" class="w-5 h-5"></i> RHU Console</a>
+                    </div>
                 </nav>
             </div>
             <div class="mt-auto p-8 border-t border-slate-50">
@@ -249,8 +258,15 @@
             if (user) {
                 const snap = await getDoc(doc(db, "users", user.uid));
                 if (snap.exists()) {
-                    document.getElementById('welcome-name').innerText = snap.data().name;
-                    document.getElementById('user-display-name').innerText = snap.data().name;
+                    const d = snap.data();
+                    document.getElementById('welcome-name').innerText = d.name;
+                    document.getElementById('user-display-name').innerText = d.name;
+                    // Restore role-based visibility
+                    if(d.role === "rhu" || d.role === "bhw") {
+                        document.getElementById('internal-section').classList.remove('hidden');
+                        if(d.role === "rhu") document.getElementById('rhu-link').classList.remove('hidden');
+                        if(d.role === "bhw") document.getElementById('bhw-link').classList.remove('hidden');
+                    }
                 }
                 document.body.classList.add('auth-ready');
                 AOS.init({ duration: 800, once: true });
