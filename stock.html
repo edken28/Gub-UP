@@ -12,28 +12,20 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
         .text-navy { color: #1e3a8a; }
-        
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
-
         @media (max-width: 768px) {
             .sidebar-closed { transform: translateX(-100%); }
             .sidebar-open { transform: translateX(0); }
         }
-
-        /* Row Entrance Animation */
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-row { animation: slideIn 0.4s ease forwards; opacity: 0; }
-
-        /* Low Stock Pulse */
-        .pulse-red { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .pulse-red { animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -53,7 +45,7 @@
                 </div>
 
                 <nav class="space-y-3">
-                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all group">
+                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all">
                         <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                         <span>Dashboard</span>
                     </a>
@@ -63,17 +55,17 @@
                         <span>Medicine Stocks</span>
                     </a>
 
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 transition-all group">
+                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 transition-all">
                         <i data-lucide="file-bar-chart" class="w-5 h-5 text-amber-500"></i>
                         <span>Disease Reports</span>
                     </a>
 
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-sky-50 transition-all group">
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-sky-50 transition-all">
                         <i data-lucide="phone" class="w-5 h-5 text-sky-500"></i>
                         <span>Hotlines</span>
                     </a>
 
-                    <div class="pt-6 pb-2">
+                    <div id="bhw-only-nav" class="pt-6 pb-2 hidden">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
                         <a href="bhw-console.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 transition-all group">
                             <i data-lucide="user-cog" class="w-5 h-5 text-emerald-500"></i>
@@ -93,23 +85,79 @@
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center gap-3">
                     <button onclick="toggleSidebar()" class="md:hidden p-2 bg-slate-100 rounded-xl text-navy"><i data-lucide="menu"></i></button>
-                    <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Global Inventory</h2>
+                    <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Gubat Central Inventory</h2>
                 </div>
                 <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-3 md:px-4 py-2 rounded-2xl">
                     <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
-                    <span id="user-name-display" class="font-bold text-navy text-xs md:text-sm">User</span>
+                    <span id="user-name-display" class="font-bold text-navy text-xs md:text-sm">Guest User</span>
                 </div>
             </header>
 
             <div class="p-4 md:p-8 max-w-7xl mx-auto">
                 <div class="mb-8" data-aos="fade-down">
                     <h1 class="text-3xl font-bold text-navy">Medicine Supplies</h1>
-                    <p class="text-slate-500 font-medium">Real-time stock monitoring across all barangays.</p>
+                    <p class="text-slate-500 font-medium">Real-time stock monitoring for Gubat District.</p>
                 </div>
 
-                <div class="relative mb-8" data-aos="fade-up">
-                    <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                    <input type="text" id="main-search" placeholder="Filter by medicine name or barangay..." class="w-full pl-14 pr-4 py-4 bg-white border border-slate-100 rounded-2xl outline-none focus:ring-2 ring-emerald-100 shadow-sm font-semibold text-navy">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8" data-aos="fade-up">
+                    <div class="relative col-span-1 md:col-span-2">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
+                        <input type="text" id="main-search" placeholder="Search medicine name..." class="w-full pl-12 pr-4 py-4 bg-white border border-slate-100 rounded-2xl outline-none focus:ring-2 ring-emerald-100 shadow-sm font-semibold text-navy">
+                    </div>
+                    <select id="filter-barangay" class="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl outline-none shadow-sm font-semibold text-navy">
+                        <option value="">All Barangays (Gubat)</option>
+                        <option value="Ariman">Ariman</option>
+                        <option value="Bagacay">Bagacay</option>
+                        <option value="Balud Del Norte">Balud Del Norte</option>
+                        <option value="Balud Del Sur">Balud Del Sur</option>
+                        <option value="Benguet">Benguet</option>
+                        <option value="Bentuco">Bentuco</option>
+                        <option value="Beriran">Beriran</option>
+                        <option value="Buenavista">Buenavista</option>
+                        <option value="Bulacao">Bulacao</option>
+                        <option value="Cabiguhan">Cabiguhan</option>
+                        <option value="Carisican">Carisican</option>
+                        <option value="Cogon">Cogon</option>
+                        <option value="Escuala">Escuala</option>
+                        <option value="Jitoma">Jitoma</option>
+                        <option value="Manook">Manook</option>
+                        <option value="Naagtan">Naagtan</option>
+                        <option value="Nato">Nato</option>
+                        <option value="Nazareno">Nazareno</option>
+                        <option value="Orosite">Orosite</option>
+                        <option value="Paco">Paco</option>
+                        <option value="Panganiban">Panganiban</option>
+                        <option value="Paradijon">Paradijon</option>
+                        <option value="Patola">Patola</option>
+                        <option value="Payawin">Payawin</option>
+                        <option value="Pinontingan">Pinontingan</option>
+                        <option value="Rizal">Rizal</option>
+                        <option value="San Ignacio">San Ignacio</option>
+                        <option value="San Jose">San Jose</option>
+                        <option value="San Roque">San Roque</option>
+                        <option value="Santa Ana">Santa Ana</option>
+                        <option value="Tabi">Tabi</option>
+                        <option value="Tigkiw">Tigkiw</option>
+                        <option value="Tiris">Tiris</option>
+                        <option value="Union">Union</option>
+                        <option value="Villareal">Villareal</option>
+                    </select>
+                    <div class="grid grid-cols-2 gap-2">
+                        <select id="filter-year" class="px-3 py-4 bg-white border border-slate-100 rounded-2xl outline-none shadow-sm font-semibold text-navy">
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026" selected>2026</option>
+                        </select>
+                        <select id="filter-month" class="px-3 py-4 bg-white border border-slate-100 rounded-2xl outline-none shadow-sm font-semibold text-navy">
+                            <option value="">All Months</option>
+                            <option value="0">January</option><option value="1">February</option>
+                            <option value="2">March</option><option value="3">April</option>
+                            <option value="4">May</option><option value="5">June</option>
+                            <option value="6">July</option><option value="7">August</option>
+                            <option value="8">September</option><option value="9">October</option>
+                            <option value="10">November</option><option value="11">December</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden" data-aos="fade-up">
@@ -117,14 +165,13 @@
                         <table class="w-full text-left whitespace-nowrap">
                             <thead class="bg-slate-50/50">
                                 <tr class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
-                                    <th class="px-10 py-6">Medicine & Barangay</th>
+                                    <th class="px-10 py-6">Medicine & Source</th>
                                     <th class="px-8 py-6">Expiration</th>
-                                    <th class="px-8 py-6 text-center">Status</th>
+                                    <th class="px-8 py-6">Date Recorded</th>
                                     <th class="px-10 py-6 text-right">In-Stock</th>
                                 </tr>
                             </thead>
-                            <tbody id="stock-table-body" class="divide-y divide-slate-50">
-                                </tbody>
+                            <tbody id="stock-table-body" class="divide-y divide-slate-50"></tbody>
                         </table>
                     </div>
                 </div>
@@ -135,7 +182,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE", authDomain: "gub-up.firebaseapp.com", projectId: "gub-up", storageBucket: "gub-up.firebasestorage.app", messagingSenderId: "75119179497", appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278" };
         const app = initializeApp(firebaseConfig);
@@ -148,51 +195,66 @@
             if (user) {
                 const docSnap = await getDoc(doc(db, "users", user.uid));
                 if (docSnap.exists()) {
-                    document.getElementById('user-name-display').innerText = docSnap.data().name;
-                    document.body.classList.add('auth-ready');
-                    AOS.init({ duration: 800, once: true });
-                    initStockListener();
+                    const ud = docSnap.data();
+                    document.getElementById('user-name-display').innerText = ud.name;
+                    if(ud.role === 'bhw') document.getElementById('bhw-only-nav').classList.remove('hidden');
                 }
-            } else { window.location.href = "login.html"; }
+            }
+            document.body.classList.add('auth-ready');
+            AOS.init({ duration: 800, once: true });
+            initStockListener();
         });
 
         function initStockListener() {
-            // Fetching all medicine from all barangays for the general stock list
-            const q = query(collection(db, "medicine_inventory"));
-            onSnapshot(q, (snap) => {
-                allStock = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-                                    .sort((a, b) => a.name.localeCompare(b.name));
-                renderStockTable(allStock);
+            onSnapshot(collection(db, "medicine_inventory"), (snap) => {
+                allStock = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                applyFilters();
             });
         }
 
-        function renderStockTable(data) {
+        function applyFilters() {
+            const term = document.getElementById('main-search').value.toLowerCase();
+            const brgy = document.getElementById('filter-barangay').value;
+            const year = document.getElementById('filter-year').value;
+            const month = document.getElementById('filter-month').value;
+
+            const filtered = allStock.filter(item => {
+                const date = item.createdAt?.toDate ? item.createdAt.toDate() : null;
+                const matchesSearch = item.name.toLowerCase().includes(term);
+                const matchesBrgy = brgy === "" || item.barangay === brgy;
+                const matchesYear = date ? date.getFullYear().toString() === year : true;
+                const matchesMonth = month === "" || (date && date.getMonth().toString() === month);
+                return matchesSearch && matchesBrgy && matchesYear && matchesMonth;
+            }).sort((a, b) => a.name.localeCompare(b.name));
+
+            renderTable(filtered);
+        }
+
+        function renderTable(data) {
             const body = document.getElementById('stock-table-body');
+            if (data.length === 0) {
+                body.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-slate-400 font-bold">No records found.</td></tr>`;
+                return;
+            }
+
             body.innerHTML = data.map((item, index) => {
                 const isLow = item.count < 10;
+                const dateStr = item.createdAt?.toDate ? item.createdAt.toDate().toLocaleDateString() : '---';
                 return `
-                <tr class="hover:bg-slate-50/80 transition-all animate-row" style="animation-delay: ${index * 0.05}s">
+                <tr class="hover:bg-slate-50 transition-all animate-row" style="animation-delay: ${index * 0.03}s">
                     <td class="px-10 py-6">
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center">
-                                <i data-lucide="pill" class="w-5 h-5"></i>
-                            </div>
+                            <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
                             <div>
                                 <span class="font-bold text-navy text-base block">${item.name}</span>
-                                <span class="text-[10px] text-blue-500 font-black uppercase tracking-widest">Brgy. ${item.barangay}</span>
+                                <span class="text-[10px] text-emerald-500 font-black uppercase tracking-widest">Brgy. ${item.barangay}</span>
                             </div>
                         </div>
                     </td>
                     <td class="px-8 py-6 text-slate-500 font-bold text-sm">${item.expiryDate || '---'}</td>
-                    <td class="px-8 py-6 text-center">
-                        <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${isLow ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600'}">
-                            ${isLow ? 'Low Stock' : 'Available'}
-                        </span>
-                    </td>
+                    <td class="px-8 py-6 text-slate-400 text-xs font-medium">${dateStr}</td>
                     <td class="px-10 py-6 text-right">
-                        <span class="font-black text-xl ${isLow ? 'text-red-500 pulse-red' : 'text-navy'}">
-                            ${(item.count || 0).toLocaleString()}
-                        </span>
+                        <span class="font-black text-xl ${isLow ? 'text-red-500 pulse-red' : 'text-navy'}">${(item.count || 0).toLocaleString()}</span>
                         <span class="text-[10px] text-slate-400 font-bold ml-1">${item.unit}</span>
                     </td>
                 </tr>`;
@@ -200,20 +262,14 @@
             lucide.createIcons();
         }
 
+        document.getElementById('main-search').oninput = applyFilters;
+        document.getElementById('filter-barangay').onchange = applyFilters;
+        document.getElementById('filter-year').onchange = applyFilters;
+        document.getElementById('filter-month').onchange = applyFilters;
         window.toggleSidebar = () => {
             const s = document.getElementById('sidebar');
             s.classList.toggle('sidebar-closed'); s.classList.toggle('sidebar-open');
         };
-
-        document.getElementById('main-search').oninput = (e) => {
-            const t = e.target.value.toLowerCase();
-            const filtered = allStock.filter(item => 
-                item.name.toLowerCase().includes(t) || 
-                item.barangay.toLowerCase().includes(t)
-            );
-            renderStockTable(filtered);
-        };
-
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
     </script>
 </body>
