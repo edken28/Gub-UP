@@ -97,8 +97,8 @@
                 
                 <div class="space-y-6 hidden sm:block relative z-10">
                     <div class="flex items-start gap-4">
-                        <div class="bg-white/20 p-2 rounded-lg mt-1"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
-                        <div><h4 class="font-bold text-sm">Instant Access</h4><p class="text-xs text-blue-100 opacity-70">Testing mode: Direct registration enabled.</p></div>
+                        <div class="bg-white/20 p-2 rounded-lg mt-1"><i data-lucide="zap" class="w-5 h-5"></i></div>
+                        <div><h4 class="font-bold text-sm">Testing Mode</h4><p class="text-xs text-blue-100 opacity-70">Direct role assignment enabled.</p></div>
                     </div>
                     <div class="flex items-start gap-4">
                         <div class="bg-white/20 p-2 rounded-lg mt-1"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
@@ -156,7 +156,17 @@
                             <i data-lucide="map-pin" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors"></i>
                             <select id="barangay" required class="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 bg-white outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all appearance-none">
                                 <option value="" disabled selected>Select Barangay</option>
-                                <option>Ariman</option><option>Bagacay</option><option>Balud Del Norte</option><option>Balud Del Sur</option><option>Benguet</option><option>Bentuco</option><option>Beriran</option><option>Buenavista</option><option>Bulacao</option><option>Cabigaan</option><option>Cabiguhan</option><option>Carriedo</option><option>Casili</option><option>Cogon</option><option>Cota Na Daco</option><option>Dita</option><option>Jupi</option><option>Lapinig</option><option>Luna-Candol</option><option>Manapao</option><option>Manook</option><option>Naagtan</option><option>Nato</option><option>Nazareno</option><option>Ogao</option><option>Paco</option><option>Panganiban</option><option>Paradijon</option><option>Patag</option><option>Payawin</option><option>Pinontingan</option><option>Rizal</option><option>San Ignacio</option><option>Sangat</option><option>Santa Ana</option><option>Tabi</option><option>Tagaytay</option><option>Tigkiw</option><option>Tiris</option><option>Togawe</option><option>Union</option><option>Villareal</option>
+                                <option>Ariman</option><option>Bagacay</option><option>Balud Del Norte</option><option>Balud Del Sur</option>
+                                <option>Benguet</option><option>Bentuco</option><option>Beriran</option><option>Buenavista</option>
+                                <option>Bulacao</option><option>Cabigaan</option><option>Cabiguhan</option><option>Carriedo</option>
+                                <option>Casili</option><option>Cogon</option><option>Cota Na Daco</option><option>Dita</option>
+                                <option>Jupi</option><option>Lapinig</option><option>Luna-Candol</option><option>Manapao</option>
+                                <option>Manook</option><option>Naagtan</option><option>Nato</option><option>Nazareno</option>
+                                <option>Ogao</option><option>Paco</option><option>Panganiban</option><option>Paradijon</option>
+                                <option>Patag</option><option>Payawin</option><option>Pinontingan</option><option>Rizal</option>
+                                <option>San Ignacio</option><option>Sangat</option><option>Santa Ana</option><option>Tabi</option>
+                                <option>Tagaytay</option><option>Tigkiw</option><option>Tiris</option><option>Togawe</option>
+                                <option>Union</option><option>Villareal</option>
                             </select>
                         </div>
                     </div>
@@ -179,22 +189,6 @@
         </div>
     </div>
 
-    <div id="otpModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
-        <div class="modal-content bg-white w-full max-w-md rounded-[2rem] p-8 md:p-10 relative shadow-2xl">
-            <button id="closeModal" class="absolute right-6 top-6 text-gray-400 hover:text-gray-600 transition-transform hover:rotate-90"><i data-lucide="x" class="w-6 h-6"></i></button>
-            <div id="modalStep1">
-                <div class="text-center mb-8">
-                    <div class="bg-blue-50 w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-4 animate-float">
-                        <i data-lucide="mail-check" class="w-10 h-10 text-blue-600"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-navy">Account Ready</h3>
-                    <p class="text-gray-400 text-sm mt-2">Registration processing...</p>
-                </div>
-                <div id="modalStep2"></div>
-            </div>
-        </div>
-    </div>
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -212,7 +206,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    emailjs.init("qwA5GyR0JwylFMYXm");
     lucide.createIcons();
 
     document.getElementById('togglePassword').addEventListener('click', function() {
@@ -223,11 +216,12 @@
         lucide.createIcons();
     });
 
+    // INSTANT REGISTRATION WITH DIRECT ROLE ASSIGNMENT
     document.getElementById('registrationForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = document.getElementById('submitBtn');
         btn.disabled = true;
-        btn.innerHTML = `<span class="animate-pulse">Creating Account...</span>`;
+        btn.innerHTML = `<span class="animate-pulse">Activating Account...</span>`;
 
         const userData = {
             name: document.getElementById('fullName').value.trim(),
@@ -239,49 +233,26 @@
 
         try {
             const userCred = await createUserWithEmailAndPassword(auth, userData.email, userData.pass);
-            const finalRole = userData.role === 'citizen' ? 'citizen' : `processing-${userData.role}`;
-
+            
+            // DIRECT ASSIGNMENT: No "processing-" prefix, instant approval
             await setDoc(doc(db, "users", userCred.user.uid), {
                 name: userData.name,
                 email: userData.email,
                 barangay: userData.brgy,
-                role: finalRole,
-                isApproved: userData.role === 'citizen',
+                role: userData.role, // Immediate bhw or rhu role
+                isApproved: true,    // Bypass approval queue
                 createdAt: new Date()
             });
 
-            if (userData.role !== 'citizen') {
-                document.getElementById('otpModal').classList.add('modal-active');
-                showThankYou();
-            } else {
-                window.location.href = "dashboard.html";
-            }
+            // Go straight to dashboard where they can see their console
+            window.location.href = "dashboard.html";
+
         } catch (err) {
-            alert(err.message);
-        } finally {
+            alert("Registration failed: " + err.message);
             btn.disabled = false;
             btn.innerHTML = `<span>Create Account</span> <i data-lucide="chevron-right" class="w-5 h-5"></i>`;
             lucide.createIcons();
         }
-    });
-
-    function showThankYou() {
-        const step2 = document.getElementById('modalStep2');
-        step2.innerHTML = `
-            <div class="text-center py-6 animate-slide-up">
-                <div class="bg-green-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner animate-float">
-                    <i data-lucide="check-circle-2" class="w-12 h-12 text-green-600"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-navy mb-2">Registration Success!</h3>
-                <p class="text-gray-500 text-sm mb-8 px-4 leading-relaxed">Staff roles require admin approval within 24 hours.</p>
-                <button onclick="window.location.href='dashboard.html'" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all active:scale-95">Continue to Dashboard</button>
-            </div>
-        `;
-        lucide.createIcons();
-    }
-
-    document.getElementById('closeModal').addEventListener('click', () => {
-        document.getElementById('otpModal').classList.remove('modal-active');
     });
 </script>
 </body>
