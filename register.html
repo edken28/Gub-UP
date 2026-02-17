@@ -14,6 +14,7 @@
         .text-brand-blue { color: #2563eb; }
         .text-navy { color: #1e3a8a; }
 
+        /* FLOATING BACKGROUND ORBS */
         .orb {
             position: fixed;
             border-radius: 50%;
@@ -31,6 +32,7 @@
             to { transform: translate(40px, 60px) rotate(10deg); }
         }
 
+        /* ACTIVE SELECTION STATE */
         input[type="radio"]:checked + .selection-card {
             border-color: #2563eb !important;
             background-color: #eff6ff !important;
@@ -38,6 +40,7 @@
             box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
         }
 
+        /* ANIMATIONS */
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -77,12 +80,12 @@
             </a>
         </div>
 
-        <div class="bg-white/90 backdrop-blur-sm rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row overflow-hidden animate-slide-up delay-1">
+        <div class="bg-white/90 backdrop-blur-sm rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row overflow-hidden animate-slide-up delay-1">
             
             <div class="bg-brand-blue w-full md:w-[38%] p-8 md:p-10 text-white flex flex-col justify-center relative overflow-hidden">
                 <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-float"></div>
                 
-                <div class="flex items-center gap-3 mb-8 relative z-10 animate-float">
+                <div class="flex items-center gap-3 mb-6 md:mb-8 relative z-10 animate-float">
                     <div class="bg-white p-2 rounded-xl shadow-lg">
                         <div class="w-8 h-8 text-brand-blue flex items-center justify-center font-bold text-2xl">+</div>
                     </div>
@@ -92,69 +95,69 @@
                     </div>
                 </div>
 
-                <h2 class="text-3xl font-bold mb-4 relative z-10 leading-tight">Join the Local Health Network</h2>
-                <p class="text-blue-100 text-sm mb-10 opacity-90 relative z-10">Dedicated monitoring for the municipality of Gubat, Sorsogon.</p>
+                <h2 class="text-2xl md:text-3xl font-bold mb-4 relative z-10 leading-tight">Join the Local Health Network</h2>
+                <p class="text-blue-100 text-sm mb-6 md:mb-10 opacity-90 relative z-10">Dedicated monitoring for the municipality of Gubat, Sorsogon.</p>
                 
                 <div class="space-y-6 hidden sm:block relative z-10">
                     <div class="flex items-start gap-4">
-                        <div class="bg-white/20 p-2 rounded-lg mt-1"><i data-lucide="zap" class="w-5 h-5"></i></div>
-                        <div><h4 class="font-bold text-sm">Testing Mode</h4><p class="text-xs text-blue-100 opacity-70">Direct role assignment enabled.</p></div>
+                        <div class="bg-white/20 p-2 rounded-lg mt-1"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
+                        <div><h4 class="font-bold text-sm">Secure Verification</h4><p class="text-xs text-blue-100 opacity-70">OTP-protected account creation.</p></div>
                     </div>
                     <div class="flex items-start gap-4">
                         <div class="bg-white/20 p-2 rounded-lg mt-1"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
-                        <div><h4 class="font-bold text-sm">Localized Data</h4><p class="text-xs text-blue-100 opacity-70">Coverage for all 42 Barangays.</p></div>
+                        <div><h4 class="font-bold text-sm">Localized Data</h4><p class="text-xs text-blue-100 opacity-70">Barangay-specific health tracking.</p></div>
                     </div>
                 </div>
             </div>
 
             <div class="w-full md:w-[62%] p-8 md:p-14 flex flex-col justify-center">
                 <div class="animate-slide-up delay-2 text-center md:text-left">
-                    <h3 class="text-3xl font-bold text-navy mb-1">Create Account</h3>
-                    <p class="text-gray-400 mb-8 font-medium">Enter your details to get started</p>
+                    <h3 class="text-2xl md:text-3xl font-bold text-navy mb-1">Create Account</h3>
+                    <p class="text-gray-400 mb-6 md:mb-8 font-medium text-sm md:text-base">Enter your details to get started</p>
                 </div>
 
-                <form id="registrationForm" class="space-y-5 animate-slide-up delay-3">
-                    <div class="grid grid-cols-3 gap-3">
+                <form id="registrationForm" class="space-y-4 md:space-y-5 animate-slide-up delay-3">
+                    <div class="grid grid-cols-3 gap-2 md:gap-3">
                         <label class="cursor-pointer group">
                             <input type="radio" name="role" value="citizen" class="hidden" checked>
-                            <div class="selection-card border-2 border-gray-100 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all text-center h-full">
-                                <i data-lucide="user" class="w-6 h-6 text-gray-400 group-hover:text-brand-blue"></i>
-                                <span class="font-bold text-gray-800 text-[10px] uppercase tracking-wide">Citizen</span>
+                            <div class="selection-card border-2 border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex flex-col items-center gap-2 transition-all text-center h-full">
+                                <i data-lucide="user" class="w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-brand-blue"></i>
+                                <span class="font-bold text-gray-800 text-[9px] md:text-[10px] uppercase tracking-wide">Citizen</span>
                             </div>
                         </label>
                         <label class="cursor-pointer group">
                             <input type="radio" name="role" value="bhw" class="hidden">
-                            <div class="selection-card border-2 border-gray-100 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all text-center h-full">
-                                <i data-lucide="pill" class="w-6 h-6 text-gray-400 group-hover:text-brand-blue"></i>
-                                <span class="font-bold text-gray-800 text-[10px] uppercase tracking-wide">BHW</span>
+                            <div class="selection-card border-2 border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex flex-col items-center gap-2 transition-all text-center h-full">
+                                <i data-lucide="pill" class="w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-brand-blue"></i>
+                                <span class="font-bold text-gray-800 text-[9px] md:text-[10px] uppercase tracking-wide">BHW</span>
                             </div>
                         </label>
                         <label class="cursor-pointer group">
                             <input type="radio" name="role" value="rhu" class="hidden">
-                            <div class="selection-card border-2 border-gray-100 p-4 rounded-2xl flex flex-col items-center gap-2 transition-all text-center h-full">
-                                <i data-lucide="hospital" class="w-6 h-6 text-gray-400 group-hover:text-brand-blue"></i>
-                                <span class="font-bold text-gray-800 text-[10px] uppercase tracking-wide">RHU Staff</span>
+                            <div class="selection-card border-2 border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex flex-col items-center gap-2 transition-all text-center h-full">
+                                <i data-lucide="hospital" class="w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-brand-blue"></i>
+                                <span class="font-bold text-gray-800 text-[9px] md:text-[10px] uppercase tracking-wide">RHU Staff</span>
                             </div>
                         </label>
                     </div>
 
-                    <div class="space-y-4">
+                    <div class="space-y-3 md:space-y-4">
                         <div class="relative group">
                             <i data-lucide="user" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors"></i>
-                            <input type="text" id="fullName" placeholder="Full Name" required class="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
+                            <input type="text" id="fullName" placeholder="Full Name" required class="w-full pl-12 pr-4 py-3 md:py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
                         </div>
                         <div class="relative group">
                             <i data-lucide="mail" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors"></i>
-                            <input type="email" id="email" placeholder="Email Address" required class="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
+                            <input type="email" id="email" placeholder="Email Address" required class="w-full pl-12 pr-4 py-3 md:py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
                         </div>
                         <div class="relative group">
                             <i data-lucide="lock" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors"></i>
-                            <input type="password" id="password" placeholder="Password" required class="w-full pl-12 pr-12 py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
+                            <input type="password" id="password" placeholder="Password" required class="w-full pl-12 pr-12 py-3 md:py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
                             <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-blue transition-colors"><i data-lucide="eye" class="w-5 h-5"></i></button>
                         </div>
                         <div class="relative group">
                             <i data-lucide="map-pin" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors"></i>
-                            <select id="barangay" required class="w-full pl-12 pr-4 py-3.5 rounded-xl border border-gray-200 bg-white outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all appearance-none">
+                            <select id="barangay" required class="w-full pl-12 pr-4 py-3 md:py-3.5 rounded-xl border border-gray-200 bg-white outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all appearance-none">
                                 <option value="" disabled selected>Select Barangay</option>
                                 <option>Ariman</option><option>Bagacay</option><option>Balud Del Norte</option><option>Balud Del Sur</option>
                                 <option>Benguet</option><option>Bentuco</option><option>Beriran</option><option>Buenavista</option>
@@ -189,6 +192,35 @@
         </div>
     </div>
 
+    <div id="otpModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-white w-full max-w-md rounded-[2rem] p-8 md:p-10 relative shadow-2xl">
+            <button id="closeModal" class="absolute right-6 top-6 text-gray-400 hover:text-gray-600 transition-transform hover:rotate-90"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <div id="modalStep1">
+                <div class="text-center mb-8">
+                    <div class="bg-blue-50 w-16 h-16 md:w-20 md:h-20 rounded-3xl flex items-center justify-center mx-auto mb-4 animate-float">
+                        <i data-lucide="mail-check" class="w-8 h-8 md:w-10 md:h-10 text-blue-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-navy">Verify Email</h3>
+                    <p class="text-gray-400 text-sm mt-2">We sent a 4-digit code to your email.</p>
+                </div>
+                <form id="otpForm" class="space-y-6 md:space-y-8">
+                    <div class="flex justify-center gap-2 md:gap-3">
+                        <input type="text" maxlength="1" class="otp-in w-12 h-16 md:w-14 md:h-18 text-center text-3xl font-bold border-2 border-gray-100 rounded-2xl focus:border-blue-600 focus:bg-blue-50 outline-none transition-all">
+                        <input type="text" maxlength="1" class="otp-in w-12 h-16 md:w-14 md:h-18 text-center text-3xl font-bold border-2 border-gray-100 rounded-2xl focus:border-blue-600 focus:bg-blue-50 outline-none transition-all">
+                        <input type="text" maxlength="1" class="otp-in w-12 h-16 md:w-14 md:h-18 text-center text-3xl font-bold border-2 border-gray-100 rounded-2xl focus:border-blue-600 focus:bg-blue-50 outline-none transition-all">
+                        <input type="text" maxlength="1" class="otp-in w-12 h-16 md:w-14 md:h-18 text-center text-3xl font-bold border-2 border-gray-100 rounded-2xl focus:border-blue-600 focus:bg-blue-50 outline-none transition-all">
+                    </div>
+                    <button type="submit" id="verifyBtn" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2">Verify Code <i data-lucide="check" class="w-5 h-5"></i></button>
+                    <div class="text-center">
+                        <button type="button" id="resendBtn" class="text-sm font-bold text-brand-blue disabled:text-gray-300 hover:underline">Resend Code</button>
+                        <p id="timer" class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest"></p>
+                    </div>
+                </form>
+            </div>
+            <div id="modalStep2" class="hidden"></div>
+        </div>
+    </div>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -206,7 +238,12 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    emailjs.init("qwA5GyR0JwylFMYXm");
     lucide.createIcons();
+
+    let generatedOtp = "";
+    let tempUserData = {};
+    let countdown;
 
     document.getElementById('togglePassword').addEventListener('click', function() {
         const passInput = document.getElementById('password');
@@ -216,14 +253,13 @@
         lucide.createIcons();
     });
 
-    // INSTANT REGISTRATION WITH DIRECT ROLE ASSIGNMENT
     document.getElementById('registrationForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = document.getElementById('submitBtn');
         btn.disabled = true;
-        btn.innerHTML = `<span class="animate-pulse">Activating Account...</span>`;
+        btn.innerHTML = `<span class="animate-pulse">Preparing Email...</span>`;
 
-        const userData = {
+        tempUserData = {
             name: document.getElementById('fullName').value.trim(),
             email: document.getElementById('email').value.trim().toLowerCase(),
             pass: document.getElementById('password').value,
@@ -231,29 +267,111 @@
             role: document.querySelector('input[name="role"]:checked').value
         };
 
+        generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+
         try {
-            const userCred = await createUserWithEmailAndPassword(auth, userData.email, userData.pass);
-            
-            // DIRECT ASSIGNMENT: No "processing-" prefix, instant approval
-            await setDoc(doc(db, "users", userCred.user.uid), {
-                name: userData.name,
-                email: userData.email,
-                barangay: userData.brgy,
-                role: userData.role, // Immediate bhw or rhu role
-                isApproved: true,    // Bypass approval queue
-                createdAt: new Date()
+            await emailjs.send("service_bmhrqyo", "template_grdnefe", {
+                to_name: tempUserData.name,
+                email: tempUserData.email,
+                passcode: generatedOtp,
+                time: new Date().toLocaleTimeString()
             });
-
-            // Go straight to dashboard where they can see their console
-            window.location.href = "dashboard.html";
-
+            document.getElementById('otpModal').classList.add('modal-active');
+            startTimer();
         } catch (err) {
-            alert("Registration failed: " + err.message);
+            alert("Error sending email: " + err.message);
+        } finally {
             btn.disabled = false;
             btn.innerHTML = `<span>Create Account</span> <i data-lucide="chevron-right" class="w-5 h-5"></i>`;
             lucide.createIcons();
         }
     });
+
+    document.getElementById('otpForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const entered = Array.from(document.querySelectorAll('.otp-in')).map(i => i.value).join('');
+        const btn = document.getElementById('verifyBtn');
+
+        if (entered !== generatedOtp) return alert("Invalid Code.");
+
+        btn.disabled = true;
+        btn.innerText = "Processing...";
+
+        try {
+            const userCred = await createUserWithEmailAndPassword(auth, tempUserData.email, tempUserData.pass);
+            const finalRole = tempUserData.role === 'citizen' ? 'citizen' : `processing-${tempUserData.role}`;
+
+            await setDoc(doc(db, "users", userCred.user.uid), {
+                name: tempUserData.name,
+                email: tempUserData.email,
+                barangay: tempUserData.brgy,
+                role: finalRole,
+                isApproved: tempUserData.role === 'citizen',
+                createdAt: new Date()
+            });
+
+            if (tempUserData.role !== 'citizen') {
+                await emailjs.send("service_bmhrqyo", "template_i6y2iba", {
+                    new_user: tempUserData.name,
+                    role: tempUserData.role.toUpperCase(),
+                    user_email: tempUserData.email,
+                    barangay: tempUserData.brgy
+                });
+                showThankYou();
+            } else {
+                window.location.href = "dashboard.html";
+            }
+        } catch (err) {
+            alert(err.message);
+            btn.disabled = false;
+            btn.innerText = "Verify Code";
+        }
+    });
+
+    function showThankYou() {
+        document.getElementById('modalStep1').classList.add('hidden');
+        const step2 = document.getElementById('modalStep2');
+        step2.classList.remove('hidden');
+        step2.innerHTML = `
+            <div class="text-center py-6 animate-slide-up">
+                <div class="bg-green-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner animate-float">
+                    <i data-lucide="check-circle-2" class="w-12 h-12 text-green-600"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-navy mb-2">Registration Success!</h3>
+                <p class="text-gray-500 text-sm mb-8 px-4 leading-relaxed">Account created. Staff roles require admin approval within 24 hours.</p>
+                <button onclick="window.location.href='dashboard.html'" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all active:scale-95">Continue to Dashboard</button>
+            </div>
+        `;
+        lucide.createIcons();
+    }
+
+    function startTimer() {
+        let timeLeft = 60;
+        const btn = document.getElementById('resendBtn');
+        const text = document.getElementById('timer');
+        btn.disabled = true;
+        clearInterval(countdown);
+        countdown = setInterval(() => {
+            timeLeft--;
+            text.innerText = `Resend available in ${timeLeft}s`;
+            if (timeLeft <= 0) { clearInterval(countdown); btn.disabled = false; text.innerText = ""; }
+        }, 1000);
+    }
+ 
+    document.getElementById('resendBtn').addEventListener('click', async () => {
+        generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+        await emailjs.send("service_bmhrqyo", "template_grdnefe", { to_name: tempUserData.name, email: tempUserData.email, passcode: generatedOtp });
+        startTimer();
+    });
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('otpModal').classList.remove('modal-active');
+    });
+
+    document.querySelectorAll('.otp-in').forEach((input, index, inputs) => {
+        input.addEventListener('input', (e) => { if (e.target.value && index < 3) inputs[index + 1].focus(); });
+        input.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && !e.target.value && index > 0) inputs[index - 1].focus(); });
+    });
 </script>
 </body>
-</html>
+</html> 
