@@ -110,7 +110,7 @@
                         </select>
                     </div>
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Year Recorded</label>
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Year Filter</label>
                         <select id="filter-year" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
                             <option value="2024">2024</option><option value="2025">2025</option><option value="2026" selected>2026</option>
                         </select>
@@ -145,8 +145,7 @@
                                     <th class="px-10 py-7">Status</th>
                                 </tr>
                             </thead>
-                            <tbody id="stock-table-body" class="divide-y divide-slate-50 font-medium text-navy">
-                                </tbody>
+                            <tbody id="stock-table-body" class="divide-y divide-slate-50 font-medium text-navy"></tbody>
                         </table>
                     </div>
                 </div>
@@ -159,15 +158,13 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Your Exact Config
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
             authDomain: "gub-up.firebaseapp.com",
             projectId: "gub-up",
             storageBucket: "gub-up.firebasestorage.app",
             messagingSenderId: "75119179497",
-            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278",
-            measurementId: "G-9MGFP3RC88"
+            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -200,21 +197,28 @@
         });
 
         function loadData() {
-            onSnapshot(collection(db, "medicine_stocks"), (snap) => {
-                masterData = snap.docs.map(d => {
-                    const data = d.data();
-                    // Mapping to match image_cbd89c.png
-                    return {
-                        id: d.id,
-                        name: data.name || "Unknown Medicine",
-                        quantity: Number(data.count || 0), // DB field is 'count'
-                        barangay: data.barangay || "General",
-                        expiry: data.expiryDate || "N/A", // DB field is 'expiryDate'
-                        unit: data.unit || "", // DB field is 'unit'
-                        createdAt: data.createdAt // Used for year filter
-                    };
+            // Updated: Listening to BOTH collections found in your database
+            const targets = ["medicine_stocks", "medicine_inventory"];
+            
+            targets.forEach(colName => {
+                onSnapshot(collection(db, colName), (snap) => {
+                    const colData = snap.docs.map(d => {
+                        const data = d.data();
+                        return {
+                            id: d.id,
+                            name: data.name || "Unknown Medicine",
+                            quantity: Number(data.count || 0), // DB uses 'count'
+                            barangay: data.barangay || "General",
+                            expiry: data.expiryDate || "N/A", // DB uses 'expiryDate'
+                            unit: data.unit || "", 
+                            createdAt: data.createdAt // timestamp
+                        };
+                    });
+
+                    // Merge and prevent duplicates
+                    masterData = [...masterData.filter(m => !snap.docs.find(d => d.id === m.id)), ...colData];
+                    applyFilters();
                 });
-                applyFilters();
             });
         }
 
@@ -226,9 +230,13 @@
             const sortValue = document.getElementById('filter-sort').value;
 
             let filtered = masterData.filter(item => {
-                // Year logic matches 'Disease Reports'
+                // Year logic: Check both createdAt and the year inside expiryDate
                 const date = item.createdAt?.toDate ? item.createdAt.toDate() : null;
-                const matchesYear = date ? date.getFullYear().toString() === yearValue : true;
+                const createdYear = date ? date.getFullYear().toString() : "";
+                const expiryYear = item.expiry && item.expiry.includes('-') ? item.expiry.split('-')[0] : "";
+                
+                // Show if either the creation year OR expiry year matches selected year
+                const matchesYear = (createdYear === yearValue || expiryYear === yearValue);
                 
                 const matchesSearch = item.name.toLowerCase().includes(searchTerm);
                 const matchesBrgy = (brgyValue === "all" || item.barangay === brgyValue);
@@ -253,7 +261,7 @@
         function renderTable(data) {
             const body = document.getElementById('stock-table-body');
             if (data.length === 0) {
-                body.innerHTML = `<tr><td colspan="5" class="py-20 text-center font-bold text-slate-300">No records found for the selected filters.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="5" class="py-20 text-center font-bold text-slate-300">No records found for ${document.getElementById('filter-year').value}.</td></tr>`;
                 return;
             }
 
@@ -291,11 +299,12 @@
             s.classList.toggle('sidebar-open');
         };
 
-        // Listeners for real-time updates
         ['stock-search', 'filter-brgy', 'filter-year', 'filter-status', 'filter-sort'].forEach(id => {
             const el = document.getElementById(id);
-            el.addEventListener('change', applyFilters);
-            el.addEventListener('input', applyFilters);
+            if(el) {
+                el.addEventListener('change', applyFilters);
+                el.addEventListener('input', applyFilters);
+            }
         });
 
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
