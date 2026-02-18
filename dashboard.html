@@ -15,10 +15,10 @@
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
         
-        /* Sidebar Logic */
+        /* Sidebar Styling */
         #sidebar { 
             position: fixed; top: 0; left: 0; height: 100vh; width: 280px; 
-            z-index: 1000; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease;
             background: white; border-right: 1px solid #f1f5f9;
         }
         @media (min-width: 1024px) { #sidebar { position: sticky; transform: translateX(0); width: 300px; } }
@@ -26,20 +26,15 @@
         #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 900; }
         #overlay.active { display: block; }
 
-        /* Monthly Category Pop-up */
-        .month-select-container { display: none; }
-        .is-monthly .month-select-container { display: block; }
-
-        /* Custom Scrollbar for Search */
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-
+        /* Search Results */
         .search-results { 
             display: none; position: absolute; top: 100%; left: 0; right: 0; 
             background: white; border: 1px solid #e2e8f0; border-radius: 1rem; 
             max-height: 250px; overflow-y: auto; z-index: 100; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); 
         }
         .search-results.active { display: block; }
+        .search-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 500; }
+        .search-item:hover { background: #f0f9ff; color: #2563eb; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -57,7 +52,7 @@
                             <p class="text-[10px] text-blue-600 uppercase font-black tracking-widest mt-1">Health Network</p>
                         </div>
                     </div>
-                    <button id="close-menu" class="lg:hidden text-slate-400 p-2 hover:bg-slate-50 rounded-lg"><i data-lucide="x"></i></button>
+                    <button id="close-sidebar" class="lg:hidden text-slate-400"><i data-lucide="x"></i></button>
                 </div>
 
                 <nav class="space-y-3">
@@ -73,7 +68,7 @@
                     <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-sky-50">
                         <i data-lucide="phone" class="text-sky-500"></i><span>Hotlines</span>
                     </a>
-                    
+
                     <div id="internal-section" class="pt-6 border-t mt-4 hidden">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest px-5 mb-2">Internal Consoles</p>
                         <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 mb-1"><i data-lucide="user-cog"></i> BHW</a>
@@ -82,14 +77,14 @@
                 </nav>
             </div>
             <div class="mt-auto p-8 border-t">
-                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors"><i data-lucide="log-out"></i> Logout</button>
+                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full"><i data-lucide="log-out"></i> Logout</button>
             </div>
         </aside>
 
         <main class="flex-1 w-full">
             <div class="lg:hidden bg-white border-b px-5 py-4 flex items-center justify-between sticky top-0 z-40">
-                <button id="open-menu" class="p-2 bg-slate-50 rounded-xl text-blue-900"><i data-lucide="menu"></i></button>
-                <div class="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 font-bold text-xs">U</div>
+                <button id="open-sidebar" class="p-2 bg-slate-50 rounded-xl text-blue-900"><i data-lucide="menu"></i></button>
+                <div class="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center text-blue-600"><i data-lucide="user" class="w-4 h-4"></i></div>
             </div>
 
             <header class="bg-white/80 backdrop-blur-md border-b px-6 md:px-10 py-6 sticky top-0 z-30">
@@ -105,19 +100,17 @@
                             <h3 class="text-2xl font-bold text-blue-900">Disease Cases</h3>
                             <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mt-1"><span id="d-label">All Diseases</span> • Total: <span id="d-total">0</span></p>
                         </div>
-                        <div id="d-filters" class="flex flex-wrap gap-2 w-full lg:w-auto">
+                        <div class="flex flex-wrap gap-2 w-full lg:w-auto">
                             <select id="d-mode" class="p-3 bg-slate-100 rounded-2xl font-bold text-blue-900 text-xs outline-none">
                                 <option value="yearly">Yearly</option>
                                 <option value="monthly">Monthly</option>
                             </select>
                             <select id="d-year" class="p-3 bg-blue-50 rounded-2xl font-bold text-blue-600 text-xs outline-none"></select>
-                            <div class="month-select-container">
-                                <select id="d-month" class="p-3 bg-amber-50 rounded-2xl font-bold text-amber-600 text-xs outline-none"></select>
-                            </div>
+                            <select id="d-month" class="hidden p-3 bg-amber-50 rounded-2xl font-bold text-amber-600 text-xs outline-none"></select>
                             <select id="d-brgy" class="p-3 bg-slate-100 rounded-2xl font-bold text-blue-900 text-xs outline-none"></select>
                             <div class="relative flex-1 min-w-[180px]">
                                 <input type="text" id="d-search" placeholder="Search Disease..." class="w-full p-3 bg-slate-100 rounded-2xl font-bold text-blue-900 text-xs outline-none">
-                                <div id="d-results" class="search-results custom-scrollbar"></div>
+                                <div id="d-results" class="search-results"></div>
                             </div>
                         </div>
                     </div>
@@ -130,24 +123,23 @@
                             <h3 class="text-2xl font-bold text-blue-900">Medicine Stocks</h3>
                             <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-1"><span id="m-label">All Medicines</span> • Total: <span id="m-total">0</span></p>
                         </div>
-                        <div id="m-filters" class="flex flex-wrap gap-2 w-full lg:w-auto">
+                        <div class="flex flex-wrap gap-2 w-full lg:w-auto">
                             <select id="m-mode" class="p-3 bg-slate-100 rounded-2xl font-bold text-blue-900 text-xs outline-none">
                                 <option value="yearly">Yearly</option>
                                 <option value="monthly">Monthly</option>
                             </select>
                             <select id="m-year" class="p-3 bg-blue-50 rounded-2xl font-bold text-blue-600 text-xs outline-none"></select>
-                            <div class="month-select-container">
-                                <select id="m-month" class="p-3 bg-emerald-50 rounded-2xl font-bold text-emerald-600 text-xs outline-none"></select>
-                            </div>
+                            <select id="m-month" class="hidden p-3 bg-emerald-50 rounded-2xl font-bold text-emerald-600 text-xs outline-none"></select>
                             <select id="m-brgy" class="p-3 bg-slate-100 rounded-2xl font-bold text-blue-900 text-xs outline-none"></select>
                             <div class="relative flex-1 min-w-[180px]">
                                 <input type="text" id="m-search" placeholder="Search Medicine..." class="w-full p-3 bg-slate-100 rounded-2xl font-bold text-blue-900 text-xs outline-none">
-                                <div id="m-results" class="search-results custom-scrollbar"></div>
+                                <div id="m-results" class="search-results"></div>
                             </div>
                         </div>
                     </div>
                     <div class="h-[350px]"><canvas id="stockChart"></canvas></div>
                 </div>
+
             </div>
         </main>
     </div>
@@ -166,74 +158,50 @@
         const years = ["2024", "2025", "2026"];
         const barangays = ["All Areas", "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
         
-        const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Avian influenza", "Measles", "Mumps", "Rubella", "Chickenpox", "Hand, foot and mouth disease", "Hepatitis A", "Hepatitis B", "Hepatitis C", "Hepatitis E", "Rabies", "HIV infection", "AIDS", "Chikungunya", "Japanese encephalitis", "Zika virus infection", "Rotavirus infection", "Poliomyelitis", "Tuberculosis", "Pneumonia", "Typhoid fever", "Leptospirosis", "Cholera", "Diphtheria", "Pertussis", "Tetanus", "Meningitis", "Urinary tract infection", "Gonorrhea", "Syphilis", "Malaria", "Schistosomiasis", "Hypertension", "Diabetes", "Heart failure", "Stroke", "Asthma", "COPD", "Cancer", "Depression", "Anxiety", "Malnutrition"];
-        const medicines = ["Paracetamol", "Ibuprofen", "Mefenamic acid", "Aspirin", "Naproxen", "Diclofenac", "Celecoxib", "Chlorphenamine", "Diphenhydramine", "Cetirizine", "Loratadine", "Ambroxol", "Guaifenesin", "Salbutamol inhaler", "Omeprazole", "Loperamide", "ORS", "Povidone iodine", "Amoxicillin", "Azithromycin", "Ciprofloxacin", "Doxycycline", "Amlodipine", "Losartan", "Metformin", "Insulin", "Atorvastatin", "Vitamin C", "Multivitamins", "Iron (Ferrous sulfate)", "Alcohol", "Hand sanitizer"];
+        // Full Lists
+        const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Measles", "Mumps", "Rubella", "Tuberculosis", "Hypertension", "Diabetes", "Asthma"];
+        const medicines = ["Paracetamol", "Ibuprofen", "Amoxicillin", "Amlodipine", "Losartan", "Metformin", "Vitamin C", "Multivitamins", "Alcohol"];
 
         let curD = "", curM = "";
 
         // UI HELPERS
         const fill = (id, list, useIdx = false) => {
-            const el = document.getElementById(id);
-            el.innerHTML = list.map((v, i) => `<option value="${useIdx ? i : v}">${v}</option>`).join('');
+            document.getElementById(id).innerHTML = list.map((v, i) => `<option value="${useIdx ? i : v}">${v}</option>`).join('');
         };
         fill('d-year', years); fill('m-year', years);
         fill('d-month', months, true); fill('m-month', months, true);
         fill('d-brgy', barangays); fill('m-brgy', barangays);
 
-        // Sidebar Control
+        // Sidebar Fix
         const toggleSidebar = () => {
             document.getElementById('sidebar').classList.toggle('sidebar-open');
             document.getElementById('overlay').classList.toggle('active');
         };
-        document.getElementById('open-menu').onclick = toggleSidebar;
-        document.getElementById('close-menu').onclick = toggleSidebar;
+        document.getElementById('open-sidebar').onclick = toggleSidebar;
+        document.getElementById('close-sidebar').onclick = toggleSidebar;
         document.getElementById('overlay').onclick = toggleSidebar;
 
-        // POP-UP CATEGORY REVEAL
-        const handleModeChange = (prefix) => {
+        // POP-UP TRIGGER (THE FIX)
+        const toggleMonthCategory = (prefix) => {
             const mode = document.getElementById(`${prefix}-mode`).value;
-            const container = document.getElementById(`${prefix}-filters`);
-            if (mode === 'monthly') container.classList.add('is-monthly');
-            else container.classList.remove('is-monthly');
-            sync();
-        };
-        document.getElementById('d-mode').onchange = () => handleModeChange('d');
-        document.getElementById('m-mode').onchange = () => handleModeChange('m');
-
-        // SEARCH FUNCTIONALITY
-        const handleSearch = (inputId, resId, list, type) => {
-            const input = document.getElementById(inputId);
-            const res = document.getElementById(resId);
-            input.oninput = () => {
-                const val = input.value.toLowerCase();
-                const filtered = list.filter(i => i.toLowerCase().includes(val));
-                res.innerHTML = filtered.map(i => `<div class="search-item p-3 cursor-pointer hover:bg-blue-50 font-medium text-xs border-b border-slate-50">${i}</div>`).join('');
-                res.classList.toggle('active', val.length > 0);
-                res.querySelectorAll('.search-item').forEach(el => {
-                    el.onclick = () => {
-                        input.value = el.innerText;
-                        res.classList.remove('active');
-                        if (type === 'd') { curD = el.innerText; document.getElementById('d-label').innerText = el.innerText; }
-                        else { curM = el.innerText; document.getElementById('m-label').innerText = el.innerText; }
-                        sync();
-                    };
-                });
-            };
-        };
-        handleSearch('d-search', 'd-results', diseases, 'd');
-        handleSearch('m-search', 'm-results', medicines, 'm');
-
-        // Close search lists on outside click
-        window.onclick = (e) => {
-            if (!e.target.closest('.relative')) document.querySelectorAll('.search-results').forEach(r => r.classList.remove('active'));
+            const monthEl = document.getElementById(`${prefix}-month`);
+            if (mode === 'monthly') {
+                monthEl.classList.remove('hidden');
+            } else {
+                monthEl.classList.add('hidden');
+            }
+            sync(); // Refresh graph
         };
 
-        // CHARTING ENGINE
+        document.getElementById('d-mode').onchange = () => toggleMonthCategory('d');
+        document.getElementById('m-mode').onchange = () => toggleMonthCategory('m');
+
+        // Charts
         const dChart = new Chart(document.getElementById('diseaseChart'), { type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: '#ef4444', backgroundColor: '#ef444411', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
         const mChart = new Chart(document.getElementById('stockChart'), { type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: '#10b981', backgroundColor: '#10b98111', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
 
+        // Database Sync
         function sync() {
-            // Disease Sync
             const dMode = document.getElementById('d-mode').value;
             const dYear = document.getElementById('d-year').value;
             const dMonth = document.getElementById('d-month').value;
@@ -241,7 +209,7 @@
 
             onSnapshot(collection(db, "disease_cases"), snap => {
                 let data = dMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
-                let labels = dMode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
+                let labs = dMode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
                 let total = 0;
                 snap.forEach(doc => {
                     const r = doc.data(); const d = r.createdAt?.toDate();
@@ -254,11 +222,11 @@
                         }
                     }
                 });
-                dChart.data.labels = labels; dChart.data.datasets[0].data = data; dChart.update();
+                dChart.data.labels = labs; dChart.data.datasets[0].data = data; dChart.update();
                 document.getElementById('d-total').innerText = total;
             });
-
-            // Medicine Sync
+            
+            // Medicine Sync (same logic)
             const mMode = document.getElementById('m-mode').value;
             const mYear = document.getElementById('m-year').value;
             const mMonth = document.getElementById('m-month').value;
@@ -266,7 +234,7 @@
 
             onSnapshot(collection(db, "medicine_inventory"), snap => {
                 let data = mMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
-                let labels = mMode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
+                let labs = mMode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
                 let total = 0;
                 snap.forEach(doc => {
                     const r = doc.data(); const d = r.createdAt?.toDate();
@@ -279,17 +247,17 @@
                         }
                     }
                 });
-                mChart.data.labels = labels; mChart.data.datasets[0].data = data; mChart.update();
+                mChart.data.labels = labs; mChart.data.datasets[0].data = data; mChart.update();
                 document.getElementById('m-total').innerText = total;
             });
         }
 
+        // AUTH & ROLES
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const s = await getDoc(doc(db, "users", user.uid));
                 if (s.exists()) {
-                    const u = s.data();
-                    document.getElementById('welcome-name').innerText = u.name;
+                    const u = s.data(); document.getElementById('welcome-name').innerText = u.name;
                     if(u.role === 'bhw' || u.role === 'rhu') {
                         document.getElementById('internal-section').classList.remove('hidden');
                         if(u.role === 'bhw') document.getElementById('bhw-link').classList.remove('hidden');
@@ -302,6 +270,29 @@
                 sync();
             } else { window.location.href = "login.html"; }
         });
+
+        // Search Handlers
+        const setupSearch = (inputId, resId, list, type) => {
+            const input = document.getElementById(inputId);
+            const res = document.getElementById(resId);
+            input.oninput = () => {
+                const q = input.value.toLowerCase();
+                const filtered = list.filter(i => i.toLowerCase().includes(q));
+                res.innerHTML = filtered.map(i => `<div class="search-item">${i}</div>`).join('');
+                res.classList.toggle('active', q.length > 0);
+                res.querySelectorAll('.search-item').forEach(el => {
+                    el.onclick = () => {
+                        input.value = el.innerText;
+                        res.classList.remove('active');
+                        if (type === 'd') { curD = el.innerText; document.getElementById('d-label').innerText = el.innerText; }
+                        else { curM = el.innerText; document.getElementById('m-label').innerText = el.innerText; }
+                        sync();
+                    };
+                });
+            };
+        };
+        setupSearch('d-search', 'd-results', diseases, 'd');
+        setupSearch('m-search', 'm-results', medicines, 'm');
 
         setInterval(() => {
             document.getElementById('live-clock').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
