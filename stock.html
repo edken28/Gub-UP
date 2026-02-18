@@ -4,73 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medicine Stocks | GUB-UP</title>
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .text-navy { color: #1e3a8a; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .text-navy { color: #0f172a; }
+        
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
+
+        /* Sidebar Mobile Logic */
         @media (max-width: 768px) {
             .sidebar-closed { transform: translateX(-100%); }
             .sidebar-open { transform: translateX(0); }
         }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-row { animation: slideIn 0.4s ease forwards; opacity: 0; }
-        .pulse-red { animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
-        select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; }
+
+        .glass-header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
+        .table-card { border-radius: 2.5rem; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .status-pill { padding: 6px 12px; border-radius: 12px; font-weight: 800; font-size: 11px; text-transform: uppercase; }
+        .status-low { background: #fff1f2; color: #be123c; }
+        .status-good { background: #f0fdf4; color: #15803d; }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen overflow-x-hidden">
 
     <div id="main-layout" class="w-full min-h-screen flex flex-col md:flex-row">
-        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 sidebar-closed md:relative md:translate-x-0 md:flex">
+        
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-[100] w-72 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 sidebar-closed md:relative md:translate-x-0 md:flex">
             <div class="p-8">
                 <div class="flex items-center justify-between mb-10">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg"><i data-lucide="plus"></i></div>
+                        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                            <i data-lucide="plus" class="w-6 h-6"></i>
+                        </div>
                         <div>
-                            <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
+                            <h1 class="font-extrabold text-navy text-xl leading-none tracking-tight">GUB-UP</h1>
                             <p class="text-[10px] text-blue-600 uppercase font-black tracking-widest mt-1">Health Network</p>
                         </div>
                     </div>
-                    <button class="md:hidden p-2 text-slate-400" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
+                    <button class="md:hidden p-2 text-slate-400 hover:text-red-500" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
                 </div>
 
-                <nav class="space-y-3">
-                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all">
-                        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <nav class="space-y-2">
+                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all group">
+                        <div class="w-8 h-8 bg-slate-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4 group-hover:text-white"></i>
+                        </div>
                         <span>Dashboard</span>
                     </a>
+                    
                     <a href="stock.html" class="flex items-center gap-3 bg-emerald-500 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-100 transition-all">
-                        <i data-lucide="package" class="w-5 h-5"></i>
+                        <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                            <i data-lucide="pill" class="w-4 h-4 text-white"></i>
+                        </div>
                         <span>Medicine Stocks</span>
                     </a>
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 transition-all">
-                        <i data-lucide="file-bar-chart" class="w-5 h-5 text-amber-500"></i>
+
+                    <a href="reports.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 transition-all group">
+                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white"></i>
+                        </div>
                         <span>Disease Reports</span>
                     </a>
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-sky-50 transition-all">
-                        <i data-lucide="phone" class="w-5 h-5 text-sky-500"></i>
+
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 transition-all group">
+                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
+                            <i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white"></i>
+                        </div>
                         <span>Hotlines</span>
                     </a>
 
-                    <div id="internal-console-section" class="pt-6 pb-2 hidden">
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                        <a id="console-link" href="#" class="flex items-center gap-3 px-5 py-4 rounded-2xl font-bold transition-all group">
-                            <i id="console-icon" data-lucide="shield-check" class="w-5 h-5"></i>
-                            <span id="console-label">Console</span>
+                    <div class="pt-6 pb-2">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-3">Internal Consoles</p>
+                        <a href="rhu-console.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-bold hover:bg-red-50 transition-all group">
+                            <div class="w-8 h-8 bg-red-100 group-hover:bg-red-500 rounded-lg flex items-center justify-center transition-colors">
+                                <i data-lucide="shield-alert" class="w-4 h-4 text-red-600 group-hover:text-white"></i>
+                            </div>
+                            <span>RHU Console</span>
                         </a>
                     </div>
                 </nav>
             </div>
+            
             <div class="mt-auto p-8 border-t border-slate-50">
                 <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full">
                     <i data-lucide="log-out" class="w-5 h-5"></i> Logout
@@ -79,52 +101,43 @@
         </aside>
 
         <main class="flex-1 w-full overflow-y-auto">
-            <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
-                <div class="flex items-center gap-3">
-                    <button onclick="toggleSidebar()" class="md:hidden p-2 bg-slate-100 rounded-xl text-navy"><i data-lucide="menu"></i></button>
-                    <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Gubat Central Inventory</h2>
+            <header class="glass-header border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="flex md:hidden p-3 bg-white border border-slate-100 rounded-xl text-navy shadow-sm hover:bg-slate-50 active:scale-95 transition-all">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-sm font-extrabold text-navy uppercase tracking-tight">Inventory Management</h2>
+                        <p class="text-[10px] font-bold text-slate-400">Medicine & Supplies Control</p>
+                    </div>
                 </div>
-                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-3 md:px-4 py-2 rounded-2xl">
-                    <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
-                    <span id="user-name-display" class="font-bold text-navy text-xs md:text-sm">Guest User</span>
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
+                    <div class="w-8 h-8 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center shadow-inner"><i data-lucide="user" class="w-4 h-4"></i></div>
+                    <span id="user-name-display" class="font-bold text-navy text-sm hidden sm:inline">User</span>
                 </div>
             </header>
 
-            <div class="p-4 md:p-8 max-w-7xl mx-auto">
-                <div class="mb-8" data-aos="fade-down">
-                    <h1 class="text-3xl font-bold text-navy">Medicine Supplies</h1>
-                    <p class="text-slate-500 font-medium">Real-time stock monitoring for Gubat District.</p>
+            <div class="p-4 md:p-10 max-w-7xl mx-auto">
+                <div class="flex flex-col lg:flex-row justify-between items-center gap-6 mb-10" data-aos="fade-down">
+                    <div class="relative flex-1 w-full group">
+                        <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
+                        <input type="text" id="stock-search" placeholder="Search medicines..." class="w-full pl-14 pr-4 py-5 bg-white border border-slate-100 rounded-3xl outline-none focus:ring-4 ring-emerald-50 shadow-sm font-semibold text-navy transition-all">
+                    </div>
+                    <button onclick="openStockModal()" class="w-full lg:w-auto bg-emerald-500 text-white px-10 py-5 rounded-3xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-emerald-600 shadow-xl shadow-emerald-100 transition-all">
+                        <i data-lucide="plus" class="w-5 h-5"></i> Add New Stock
+                    </button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8" data-aos="fade-up">
-                    <div class="relative col-span-1 md:col-span-2">
-                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                        <input type="text" id="main-search" placeholder="Search medicine name..." class="w-full pl-12 pr-4 py-4 bg-white border border-slate-100 rounded-2xl outline-none focus:ring-2 ring-emerald-100 shadow-sm font-semibold text-navy">
-                    </div>
-                    <select id="filter-barangay" class="w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl outline-none shadow-sm font-semibold text-navy">
-                        <option value="">All Barangays</option>
-                        <option value="Ariman">Ariman</option><option value="Bagacay">Bagacay</option><option value="Balud Del Norte">Balud Del Norte</option><option value="Balud Del Sur">Balud Del Sur</option><option value="Benguet">Benguet</option><option value="Bentuco">Bentuco</option><option value="Beriran">Beriran</option><option value="Buenavista">Buenavista</option><option value="Bulacao">Bulacao</option><option value="Cabigaan">Cabigaan</option><option value="Cabiguhan">Cabiguhan</option><option value="Carriedo">Carriedo</option><option value="Casili">Casili</option><option value="Cogon">Cogon</option><option value="Cota Na Daco">Cota Na Daco</option><option value="Dita">Dita</option><option value="Jupi">Jupi</option><option value="Lapinig">Lapinig</option><option value="Luna-Candol">Luna-Candol</option><option value="Manapao">Manapao</option><option value="Manook">Manook</option><option value="Naagtan">Naagtan</option><option value="Nato">Nato</option><option value="Nazareno">Nazareno</option><option value="Ogao">Ogao</option><option value="Paco">Paco</option><option value="Panganiban">Panganiban</option><option value="Paradijon">Paradijon</option><option value="Patag">Patag</option><option value="Payawin">Payawin</option><option value="Pinontingan">Pinontingan</option><option value="Rizal">Rizal</option><option value="San Ignacio">San Ignacio</option><option value="Sangat">Sangat</option><option value="Santa Ana">Santa Ana</option><option value="Tabi">Tabi</option><option value="Tagaytay">Tagaytay</option><option value="Tigkiw">Tigkiw</option><option value="Tiris">Tiris</option><option value="Togawe">Togawe</option><option value="Union">Union</option><option value="Villareal">Villareal</option>
-                    </select>
-                    <div class="grid grid-cols-2 gap-2">
-                        <select id="filter-year" class="px-3 py-4 bg-white border border-slate-100 rounded-2xl outline-none shadow-sm font-semibold text-navy">
-                            <option value="2024">2024</option><option value="2025">2025</option><option value="2026" selected>2026</option>
-                        </select>
-                        <select id="filter-month" class="px-3 py-4 bg-white border border-slate-100 rounded-2xl outline-none shadow-sm font-semibold text-navy">
-                            <option value="">All Months</option>
-                            <option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden" data-aos="fade-up">
+                <div class="bg-white table-card border border-slate-100 shadow-sm overflow-hidden" data-aos="fade-up">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left whitespace-nowrap">
                             <thead class="bg-slate-50/50">
-                                <tr class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
-                                    <th class="px-10 py-6">Medicine & Source</th>
-                                    <th class="px-8 py-6">Expiration</th>
-                                    <th class="px-8 py-6">Date Recorded</th>
-                                    <th class="px-10 py-6 text-right">In-Stock</th>
+                                <tr class="text-[11px] font-black text-slate-400 uppercase tracking-[0.15em]">
+                                    <th class="px-10 py-7">Medicine Details</th>
+                                    <th class="px-8 py-7">Quantity</th>
+                                    <th class="px-8 py-7">Category</th>
+                                    <th class="px-8 py-7">Status</th>
+                                    <th class="px-10 py-7 text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="stock-table-body" class="divide-y divide-slate-50"></tbody>
@@ -135,118 +148,154 @@
         </main>
     </div>
 
+    <div id="stock-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="closeStockModal()"></div>
+        <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col scale-95 transition-all duration-300" id="stock-modal-container">
+            <div class="absolute top-0 left-0 w-full h-2 bg-emerald-500"></div>
+            <div class="p-8 pb-0 flex justify-between items-start">
+                <div>
+                    <h3 id="stock-modal-title" class="text-2xl font-extrabold text-navy tracking-tight">Add Stock</h3>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Official Inventory Entry</p>
+                </div>
+                <button onclick="closeStockModal()" class="p-2 bg-slate-50 rounded-xl text-slate-400 hover:text-navy transition-colors"><i data-lucide="x"></i></button>
+            </div>
+            <form id="stock-form" class="p-8 space-y-6 overflow-y-auto custom-scrollbar">
+                <input type="hidden" id="stock-id">
+                <div>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Medicine Name</label>
+                    <input type="text" id="med-name" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Quantity</label>
+                        <input type="number" id="med-qty" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Category</label>
+                        <select id="med-category" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none">
+                            <option value="Analgesic">Analgesic</option>
+                            <option value="Antibiotic">Antibiotic</option>
+                            <option value="Antiviral">Antiviral</option>
+                            <option value="Vaccine">Vaccine</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closeStockModal()" class="flex-1 font-bold text-slate-400">Cancel</button>
+                    <button type="submit" class="flex-[2] py-4 bg-emerald-500 text-white font-bold rounded-2xl shadow-xl shadow-emerald-100">Save Stock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE", authDomain: "gub-up.firebaseapp.com", projectId: "gub-up", storageBucket: "gub-up.firebasestorage.app", messagingSenderId: "75119179497", appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278" };
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
+            authDomain: "gub-up.firebaseapp.com",
+            projectId: "gub-up",
+            storageBucket: "gub-up.firebasestorage.app",
+            messagingSenderId: "75119179497",
+            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
+        };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let allStock = [];
+        let allStocks = [];
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const docSnap = await getDoc(doc(db, "users", user.uid));
-                if (docSnap.exists()) {
-                    const ud = docSnap.data();
-                    document.getElementById('user-name-display').innerText = ud.name;
-                    
-                    const consoleSec = document.getElementById('internal-console-section');
-                    const consoleLabel = document.getElementById('console-label');
-                    const consoleLink = document.getElementById('console-link');
-                    const consoleIcon = document.getElementById('console-icon');
-
-                    if(ud.role === 'rhu') {
-                        consoleSec.classList.remove('hidden');
-                        consoleLabel.innerText = "RHU Console";
-                        consoleLink.href = "rhu-console.html";
-                        consoleLink.classList.add('text-red-500', 'hover:bg-red-50'); // RED TEXT & HOVER
-                        consoleIcon.setAttribute('data-lucide', 'shield-check');
-                        consoleIcon.classList.add('text-red-500');
-                    } else if (ud.role === 'bhw') {
-                        consoleSec.classList.remove('hidden');
-                        consoleLabel.innerText = "BHW Console";
-                        consoleLink.href = "bhw-console.html";
-                        consoleLink.classList.add('text-emerald-500', 'hover:bg-emerald-50'); // GREEN TEXT & HOVER
-                        consoleIcon.setAttribute('data-lucide', 'user-cog');
-                        consoleIcon.classList.add('text-emerald-500');
-                    } else {
-                        consoleLink.classList.add('text-slate-600', 'hover:bg-slate-50');
-                    }
-                    lucide.createIcons();
-                }
-            }
-            document.body.classList.add('auth-ready');
-            AOS.init({ duration: 800, once: true });
-            initStockListener();
+                document.getElementById('user-name-display').innerText = docSnap.exists() ? docSnap.data().name : "User";
+                document.body.classList.add('auth-ready');
+                AOS.init({ duration: 800, once: true });
+                init();
+            } else { window.location.href = "login.html"; }
         });
 
-        function initStockListener() {
-            onSnapshot(collection(db, "medicine_inventory"), (snap) => {
-                allStock = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                applyFilters();
+        function init() {
+            onSnapshot(query(collection(db, "medicine_stocks"), orderBy("name", "asc")), (snap) => {
+                allStocks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderStockTable(allStocks);
             });
         }
 
-        function applyFilters() {
-            const term = document.getElementById('main-search').value.toLowerCase();
-            const brgy = document.getElementById('filter-barangay').value;
-            const year = document.getElementById('filter-year').value;
-            const month = document.getElementById('filter-month').value;
-
-            const filtered = allStock.filter(item => {
-                const date = item.createdAt?.toDate ? item.createdAt.toDate() : null;
-                const matchesSearch = item.name.toLowerCase().includes(term);
-                const matchesBrgy = brgy === "" || item.barangay === brgy;
-                const matchesYear = date ? date.getFullYear().toString() === year : true;
-                const matchesMonth = month === "" || (date && date.getMonth().toString() === month);
-                return matchesSearch && matchesBrgy && matchesYear && matchesMonth;
-            }).sort((a, b) => a.name.localeCompare(b.name));
-            renderTable(filtered);
-        }
-
-        function renderTable(data) {
+        function renderStockTable(data) {
             const body = document.getElementById('stock-table-body');
-            if (data.length === 0) {
-                body.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-slate-400 font-bold">No records found.</td></tr>`;
-                return;
-            }
-            body.innerHTML = data.map((item, index) => {
-                const isLow = item.count < 10;
-                const dateStr = item.createdAt?.toDate ? item.createdAt.toDate().toLocaleDateString() : '---';
-                return `
-                <tr class="hover:bg-slate-50 transition-all animate-row" style="animation-delay: ${index * 0.03}s">
-                    <td class="px-10 py-6">
+            body.innerHTML = data.map(item => `
+                <tr class="hover:bg-slate-50 transition-all">
+                    <td class="px-10 py-7">
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
-                            <div>
-                                <span class="font-bold text-navy text-base block">${item.name}</span>
-                                <span class="text-[10px] text-emerald-500 font-black uppercase tracking-widest">Brgy. ${item.barangay}</span>
-                            </div>
+                            <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
+                            <span class="font-extrabold text-navy text-lg">${item.name}</span>
                         </div>
                     </td>
-                    <td class="px-8 py-6 text-slate-500 font-bold text-sm">${item.expiryDate || '---'}</td>
-                    <td class="px-8 py-6 text-slate-400 text-xs font-medium">${dateStr}</td>
-                    <td class="px-10 py-6 text-right">
-                        <span class="font-black text-xl ${isLow ? 'text-red-500 pulse-red' : 'text-navy'}">${(item.count || 0).toLocaleString()}</span>
-                        <span class="text-[10px] text-slate-400 font-bold ml-1">${item.unit}</span>
+                    <td class="px-8 py-7"><span class="font-black text-navy">${item.quantity} units</span></td>
+                    <td class="px-8 py-7 text-slate-500 font-bold uppercase text-xs">${item.category}</td>
+                    <td class="px-8 py-7">
+                        <span class="status-pill ${item.quantity < 50 ? 'status-low' : 'status-good'}">
+                            ${item.quantity < 50 ? 'Low Stock' : 'Good Stock'}
+                        </span>
                     </td>
-                </tr>`;
-            }).join('');
+                    <td class="px-10 py-7 text-right">
+                        <button onclick="editStock('${item.id}')" class="p-2 hover:text-blue-600"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                        <button onclick="deleteStock('${item.id}')" class="p-2 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>`).join('');
             lucide.createIcons();
         }
 
-        document.getElementById('main-search').oninput = applyFilters;
-        document.getElementById('filter-barangay').onchange = applyFilters;
-        document.getElementById('filter-year').onchange = applyFilters;
-        document.getElementById('filter-month').onchange = applyFilters;
+        window.openStockModal = () => {
+            document.getElementById('stock-form').reset();
+            document.getElementById('stock-id').value = "";
+            document.getElementById('stock-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('stock-modal-container').classList.remove('scale-95'), 10);
+        };
+
+        window.closeStockModal = () => {
+            document.getElementById('stock-modal-container').classList.add('scale-95');
+            setTimeout(() => document.getElementById('stock-modal').classList.add('hidden'), 200);
+        };
+
+        window.editStock = (id) => {
+            const item = allStocks.find(s => s.id === id);
+            document.getElementById('stock-id').value = id;
+            document.getElementById('med-name').value = item.name;
+            document.getElementById('med-qty').value = item.quantity;
+            document.getElementById('med-category').value = item.category;
+            document.getElementById('stock-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('stock-modal-container').classList.remove('scale-95'), 10);
+        };
+
+        window.deleteStock = async (id) => { if(confirm("Delete this stock entry?")) await deleteDoc(doc(db, "medicine_stocks", id)); };
+
+        document.getElementById('stock-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('stock-id').value;
+            const data = {
+                name: document.getElementById('med-name').value,
+                quantity: parseInt(document.getElementById('med-qty').value),
+                category: document.getElementById('med-category').value
+            };
+            id ? await updateDoc(doc(db, "medicine_stocks", id), data) : await addDoc(collection(db, "medicine_stocks"), data);
+            closeStockModal();
+        };
+
         window.toggleSidebar = () => {
             const s = document.getElementById('sidebar');
-            s.classList.toggle('sidebar-closed'); s.classList.toggle('sidebar-open');
+            s.classList.toggle('sidebar-closed'); 
+            s.classList.toggle('sidebar-open');
         };
+
+        document.getElementById('stock-search').oninput = (e) => {
+            const t = e.target.value.toLowerCase();
+            renderStockTable(allStocks.filter(s => s.name.toLowerCase().includes(t) || s.category.toLowerCase().includes(t)));
+        };
+
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
     </script>
 </body>
