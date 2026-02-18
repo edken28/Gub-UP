@@ -23,12 +23,14 @@
         .status-pill { padding: 6px 12px; border-radius: 12px; font-weight: 800; font-size: 11px; text-transform: uppercase; }
         .status-low { background: #fff1f2; color: #be123c; }
         .status-good { background: #f0fdf4; color: #15803d; }
-        .status-expired { background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
+        .filter-select { background: white; border: 1px solid #f1f5f9; padding: 12px 20px; border-radius: 16px; font-weight: 600; color: #1e293b; outline: none; transition: all 0.2s; cursor: pointer; }
+        .filter-select:hover { border-color: #cbd5e1; }
     </style>
 </head>
 <body class="min-h-screen overflow-x-hidden">
 
     <div id="main-layout" class="w-full min-h-screen flex flex-col md:flex-row">
+        
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-[100] w-72 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 sidebar-closed md:relative md:translate-x-0 md:flex">
             <div class="p-8">
                 <div class="flex items-center justify-between mb-10">
@@ -52,10 +54,23 @@
                         <i data-lucide="pill"></i> Medicine Stocks
                     </a>
                     <a href="reports.html" class="flex items-center gap-3 text-slate-600 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
-                        <i data-lucide="file-bar-chart-2"></i> Disease Reports
+                        <i data-lucide="file-bar-chart-2" class="text-amber-500"></i> Disease Reports
                     </a>
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 hover:text-sky-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-sky-50 transition-all">
+                        <i data-lucide="phone-call" class="text-sky-500"></i> Hotlines
+                    </a>
+                    <div id="internal-section" class="pt-6 border-t mt-4 hidden">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-5">Internal Management</p>
+                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-3.5 font-semibold hover:bg-emerald-50 rounded-2xl transition-all">
+                            <i data-lucide="users" class="w-5 h-5"></i> BHW Console
+                        </a>
+                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-3.5 font-semibold hover:bg-red-50 rounded-2xl transition-all">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> RHU Console
+                        </a>
+                    </div>
                 </nav>
             </div>
+            
             <div class="mt-auto p-8">
                 <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors">
                     <i data-lucide="log-out"></i> Logout
@@ -66,21 +81,42 @@
         <main class="flex-1 w-full overflow-y-auto">
             <header class="glass-header border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center gap-4">
-                    <button onclick="toggleSidebar()" class="flex md:hidden p-3 bg-white border border-slate-100 rounded-xl text-navy shadow-sm">
+                    <button onclick="toggleSidebar()" class="flex md:hidden p-3 bg-white border border-slate-100 rounded-xl text-navy shadow-sm active:scale-95 transition-transform">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                     <div>
-                        <h2 class="text-sm font-extrabold text-navy uppercase tracking-tight">Public Stock View</h2>
-                        <p class="text-[10px] font-bold text-slate-400">Available Medicine per Barangay</p>
+                        <h2 class="text-sm font-extrabold text-navy uppercase tracking-tight">Stock Inventory</h2>
+                        <p class="text-[10px] font-bold text-slate-400">Public Viewing Mode</p>
                     </div>
+                </div>
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
+                    <div class="w-8 h-8 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center shadow-inner"><i data-lucide="user" class="w-4 h-4"></i></div>
+                    <span id="user-name-display" class="font-bold text-navy text-sm hidden sm:inline">Guest</span>
                 </div>
             </header>
 
             <div class="p-4 md:p-10 max-w-7xl mx-auto">
-                <div class="flex flex-col lg:flex-row justify-between items-center gap-6 mb-10" data-aos="fade-down">
-                    <div class="relative flex-1 w-full group">
+                <div class="space-y-6 mb-10" data-aos="fade-down">
+                    <div class="relative group">
                         <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                        <input type="text" id="stock-search" placeholder="Search medicines or barangay..." class="w-full pl-14 pr-4 py-5 bg-white border border-slate-100 rounded-3xl outline-none focus:ring-4 ring-emerald-50 shadow-sm font-semibold text-navy transition-all">
+                        <input type="text" id="stock-search" placeholder="Search medicines by name..." class="w-full pl-14 pr-4 py-5 bg-white border border-slate-100 rounded-3xl outline-none focus:ring-4 ring-emerald-50 shadow-sm font-semibold text-navy transition-all">
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-4">
+                        <select id="filter-barangay" class="filter-select flex-1 min-w-[200px]">
+                            <option value="all">All Barangays</option>
+                            <option value="Poblacion">Poblacion</option>
+                            <option value="Pinontalan">Pinontalan</option>
+                            <option value="Benguet">Benguet</option>
+                            </select>
+                        <select id="sort-quantity" class="filter-select flex-1 min-w-[200px]">
+                            <option value="default">Quantity: Default</option>
+                            <option value="low-high">Quantity: Lowest to Highest</option>
+                        </select>
+                        <select id="sort-expiry" class="filter-select flex-1 min-w-[200px]">
+                            <option value="default">Expiry: Default</option>
+                            <option value="near-far">Expiry: Near to Far</option>
+                        </select>
                     </div>
                 </div>
 
@@ -90,8 +126,8 @@
                             <thead class="bg-slate-50/50">
                                 <tr class="text-[11px] font-black text-slate-400 uppercase tracking-[0.15em]">
                                     <th class="px-10 py-7">Medicine</th>
-                                    <th class="px-8 py-7">Barangay</th>
                                     <th class="px-8 py-7">Quantity</th>
+                                    <th class="px-8 py-7">Barangay</th>
                                     <th class="px-8 py-7">Expiry Date</th>
                                     <th class="px-8 py-7">Status</th>
                                 </tr>
@@ -108,7 +144,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -118,7 +154,6 @@
             messagingSenderId: "75119179497",
             appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
         };
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -127,6 +162,27 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                const docSnap = await getDoc(doc(db, "users", user.uid));
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    document.getElementById('user-name-display').innerText = userData.name;
+                    
+                    const internalSection = document.getElementById('internal-section');
+                    const bhwLink = document.getElementById('bhw-link');
+                    const rhuLink = document.getElementById('rhu-link');
+                    
+                    if (userData.role === 'admin' || userData.role === 'bhw' || userData.role === 'rhu') {
+                        internalSection.classList.remove('hidden');
+                        if (userData.role === 'admin') {
+                            bhwLink.classList.remove('hidden');
+                            rhuLink.classList.remove('hidden');
+                        } else if (userData.role === 'bhw') {
+                            bhwLink.classList.remove('hidden');
+                        } else if (userData.role === 'rhu') {
+                            rhuLink.classList.remove('hidden');
+                        }
+                    }
+                }
                 document.body.classList.add('auth-ready');
                 AOS.init({ duration: 800, once: true });
                 init();
@@ -134,60 +190,75 @@
         });
 
         function init() {
-            // Updated Query: Sorting is handled in Javascript to allow multi-level logic (Qty + Expiry)
-            onSnapshot(collection(db, "medicine_stocks"), (snap) => {
+            // Match database and order by name initially
+            onSnapshot(query(collection(db, "medicine_stocks"), orderBy("name", "asc")), (snap) => {
                 allStocks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                
-                // CUSTOM SORTING LOGIC:
-                // 1. Sort by Quantity (Lowest to Highest)
-                // 2. Then sort by Expiry Date (Soonest to Furthest)
-                allStocks.sort((a, b) => {
-                    if (a.quantity !== b.quantity) return a.quantity - b.quantity;
-                    return new Date(a.expiryDate) - new Date(b.expiryDate);
-                });
-
-                renderStockTable(allStocks);
+                applyFilters();
             });
+        }
+
+        function applyFilters() {
+            let filtered = [...allStocks];
+            const searchTerm = document.getElementById('stock-search').value.toLowerCase();
+            const barangay = document.getElementById('filter-barangay').value;
+            const qtySort = document.getElementById('sort-quantity').value;
+            const expirySort = document.getElementById('sort-expiry').value;
+
+            // Search
+            if (searchTerm) {
+                filtered = filtered.filter(s => s.name.toLowerCase().includes(searchTerm));
+            }
+
+            // Barangay Filter
+            if (barangay !== 'all') {
+                filtered = filtered.filter(s => s.barangay === barangay);
+            }
+
+            // Quantity Sort
+            if (qtySort === 'low-high') {
+                filtered.sort((a, b) => a.quantity - b.quantity);
+            }
+
+            // Expiry Sort
+            if (expirySort === 'near-far') {
+                filtered.sort((a, b) => new Date(a.expiryDate) - new Date(b.expiryDate));
+            }
+
+            renderStockTable(filtered);
         }
 
         function renderStockTable(data) {
             const body = document.getElementById('stock-table-body');
-            body.innerHTML = data.map(item => {
-                const expiry = item.expiryDate || 'N/A';
-                const isLow = item.quantity < 50;
-                
-                return `
+            if(data.length === 0) {
+                body.innerHTML = `<tr><td colspan="5" class="px-10 py-20 text-center text-slate-400 font-bold">No medicines found matching your filters.</td></tr>`;
+                return;
+            }
+
+            body.innerHTML = data.map(item => `
                 <tr class="hover:bg-slate-50 transition-all">
                     <td class="px-10 py-7">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
-                            <div>
-                                <span class="font-extrabold text-navy text-lg block">${item.name}</span>
-                                <span class="text-[10px] text-slate-400 font-bold uppercase">${item.category}</span>
-                            </div>
+                            <span class="font-extrabold text-navy text-lg">${item.name}</span>
                         </div>
                     </td>
-                    <td class="px-8 py-7 font-bold text-slate-600">${item.barangay || 'General'}</td>
                     <td class="px-8 py-7"><span class="font-black text-navy">${item.quantity} units</span></td>
-                    <td class="px-8 py-7 font-semibold text-slate-500">${expiry}</td>
+                    <td class="px-8 py-7"><span class="text-slate-600 font-bold text-sm">${item.barangay || 'General'}</span></td>
+                    <td class="px-8 py-7 text-slate-500 font-bold text-sm">${item.expiryDate || 'N/A'}</td>
                     <td class="px-8 py-7">
-                        <span class="status-pill ${isLow ? 'status-low' : 'status-good'}">
-                            ${isLow ? 'Low Stock' : 'Available'}
+                        <span class="status-pill ${item.quantity < 50 ? 'status-low' : 'status-good'}">
+                            ${item.quantity < 50 ? 'Low Stock' : 'In Stock'}
                         </span>
                     </td>
-                </tr>`;
-            }).join('');
+                </tr>`).join('');
             lucide.createIcons();
         }
 
-        document.getElementById('stock-search').oninput = (e) => {
-            const t = e.target.value.toLowerCase();
-            const filtered = allStocks.filter(s => 
-                s.name.toLowerCase().includes(t) || 
-                (s.barangay && s.barangay.toLowerCase().includes(t))
-            );
-            renderStockTable(filtered);
-        };
+        // Listeners for filters
+        document.getElementById('stock-search').oninput = applyFilters;
+        document.getElementById('filter-barangay').onchange = applyFilters;
+        document.getElementById('sort-quantity').onchange = applyFilters;
+        document.getElementById('sort-expiry').onchange = applyFilters;
 
         window.toggleSidebar = () => {
             const s = document.getElementById('sidebar');
