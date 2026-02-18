@@ -52,7 +52,7 @@
                     <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 hover:text-blue-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-blue-50 transition-all">
                         <i data-lucide="layout-dashboard"></i> Dashboard
                     </a>
-                    <a href="stock.html" class="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-emerald-100 transition-all">
+                    <a href="stock.html" class="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-emerald-100">
                         <i data-lucide="pill"></i> Medicine Stocks
                     </a>
                     <a href="reports.html" class="flex items-center gap-3 text-slate-600 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
@@ -87,8 +87,8 @@
                         <i data-lucide="menu"></i>
                     </button>
                     <div>
-                        <h2 class="text-sm font-extrabold text-navy uppercase tracking-tight">Community Medicine Tracker</h2>
-                        <p class="text-[10px] font-bold text-slate-400">Public Viewing Only • Real-time Updates</p>
+                        <h2 class="text-sm font-extrabold text-navy uppercase tracking-tight">Medicine Inventory</h2>
+                        <p class="text-[10px] font-bold text-slate-400">Public Supply Monitor</p>
                     </div>
                 </div>
             </header>
@@ -97,40 +97,52 @@
                 <div class="flex flex-col lg:flex-row justify-between items-center gap-6 mb-10" data-aos="fade-down">
                     <div class="relative flex-1 w-full group">
                         <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                        <input type="text" id="stock-search" placeholder="Search available medicine (e.g. Paracetamol)..." class="w-full pl-14 pr-4 py-5 bg-white border border-slate-100 rounded-3xl outline-none focus:ring-4 ring-emerald-50 shadow-sm font-semibold text-navy transition-all">
+                        <input type="text" id="stock-search" placeholder="Search medicine name..." class="w-full pl-14 pr-4 py-5 bg-white border border-slate-100 rounded-3xl outline-none focus:ring-4 ring-emerald-50 shadow-sm font-semibold text-navy transition-all">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" data-aos="fade-up">
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Barangay Location</label>
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Origin Barangay</label>
                         <select id="filter-brgy" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
-                            <option value="all">Everywhere in Gubat</option>
-                            <option value="Poblacion">Poblacion</option><option value="Pinontalan">Pinontalan</option>
-                            <option value="Benguet">Benguet</option><option value="Ariman">Ariman</option>
-                            <option value="Bagacay">Bagacay</option><option value="Tigkiw">Tigkiw</option>
+                            <option value="all">All Barangays</option>
+                            <option value="Ariman">Ariman</option><option value="Bagacay">Bagacay</option><option value="Balud Del Norte">Balud Del Norte</option>
+                            <option value="Balud Del Sur">Balud Del Sur</option><option value="Benguet">Benguet</option><option value="Bentuco">Bentuco</option>
+                            <option value="Beriran">Beriran</option><option value="Buenavista">Buenavista</option><option value="Bulacao">Bulacao</option>
+                            <option value="Cabigaan">Cabigaan</option><option value="Cabiguhan">Cabiguhan</option><option value="Carriedo">Carriedo</option>
+                            <option value="Casili">Casili</option><option value="Cogon">Cogon</option><option value="Cota Na Daco">Cota Na Daco</option>
+                            <option value="Dita">Dita</option><option value="Jupi">Jupi</option><option value="Lapinig">Lapinig</option>
+                            <option value="Luna-Candol">Luna-Candol</option><option value="Manapao">Manapao</option><option value="Manook">Manook</option>
+                            <option value="Naagtan">Naagtan</option><option value="Nato">Nato</option><option value="Nazareno">Nazareno</option>
+                            <option value="Ogao">Ogao</option><option value="Paco">Paco</option><option value="Panganiban">Panganiban</option>
+                            <option value="Paradijon">Paradijon</option><option value="Patag">Patag</option><option value="Payawin">Payawin</option>
+                            <option value="Pinontingan">Pinontingan</option><option value="Rizal">Rizal</option><option value="San Ignacio">San Ignacio</option>
+                            <option value="Sangat">Sangat</option><option value="Santa Ana">Santa Ana</option><option value="Tabi">Tabi</option>
+                            <option value="Tagaytay">Tagaytay</option><option value="Tigkiw">Tigkiw</option><option value="Tiris">Tiris</option>
+                            <option value="Togawe">Togawe</option><option value="Union">Union</option><option value="Villareal">Villareal</option>
                         </select>
                     </div>
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Availability</label>
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Stock Level</label>
                         <select id="filter-status" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
-                            <option value="all">All Items</option>
+                            <option value="all">All Levels</option>
                             <option value="low">Low Stock (< 50)</option>
-                            <option value="good">Adequate (50+)</option>
+                            <option value="good">Good Stock (50+)</option>
                         </select>
                     </div>
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Sort By Expiry</label>
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Sort Expiry</label>
                         <select id="sort-expiry" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
-                            <option value="near">Expiring Soonest</option>
-                            <option value="far">Furthest Expiry</option>
+                            <option value="near">Near to Far</option>
+                            <option value="far">Far to Near</option>
                         </select>
                     </div>
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Sort By Quantity</label>
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Sort Quantity</label>
                         <select id="sort-qty" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
-                            <option value="high">Highest Stock</option>
-                            <option value="low">Lowest Stock</option>
+                            <option value="none">Default</option>
+                            <option value="high">Highest First</option>
+                            <option value="low">Lowest First</option>
                         </select>
                     </div>
                 </div>
@@ -140,9 +152,9 @@
                         <table class="w-full text-left whitespace-nowrap">
                             <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 text-[11px] font-black uppercase tracking-widest">
                                 <tr>
-                                    <th class="px-10 py-7">Medicine & Category</th>
-                                    <th class="px-8 py-7">Distribution Center</th>
-                                    <th class="px-8 py-7 text-center">Current Stock</th>
+                                    <th class="px-10 py-7">Medicine Details</th>
+                                    <th class="px-8 py-7">Barangay</th>
+                                    <th class="px-8 py-7 text-center">Quantity</th>
                                     <th class="px-8 py-7">Expiry Date</th>
                                     <th class="px-10 py-7">Status</th>
                                 </tr>
@@ -168,21 +180,21 @@
 
         let masterData = [];
 
-        // Auth Logic: Allow everyone to see data, just display different nav based on role
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const docSnap = await getDoc(doc(db, "users", user.uid));
                 if (docSnap.exists()) {
                     const ud = docSnap.data();
                     const internalSec = document.getElementById('internal-section');
-                    // Check if user is Staff (BHW/RHU/Admin) to show management links
                     if (['admin', 'bhw', 'rhu'].includes(ud.role)) {
                         internalSec.classList.remove('hidden');
                         if (ud.role === 'admin') { 
                             document.getElementById('bhw-link').classList.remove('hidden'); 
                             document.getElementById('rhu-link').classList.remove('hidden'); 
-                        } else {
-                            document.getElementById(`${ud.role}-link`).classList.remove('hidden');
+                        } else if (ud.role === 'bhw') {
+                            document.getElementById('bhw-link').classList.remove('hidden');
+                        } else if (ud.role === 'rhu') {
+                            document.getElementById('rhu-link').classList.remove('hidden');
                         }
                     }
                 }
@@ -190,25 +202,26 @@
                 AOS.init({ duration: 800, once: true });
                 lucide.createIcons();
                 loadData();
-            } else { 
-                window.location.href = "login.html"; 
-            }
+            } else { window.location.href = "login.html"; }
         });
 
         function loadData() {
+            // Check collection name: 'medicine_stocks' or 'medicines'? Using 'medicine_stocks' per previous context.
             onSnapshot(collection(db, "medicine_stocks"), (snap) => {
                 masterData = snap.docs.map(d => {
                     const data = d.data();
                     return {
                         id: d.id,
-                        name: data.name || data.medicineName || "Unnamed",
+                        name: data.name || data.medicineName || "Unnamed Medicine",
                         quantity: Number(data.quantity || data.qty || 0),
-                        barangay: data.barangay || "General",
+                        barangay: data.barangay || "Unspecified",
                         expiryDate: data.expiryDate || "N/A",
-                        category: data.category || "General Medicine"
+                        category: data.category || "General"
                     };
                 });
                 applyFilters();
+            }, (error) => {
+                console.error("Firebase error:", error);
             });
         }
 
@@ -220,7 +233,7 @@
             const sortQty = document.getElementById('sort-qty').value;
 
             let filtered = masterData.filter(item => {
-                const matchesSearch = item.name.toLowerCase().includes(search) || item.category.toLowerCase().includes(search);
+                const matchesSearch = item.name.toLowerCase().includes(search);
                 const matchesBrgy = brgy === "all" || item.barangay === brgy;
                 const matchesStatus = status === "all" || 
                                      (status === "low" ? item.quantity < 50 : item.quantity >= 50);
@@ -228,13 +241,11 @@
             });
 
             filtered.sort((a, b) => {
-                // Primary Sort: Quantity
                 if (sortQty === 'high') return b.quantity - a.quantity;
                 if (sortQty === 'low') return a.quantity - b.quantity;
                 
-                // Secondary Sort: Expiry
-                const dateA = new Date(a.expiryDate === "N/A" ? "2099-01-01" : a.expiryDate);
-                const dateB = new Date(b.expiryDate === "N/A" ? "2099-01-01" : b.expiryDate);
+                const dateA = new Date(a.expiryDate === "N/A" ? "2099-12-31" : a.expiryDate);
+                const dateB = new Date(b.expiryDate === "N/A" ? "2099-12-31" : b.expiryDate);
                 return sortExp === 'near' ? dateA - dateB : dateB - dateA;
             });
 
@@ -244,27 +255,27 @@
         function renderTable(data) {
             const body = document.getElementById('stock-table-body');
             if (data.length === 0) {
-                body.innerHTML = `<tr><td colspan="5" class="py-20 text-center font-bold text-slate-300">No matching medicines currently in stock.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="5" class="py-20 text-center font-bold text-slate-400">No data found in the records.</td></tr>`;
                 return;
             }
 
             body.innerHTML = data.map((item, index) => {
                 const isLow = item.quantity < 50;
-                const statusClass = isLow ? "bg-red-500 text-white shadow-lg shadow-red-50" : "bg-emerald-500 text-white shadow-lg shadow-emerald-50";
+                const statusClass = isLow ? "bg-red-500 text-white shadow-lg shadow-red-100" : "bg-emerald-500 text-white shadow-lg shadow-emerald-100";
                 
                 return `
-                <tr class="hover:bg-slate-50/50 transition-all animate-row border-b border-slate-50" style="animation-delay: ${index * 0.03}s">
+                <tr class="hover:bg-slate-50/80 transition-all animate-row" style="animation-delay: ${index * 0.05}s">
                     <td class="px-10 py-7">
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
+                            <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
                             <div>
-                                <span class="font-extrabold text-navy text-lg block leading-none mb-1">${item.name}</span>
+                                <span class="font-extrabold text-lg block">${item.name}</span>
                                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${item.category}</span>
                             </div>
                         </div>
                     </td>
-                    <td class="px-8 py-7 text-slate-500 font-bold text-xs uppercase tracking-wider italic">Brgy. ${item.barangay}</td>
-                    <td class="px-8 py-7 text-center font-black text-xl text-navy">${item.quantity.toLocaleString()}</td>
+                    <td class="px-8 py-7 text-slate-500 font-bold text-xs uppercase tracking-wider">Brgy. ${item.barangay}</td>
+                    <td class="px-8 py-7 text-center font-black text-xl">${item.quantity.toLocaleString()}</td>
                     <td class="px-8 py-7 text-slate-400 text-xs font-bold uppercase">${item.expiryDate}</td>
                     <td class="px-10 py-7">
                         <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest ${statusClass}">
@@ -283,9 +294,8 @@
         };
 
         ['stock-search', 'filter-brgy', 'filter-status', 'sort-expiry', 'sort-qty'].forEach(id => {
-            const el = document.getElementById(id);
-            el.addEventListener('input', applyFilters);
-            el.addEventListener('change', applyFilters);
+            document.getElementById(id).addEventListener('input', applyFilters);
+            document.getElementById(id).addEventListener('change', applyFilters);
         });
 
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
