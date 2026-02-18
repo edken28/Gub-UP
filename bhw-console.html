@@ -127,6 +127,7 @@
                             <thead class="bg-slate-50/50 border-b border-slate-50">
                                 <tr class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
                                     <th class="px-10 py-6">Medicine Identity</th>
+                                    <th class="px-8 py-6">Date Added</th>
                                     <th class="px-8 py-6">Expiration</th>
                                     <th class="px-8 py-6 text-center">In-Stock</th>
                                     <th class="px-10 py-6 text-right">Actions</th>
@@ -155,12 +156,19 @@
                 </div>
                 <form id="item-form" class="space-y-5">
                     <input type="hidden" id="entry-id">
+                    
                     <div class="relative">
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Select Medicine</label>
                         <input type="text" id="medicine-input" autocomplete="off" placeholder="Start typing name..." class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none focus:ring-2 ring-emerald-100">
                         <div id="medicine-dropdown" class="dropdown-list custom-scrollbar"></div>
                         <input type="hidden" id="med-name" required>
                     </div>
+
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Date Added (On Web)</label>
+                        <input type="date" id="med-added-date" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none">
+                    </div>
+
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Quantity</label>
@@ -176,10 +184,12 @@
                             </select>
                         </div>
                     </div>
+
                     <div>
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Expiration Date</label>
                         <input type="date" id="med-expiry" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none">
                     </div>
+
                     <div class="flex gap-4 pt-6">
                         <button type="button" onclick="closeModal()" class="flex-1 font-bold text-slate-400 hover:text-slate-600 transition-colors">Cancel</button>
                         <button type="submit" class="flex-[2] py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-xl shadow-emerald-100 hover:bg-emerald-700 transition-all">Save Record</button>
@@ -204,7 +214,6 @@
         let userBrgy = "";
         let allItems = [];
 
-        // Sidebar Control
         document.getElementById('open-sidebar').onclick = () => { document.getElementById('sidebar').classList.add('sidebar-open'); document.getElementById('overlay').classList.add('active'); };
         document.getElementById('close-sidebar').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
         document.getElementById('overlay').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
@@ -236,7 +245,7 @@
         function renderTable(data) {
             const body = document.getElementById('inventory-table-body');
             if (data.length === 0) {
-                body.innerHTML = `<tr><td colspan="4" class="py-20 text-center text-slate-400 font-bold">No records found for ${userBrgy}.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="5" class="py-20 text-center text-slate-400 font-bold">No records found for ${userBrgy}.</td></tr>`;
                 return;
             }
             body.innerHTML = data.map((item, index) => `
@@ -250,6 +259,7 @@
                             </div>
                         </div>
                     </td>
+                    <td class="px-8 py-7"><span class="text-slate-500 font-bold text-[12px]">${item.addedDate || 'N/A'}</span></td>
                     <td class="px-8 py-7"><span class="px-3 py-1 bg-slate-100 rounded-full text-slate-500 font-bold text-[11px]">${item.expiryDate || 'N/A'}</span></td>
                     <td class="px-8 py-7 text-center">
                         <span class="font-bold text-lg ${item.count < 10 ? 'text-red-500 pulse-red' : 'text-slate-700'}">${(item.count || 0).toLocaleString()}</span>
@@ -276,13 +286,22 @@
         };
 
         window.selectMedicine = (n) => { mInput.value = n; hInput.value = n; mDrop.classList.remove('active'); };
-        window.openAddModal = () => { document.getElementById('item-form').reset(); document.getElementById('entry-id').value = ""; document.getElementById('item-modal').classList.remove('hidden'); };
+        
+        window.openAddModal = () => { 
+            document.getElementById('item-form').reset(); 
+            document.getElementById('entry-id').value = ""; 
+            // Default Date Added to today
+            document.getElementById('med-added-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('item-modal').classList.remove('hidden'); 
+        };
+        
         window.closeModal = () => { document.getElementById('item-modal').classList.add('hidden'); };
 
         window.editEntry = (id) => {
             const item = allItems.find(c => c.id === id);
             document.getElementById('entry-id').value = id;
             mInput.value = item.name; hInput.value = item.name;
+            document.getElementById('med-added-date').value = item.addedDate;
             document.getElementById('med-count').value = item.count;
             document.getElementById('med-unit').value = item.unit;
             document.getElementById('med-expiry').value = item.expiryDate;
@@ -294,7 +313,15 @@
         document.getElementById('item-form').onsubmit = async (e) => {
             e.preventDefault();
             const id = document.getElementById('entry-id').value;
-            const data = { name: hInput.value || mInput.value, count: parseInt(document.getElementById('med-count').value), unit: document.getElementById('med-unit').value, expiryDate: document.getElementById('med-expiry').value, barangay: userBrgy, createdAt: Timestamp.now() };
+            const data = { 
+                name: hInput.value || mInput.value, 
+                addedDate: document.getElementById('med-added-date').value,
+                count: parseInt(document.getElementById('med-count').value), 
+                unit: document.getElementById('med-unit').value, 
+                expiryDate: document.getElementById('med-expiry').value, 
+                barangay: userBrgy, 
+                createdAt: Timestamp.now() 
+            };
             id ? await updateDoc(doc(db, "medicine_inventory", id), data) : await addDoc(collection(db, "medicine_inventory"), data);
             closeModal();
         };
