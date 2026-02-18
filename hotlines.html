@@ -11,104 +11,82 @@
     <style>
         body { font-family: 'Inter', sans-serif; opacity: 0; transition: opacity 0.3s ease-in; }
         .auth-ready { opacity: 1; }
-        .bg-brand-blue { background-color: #2563eb; }
-        .text-brand-blue { color: #2563eb; }
-        .text-navy { color: #1e3a8a; }
         .hover-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .hover-card:hover { transform: translateY(-8px); }
         
-        /* Mobile Sidebar Transitions */
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .sidebar-closed { transform: translateX(-100%); }
             .sidebar-open { transform: translateX(0); }
         }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col md:flex-row overflow-x-hidden">
+<body class="bg-slate-50 min-h-screen flex flex-col lg:flex-row overflow-x-hidden">
 
-    <div class="md:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-50">
+    <div class="lg:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-50">
         <div class="flex items-center gap-2">
-            <div class="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center text-white">
-                <i data-lucide="plus" class="w-5 h-5"></i>
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+                <i data-lucide="activity" class="w-5 h-5"></i>
             </div>
-            <span class="font-bold text-navy">GUB-UP</span>
+            <span class="font-bold text-blue-900">GUB-UP</span>
         </div>
         <button onclick="toggleSidebar()" class="p-2 text-slate-600 bg-slate-50 rounded-xl">
             <i data-lucide="menu"></i>
         </button>
     </div>
 
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-[60] w-72 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 sidebar-closed md:relative md:translate-x-0 md:flex md:h-screen md:sticky md:top-0">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-[60] w-72 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 sidebar-closed lg:relative lg:translate-x-0 lg:flex lg:h-screen lg:sticky lg:top-0">
         <div class="p-8">
             <div class="flex items-center justify-between mb-10">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white shadow-lg">
-                        <i data-lucide="plus" class="w-6 h-6"></i>
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                        <i data-lucide="activity"></i>
                     </div>
                     <div>
-                        <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
-                        <p class="text-[10px] text-brand-blue uppercase font-black tracking-widest mt-1">Health Network</p>
+                        <h1 class="font-bold text-blue-900 text-xl">GUB-UP</h1>
+                        <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">Health System</p>
                     </div>
                 </div>
-                <button class="md:hidden p-2 text-slate-400" onclick="toggleSidebar()">
-                    <i data-lucide="x"></i>
-                </button>
+                <button id="close-sidebar" onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-400"><i data-lucide="x"></i></button>
             </div>
 
-            <nav class="space-y-3">
-                <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all group">
-                    <div class="w-8 h-8 bg-slate-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
-                        <i data-lucide="layout-dashboard" class="w-4 h-4 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <span>Dashboard</span>
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 hover:text-blue-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-blue-50 transition-all">
+                    <i data-lucide="layout-dashboard"></i> Dashboard
                 </a>
-                <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
-                    <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
-                        <i data-lucide="package" class="w-4 h-4 text-emerald-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <span>Medicine Stocks</span>
+                <a href="stock.html" class="flex items-center gap-3 text-slate-600 hover:text-emerald-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-emerald-50 transition-all">
+                    <i data-lucide="pill" class="text-emerald-500"></i> Medicine Stocks
                 </a>
-                <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 hover:text-amber-600 transition-all group">
-                    <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
-                        <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white transition-colors"></i>
-                    </div>
-                    <span>Disease Reports</span>
+                <a href="reports.html" class="flex items-center gap-3 text-slate-600 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
+                    <i data-lucide="file-bar-chart-2" class="text-amber-500"></i> Disease Reports
                 </a>
-                <a href="hotlines.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-100 transition-all">
-                    <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                        <i data-lucide="phone-forwarded" class="w-4 h-4 text-white"></i>
-                    </div>
-                    <span>Hotlines</span>
+                <a href="hotlines.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-blue-100">
+                    <i data-lucide="phone-call"></i> Hotlines
                 </a>
-
-                <div id="internal-consoles-section" class="pt-6 pb-2 hidden">
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
-                    <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 bg-red-50 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-600 hover:text-white transition-all mb-2">
-                        <i data-lucide="shield-alert" class="w-5 h-5"></i>
-                        <span>RHU Console</span>
+                
+                <div id="internal-section" class="pt-6 border-t mt-4 hidden">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-5">Internal Management</p>
+                    <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-3.5 font-semibold hover:bg-emerald-50 rounded-2xl transition-all">
+                        <i data-lucide="users" class="w-5 h-5"></i> BHW Console
                     </a>
-                    <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all group">
-                        <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 group-hover:text-white transition-colors"></i>
-                        </div>
-                        <span>BHW Console</span>
+                    <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-3.5 font-semibold hover:bg-red-50 rounded-2xl transition-all">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i> RHU Console
                     </a>
                 </div>
             </nav>
         </div>
-        <div class="mt-auto p-8 border-t border-slate-50">
-            <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full group">
-                <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Logout
+        <div class="mt-auto p-8">
+            <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors">
+                <i data-lucide="log-out"></i> Logout
             </button>
         </div>
     </aside>
 
-    <div id="sidebar-overlay" class="fixed inset-0 bg-navy/40 backdrop-blur-sm z-50 hidden md:hidden" onclick="toggleSidebar()"></div>
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
     <main class="flex-1 p-4 md:p-8 overflow-y-auto">
         <header class="flex justify-between items-center mb-10" data-aos="fade-down">
             <div>
-                <h1 class="text-2xl md:text-3xl font-extrabold text-navy">Emergency Hotlines</h1>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-blue-900">Emergency Hotlines</h1>
                 <p class="text-slate-500 font-medium">Quick access to emergency services</p>
             </div>
         </header>
@@ -131,7 +109,7 @@
             </div>
         </div>
 
-        <h2 class="text-xl font-black text-navy mb-6 px-2 uppercase tracking-widest text-[12px]">6 Emergency Services</h2>
+        <h2 class="text-xl font-black text-blue-900 mb-6 px-2 uppercase tracking-widest text-[12px]">6 Emergency Services</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover-card" data-aos="zoom-in">
@@ -145,15 +123,15 @@
                 <div class="p-6 space-y-4">
                     <div>
                         <p class="text-[10px] uppercase font-bold text-slate-400">Mobile</p>
-                        <p class="font-bold text-navy text-lg">0945-661-9900</p>
+                        <p class="font-bold text-blue-900 text-lg">0945-661-9900</p>
                     </div>
-                    <a href="tel:09456619900" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md">
+                    <a href="tel:09456619900" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call Now
                     </a>
                 </div>
             </div>
 
-            <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover-card" data-aos="zoom-in">
+            <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover-card" data-aos="zoom-in" data-aos-delay="100">
                 <div class="bg-[#bf8b0a] p-6 text-white">
                     <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mb-3">
                         <i data-lucide="alert-triangle" class="w-6 h-6"></i>
@@ -164,15 +142,15 @@
                 <div class="p-6 space-y-4">
                     <div>
                         <p class="text-[10px] uppercase font-bold text-slate-400">Mobile</p>
-                        <p class="font-bold text-navy text-lg">0938-161-8174</p>
+                        <p class="font-bold text-blue-900 text-lg">0938-161-8174</p>
                     </div>
-                    <a href="tel:09381618174" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md">
+                    <a href="tel:09381618174" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call Now
                     </a>
                 </div>
             </div>
 
-            <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover-card" data-aos="zoom-in">
+            <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover-card" data-aos="zoom-in" data-aos-delay="200">
                 <div class="bg-[#10933d] p-6 text-white">
                     <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mb-3">
                         <i data-lucide="book-plus" class="w-6 h-6"></i>
@@ -183,14 +161,14 @@
                 <div class="p-6 space-y-4">
                     <div>
                         <p class="text-[10px] uppercase font-bold text-slate-400">Mobile</p>
-                        <p class="font-bold text-navy text-lg">0945-508-7495</p>
+                        <p class="font-bold text-blue-900 text-lg">0945-508-7495</p>
                     </div>
-                    <a href="tel:09455087495" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md">
+                    <a href="tel:09455087495" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call Now
                     </a>
                 </div>
             </div>
-
+            
             <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover-card" data-aos="zoom-in">
                 <div class="bg-blue-600 p-6 text-white">
                     <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mb-3">
@@ -202,9 +180,9 @@
                 <div class="p-6 space-y-4">
                     <div>
                         <p class="text-[10px] uppercase font-bold text-slate-400">Mobile</p>
-                        <p class="font-bold text-navy text-lg">0947-616-9184</p>
+                        <p class="font-bold text-blue-900 text-lg">0947-616-9184</p>
                     </div>
-                    <a href="tel:09476169184" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md">
+                    <a href="tel:09476169184" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call Now
                     </a>
                 </div>
@@ -215,15 +193,15 @@
                     <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mb-3">
                         <i data-lucide="ambulance" class="w-6 h-6"></i>
                     </div>
-                    <h3 class="font-bold text-lg leading-tight">Emergency Medical Services</h3>
+                    <h3 class="font-bold text-lg leading-tight">EMS</h3>
                     <p class="text-white/80 text-sm">Ambulance</p>
                 </div>
                 <div class="p-6 space-y-4">
                     <div>
                         <p class="text-[10px] uppercase font-bold text-slate-400">Mobile</p>
-                        <p class="font-bold text-navy text-lg">0966-847-6669</p>
+                        <p class="font-bold text-blue-900 text-lg">0966-847-6669</p>
                     </div>
-                    <a href="tel:09668476669" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md">
+                    <a href="tel:09668476669" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call Now
                     </a>
                 </div>
@@ -234,27 +212,27 @@
                     <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mb-3">
                         <i data-lucide="shield" class="w-6 h-6"></i>
                     </div>
-                    <h3 class="font-bold text-lg leading-tight">Municipal Police Station</h3>
-                    <p class="text-white/80 text-sm">Gubat Police Station</p>
+                    <h3 class="font-bold text-lg leading-tight">Police Station</h3>
+                    <p class="text-white/80 text-sm">Gubat PNP</p>
                 </div>
                 <div class="p-6 space-y-4">
                     <div>
                         <p class="text-[10px] uppercase font-bold text-slate-400">Mobile</p>
-                        <p class="font-bold text-navy text-lg">0998-598-6070</p>
+                        <p class="font-bold text-blue-900 text-lg">0998-598-6070</p>
                     </div>
-                    <a href="tel:09985986070" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md">
+                    <a href="tel:09985986070" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call Now
                     </a>
                 </div>
             </div>
         </div>
 
-        <h2 class="text-xl font-black text-navy mb-6 px-2 uppercase tracking-widest text-[12px]">Barangay Health Centers</h2>
+        <h2 class="text-xl font-black text-blue-900 mb-6 px-2 uppercase tracking-widest text-[12px]">Barangay Health Centers</h2>
         <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm mb-12" data-aos="fade-up">
             <div class="divide-y divide-slate-50">
                 <script>
                     const bhcs = [
-                        { name: "Thomas", location: "Paradijon, Gubat", phone: "0912-345-6789" },
+                        { name: "Paradijon", location: "Paradijon, Gubat", phone: "0912-345-6789" },
                     ];
 
                     document.write(bhcs.map(bhc => `
@@ -264,7 +242,7 @@
                                     <i data-lucide="hospital" class="w-6 h-6"></i>
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-navy text-lg group-hover:text-blue-700 transition-colors">${bhc.name}</h4>
+                                    <h4 class="font-bold text-blue-900 text-lg group-hover:text-blue-700 transition-colors">${bhc.name}</h4>
                                     <div class="flex flex-wrap items-center gap-3 mt-1">
                                         <p class="text-sm text-slate-500 flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> ${bhc.location}</p>
                                         <p class="text-sm font-bold text-blue-600">${bhc.phone}</p>
@@ -278,28 +256,6 @@
                     `).join(''));
                 </script>
             </div>
-        </div>
-
-        <div class="bg-[#eff6ff] border border-[#dbeafe] rounded-2xl p-6 md:p-8 mb-12 shadow-sm" data-aos="fade-up">
-            <h3 class="text-xl font-bold text-[#1e3a8a] mb-6">Important Information</h3>
-            <ul class="space-y-4">
-                <li class="flex items-start gap-3">
-                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
-                    <p class="text-[#1e40af] font-medium">1. All emergency hotlines are available 24/7 unless otherwise specified</p>
-                </li>
-                <li class="flex items-start gap-3">
-                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
-                    <p class="text-[#1e40af] font-medium">2. For non-emergency health concerns, please visit your barangay health center during office hours</p>
-                </li>
-                <li class="flex items-start gap-3">
-                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
-                    <p class="text-[#1e40af] font-medium">3. Keep these numbers saved on your phone for quick access</p>
-                </li>
-                <li class="flex items-start gap-3">
-                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
-                    <p class="text-[#1e40af] font-medium">4. In case of medical emergency, always call for professional help immediately</p>
-                </li>
-            </ul>
         </div>
     </main>
 
@@ -322,7 +278,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Fixed Sidebar Toggle Logic
         window.toggleSidebar = () => {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
@@ -331,7 +286,7 @@
             overlay.classList.toggle('hidden');
         };
 
-        const internalSection = document.getElementById('internal-consoles-section');
+        const internalSection = document.getElementById('internal-section');
         const rhuLink = document.getElementById('rhu-link');
         const bhwLink = document.getElementById('bhw-link');
 
