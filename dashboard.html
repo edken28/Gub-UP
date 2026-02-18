@@ -15,7 +15,7 @@
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
         
-        /* The Month Selector Logic */
+        /* Persistent Month Selector Logic */
         .month-selector { display: none; } 
 
         #sidebar { 
@@ -43,56 +43,56 @@
     <div id="overlay"></div>
     <div id="main-layout" class="w-full flex flex-col lg:flex-row">
         
-        <aside id="sidebar" class="flex flex-col">
+        <aside id="sidebar" class="flex flex-col shadow-2xl lg:shadow-none">
             <div class="p-8">
                 <div class="flex items-center justify-between mb-10">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
-                            <i data-lucide="plus"></i>
+                            <i data-lucide="activity"></i>
                         </div>
                         <div>
                             <h1 class="font-bold text-blue-900 text-xl tracking-tight">GUB-UP</h1>
                             <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">Health System</p>
                         </div>
                     </div>
-                    <button id="close-sidebar" class="lg:hidden p-2 text-slate-400"><i data-lucide="x"></i></button>
+                    <button id="close-sidebar" class="lg:hidden p-2 text-slate-400 hover:bg-slate-50 rounded-lg"><i data-lucide="x"></i></button>
                 </div>
 
                 <nav class="space-y-2">
                     <a href="dashboard.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-blue-100 transition-all">
-                        <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+                        <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
                     </a>
                     <a href="stock.html" class="flex items-center gap-3 text-slate-500 hover:text-emerald-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-emerald-50 transition-all">
-                        <i data-lucide="package" class="w-5 h-5"></i> Medicine Stocks
+                        <i data-lucide="pills" class="w-5 h-5"></i> Medicine Stocks
                     </a>
                     <a href="reports.html" class="flex items-center gap-3 text-slate-500 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
-                        <i data-lucide="file-bar-chart" class="w-5 h-5"></i> Disease Reports
+                        <i data-lucide="clipboard-list" class="w-5 h-5"></i> Disease Reports
                     </a>
                     <a href="hotlines.html" class="flex items-center gap-3 text-slate-500 hover:text-sky-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-sky-50 transition-all">
-                        <i data-lucide="phone" class="w-5 h-5"></i> Hotlines
+                        <i data-lucide="phone-call" class="w-5 h-5"></i> Hotlines
                     </a>
                     
                     <div id="internal-section" class="pt-6 border-t mt-4 hidden">
                         <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-5">Internal Management</p>
                         <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-3.5 font-semibold hover:bg-emerald-50 rounded-2xl transition-all">
-                            <i data-lucide="user-cog" class="w-5 h-5"></i> BHW Console
+                            <i data-lucide="user-plus" class="w-5 h-5"></i> BHW Console
                         </a>
                         <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-3.5 font-semibold hover:bg-red-50 rounded-2xl transition-all">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i> RHU Console
+                            <i data-lucide="shield" class="w-5 h-5"></i> RHU Console
                         </a>
                     </div>
                 </nav>
             </div>
-            <div class="mt-auto p-8">
+            <div class="mt-auto p-8 border-t border-slate-50">
                 <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors">
-                    <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+                    <i data-lucide="power" class="w-5 h-5"></i> Logout
                 </button>
             </div>
         </aside>
 
         <main class="flex-1 min-w-0">
             <header class="bg-white/80 backdrop-blur-md border-b px-6 py-4 sticky top-0 z-30 flex items-center justify-between lg:justify-end">
-                <button id="open-sidebar" class="lg:hidden p-2.5 bg-white border border-slate-200 rounded-xl text-blue-900 shadow-sm">
+                <button id="open-sidebar" class="lg:hidden p-2.5 bg-white border border-slate-200 rounded-xl text-blue-900 shadow-sm hover:bg-slate-50">
                     <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
                 <div class="flex items-center gap-4">
@@ -100,7 +100,7 @@
                         <p id="live-clock" class="text-[10px] font-bold text-blue-600 uppercase tracking-tighter">Loading...</p>
                         <h2 class="text-slate-900 font-bold text-sm">Welcome, <span id="welcome-name" class="text-blue-600">User</span></h2>
                     </div>
-                    <div class="w-10 h-10 bg-slate-100 rounded-full border-2 border-white shadow-sm flex items-center justify-center text-slate-400">
+                    <div class="w-10 h-10 bg-blue-50 rounded-full border-2 border-white shadow-sm flex items-center justify-center text-blue-600">
                         <i data-lucide="user" class="w-5 h-5"></i>
                     </div>
                 </div>
@@ -108,56 +108,56 @@
 
             <div class="p-6 lg:p-10 space-y-8 max-w-[1400px] mx-auto">
                 
-                <div class="bg-white rounded-[2rem] border border-slate-100 p-6 lg:p-8 shadow-sm" data-aos="fade-up">
-                    <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-8">
+                <div class="bg-white rounded-[2.5rem] border border-slate-100 p-6 lg:p-10 shadow-sm" data-aos="fade-up">
+                    <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-10">
                         <div>
-                            <h3 class="text-xl font-bold text-slate-800">Disease Statistics</h3>
-                            <p class="text-xs font-medium text-red-500 mt-1 uppercase tracking-widest"><span id="d-label">All Diseases</span> • Total: <span id="d-total">0</span></p>
+                            <h3 class="text-2xl font-bold text-slate-800 tracking-tight">Disease Statistics</h3>
+                            <p class="text-xs font-bold text-red-500 mt-1 uppercase tracking-widest"><span id="d-label">All Diseases</span> • Total: <span id="d-total">0</span></p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2 w-full xl:w-auto">
-                            <select id="d-mode" class="flex-1 xl:flex-none p-3 bg-slate-50 rounded-xl font-bold text-[11px] outline-none border border-slate-100">
+                            <select id="d-mode" class="flex-1 xl:flex-none p-3.5 bg-slate-100 rounded-2xl font-bold text-[11px] outline-none border-none hover:bg-slate-200 transition-colors">
                                 <option value="yearly">Yearly</option>
                                 <option value="monthly">Monthly</option>
                             </select>
-                            <select id="d-year" class="flex-1 xl:flex-none p-3 bg-blue-50 text-blue-600 rounded-xl font-bold text-[11px] outline-none"></select>
+                            <select id="d-year" class="flex-1 xl:flex-none p-3.5 bg-blue-50 text-blue-600 rounded-2xl font-bold text-[11px] outline-none border-none"></select>
                             
-                            <select id="d-month" class="month-selector flex-1 xl:flex-none p-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-[11px] outline-none"></select>
+                            <select id="d-month" class="month-selector flex-1 xl:flex-none p-3.5 bg-amber-50 text-amber-600 rounded-2xl font-bold text-[11px] outline-none border-none"></select>
                             
-                            <select id="d-brgy" class="flex-1 xl:flex-none p-3 bg-slate-50 rounded-xl font-bold text-[11px] outline-none"></select>
+                            <select id="d-brgy" class="flex-1 xl:flex-none p-3.5 bg-slate-100 rounded-2xl font-bold text-[11px] outline-none border-none"></select>
                             
                             <div class="relative w-full xl:w-64">
-                                <input type="text" id="d-search" placeholder="Search disease..." class="w-full px-4 py-3 bg-slate-50 rounded-xl font-bold text-[11px] border border-slate-100 outline-none">
+                                <input type="text" id="d-search" placeholder="Search disease..." class="w-full px-5 py-3.5 bg-slate-100 rounded-2xl font-bold text-[11px] outline-none border-none focus:ring-2 focus:ring-blue-100">
                                 <div id="d-results" class="search-results"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="h-[350px]"><canvas id="diseaseChart"></canvas></div>
+                    <div class="h-[400px]"><canvas id="diseaseChart"></canvas></div>
                 </div>
 
-                <div class="bg-white rounded-[2rem] border border-slate-100 p-6 lg:p-8 shadow-sm" data-aos="fade-up" data-aos-delay="100">
-                    <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-8">
+                <div class="bg-white rounded-[2.5rem] border border-slate-100 p-6 lg:p-10 shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-10">
                         <div>
-                            <h3 class="text-xl font-bold text-slate-800">Inventory Levels</h3>
-                            <p class="text-xs font-medium text-emerald-500 mt-1 uppercase tracking-widest"><span id="m-label">All Medicines</span> • Total: <span id="m-total">0</span></p>
+                            <h3 class="text-2xl font-bold text-slate-800 tracking-tight">Inventory Levels</h3>
+                            <p class="text-xs font-bold text-emerald-500 mt-1 uppercase tracking-widest"><span id="m-label">All Medicines</span> • Total: <span id="m-total">0</span></p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2 w-full xl:w-auto">
-                            <select id="m-mode" class="flex-1 xl:flex-none p-3 bg-slate-50 rounded-xl font-bold text-[11px] outline-none border border-slate-100">
+                            <select id="m-mode" class="flex-1 xl:flex-none p-3.5 bg-slate-100 rounded-2xl font-bold text-[11px] outline-none border-none hover:bg-slate-200 transition-colors">
                                 <option value="yearly">Yearly</option>
                                 <option value="monthly">Monthly</option>
                             </select>
-                            <select id="m-year" class="flex-1 xl:flex-none p-3 bg-blue-50 text-blue-600 rounded-xl font-bold text-[11px] outline-none"></select>
+                            <select id="m-year" class="flex-1 xl:flex-none p-3.5 bg-blue-50 text-blue-600 rounded-2xl font-bold text-[11px] outline-none border-none"></select>
                             
-                            <select id="m-month" class="month-selector flex-1 xl:flex-none p-3 bg-emerald-50 text-emerald-600 rounded-xl font-bold text-[11px] outline-none"></select>
+                            <select id="m-month" class="month-selector flex-1 xl:flex-none p-3.5 bg-emerald-50 text-emerald-600 rounded-2xl font-bold text-[11px] outline-none border-none"></select>
                             
-                            <select id="m-brgy" class="flex-1 xl:flex-none p-3 bg-slate-50 rounded-xl font-bold text-[11px] outline-none"></select>
+                            <select id="m-brgy" class="flex-1 xl:flex-none p-3.5 bg-slate-100 rounded-2xl font-bold text-[11px] outline-none border-none"></select>
                             
                             <div class="relative w-full xl:w-64">
-                                <input type="text" id="m-search" placeholder="Search medicine..." class="w-full px-4 py-3 bg-slate-50 rounded-xl font-bold text-[11px] border border-slate-100 outline-none">
+                                <input type="text" id="m-search" placeholder="Search medicine..." class="w-full px-5 py-3.5 bg-slate-100 rounded-2xl font-bold text-[11px] outline-none border-none focus:ring-2 focus:ring-emerald-100">
                                 <div id="m-results" class="search-results"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="h-[350px]"><canvas id="stockChart"></canvas></div>
+                    <div class="h-[400px]"><canvas id="stockChart"></canvas></div>
                 </div>
             </div>
         </main>
@@ -189,25 +189,30 @@
         fill('d-month', months, true); fill('m-month', months, true);
         fill('d-brgy', barangays); fill('m-brgy', barangays);
 
-        // Sidebar Controls
+        // Sidebar Control
         document.getElementById('open-sidebar').onclick = () => { document.getElementById('sidebar').classList.add('sidebar-open'); document.getElementById('overlay').classList.add('active'); };
         document.getElementById('close-sidebar').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
         document.getElementById('overlay').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
 
-        // THE FORCE REVEAL LOGIC
-        const toggleMonth = (prefix) => {
+        // THE FIXED TOGGLE FUNCTION
+        const forceToggleMonth = (prefix) => {
             const mode = document.getElementById(`${prefix}-mode`).value;
             const monthEl = document.getElementById(`${prefix}-month`);
-            monthEl.style.display = (mode === 'monthly') ? "block" : "none";
+            if(mode === 'monthly') {
+                monthEl.style.display = 'block';
+            } else {
+                monthEl.style.display = 'none';
+            }
             sync();
         };
-        document.getElementById('d-mode').onchange = () => toggleMonth('d');
-        document.getElementById('m-mode').onchange = () => toggleMonth('m');
 
-        // Charts
+        document.getElementById('d-mode').onchange = () => forceToggleMonth('d');
+        document.getElementById('m-mode').onchange = () => forceToggleMonth('m');
+
+        // Charts (Fixed Undefined by providing default label)
         const common = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
         const dChart = new Chart(document.getElementById('diseaseChart'), { type: 'line', data: { labels: [], datasets: [{ label: 'Cases', data: [], borderColor: '#3b82f6', backgroundColor: '#3b82f611', fill: true, tension: 0.4 }] }, options: common });
-        const mChart = new Chart(document.getElementById('stockChart'), { type: 'line', data: { labels: [], datasets: [{ label: 'Stocks', data: [], borderColor: '#10b981', backgroundColor: '#10b98111', fill: true, tension: 0.4 }] }, options: common });
+        const mChart = new Chart(document.getElementById('stockChart'), { type: 'line', data: { labels: [], datasets: [{ label: 'Stock Level', data: [], borderColor: '#10b981', backgroundColor: '#10b98111', fill: true, tension: 0.4 }] }, options: common });
 
         function sync() {
             const dMode = document.getElementById('d-mode').value;
@@ -234,7 +239,6 @@
                 document.getElementById('d-total').innerText = total;
             });
 
-            // Same for medicine... (simplified for space)
             const mMode = document.getElementById('m-mode').value;
             const mYear = document.getElementById('m-year').value;
             const mMonth = document.getElementById('m-month').value;
@@ -259,7 +263,6 @@
             });
         }
 
-        // Search Handlers
         const setupSearch = (inputId, resId, list, type) => {
             const inp = document.getElementById(inputId);
             const res = document.getElementById(resId);
@@ -296,7 +299,9 @@
                 document.body.classList.add('auth-ready');
                 lucide.createIcons();
                 AOS.init();
-                sync();
+                // Initial visibility check
+                forceToggleMonth('d');
+                forceToggleMonth('m');
             } else { window.location.href = "login.html"; }
         });
 
