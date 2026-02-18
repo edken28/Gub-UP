@@ -15,9 +15,6 @@
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
         
-        /* THE FIX: Manual Month Selector Styling */
-        .month-selector { display: none; } /* Default hidden */
-
         #sidebar { 
             position: fixed; top: 0; left: 0; height: 100vh; width: 280px; 
             z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease;
@@ -25,82 +22,94 @@
         }
         @media (min-width: 1024px) { #sidebar { position: sticky; transform: translateX(0); width: 300px; } }
         .sidebar-open { transform: translateX(0) !important; }
-        #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; }
+        #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 900; }
         #overlay.active { display: block; }
-        .search-results { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 1rem; z-index: 100; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .search-results.active { display: block; }
+        
+        .month-selector { display: none; }
     </style>
 </head>
 <body class="min-h-screen">
     <div id="overlay"></div>
+
     <div id="main-layout" class="w-full flex flex-col lg:flex-row">
-        <aside id="sidebar" class="flex flex-col">
+        <aside id="sidebar" class="flex flex-col shadow-sm">
             <div class="p-8">
                 <div class="flex items-center justify-between mb-10">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white"><i data-lucide="plus"></i></div>
+                        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200"><i data-lucide="plus"></i></div>
                         <div>
-                            <h1 class="font-bold text-blue-900 text-lg">GUB-UP</h1>
+                            <h1 class="font-bold text-blue-900 text-lg leading-tight">GUB-UP</h1>
+                            <p class="text-[10px] text-blue-500 font-bold tracking-widest uppercase">Health Hub</p>
                         </div>
                     </div>
-                    <button id="close-sidebar" class="lg:hidden"><i data-lucide="x"></i></button>
+                    <button id="close-sidebar" class="lg:hidden p-2 text-slate-400 hover:bg-slate-50 rounded-lg"><i data-lucide="chevron-left"></i></button>
                 </div>
-                <nav class="space-y-3">
-                    <a href="dashboard.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-4 rounded-2xl font-bold shadow-lg"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50"><i data-lucide="package" class="text-emerald-500"></i> Medicine Stocks</a>
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50"><i data-lucide="file-bar-chart" class="text-amber-500"></i> Disease Reports</a>
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-sky-50"><i data-lucide="phone" class="text-sky-500"></i> Hotlines</a>
+
+                <nav class="space-y-2">
+                    <a href="dashboard.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-3.5 rounded-2xl font-bold shadow-lg shadow-blue-100"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard</a>
+                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-3.5 rounded-2xl font-bold hover:bg-emerald-50 hover:text-emerald-600 transition-all"><i data-lucide="package" class="w-5 h-5"></i> Stocks</a>
+                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-3.5 rounded-2xl font-bold hover:bg-amber-50 hover:text-amber-600 transition-all"><i data-lucide="file-bar-chart" class="w-5 h-5"></i> Reports</a>
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-3.5 rounded-2xl font-bold hover:bg-sky-50 hover:text-sky-600 transition-all"><i data-lucide="phone" class="w-5 h-5"></i> Hotlines</a>
                     
                     <div id="internal-section" class="pt-6 border-t mt-4 hidden">
-                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-4 font-bold hover:bg-emerald-50"><i data-lucide="user-cog"></i> BHW</a>
-                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-4 font-bold hover:bg-red-50"><i data-lucide="shield-check"></i> RHU</a>
+                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest px-5 mb-2">Admin Tools</p>
+                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-3.5 font-bold hover:bg-emerald-50 rounded-2xl"><i data-lucide="user-cog" class="w-5 h-5"></i> BHW Console</a>
+                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-3.5 font-bold hover:bg-red-50 rounded-2xl"><i data-lucide="shield-check" class="w-5 h-5"></i> RHU Console</a>
                     </div>
                 </nav>
             </div>
-            <button id="logout-btn" class="mt-auto p-8 flex items-center gap-3 text-slate-400 font-bold"><i data-lucide="log-out"></i> Logout</button>
+            <div class="mt-auto p-8 border-t">
+                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full"><i data-lucide="log-out" class="w-5 h-5"></i> Logout</button>
+            </div>
         </aside>
 
-        <main class="flex-1">
-            <header class="bg-white/80 border-b px-10 py-6 sticky top-0 z-30 flex justify-between items-center">
-                <h1 class="text-blue-900 font-bold text-2xl">Welcome, <span id="welcome-name">User</span></h1>
-                <button id="open-sidebar" class="lg:hidden p-2 bg-slate-100 rounded-lg"><i data-lucide="menu"></i></button>
+        <main class="flex-1 bg-slate-50/50">
+            <header class="bg-white border-b px-6 py-4 sticky top-0 z-40 flex items-center justify-between lg:hidden">
+                <button id="open-sidebar" class="p-2.5 bg-slate-100 rounded-xl text-blue-900 shadow-sm"><i data-lucide="menu"></i></button>
+                <div class="text-blue-900 font-bold">GUB-UP</div>
+                <div class="w-10 h-10 bg-blue-50 rounded-full"></div>
             </header>
 
-            <div class="p-10 space-y-8">
-                <div class="bg-white rounded-[2.5rem] border p-10 shadow-sm" data-aos="fade-up">
-                    <div class="flex flex-col lg:flex-row justify-between items-center gap-4 mb-10">
-                        <h3 class="text-2xl font-bold text-blue-900">Disease Cases</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <select id="d-mode" class="p-3 bg-slate-100 rounded-2xl font-bold text-xs">
-                                <option value="yearly">Yearly</option>
-                                <option value="monthly">Monthly</option>
-                            </select>
-                            <select id="d-year" class="p-3 bg-blue-50 rounded-2xl font-bold text-blue-600 text-xs"></select>
-                            
-                            <select id="d-month" class="month-selector p-3 bg-amber-50 rounded-2xl font-bold text-amber-600 text-xs"></select>
-                            
-                            <select id="d-brgy" class="p-3 bg-slate-100 rounded-2xl font-bold text-xs"></select>
-                            <input type="text" id="d-search" placeholder="Search..." class="p-3 bg-slate-100 rounded-2xl font-bold text-xs outline-none">
-                        </div>
-                    </div>
-                    <div class="h-[350px]"><canvas id="diseaseChart"></canvas></div>
+            <div class="hidden lg:flex bg-white/80 backdrop-blur-md border-b px-10 py-6 sticky top-0 z-30 justify-between items-center">
+                <div>
+                    <p id="live-clock" class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">Loading...</p>
+                    <h1 class="text-blue-900 font-bold text-2xl">Hello, <span id="welcome-name" class="text-blue-600">User</span>!</h1>
                 </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <p class="text-xs font-bold text-slate-900" id="user-role-display">Member</p>
+                        <p class="text-[10px] text-slate-400">Gubat Health Network</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner"><i data-lucide="user"></i></div>
+                </div>
+            </div>
 
-                <div class="bg-white rounded-[2.5rem] border p-10 shadow-sm" data-aos="fade-up">
-                    <div class="flex flex-col lg:flex-row justify-between items-center gap-4 mb-10">
-                        <h3 class="text-2xl font-bold text-blue-900">Medicine Stocks</h3>
-                        <div class="flex flex-wrap gap-2">
-                            <select id="m-mode" class="p-3 bg-slate-100 rounded-2xl font-bold text-xs">
+            <div class="p-6 lg:p-10 max-w-7xl mx-auto space-y-8">
+                <div class="bg-white rounded-[2rem] border border-slate-200/60 p-6 lg:p-10 shadow-sm" data-aos="fade-up">
+                    <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-10">
+                        <div>
+                            <h3 class="text-xl font-bold text-blue-900">Disease Statistics</h3>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">Total Recorded: <span id="d-total" class="text-red-500">0</span> Cases</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 w-full xl:w-auto bg-slate-50 p-2 rounded-[1.5rem] border">
+                            <select id="d-mode" class="p-2.5 bg-white border rounded-xl font-bold text-xs text-blue-900 outline-none shadow-sm cursor-pointer">
                                 <option value="yearly">Yearly</option>
                                 <option value="monthly">Monthly</option>
                             </select>
-                            <select id="m-year" class="p-3 bg-blue-50 rounded-2xl font-bold text-blue-600 text-xs"></select>
-                            <select id="m-month" class="month-selector p-3 bg-emerald-50 rounded-2xl font-bold text-emerald-600 text-xs"></select>
-                            <select id="m-brgy" class="p-3 bg-slate-100 rounded-2xl font-bold text-xs"></select>
-                            <input type="text" id="m-search" placeholder="Search..." class="p-3 bg-slate-100 rounded-2xl font-bold text-xs outline-none">
+                            <select id="d-year" class="p-2.5 bg-white border rounded-xl font-bold text-xs text-blue-600 outline-none shadow-sm cursor-pointer"></select>
+                            
+                            <select id="d-month" class="month-selector p-2.5 bg-amber-50 border border-amber-100 rounded-xl font-bold text-xs text-amber-600 outline-none shadow-sm cursor-pointer"></select>
+                            
+                            <select id="d-brgy" class="p-2.5 bg-white border rounded-xl font-bold text-xs text-slate-600 outline-none shadow-sm cursor-pointer"></select>
+                            <div class="relative flex-1 xl:min-w-[200px]">
+                                <input type="text" id="d-search" placeholder="Search Disease..." class="w-full p-2.5 bg-white border rounded-xl font-bold text-xs outline-none shadow-sm">
+                            </div>
                         </div>
                     </div>
-                    <div class="h-[350px]"><canvas id="stockChart"></canvas></div>
+                    <div class="h-[400px]"><canvas id="diseaseChart"></canvas></div>
                 </div>
             </div>
         </main>
@@ -119,81 +128,99 @@
         const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         const years = ["2024", "2025", "2026"];
         const barangays = ["All Areas", "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
-        
+
+        // Fill Options
         const fill = (id, list, useIdx = false) => {
-            document.getElementById(id).innerHTML = list.map((v, i) => `<option value="${useIdx ? i : v}">${v}</option>`).join('');
+            const el = document.getElementById(id);
+            if(el) el.innerHTML = list.map((v, i) => `<option value="${useIdx ? i : v}">${v}</option>`).join('');
         };
-        fill('d-year', years); fill('m-year', years);
-        fill('d-month', months, true); fill('m-month', months, true);
-        fill('d-brgy', barangays); fill('m-brgy', barangays);
+        fill('d-year', years);
+        fill('d-month', months, true);
+        fill('d-brgy', barangays);
 
-        // Sidebar Fix
-        document.getElementById('open-sidebar').onclick = () => { document.getElementById('sidebar').classList.add('sidebar-open'); document.getElementById('overlay').classList.add('active'); };
-        document.getElementById('close-sidebar').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
+        // Sidebar Navigation
+        document.getElementById('open-sidebar').onclick = () => {
+            document.getElementById('sidebar').classList.add('sidebar-open');
+            document.getElementById('overlay').classList.add('active');
+        };
+        const closeSide = () => {
+            document.getElementById('sidebar').classList.remove('sidebar-open');
+            document.getElementById('overlay').classList.remove('active');
+        };
+        document.getElementById('close-sidebar').onclick = closeSide;
+        document.getElementById('overlay').onclick = closeSide;
 
-        // THE FORCE REVEAL LOGIC
-        const toggleMonthCategory = (prefix) => {
+        // Force Reveal Monthly Box
+        const toggleMonth = (prefix) => {
             const mode = document.getElementById(`${prefix}-mode`).value;
-            const monthEl = document.getElementById(`${prefix}-month`);
-            
-            if (mode === 'monthly') {
-                monthEl.style.display = "block"; // Force show
-            } else {
-                monthEl.style.display = "none"; // Force hide
-            }
+            const el = document.getElementById(`${prefix}-month`);
+            el.style.display = (mode === 'monthly') ? "block" : "none";
             sync();
         };
+        document.getElementById('d-mode').onchange = () => toggleMonth('d');
 
-        document.getElementById('d-mode').onchange = () => toggleMonthCategory('d');
-        document.getElementById('m-mode').onchange = () => toggleMonthCategory('m');
-
-        // Charts
-        const dChart = new Chart(document.getElementById('diseaseChart'), { type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: '#ef4444', backgroundColor: '#ef444411', fill: true }] }, options: { responsive: true, maintainAspectRatio: false } });
-        const mChart = new Chart(document.getElementById('stockChart'), { type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: '#10b981', backgroundColor: '#10b98111', fill: true }] }, options: { responsive: true, maintainAspectRatio: false } });
+        // Chart Init
+        const ctxD = document.getElementById('diseaseChart').getContext('2d');
+        const dChart = new Chart(ctxD, {
+            type: 'line',
+            data: { 
+                labels: [], 
+                datasets: [{ 
+                    label: 'Cases', // Fixed "Undefined"
+                    data: [], 
+                    borderColor: '#3b82f6', 
+                    backgroundColor: 'rgba(59, 130, 246, 0.05)', 
+                    fill: true, 
+                    tension: 0.4, 
+                    borderWidth: 3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#3b82f6',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                }] 
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false } // Hides the "label" at the top entirely
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
 
         function sync() {
-            const dMode = document.getElementById('d-mode').value;
-            const dYear = document.getElementById('d-year').value;
-            const dMonth = document.getElementById('d-month').value;
-            const dBrgy = document.getElementById('d-brgy').value;
+            const mode = document.getElementById('d-mode').value;
+            const year = document.getElementById('d-year').value;
+            const month = document.getElementById('d-month').value;
+            const brgy = document.getElementById('d-brgy').value;
 
             onSnapshot(collection(db, "disease_cases"), snap => {
-                let counts = dMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
-                let labs = dMode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
-                snap.forEach(doc => {
-                    const r = doc.data(); const date = r.createdAt?.toDate();
-                    if(!date) return;
-                    if(dBrgy === "All Areas" || r.barangay === dBrgy) {
-                        if(dMode === 'yearly' && date.getFullYear() == dYear) counts[date.getMonth()] += Number(r.count);
-                        else if(dMode === 'monthly' && date.getMonth() == dMonth && date.getFullYear() == dYear) {
-                            const wk = Math.ceil((date.getDate() + new Date(date.getFullYear(), date.getMonth(), 1).getDay()) / 7) - 1;
-                            if(wk>=0 && wk<5) counts[wk] += Number(r.count);
-                        }
-                    }
-                });
-                dChart.data.labels = labs; dChart.data.datasets[0].data = counts; dChart.update();
-            });
+                let counts = mode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
+                let labels = mode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
+                let total = 0;
 
-            // Same for medicine...
-            const mMode = document.getElementById('m-mode').value;
-            const mYear = document.getElementById('m-year').value;
-            const mMonth = document.getElementById('m-month').value;
-            const mBrgy = document.getElementById('m-brgy').value;
-            onSnapshot(collection(db, "medicine_inventory"), snap => {
-                let counts = mMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
-                let labs = mMode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
                 snap.forEach(doc => {
                     const r = doc.data(); const date = r.createdAt?.toDate();
                     if(!date) return;
-                    if(mBrgy === "All Areas" || r.barangay === mBrgy) {
-                        if(mMode === 'yearly' && date.getFullYear() == mYear) counts[date.getMonth()] += Number(r.count);
-                        else if(mMode === 'monthly' && date.getMonth() == mMonth && date.getFullYear() == mYear) {
+                    if(brgy === "All Areas" || r.barangay === brgy) {
+                        if(mode === 'yearly' && date.getFullYear() == year) {
+                            counts[date.getMonth()] += Number(r.count);
+                            total += Number(r.count);
+                        } else if(mode === 'monthly' && date.getMonth() == month && date.getFullYear() == year) {
                             const wk = Math.ceil((date.getDate() + new Date(date.getFullYear(), date.getMonth(), 1).getDay()) / 7) - 1;
                             if(wk>=0 && wk<5) counts[wk] += Number(r.count);
+                            total += Number(r.count);
                         }
                     }
                 });
-                mChart.data.labels = labs; mChart.data.datasets[0].data = counts; mChart.update();
+                dChart.data.labels = labels;
+                dChart.data.datasets[0].data = counts;
+                dChart.update();
+                document.getElementById('d-total').innerText = total;
             });
         }
 
@@ -201,8 +228,10 @@
             if (user) {
                 const s = await getDoc(doc(db, "users", user.uid));
                 if (s.exists()) {
-                    const u = s.data(); document.getElementById('welcome-name').innerText = u.name;
-                    if(u.role === 'bhw' || u.role === 'rhu') {
+                    const u = s.data();
+                    document.getElementById('welcome-name').innerText = u.name;
+                    document.getElementById('user-role-display').innerText = u.role?.toUpperCase() || "Member";
+                    if(['bhw','rhu'].includes(u.role)) {
                         document.getElementById('internal-section').classList.remove('hidden');
                         if(u.role === 'bhw') document.getElementById('bhw-link').classList.remove('hidden');
                         if(u.role === 'rhu') document.getElementById('rhu-link').classList.remove('hidden');
@@ -210,11 +239,16 @@
                 }
                 document.body.classList.add('auth-ready');
                 lucide.createIcons();
-                AOS.init();
+                AOS.init({ duration: 800, once: true });
                 sync();
             } else { window.location.href = "login.html"; }
         });
 
+        setInterval(() => {
+            document.getElementById('live-clock').innerText = new Date().toLocaleString();
+        }, 1000);
+
+        document.querySelectorAll('select').forEach(s => s.onchange = sync);
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
     </script>
 </body>
