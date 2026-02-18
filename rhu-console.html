@@ -23,6 +23,10 @@
             .sidebar-open { transform: translateX(0); }
         }
 
+        /* Overlay for mobile */
+        #sidebar-overlay { display: none; }
+        #sidebar-overlay.active { display: block; }
+
         .dropdown-list {
             display: none;
             position: absolute;
@@ -50,6 +54,8 @@
 </head>
 <body class="min-h-screen overflow-x-hidden">
 
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-[90] transition-opacity" onclick="toggleSidebar()"></div>
+
     <div id="main-layout" class="w-full min-h-screen flex flex-col md:flex-row">
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-[100] w-72 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 sidebar-closed md:relative md:translate-x-0 md:flex">
             <div class="p-8">
@@ -67,41 +73,26 @@
                 </div>
 
                 <nav class="space-y-2">
-                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all group">
-                        <div class="w-8 h-8 bg-slate-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="layout-dashboard" class="w-4 h-4 group-hover:text-white"></i>
-                        </div>
-                        <span>Dashboard</span>
+                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 hover:text-blue-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-blue-50 transition-all">
+                        <i data-lucide="layout-dashboard"></i> Dashboard
+                    </a>
+                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 hover:text-emerald-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-emerald-50 transition-all">
+                        <i data-lucide="pill" class="text-emerald-500"></i> Medicine Stocks
+                    </a>
+                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
+                        <i data-lucide="file-bar-chart-2" class="text-amber-500"></i> Disease Reports
+                    </a>
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 hover:text-sky-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-sky-50 transition-all">
+                        <i data-lucide="phone-call" class="text-sky-500"></i> Hotlines
                     </a>
                     
-                    <a href="stock.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 transition-all group">
-                        <div class="w-8 h-8 bg-emerald-100 group-hover:bg-emerald-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="pill" class="w-4 h-4 text-emerald-600 group-hover:text-white"></i>
-                        </div>
-                        <span>Medicine Stocks</span>
-                    </a>
-
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 transition-all group">
-                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white"></i>
-                        </div>
-                        <span>Disease Reports</span>
-                    </a>
-
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 transition-all group">
-                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white transition-colors"></i>
-                        </div>
-                        <span>Hotlines</span>
-                    </a>
-
-                    <div class="pt-6 pb-2">
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-3">Internal Consoles</p>
-                        <a href="rhu-console.html" class="flex items-center gap-3 bg-rhu-red text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-red-200 transition-all">
-                            <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                                <i data-lucide="shield-alert" class="w-4 h-4 text-white"></i>
-                            </div>
-                            <span>RHU Console</span>
+                    <div id="internal-section" class="pt-6 border-t mt-4">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-5">Internal Management</p>
+                        <a href="bhw-console.html" id="bhw-link" class="flex items-center gap-3 text-slate-600 hover:text-emerald-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-emerald-50 transition-all">
+                            <i data-lucide="users" class="w-5 h-5"></i> BHW Console
+                        </a>
+                        <a href="rhu-console.html" id="rhu-link" class="flex items-center gap-3 bg-red-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-red-100">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> RHU Console
                         </a>
                     </div>
                 </nav>
@@ -162,197 +153,32 @@
         </main>
     </div>
 
-    <div id="case-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="closeModal()"></div>
-        <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col scale-95 transition-all duration-300" id="modal-container">
-            <div class="absolute top-0 left-0 w-full h-2 bg-rhu-red"></div>
-            <div class="p-8 pb-0">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <h3 id="modal-title" class="text-2xl font-extrabold text-navy tracking-tight">Case Entry</h3>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">RHU Official Log</p>
-                    </div>
-                    <button onclick="closeModal()" class="p-2 bg-slate-50 rounded-xl text-slate-400 hover:text-navy transition-colors">
-                        <i data-lucide="x" class="w-5 h-5"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <form id="case-form" class="p-8 space-y-6 overflow-y-auto custom-scrollbar">
-                <input type="hidden" id="entry-id">
-                <div class="relative">
-                    <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Search Disease</label>
-                    <div class="relative">
-                        <i data-lucide="activity" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4"></i>
-                        <input type="text" id="disease-input" autocomplete="off" placeholder="Start typing disease name..." class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none focus:ring-4 ring-red-50 transition-all">
-                    </div>
-                    <div id="disease-dropdown" class="dropdown-list custom-scrollbar"></div>
-                    <input type="hidden" id="case-name" required>
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Affected Barangay</label>
-                    <div class="relative">
-                        <i data-lucide="map-pin" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4"></i>
-                        <select id="case-barangay" required class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none appearance-none"></select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Case Count</label>
-                        <input type="number" id="case-count" required min="1" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none focus:ring-4 ring-red-50">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Effective Date</label>
-                        <input type="date" id="case-date" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none focus:ring-4 ring-red-50">
-                    </div>
-                </div>
-
-                <div class="flex gap-4 pt-4">
-                    <button type="button" onclick="closeModal()" class="flex-1 font-bold text-slate-400 hover:text-navy transition-all">Cancel</button>
-                    <button type="submit" class="flex-[2] py-4 bg-rhu-red text-white font-bold rounded-2xl shadow-xl shadow-red-100">Save Record</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc, getDoc, query, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        // [KEEP YOUR EXISTING FIREBASE IMPORTS AND CONFIG HERE]
+        // ... (Refer to your original code for imports)
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
-            authDomain: "gub-up.firebaseapp.com",
-            projectId: "gub-up",
-            storageBucket: "gub-up.firebasestorage.app",
-            messagingSenderId: "75119179497",
-            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        const diseaseList = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Avian influenza", "Measles", "Mumps", "Rubella", "Chickenpox (Varicella)", "Hand, foot and mouth disease", "Hepatitis A", "Hepatitis B", "Hepatitis C", "Hepatitis E", "Rabies", "HIV infection", "AIDS", "Chikungunya", "Japanese encephalitis", "Zika virus infection", "Rotavirus infection", "Norovirus infection", "Poliomyelitis", "Human papillomavirus (HPV) infection", "Cytomegalovirus infection", "Epstein-Barr virus infection", "Viral gastroenteritis", "Viral meningitis", "Viral pneumonia", "Tuberculosis (Pulmonary TB)", "Extrapulmonary tuberculosis", "Multidrug-resistant TB", "Pneumonia (bacterial)", "Typhoid fever", "Paratyphoid fever", "Leptospirosis", "Cholera", "Shigellosis", "Diphtheria", "Pertussis (Whooping cough)", "Tetanus", "Neonatal tetanus", "Meningococcal meningitis", "Bacterial meningitis", "Urinary tract infection", "Gonorrhea", "Syphilis", "Chlamydia", "Bacterial skin infections", "Cellulitis", "Impetigo", "Rheumatic fever", "Rheumatic heart disease", "Scarlet fever", "Sepsis", "Anthrax", "Helicobacter pylori infection", "Malaria", "Schistosomiasis", "Ascariasis", "Trichuriasis", "Hookworm infection", "Filariasis", "Amebiasis", "Giardiasis", "Toxoplasmosis", "Strongyloidiasis", "Taeniasis (Tapeworm)", "Cysticercosis", "Cryptosporidiosis", "Candidiasis", "Tinea (Ringworm)", "Athlete’s foot", "Onychomycosis", "Aspergillosis", "Histoplasmosis", "Cryptococcosis", "Hypertension", "Coronary artery disease", "Myocardial infarction (Heart attack)", "Stroke", "Heart failure", "Arrhythmia", "Cardiomyopathy", "Peripheral artery disease", "Type 1 diabetes", "Type 2 diabetes", "Prediabetes", "Dyslipidemia", "Obesity", "Metabolic syndrome", "Hyperthyroidism", "Hypothyroidism", "Goiter", "Polycystic ovary syndrome (PCOS)", "Asthma", "COPD", "Chronic bronchitis", "Emphysema", "Allergic rhinitis", "Sinusitis", "Pulmonary fibrosis", "Breast cancer", "Lung cancer", "Liver cancer", "Colorectal cancer", "Cervical cancer", "Prostate cancer", "Stomach cancer", "Nasopharyngeal cancer", "Ovarian cancer", "Pancreatic cancer", "Leukemia", "Lymphoma", "Thyroid cancer", "Skin cancer", "Depression", "Anxiety disorders", "Bipolar disorder", "Schizophrenia", "Epilepsy", "Migraine", "Alzheimer’s disease", "Parkinson’s disease", "Dementia", "Stroke-related neurological deficits", "Malnutrition", "Stunting", "Wasting", "Vitamin A deficiency", "Iron deficiency anemia", "Iodine deficiency disorder", "Rickets", "Kwashiorkor", "Marasmus", "Acute gastroenteritis", "Flood-related leptospirosis", "Skin fungal infections (post-flood)", "Conjunctivitis", "Diarrheal diseases", "Kidney stones", "Chronic kidney disease", "Urinary tract stones", "Gallstones", "Peptic ulcer disease", "Gastroesophageal reflux disease (GERD)", "Arthritis", "Osteoarthritis", "Rheumatoid arthritis", "Gout", "Osteoporosis", "Back pain", "Scoliosis", "Hernia", "Hemorrhoids", "Appendicitis", "Gallbladder disease", "Dental caries", "Periodontal disease", "Acne", "Eczema", "Psoriasis", "Scabies", "Contact dermatitis", "Heat rash (Prickly heat)", "Urticaria (Hives)", "Keloids", "Alcohol use disorder", "Liver cirrhosis", "Fatty liver disease", "Drug dependence", "Nicotine dependence", "Substance-induced psychosis", "Endometriosis", "Uterine fibroids", "Pelvic inflammatory disease", "Ectopic pregnancy", "Pre-eclampsia", "Gestational diabetes", "Infertility", "STIs"];
-        const barangays = ["Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
-
-        document.getElementById('case-barangay').innerHTML = barangays.map(b => `<option value="${b}">${b}</option>`).join('');
-        const dInput = document.getElementById('disease-input');
-        const dDrop = document.getElementById('disease-dropdown');
-        const hInput = document.getElementById('case-name');
-
-        dInput.addEventListener('input', () => {
-            const q = dInput.value.toLowerCase();
-            const filtered = diseaseList.filter(d => d.toLowerCase().includes(q));
-            dDrop.innerHTML = filtered.map(d => `<div class="dropdown-item" onclick="selectDisease('${d}')">${d}</div>`).join('');
-            dDrop.classList.toggle('active', filtered.length > 0 && q.length > 0);
-        });
-
-        window.selectDisease = (n) => {
-            dInput.value = n; hInput.value = n;
-            dDrop.classList.remove('active');
-        };
-
-        let allCases = [];
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const docSnap = await getDoc(doc(db, "users", user.uid));
-                if (docSnap.exists() && docSnap.data().role === "rhu") {
-                    document.getElementById('user-name-display').innerText = docSnap.data().name;
-                    document.body.classList.add('auth-ready');
-                    AOS.init({ duration: 800, once: true });
-                    init();
-                } else { window.location.href = "dashboard.html"; }
-            } else { window.location.href = "login.html"; }
-        });
-
-        function init() {
-            onSnapshot(query(collection(db, "disease_cases"), orderBy("createdAt", "desc")), (snap) => {
-                allCases = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                renderTable(allCases);
-            });
-        }
-
-        function renderTable(data) {
-            const body = document.getElementById('disease-table-body');
-            body.innerHTML = data.map(item => `
-                <tr class="hover:bg-slate-50/50 transition-all">
-                    <td class="px-10 py-7">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-red-50 text-rhu-red rounded-xl flex items-center justify-center shadow-sm"><i data-lucide="activity" class="w-5 h-5"></i></div>
-                            <span class="font-extrabold text-navy text-lg">${item.name}</span>
-                        </div>
-                    </td>
-                    <td class="px-8 py-7">
-                        <span class="text-slate-500 font-bold uppercase text-[11px] tracking-wider">${item.barangay}</span>
-                    </td>
-                    <td class="px-8 py-7 text-center">
-                        <span class="bg-navy text-white px-4 py-1.5 rounded-full font-black text-sm">${item.count.toLocaleString()}</span>
-                    </td>
-                    <td class="px-8 py-7">
-                        <div class="text-slate-500 font-bold text-xs">${item.createdAt?.toDate ? item.createdAt.toDate().toLocaleDateString() : 'N/A'}</div>
-                    </td>
-                    <td class="px-10 py-7 text-right">
-                        <div class="flex justify-end gap-2">
-                            <button onclick="editEntry('${item.id}')" class="p-3 bg-white border border-slate-100 text-slate-400 rounded-xl hover:bg-blue-600 hover:text-white transition-all shadow-sm"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-                            <button onclick="deleteEntry('${item.id}')" class="p-3 bg-white border border-slate-100 text-slate-400 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </div>
-                    </td>
-                </tr>`).join('');
-            lucide.createIcons();
-        }
-
-        window.openAddModal = () => {
-            document.getElementById('case-form').reset();
-            document.getElementById('entry-id').value = "";
-            document.getElementById('case-date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('case-modal').classList.remove('hidden');
-            setTimeout(() => document.getElementById('modal-container').classList.remove('scale-95'), 10);
-        };
-
-        window.closeModal = () => {
-            document.getElementById('modal-container').classList.add('scale-95');
-            setTimeout(() => document.getElementById('case-modal').classList.add('hidden'), 200);
-        };
-
-        window.editEntry = (id) => {
-            const item = allCases.find(c => c.id === id);
-            document.getElementById('entry-id').value = id;
-            dInput.value = item.name; hInput.value = item.name;
-            document.getElementById('case-barangay').value = item.barangay;
-            document.getElementById('case-count').value = item.count;
-            if(item.createdAt) document.getElementById('case-date').value = item.createdAt.toDate().toISOString().split('T')[0];
-            document.getElementById('case-modal').classList.remove('hidden');
-            setTimeout(() => document.getElementById('modal-container').classList.remove('scale-95'), 10);
-        };
-
-        window.deleteEntry = async (id) => { if(confirm("Delete record?")) await deleteDoc(doc(db, "disease_cases", id)); };
-
-        document.getElementById('case-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('entry-id').value;
-            const data = {
-                name: hInput.value || dInput.value,
-                barangay: document.getElementById('case-barangay').value,
-                count: parseInt(document.getElementById('case-count').value),
-                createdAt: Timestamp.fromDate(new Date(document.getElementById('case-date').value))
-            };
-            id ? await updateDoc(doc(db, "disease_cases", id), data) : await addDoc(collection(db, "disease_cases"), data);
-            closeModal();
-        };
-
+        // Updated toggleSidebar Function
         window.toggleSidebar = () => {
-            const s = document.getElementById('sidebar');
-            s.classList.toggle('sidebar-closed'); s.classList.toggle('sidebar-open');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const isOpen = sidebar.classList.contains('sidebar-open');
+
+            if (isOpen) {
+                sidebar.classList.replace('sidebar-open', 'sidebar-closed');
+                overlay.classList.remove('active');
+            } else {
+                sidebar.classList.replace('sidebar-closed', 'sidebar-open');
+                overlay.classList.add('active');
+            }
         };
 
-        document.getElementById('main-search').oninput = (e) => {
-            const t = e.target.value.toLowerCase();
-            renderTable(allCases.filter(c => c.name.toLowerCase().includes(t) || c.barangay.toLowerCase().includes(t)));
-        };
+        // Ensure icons load
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            AOS.init({ duration: 800, once: true });
+        });
 
-        document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
+        // [KEEP YOUR REMAINING FIREBASE LOGIC AND TABLE RENDERING HERE]
     </script>
 </body>
 </html>
