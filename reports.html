@@ -16,6 +16,7 @@
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
 
+        /* Sidebar Mobile Logic */
         @media (max-width: 768px) {
             .sidebar-closed { transform: translateX(-100%); }
             .sidebar-open { transform: translateX(0); }
@@ -23,6 +24,9 @@
 
         .glass-header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
         .table-card { border-radius: 2.5rem; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
         .filter-select {
             appearance: none;
@@ -46,11 +50,11 @@
                             <i data-lucide="plus" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <h1 class="font-extrabold text-navy text-xl leading-none">GUB-UP</h1>
+                            <h1 class="font-extrabold text-navy text-xl leading-none tracking-tight">GUB-UP</h1>
                             <p class="text-[10px] text-blue-600 uppercase font-black tracking-widest mt-1">Health Network</p>
                         </div>
                     </div>
-                    <button class="md:hidden p-2 text-slate-400 hover:text-red-500" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
+                    <button class="md:hidden p-2 text-slate-400 hover:text-red-500 transition-colors" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
                 </div>
 
                 <nav class="space-y-2">
@@ -92,17 +96,13 @@
         <main class="flex-1 w-full overflow-y-auto">
             <header class="glass-header border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center gap-4">
-                    <button onclick="toggleSidebar()" class="flex md:hidden p-3 bg-white border border-slate-100 rounded-xl text-navy shadow-sm active:scale-95 transition-all">
+                    <button onclick="toggleSidebar()" class="flex md:hidden p-3 bg-white border border-slate-100 rounded-xl text-navy shadow-sm hover:bg-slate-50 transition-all">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                     <div>
                         <h2 class="text-sm font-extrabold text-navy uppercase tracking-tight">Disease Analytics</h2>
-                        <p class="text-[10px] font-bold text-slate-400">Outbreak Monitoring & Recording</p>
+                        <p class="text-[10px] font-bold text-slate-400">Gubat District Outbreak Monitor</p>
                     </div>
-                </div>
-                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
-                    <div class="w-8 h-8 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center shadow-inner"><i data-lucide="activity" class="w-4 h-4"></i></div>
-                    <span id="user-name-display" class="font-bold text-navy text-sm hidden sm:inline">Analyst</span>
                 </div>
             </header>
 
@@ -110,37 +110,36 @@
                 <div class="flex flex-col lg:flex-row justify-between items-center gap-6 mb-10" data-aos="fade-down">
                     <div class="relative flex-1 w-full group">
                         <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                        <input type="text" id="disease-search" placeholder="Search disease name..." class="w-full pl-14 pr-4 py-5 bg-white border border-slate-100 rounded-3xl outline-none focus:ring-4 ring-amber-50 shadow-sm font-semibold text-navy transition-all">
+                        <input type="text" id="disease-search" placeholder="Search disease name or origin..." class="w-full pl-14 pr-4 py-5 bg-white border border-slate-100 rounded-3xl outline-none focus:ring-4 ring-amber-50 shadow-sm font-semibold text-navy transition-all">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" data-aos="fade-up">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" data-aos="fade-up">
                     <div class="flex flex-col gap-1.5">
                         <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Location</label>
-                        <select id="filter-brgy" class="filter-select w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
+                        <select id="filter-brgy" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
                             <option value="all">All Barangays</option>
-                            <option value="Ariman">Ariman</option><option value="Bagacay">Bagacay</option><option value="Balud Del Norte">Balud Del Norte</option><option value="Balud Del Sur">Balud Del Sur</option><option value="Benguet">Benguet</option><option value="Bentuco">Bentuco</option><option value="Beriran">Beriran</option><option value="Buenavista">Buenavista</option><option value="Bulacao">Bulacao</option><option value="Cabigaan">Cabigaan</option><option value="Cabiguhan">Cabiguhan</option><option value="Carriedo">Carriedo</option><option value="Casili">Casili</option><option value="Cogon">Cogon</option><option value="Cota Na Daco">Cota Na Daco</option><option value="Dita">Dita</option><option value="Jupi">Jupi</option><option value="Lapinig">Lapinig</option><option value="Luna-Candol">Luna-Candol</option><option value="Manapao">Manapao</option><option value="Manook">Manook</option><option value="Naagtan">Naagtan</option><option value="Nato">Nato</option><option value="Nazareno">Nazareno</option><option value="Ogao">Ogao</option><option value="Paco">Paco</option><option value="Panganiban">Panganiban</option><option value="Paradijon">Paradijon</option><option value="Patag">Patag</option><option value="Payawin">Payawin</option><option value="Pinontingan">Pinontingan</option><option value="Rizal">Rizal</option><option value="San Ignacio">San Ignacio</option><option value="Sangat">Sangat</option><option value="Santa Ana">Santa Ana</option><option value="Tabi">Tabi</option><option value="Tagaytay">Tagaytay</option><option value="Tigkiw">Tigkiw</option><option value="Tiris">Tiris</option><option value="Togawe">Togawe</option><option value="Union">Union</option><option value="Villareal">Villareal</option>
-                        </select>
+                            <option value="Ariman">Ariman</option><option value="Bagacay">Bagacay</option><option value="Balud Del Norte">Balud Del Norte</option><option value="Balud Del Sur">Balud Del Sur</option>
+                            </select>
                     </div>
                     <div class="flex flex-col gap-1.5">
                         <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Year</label>
-                        <select id="filter-year" class="filter-select w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
+                        <select id="filter-year" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
                             <option value="2024">2024</option><option value="2025">2025</option><option value="2026" selected>2026</option>
                         </select>
                     </div>
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Month</label>
-                        <select id="filter-time" class="filter-select w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
-                            <option value="all">Full Year</option>
-                            <option value="0">January</option><option value="1">February</option><option value="2">March</option><option value="3">April</option><option value="4">May</option><option value="5">June</option><option value="6">July</option><option value="7">August</option><option value="8">September</option><option value="9">October</option><option value="10">November</option><option value="11">December</option>
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Timeframe</label>
+                        <select id="filter-time" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
+                            <option value="all">Total (All Months)</option>
+                            <option value="0">January</option><option value="1">February</option><option value="2">March</option>
                         </select>
                     </div>
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Sort</label>
-                        <select id="filter-sort" class="filter-select w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
-                            <option value="desc">Newest</option>
-                            <option value="high">Cases (High)</option>
-                            <option value="asc">Oldest</option>
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Sort By</label>
+                        <select id="filter-sort" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
+                            <option value="desc">Newest First</option>
+                            <option value="high">Most Cases</option>
                         </select>
                     </div>
                 </div>
@@ -148,16 +147,16 @@
                 <div class="bg-white table-card border border-slate-100 shadow-sm overflow-hidden" data-aos="fade-up">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left whitespace-nowrap">
-                            <thead class="bg-slate-50/50">
-                                <tr class="text-[11px] font-black text-slate-400 uppercase tracking-[0.15em]">
+                            <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 text-[11px] font-black uppercase tracking-widest">
+                                <tr>
                                     <th class="px-10 py-7">Disease Identity</th>
-                                    <th class="px-8 py-7">Barangay</th>
-                                    <th class="px-8 py-7 text-center">Total Cases</th>
+                                    <th class="px-8 py-7">Origin Barangay</th>
+                                    <th class="px-8 py-7 text-center">Cases</th>
                                     <th class="px-8 py-7">Date Recorded</th>
                                     <th class="px-10 py-7">Severity</th>
                                 </tr>
                             </thead>
-                            <tbody id="disease-table-body" class="divide-y divide-slate-50"></tbody>
+                            <tbody id="disease-table-body" class="divide-y divide-slate-50 font-medium text-navy"></tbody>
                         </table>
                     </div>
                 </div>
@@ -181,18 +180,16 @@
             if (user) {
                 const docSnap = await getDoc(doc(db, "users", user.uid));
                 if (docSnap.exists()) {
-                    const userData = docSnap.data();
-                    document.getElementById('user-name-display').innerText = userData.name;
-                    
-                    const internalSection = document.getElementById('internal-section');
+                    const ud = docSnap.data();
+                    const internalSec = document.getElementById('internal-section');
                     const bhwLink = document.getElementById('bhw-link');
                     const rhuLink = document.getElementById('rhu-link');
-                    
-                    if (['admin', 'bhw', 'rhu'].includes(userData.role)) {
-                        internalSection.classList.remove('hidden');
-                        if (userData.role === 'admin') { bhwLink.classList.remove('hidden'); rhuLink.classList.remove('hidden'); }
-                        else if (userData.role === 'bhw') bhwLink.classList.remove('hidden');
-                        else if (userData.role === 'rhu') rhuLink.classList.remove('hidden');
+
+                    if (ud.role === 'admin' || ud.role === 'bhw' || ud.role === 'rhu') {
+                        internalSec.classList.remove('hidden');
+                        if (ud.role === 'admin') { bhwLink.classList.remove('hidden'); rhuLink.classList.remove('hidden'); }
+                        else if (ud.role === 'bhw') { bhwLink.classList.remove('hidden'); }
+                        else if (ud.role === 'rhu') { rhuLink.classList.remove('hidden'); }
                     }
                 }
                 document.body.classList.add('auth-ready');
@@ -217,7 +214,7 @@
 
             let filtered = masterData.filter(item => {
                 const date = item.createdAt?.toDate ? item.createdAt.toDate() : null;
-                const matchesSearch = item.name.toLowerCase().includes(searchTerm);
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm) || item.barangay.toLowerCase().includes(searchTerm);
                 const matchesBrgy = brgyValue === "all" || item.barangay === brgyValue;
                 const matchesYear = date ? date.getFullYear().toString() === yearValue : true;
                 const matchesMonth = monthValue === "all" || (date && date.getMonth().toString() === monthValue);
@@ -236,31 +233,26 @@
 
         function renderTable(data) {
             const body = document.getElementById('disease-table-body');
-            if (data.length === 0) {
-                body.innerHTML = `<tr><td colspan="5" class="py-20 text-center text-slate-400 font-bold">No disease reports found.</td></tr>`;
-                return;
-            }
-
             body.innerHTML = data.map((item, index) => {
                 const dateStr = item.createdAt?.toDate ? item.createdAt.toDate().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : "---";
-                let sevStyle = "bg-slate-100 text-slate-500";
-                if(item.severity === 'High') sevStyle = "bg-red-500 text-white shadow-lg shadow-red-100";
-                else if(item.severity === 'Medium') sevStyle = "bg-orange-400 text-white shadow-lg shadow-orange-100";
-                else if(item.severity === 'Low') sevStyle = "bg-emerald-500 text-white shadow-lg shadow-emerald-100";
+                let sevClass = "bg-slate-100 text-slate-500";
+                if(item.severity === 'High') sevClass = "bg-red-500 text-white shadow-lg shadow-red-100";
+                else if(item.severity === 'Medium') sevClass = "bg-amber-500 text-white shadow-lg shadow-amber-100";
+                else if(item.severity === 'Low') sevClass = "bg-emerald-500 text-white shadow-lg shadow-emerald-100";
 
                 return `
                 <tr class="hover:bg-slate-50/80 transition-all animate-row" style="animation-delay: ${index * 0.05}s">
                     <td class="px-10 py-7">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 bg-amber-50 text-amber-500 rounded-xl flex items-center justify-center"><i data-lucide="activity" class="w-5 h-5"></i></div>
-                            <span class="font-extrabold text-navy text-lg">${item.name}</span>
+                            <span class="font-extrabold text-lg">${item.name}</span>
                         </div>
                     </td>
                     <td class="px-8 py-7 text-slate-500 font-bold text-xs uppercase tracking-wider">Brgy. ${item.barangay}</td>
-                    <td class="px-8 py-7 text-center font-black text-xl text-navy">${(item.count || 0).toLocaleString()}</td>
+                    <td class="px-8 py-7 text-center font-black text-xl">${(item.count || 0).toLocaleString()}</td>
                     <td class="px-8 py-7 text-slate-400 text-xs font-bold uppercase">${dateStr}</td>
                     <td class="px-10 py-7">
-                        <span class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest ${sevStyle}">
+                        <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest ${sevClass}">
                             ${item.severity || 'Normal'}
                         </span>
                     </td>
@@ -276,6 +268,7 @@
         };
 
         ['disease-search', 'filter-brgy', 'filter-year', 'filter-time', 'filter-sort'].forEach(id => {
+            document.getElementById(id).addEventListener('change', applyFilters);
             document.getElementById(id).addEventListener('input', applyFilters);
         });
 
