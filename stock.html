@@ -28,7 +28,6 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-        /* Status colors */
         .status-pill { padding: 6px 12px; border-radius: 12px; font-weight: 800; font-size: 11px; text-transform: uppercase; }
         .status-low { background: #fff1f2; color: #be123c; }
         .status-good { background: #f0fdf4; color: #15803d; }
@@ -50,53 +49,41 @@
                             <p class="text-[10px] text-blue-600 uppercase font-black tracking-widest mt-1">Health Network</p>
                         </div>
                     </div>
-                    <button class="md:hidden p-2 text-slate-400 hover:text-red-500 transition-colors" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
+                    <button class="md:hidden p-2 text-slate-400 hover:text-red-500" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
                 </div>
 
                 <nav class="space-y-2">
-                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all group">
-                        <div class="w-8 h-8 bg-slate-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="layout-dashboard" class="w-4 h-4 group-hover:text-white"></i>
-                        </div>
-                        <span>Dashboard</span>
+                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 hover:text-blue-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-blue-50 transition-all">
+                        <i data-lucide="layout-dashboard"></i> Dashboard
                     </a>
                     
-                    <a href="stock.html" class="flex items-center gap-3 bg-emerald-500 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-100 transition-all">
-                        <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                            <i data-lucide="pill" class="w-4 h-4 text-white"></i>
-                        </div>
-                        <span>Medicine Stocks</span>
+                    <a href="stock.html" class="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-emerald-100 transition-all">
+                        <i data-lucide="pill"></i> Medicine Stocks
                     </a>
 
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 transition-all group">
-                        <div class="w-8 h-8 bg-amber-100 group-hover:bg-amber-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="file-bar-chart" class="w-4 h-4 text-amber-600 group-hover:text-white"></i>
-                        </div>
-                        <span>Disease Reports</span>
+                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
+                        <i data-lucide="file-bar-chart-2" class="text-amber-500"></i> Disease Reports
                     </a>
 
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-bold hover:bg-blue-50 transition-all group">
-                        <div class="w-8 h-8 bg-blue-100 group-hover:bg-blue-500 rounded-lg flex items-center justify-center transition-colors">
-                            <i data-lucide="phone" class="w-4 h-4 text-blue-600 group-hover:text-white"></i>
-                        </div>
-                        <span>Hotlines</span>
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 hover:text-sky-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-sky-50 transition-all">
+                        <i data-lucide="phone-call" class="text-sky-500"></i> Hotlines
                     </a>
-
-                    <div class="pt-6 pb-2">
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-3">Internal Consoles</p>
-                        <a href="rhu-console.html" class="flex items-center gap-3 text-slate-500 px-5 py-4 rounded-2xl font-bold hover:bg-red-50 transition-all group">
-                            <div class="w-8 h-8 bg-red-100 group-hover:bg-red-500 rounded-lg flex items-center justify-center transition-colors">
-                                <i data-lucide="shield-alert" class="w-4 h-4 text-red-600 group-hover:text-white"></i>
-                            </div>
-                            <span>RHU Console</span>
+                    
+                    <div id="internal-section" class="pt-6 border-t mt-4 hidden">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-5">Internal Management</p>
+                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-3.5 font-semibold hover:bg-emerald-50 rounded-2xl transition-all">
+                            <i data-lucide="users" class="w-5 h-5"></i> BHW Console
+                        </a>
+                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-3.5 font-semibold hover:bg-red-50 rounded-2xl transition-all">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> RHU Console
                         </a>
                     </div>
                 </nav>
             </div>
             
-            <div class="mt-auto p-8 border-t border-slate-50">
-                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold transition-colors w-full">
-                    <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+            <div class="mt-auto p-8">
+                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors">
+                    <i data-lucide="log-out"></i> Logout
                 </button>
             </div>
         </aside>
@@ -104,7 +91,7 @@
         <main class="flex-1 w-full overflow-y-auto">
             <header class="glass-header border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center gap-4">
-                    <button onclick="toggleSidebar()" class="flex md:hidden p-3 bg-white border border-slate-100 rounded-xl text-navy shadow-sm hover:bg-slate-50 transition-all">
+                    <button onclick="toggleSidebar()" class="flex md:hidden p-3 bg-white border border-slate-100 rounded-xl text-navy shadow-sm active:scale-95 transition-transform">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                     <div>
@@ -112,15 +99,19 @@
                         <p class="text-[10px] font-bold text-slate-400">Medicine & Supplies Control</p>
                     </div>
                 </div>
+                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
+                    <div class="w-8 h-8 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center shadow-inner"><i data-lucide="user" class="w-4 h-4"></i></div>
+                    <span id="user-name-display" class="font-bold text-navy text-sm hidden sm:inline">Officer</span>
+                </div>
             </header>
 
             <div class="p-4 md:p-10 max-w-7xl mx-auto">
                 <div class="flex flex-col lg:flex-row justify-between items-center gap-6 mb-10" data-aos="fade-down">
                     <div class="relative flex-1 w-full group">
                         <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                        <input type="text" id="stock-search" placeholder="Search medicines by name or category..." class="w-full pl-14 pr-4 py-5 bg-white border border-slate-100 rounded-3xl outline-none focus:ring-4 ring-emerald-50 shadow-sm font-semibold text-navy transition-all">
+                        <input type="text" id="stock-search" placeholder="Search medicines..." class="w-full pl-14 pr-4 py-5 bg-white border border-slate-100 rounded-3xl outline-none focus:ring-4 ring-emerald-50 shadow-sm font-semibold text-navy transition-all">
                     </div>
-                    <button onclick="openStockModal()" class="w-full lg:w-auto bg-emerald-500 text-white px-10 py-5 rounded-3xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-emerald-600 shadow-xl shadow-emerald-100 transition-all">
+                    <button onclick="openStockModal()" class="w-full lg:w-auto bg-emerald-600 text-white px-10 py-5 rounded-3xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-emerald-700 shadow-xl shadow-emerald-100 transition-all hover:-translate-y-1">
                         <i data-lucide="plus" class="w-5 h-5"></i> Add New Stock
                     </button>
                 </div>
@@ -148,25 +139,24 @@
     <div id="stock-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="closeStockModal()"></div>
         <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col scale-95 transition-all duration-300" id="stock-modal-container">
-            <div class="absolute top-0 left-0 w-full h-2 bg-emerald-500"></div>
+            <div class="absolute top-0 left-0 w-full h-2 bg-emerald-600"></div>
             <div class="p-8 pb-0 flex justify-between items-start">
                 <div>
-                    <h3 id="stock-modal-title" class="text-2xl font-extrabold text-navy tracking-tight">Add Stock</h3>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Official Inventory Entry</p>
+                    <h3 id="stock-modal-title" class="text-2xl font-extrabold text-navy tracking-tight">Stock Entry</h3>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Official Inventory Log</p>
                 </div>
                 <button onclick="closeStockModal()" class="p-2 bg-slate-50 rounded-xl text-slate-400 hover:text-navy transition-colors"><i data-lucide="x"></i></button>
             </div>
-            
             <form id="stock-form" class="p-8 space-y-6 overflow-y-auto custom-scrollbar">
                 <input type="hidden" id="stock-id">
                 <div>
                     <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Medicine Name</label>
-                    <input type="text" id="med-name" required placeholder="e.g. Paracetamol 500mg" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none focus:ring-4 ring-emerald-50 transition-all">
+                    <input type="text" id="med-name" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none focus:ring-4 ring-emerald-50">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Current Qty</label>
-                        <input type="number" id="med-qty" required min="0" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none">
+                        <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Quantity</label>
+                        <input type="number" id="med-qty" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none">
                     </div>
                     <div>
                         <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Category</label>
@@ -175,13 +165,13 @@
                             <option value="Antibiotic">Antibiotic</option>
                             <option value="Antiviral">Antiviral</option>
                             <option value="Vaccine">Vaccine</option>
-                            <option value="Vitamins">Vitamins</option>
+                            <option value="Supplements">Supplements</option>
                         </select>
                     </div>
                 </div>
                 <div class="flex gap-4 pt-4">
                     <button type="button" onclick="closeStockModal()" class="flex-1 font-bold text-slate-400">Cancel</button>
-                    <button type="submit" class="flex-[2] py-4 bg-emerald-500 text-white font-bold rounded-2xl shadow-xl shadow-emerald-100">Update Stock</button>
+                    <button type="submit" class="flex-[2] py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-xl shadow-emerald-100">Save Stock</button>
                 </div>
             </form>
         </div>
@@ -208,6 +198,28 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                const docSnap = await getDoc(doc(db, "users", user.uid));
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    document.getElementById('user-name-display').innerText = userData.name;
+                    
+                    // Dashboard Sync: Show internal section based on role
+                    const internalSection = document.getElementById('internal-section');
+                    const bhwLink = document.getElementById('bhw-link');
+                    const rhuLink = document.getElementById('rhu-link');
+                    
+                    if (userData.role === 'admin' || userData.role === 'bhw' || userData.role === 'rhu') {
+                        internalSection.classList.remove('hidden');
+                        if (userData.role === 'admin') {
+                            bhwLink.classList.remove('hidden');
+                            rhuLink.classList.remove('hidden');
+                        } else if (userData.role === 'bhw') {
+                            bhwLink.classList.remove('hidden');
+                        } else if (userData.role === 'rhu') {
+                            rhuLink.classList.remove('hidden');
+                        }
+                    }
+                }
                 document.body.classList.add('auth-ready');
                 AOS.init({ duration: 800, once: true });
                 init();
@@ -239,8 +251,8 @@
                         </span>
                     </td>
                     <td class="px-10 py-7 text-right">
-                        <button onclick="editStock('${item.id}')" class="p-2 hover:text-blue-600"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-                        <button onclick="deleteStock('${item.id}')" class="p-2 hover:text-red-600"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        <button onclick="editStock('${item.id}')" class="p-2 hover:text-blue-600 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                        <button onclick="deleteStock('${item.id}')" class="p-2 hover:text-red-600 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                     </td>
                 </tr>`).join('');
             lucide.createIcons();
