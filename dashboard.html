@@ -15,8 +15,9 @@
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
         
-        /* The Month Selector - Fixed Visibility */
-        .month-selector { display: none; } 
+        /* Fixed visibility logic */
+        .month-hidden { display: none !important; }
+        .month-visible { display: inline-block !important; }
 
         #sidebar { 
             position: fixed; top: 0; left: 0; height: 100vh; width: 280px; 
@@ -47,7 +48,7 @@
             <div class="p-8">
                 <div class="flex items-center justify-between mb-10">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg">
                             <i data-lucide="activity"></i>
                         </div>
                         <div>
@@ -97,10 +98,10 @@
                 </button>
                 <div class="flex items-center gap-4">
                     <div class="hidden md:block text-right">
-                        <p id="live-clock" class="text-[10px] font-bold text-blue-600 uppercase tracking-tighter">Loading...</p>
+                        <p id="live-clock" class="text-[10px] font-bold text-blue-600 uppercase">Loading...</p>
                         <h2 class="text-slate-900 font-bold text-sm">Welcome, <span id="welcome-name" class="text-blue-600">User</span></h2>
                     </div>
-                    <div class="w-10 h-10 bg-blue-50 rounded-full border-2 border-white shadow-sm flex items-center justify-center text-blue-600">
+                    <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-600">
                         <i data-lucide="user" class="w-5 h-5"></i>
                     </div>
                 </div>
@@ -120,7 +121,7 @@
                             </select>
                             <select id="d-year" class="flex-1 xl:flex-none p-3 bg-blue-50 text-blue-600 rounded-xl font-bold text-[11px] outline-none"></select>
                             
-                            <select id="d-month" class="month-selector flex-1 xl:flex-none p-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-[11px] outline-none"></select>
+                            <select id="d-month" class="month-hidden flex-1 xl:flex-none p-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-[11px] outline-none"></select>
                             
                             <select id="d-brgy" class="flex-1 xl:flex-none p-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none"></select>
                             <div class="relative w-full xl:w-64">
@@ -145,7 +146,7 @@
                             </select>
                             <select id="m-year" class="flex-1 xl:flex-none p-3 bg-blue-50 text-blue-600 rounded-xl font-bold text-[11px] outline-none"></select>
                             
-                            <select id="m-month" class="month-selector flex-1 xl:flex-none p-3 bg-emerald-50 text-emerald-600 rounded-xl font-bold text-[11px] outline-none"></select>
+                            <select id="m-month" class="month-hidden flex-1 xl:flex-none p-3 bg-emerald-50 text-emerald-600 rounded-xl font-bold text-[11px] outline-none"></select>
                             
                             <select id="m-brgy" class="flex-1 xl:flex-none p-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none"></select>
                             <div class="relative w-full xl:w-64">
@@ -185,25 +186,22 @@
         fill('d-month', months, true); fill('m-month', months, true);
         fill('d-brgy', barangays); fill('m-brgy', barangays);
 
-        // Sidebar Control
-        document.getElementById('open-sidebar').onclick = () => { document.getElementById('sidebar').classList.add('sidebar-open'); document.getElementById('overlay').classList.add('active'); };
-        document.getElementById('close-sidebar').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
-        document.getElementById('overlay').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
-
-        // DIRECT MONTH VISIBILITY FIX
-        const handleModeChange = (prefix) => {
+        // Visibility Toggle Function
+        const toggleMonthUI = (prefix) => {
             const mode = document.getElementById(`${prefix}-mode`).value;
-            const monthEl = document.getElementById(`${prefix}-month`);
+            const dropdown = document.getElementById(`${prefix}-month`);
             if (mode === 'monthly') {
-                monthEl.style.display = 'inline-block';
+                dropdown.classList.remove('month-hidden');
+                dropdown.classList.add('month-visible');
             } else {
-                monthEl.style.display = 'none';
+                dropdown.classList.add('month-hidden');
+                dropdown.classList.remove('month-visible');
             }
-            sync(); // Refresh data
+            sync();
         };
 
-        document.getElementById('d-mode').onchange = () => handleModeChange('d');
-        document.getElementById('m-mode').onchange = () => handleModeChange('m');
+        document.getElementById('d-mode').onchange = () => toggleMonthUI('d');
+        document.getElementById('m-mode').onchange = () => toggleMonthUI('m');
 
         const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
         const dChart = new Chart(document.getElementById('diseaseChart'), { type: 'line', data: { labels: [], datasets: [{ label: '', data: [], borderColor: '#3b82f6', backgroundColor: '#3b82f611', fill: true, tension: 0.4 }] }, options: opt });
@@ -295,9 +293,9 @@
                 document.body.classList.add('auth-ready');
                 lucide.createIcons();
                 AOS.init();
-                // Check initial state
-                handleModeChange('d');
-                handleModeChange('m');
+                // Initial check for dropdowns
+                toggleMonthUI('d');
+                toggleMonthUI('m');
             } else { window.location.href = "login.html"; }
         });
 
