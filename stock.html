@@ -52,7 +52,7 @@
                     <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 hover:text-blue-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-blue-50 transition-all">
                         <i data-lucide="layout-dashboard"></i> Dashboard
                     </a>
-                    <a href="stock.html" class="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-emerald-100">
+                    <a href="stock.html" class="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-emerald-100 transition-all">
                         <i data-lucide="pill"></i> Medicine Stocks
                     </a>
                     <a href="reports.html" class="flex items-center gap-3 text-slate-600 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
@@ -180,19 +180,18 @@
                             document.getElementById('bhw-link').classList.remove('hidden'); 
                             document.getElementById('rhu-link').classList.remove('hidden'); 
                         }
-                        else if (document.getElementById(`${ud.role}-link`)) {
-                            document.getElementById(`${ud.role}-link`).classList.remove('hidden');
-                        }
+                        else if (ud.role === 'bhw') { document.getElementById('bhw-link').classList.remove('hidden'); }
+                        else if (ud.role === 'rhu') { document.getElementById('rhu-link').classList.remove('hidden'); }
                     }
                 }
                 document.body.classList.add('auth-ready');
                 AOS.init({ duration: 800, once: true });
+                lucide.createIcons(); // Initialize Sidebar Icons
                 loadData();
             } else { window.location.href = "login.html"; }
         });
 
         function loadData() {
-            // Updated to look for 'medicine_stocks'
             onSnapshot(collection(db, "medicine_stocks"), (snap) => {
                 masterData = snap.docs.map(d => {
                     const data = d.data();
@@ -224,13 +223,9 @@
                 return matchesSearch && matchesBrgy && matchesStatus;
             });
 
-            // Sorting Logic
             filtered.sort((a, b) => {
-                // Quantity Sort Priority
                 if (sortQty === 'high') return b.quantity - a.quantity;
                 if (sortQty === 'low') return a.quantity - b.quantity;
-                
-                // Expiry Sort (Secondary)
                 const dateA = new Date(a.expiryDate === "---" ? "2099-01-01" : a.expiryDate);
                 const dateB = new Date(b.expiryDate === "---" ? "2099-01-01" : b.expiryDate);
                 return sortExp === 'near' ? dateA - dateB : dateB - dateA;
@@ -248,7 +243,6 @@
 
             body.innerHTML = data.map((item, index) => {
                 let statusClass = item.quantity < 50 ? "bg-red-500 text-white shadow-lg shadow-red-100" : "bg-emerald-500 text-white shadow-lg shadow-emerald-100";
-                
                 return `
                 <tr class="hover:bg-slate-50/80 transition-all animate-row" style="animation-delay: ${index * 0.05}s">
                     <td class="px-10 py-7">
@@ -270,7 +264,7 @@
                     </td>
                 </tr>`;
             }).join('');
-            lucide.createIcons();
+            lucide.createIcons(); // Initialize table icons
         }
 
         window.toggleSidebar = () => {
@@ -281,6 +275,7 @@
 
         ['stock-search', 'filter-brgy', 'filter-status', 'sort-expiry', 'sort-qty'].forEach(id => {
             document.getElementById(id).addEventListener('input', applyFilters);
+            document.getElementById(id).addEventListener('change', applyFilters);
         });
 
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
