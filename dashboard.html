@@ -3,302 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | GUB-UP</title>
+    <title>GUB-UP Dashboard</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
-        #main-layout { display: none; }
-        .auth-ready #main-layout { display: flex; }
-
-        /* Mobile Sidebar Logic */
-        #sidebar { 
-            position: fixed; top: 0; left: 0; height: 100vh; width: 280px; 
-            z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease;
-            background: white; border-right: 1px solid #f1f5f9;
-        }
-        @media (min-width: 1024px) { #sidebar { position: sticky; transform: translateX(0); width: 300px; } }
-        .sidebar-open { transform: translateX(0) !important; }
-        #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 900; }
-        #overlay.active { display: block; }
-
-        /* Search List Styling */
-        .search-results { 
-            display: none; position: absolute; top: 100%; left: 0; right: 0; 
-            background: white; border: 1px solid #e2e8f0; border-radius: 1rem; 
-            max-height: 250px; overflow-y: auto; z-index: 100; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); 
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 280px; background: white; z-index: 1000; transform: translateX(-100%); transition: 0.3s transform ease-in-out; border-right: 1px solid #e2e8f0; }
+        .sidebar.active { transform: translateX(0); }
+        @media (min-width: 1024px) { .sidebar { transform: translateX(0); position: sticky; width: 300px; } }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; backdrop-filter: blur(2px); }
+        .overlay.active { display: block; }
+        .search-results { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 12px; max-height: 200px; overflow-y: auto; z-index: 50; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
         .search-results.active { display: block; }
-        .search-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 500; }
-        .search-item:hover { background: #f0f9ff; color: #2563eb; }
+        .item-row { padding: 10px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+        .item-row:hover { background: #eff6ff; color: #2563eb; }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="flex min-h-screen">
 
-    <div id="overlay"></div>
+    <div id="overlay" class="overlay"></div>
 
-    <div id="main-layout" class="w-full flex flex-col lg:flex-row">
-        <aside id="sidebar" class="flex flex-col">
-            <div class="p-8">
-                <div class="flex items-center justify-between mb-10">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg"><i data-lucide="plus"></i></div>
-                        <div>
-                            <h1 class="font-bold text-[#1e3a8a] text-lg leading-none">GUB-UP</h1>
-                            <p class="text-[10px] text-blue-600 uppercase font-black tracking-widest mt-1">Health Network</p>
+    <aside id="sidebar" class="sidebar flex flex-col p-6">
+        <div class="flex items-center justify-between mb-10">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white"><i data-lucide="activity"></i></div>
+                <h1 class="font-extrabold text-slate-800 text-xl tracking-tight">GUB-UP</h1>
+            </div>
+            <button id="close-btn" class="lg:hidden p-2 text-slate-400"><i data-lucide="x"></i></button>
+        </div>
+        
+        <nav class="space-y-2 flex-1">
+            <a href="#" class="flex items-center gap-3 p-4 bg-blue-50 text-blue-600 rounded-xl font-bold"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+            <a href="stock.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-xl font-bold"><i data-lucide="package"></i> Medicine Stocks</a>
+            <a href="reports.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-xl font-bold"><i data-lucide="file-text"></i> Disease Reports</a>
+            <a href="hotlines.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-xl font-bold"><i data-lucide="phone"></i> Hotlines</a>
+        </nav>
+
+        <button id="logout-btn" class="flex items-center gap-3 p-4 text-red-500 font-bold border-t mt-4"><i data-lucide="log-out"></i> Logout</button>
+    </aside>
+
+    <main class="flex-1">
+        <div class="lg:hidden flex items-center justify-between p-4 bg-white border-b">
+            <button id="menu-btn" class="p-2 bg-slate-100 rounded-lg"><i data-lucide="menu"></i></button>
+            <span class="font-bold text-blue-600">GUB-UP</span>
+            <div class="w-8 h-8 bg-blue-100 rounded-full"></div>
+        </div>
+
+        <div class="p-4 lg:p-10 max-w-6xl mx-auto space-y-6">
+            
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-extrabold text-slate-800">Disease Cases</h2>
+                        <p class="text-xs font-bold text-red-500 uppercase tracking-widest"><span id="d-label">All Cases</span>: <span id="d-total">0</span></p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:flex gap-2">
+                        <select id="d-mode" class="p-3 bg-slate-50 rounded-xl text-xs font-bold outline-none border border-slate-200">
+                            <option value="yearly">Yearly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                        <select id="d-picker" class="p-3 bg-blue-50 text-blue-700 rounded-xl text-xs font-bold outline-none border border-blue-100"></select>
+                        <select id="d-area" class="p-3 bg-slate-50 rounded-xl text-xs font-bold outline-none border border-slate-200"></select>
+                        <div class="relative col-span-2 md:w-48">
+                            <input type="text" id="d-search" placeholder="Search..." class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold outline-none border border-slate-200">
+                            <div id="d-res" class="search-results"></div>
                         </div>
                     </div>
-                    <button id="close-menu" class="lg:hidden text-slate-400"><i data-lucide="x"></i></button>
                 </div>
+                <div class="h-64 md:h-80"><canvas id="diseaseChart"></canvas></div>
+            </div>
 
-                <nav class="space-y-3">
-                    <a href="dashboard.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-100">
-                        <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
-                    </a>
-                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50">
-                        <i data-lucide="package" class="text-emerald-500"></i><span>Medicine Stocks</span>
-                    </a>
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50">
-                        <i data-lucide="file-bar-chart" class="text-amber-500"></i><span>Disease Reports</span>
-                    </a>
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-sky-50">
-                        <i data-lucide="phone" class="text-sky-500"></i><span>Hotlines</span>
-                    </a>
-                    <div id="internal-section" class="pt-6 pb-2 hidden">
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest px-5 mb-2">Internal Consoles</p>
-                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 mb-2"><i data-lucide="user-cog"></i> BHW</a>
-                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-shield"></a>
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-extrabold text-slate-800">Medicine Stocks</h2>
+                        <p class="text-xs font-bold text-emerald-500 uppercase tracking-widest"><span id="m-label">All Items</span>: <span id="m-total">0</span></p>
                     </div>
-                </nav>
-            </div>
-            <div class="mt-auto p-8 border-t">
-                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full"><i data-lucide="log-out"></i> Logout</button>
-            </div>
-        </aside>
-
-        <main class="flex-1 w-full">
-            <div id="mobile-top-bar" class="lg:hidden bg-white border-b border-slate-100 px-5 py-4 flex items-center justify-between sticky top-0 z-40">
-                <button id="open-menu" class="p-2 bg-slate-50 rounded-xl text-[#1e3a8a]"><i data-lucide="menu"></i></button>
-                <h2 class="font-black text-blue-600 text-[10px] uppercase tracking-widest">GUB-UP</h2>
-                <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
-            </div>
-
-            <header class="bg-white/80 backdrop-blur-md border-b px-6 md:px-10 py-6 sticky top-0 z-30">
-                <div id="live-clock" class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">Loading...</div>
-                <h1 class="text-[#1e3a8a] font-bold text-2xl">Welcome, <span id="welcome-name">User</span>!</h1>
-            </header>
-
-            <div class="p-4 md:p-10 max-w-7xl mx-auto space-y-8">
-                
-                <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-6 md:p-10" data-aos="fade-up">
-                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
-                        <div>
-                            <h3 class="text-2xl font-bold text-[#1e3a8a]">Disease Cases</h3>
-                            <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mt-1"><span id="d-label">All Diseases</span> • Total: <span id="d-total">0</span></p>
-                        </div>
-                        <div class="flex flex-wrap gap-2 w-full lg:w-auto">
-                            <select id="d-mode" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none">
-                                <option value="yearly">Yearly</option>
-                                <option value="monthly">Monthly</option>
-                            </select>
-                            
-                            <select id="d-dynamic" class="p-3 bg-blue-50 rounded-2xl font-bold text-blue-600 text-xs outline-none"></select>
-
-                            <select id="d-brgy" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none"></select>
-                            
-                            <div class="relative flex-1 min-w-[180px]">
-                                <input type="text" id="d-search" placeholder="Search Disease..." class="w-full p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none">
-                                <div id="d-results" class="search-results custom-scrollbar"></div>
-                            </div>
+                    
+                    <div class="grid grid-cols-2 md:flex gap-2">
+                        <select id="m-mode" class="p-3 bg-slate-50 rounded-xl text-xs font-bold outline-none border border-slate-200">
+                            <option value="yearly">Yearly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                        <select id="m-picker" class="p-3 bg-emerald-50 text-emerald-700 rounded-xl text-xs font-bold outline-none border-emerald-100"></select>
+                        <select id="m-area" class="p-3 bg-slate-50 rounded-xl text-xs font-bold outline-none border border-slate-200"></select>
+                        <div class="relative col-span-2 md:w-48">
+                            <input type="text" id="m-search" placeholder="Search..." class="w-full p-3 bg-slate-50 rounded-xl text-xs font-bold outline-none border border-slate-200">
+                            <div id="m-res" class="search-results"></div>
                         </div>
                     </div>
-                    <div class="h-[350px]"><canvas id="diseaseChart"></canvas></div>
                 </div>
-
-                <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-6 md:p-10" data-aos="fade-up">
-                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
-                        <div>
-                            <h3 class="text-2xl font-bold text-[#1e3a8a]">Medicine Stocks</h3>
-                            <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-1"><span id="m-label">All Medicines</span> • Total: <span id="m-total">0</span></p>
-                        </div>
-                        <div class="flex flex-wrap gap-2 w-full lg:w-auto">
-                            <select id="m-mode" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none">
-                                <option value="yearly">Yearly</option>
-                                <option value="monthly">Monthly</option>
-                            </select>
-                            <select id="m-dynamic" class="p-3 bg-emerald-50 rounded-2xl font-bold text-emerald-600 text-xs outline-none"></select>
-                            <select id="m-brgy" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none"></select>
-                            <div class="relative flex-1 min-w-[180px]">
-                                <input type="text" id="m-search" placeholder="Search Medicine..." class="w-full p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none">
-                                <div id="m-results" class="search-results custom-scrollbar"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="h-[350px]"><canvas id="stockChart"></canvas></div>
-                </div>
-
+                <div class="h-64 md:h-80"><canvas id="stockChart"></canvas></div>
             </div>
-        </main>
-    </div>
+
+        </div>
+    </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE", authDomain: "gub-up.firebaseapp.com", projectId: "gub-up", storageBucket: "gub-up.firebasestorage.app", messagingSenderId: "75119179497", appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-        const years = ["2024", "2025", "2026"];
-        const barangays = ["All Areas", "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
-        const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Avian influenza", "Measles", "Mumps", "Rubella", "Chickenpox", "Hand, foot and mouth disease", "Hepatitis A", "Hepatitis B", "Hepatitis C", "Hepatitis E", "Rabies", "HIV infection", "AIDS", "Chikungunya", "Japanese encephalitis", "Zika virus infection", "Rotavirus infection", "Poliomyelitis", "Tuberculosis", "Pneumonia", "Typhoid fever", "Leptospirosis", "Cholera", "Diphtheria", "Pertussis", "Tetanus", "Meningitis", "Urinary tract infection", "Gonorrhea", "Syphilis", "Malaria", "Schistosomiasis", "Hypertension", "Diabetes", "Heart failure", "Stroke", "Asthma", "COPD", "Cancer", "Depression", "Anxiety", "Malnutrition"];
-        const medicines = ["Paracetamol", "Ibuprofen", "Mefenamic acid", "Aspirin", "Naproxen", "Diclofenac", "Celecoxib", "Chlorphenamine", "Diphenhydramine", "Cetirizine", "Loratadine", "Ambroxol", "Guaifenesin", "Salbutamol inhaler", "Omeprazole", "Loperamide", "ORS", "Povidone iodine", "Amoxicillin", "Azithromycin", "Ciprofloxacin", "Doxycycline", "Amlodipine", "Losartan", "Metformin", "Insulin", "Atorvastatin", "Vitamin C", "Multivitamins", "Iron (Ferrous sulfate)", "Alcohol", "Hand sanitizer"];
+        // DATA LISTS
+        const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const years = ['2024', '2025', '2026'];
+        const brgys = ["All Areas", "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
+        const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Measles", "Mumps", "Rubella", "Chickenpox", "Hand, foot and mouth disease", "Hepatitis A", "Hepatitis B", "Rabies", "HIV infection", "Tuberculosis", "Pneumonia", "Typhoid fever", "Leptospirosis", "Cholera", "Hypertension", "Diabetes", "Asthma"];
+        const medicines = ["Paracetamol", "Ibuprofen", "Mefenamic acid", "Aspirin", "Amoxicillin", "Azithromycin", "Ciprofloxacin", "Amlodipine", "Losartan", "Metformin", "Vitamin C", "Multivitamins", "Alcohol"];
 
-        let curD = "", curM = "";
+        let selD = "", selM = "";
 
-        // UI HELPERS
-        const fill = (id, list, valIsIdx = false) => {
-            document.getElementById(id).innerHTML = list.map((item, i) => `<option value="${valIsIdx ? i : item}">${item}</option>`).join('');
-        };
-        fill('d-brgy', barangays); fill('m-brgy', barangays);
-
-        // Sidebar Fix
-        const toggleNav = () => {
-            document.getElementById('sidebar').classList.toggle('sidebar-open');
-            document.getElementById('overlay').classList.toggle('active');
-        };
-        document.getElementById('open-menu').onclick = toggleNav;
-        document.getElementById('close-menu').onclick = toggleNav;
-        document.getElementById('overlay').onclick = toggleNav;
-
-        // MORPHING LOGIC
-        const updateDynamicSlot = (prefix) => {
-            const mode = document.getElementById(`${prefix}-mode`).value;
-            const slot = document.getElementById(`${prefix}-dynamic`);
-            if (mode === 'yearly') fill(`${prefix}-dynamic`, years);
-            else fill(`${prefix}-dynamic`, monthNames, true);
-            sync();
-        };
-
-        document.getElementById('d-mode').onchange = () => updateDynamicSlot('d');
-        document.getElementById('m-mode').onchange = () => updateDynamicSlot('m');
+        // 1. MOBILE MENU TOGGLE
+        const side = document.getElementById('sidebar');
+        const ovr = document.getElementById('overlay');
+        const toggleMenu = () => { side.classList.toggle('active'); ovr.classList.toggle('active'); };
         
-        // Init slots
-        updateDynamicSlot('d'); updateDynamicSlot('m');
+        document.getElementById('menu-btn').onclick = toggleMenu;
+        document.getElementById('close-btn').onclick = toggleMenu;
+        ovr.onclick = toggleMenu;
 
-        // SEARCH UI
-        const setupSearch = (inputId, resId, list, type) => {
-            const input = document.getElementById(inputId);
+        // 2. THE MORPHING CATEGORY LOGIC
+        const fillSelect = (id, list, useIdx) => {
+            const el = document.getElementById(id);
+            el.innerHTML = list.map((v, i) => `<option value="${useIdx ? i : v}">${v}</option>`).join('');
+        };
+
+        const setupMorph = (prefix) => {
+            const modeSel = document.getElementById(`${prefix}-mode`);
+            const picker = document.getElementById(`${prefix}-picker`);
+            
+            const refreshPicker = () => {
+                if(modeSel.value === 'yearly') fillSelect(`${prefix}-picker`, years, false);
+                else fillSelect(`${prefix}-picker`, months, true);
+                sync();
+            };
+            
+            modeSel.onchange = refreshPicker;
+            refreshPicker(); // Initial run
+        };
+
+        fillSelect('d-area', brgys, false);
+        fillSelect('m-area', brgys, false);
+        setupMorph('d'); setupMorph('m');
+
+        // 3. SEARCH LOGIC
+        const setupSearch = (inpId, resId, list, type) => {
+            const inp = document.getElementById(inpId);
             const res = document.getElementById(resId);
-            input.oninput = () => {
-                const q = input.value.toLowerCase();
-                const filtered = list.filter(i => i.toLowerCase().includes(q));
-                res.innerHTML = filtered.map(i => `<div class="search-item">${i}</div>`).join('');
-                res.classList.toggle('active', q.length > 0);
-                res.querySelectorAll('.search-item').forEach(el => {
-                    el.onclick = () => {
-                        input.value = el.innerText;
+            
+            inp.oninput = () => {
+                const val = inp.value.toLowerCase();
+                const matches = list.filter(x => x.toLowerCase().includes(val));
+                res.innerHTML = matches.map(m => `<div class="item-row">${m}</div>`).join('');
+                res.classList.toggle('active', val.length > 0 && matches.length > 0);
+                
+                res.querySelectorAll('.item-row').forEach(row => {
+                    row.onclick = () => {
+                        inp.value = row.innerText;
                         res.classList.remove('active');
-                        if (type === 'd') { curD = el.innerText; document.getElementById('d-label').innerText = el.innerText; }
-                        else { curM = el.innerText; document.getElementById('m-label').innerText = el.innerText; }
+                        if(type === 'd') { selD = row.innerText; document.getElementById('d-label').innerText = row.innerText; }
+                        else { selM = row.innerText; document.getElementById('m-label').innerText = row.innerText; }
                         sync();
                     };
                 });
             };
         };
-        setupSearch('d-search', 'd-results', diseases, 'd');
-        setupSearch('m-search', 'm-results', medicines, 'm');
+        setupSearch('d-search', 'd-res', diseases, 'd');
+        setupSearch('m-search', 'm-res', medicines, 'm');
 
-        // Click Outside to close search
-        window.onclick = (e) => {
-            if (!e.target.closest('.relative')) document.querySelectorAll('.search-results').forEach(r => r.classList.remove('active'));
-        };
+        // Close search when clicking outside
+        document.addEventListener('click', (e) => {
+            if(!e.target.closest('.relative')) document.querySelectorAll('.search-results').forEach(r => r.classList.remove('active'));
+        });
 
-        // CHART SYNC
-        const dChart = new Chart(document.getElementById('diseaseChart'), { type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: '#ef4444', backgroundColor: '#ef444411', fill: true, tension: 0.4, borderWidth: 3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
-        const mChart = new Chart(document.getElementById('stockChart'), { type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: '#10b981', backgroundColor: '#10b98111', fill: true, tension: 0.4, borderWidth: 3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+        // 4. CHART & DATA SYNC
+        const dCtx = document.getElementById('diseaseChart').getContext('2d');
+        const mCtx = document.getElementById('stockChart').getContext('2d');
+        const dChart = new Chart(dCtx, { type: 'line', data: { labels: [], datasets: [{ borderColor: '#ef4444', backgroundColor: '#ef444410', fill: true, tension: 0.4, data: [] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+        const mChart = new Chart(mCtx, { type: 'line', data: { labels: [], datasets: [{ borderColor: '#10b981', backgroundColor: '#10b98110', fill: true, tension: 0.4, data: [] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
 
         function sync() {
-            // Logic for Disease
+            // Process Disease
             const dMode = document.getElementById('d-mode').value;
-            const dVal = document.getElementById('d-dynamic').value;
-            const dBrgy = document.getElementById('d-brgy').value;
+            const dVal = document.getElementById('d-picker').value;
+            const dArea = document.getElementById('d-area').value;
 
             onSnapshot(collection(db, "disease_cases"), snap => {
-                let data = dMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
-                let labs = dMode === 'yearly' ? monthNames.map(m => m.substring(0,3)) : ["W1", "W2", "W3", "W4", "W5"];
+                let counts = dMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
+                let labs = dMode === 'yearly' ? months.map(m => m.slice(0,3)) : ["W1", "W2", "W3", "W4", "W5"];
                 let total = 0;
                 snap.forEach(doc => {
                     const r = doc.data(); const d = r.createdAt?.toDate();
                     if(!d) return;
-                    if((curD==="" || r.name===curD) && (dBrgy==="All Areas" || r.barangay===dBrgy)) {
-                        if(dMode === 'yearly' && d.getFullYear() == dVal) { data[d.getMonth()] += Number(r.count||0); total += Number(r.count||0); }
+                    if((selD==="" || r.name===selD) && (dArea==="All Areas" || r.barangay===dArea)) {
+                        if(dMode === 'yearly' && d.getFullYear() == dVal) { counts[d.getMonth()] += Number(r.count||0); total += Number(r.count||0); }
                         else if(dMode === 'monthly' && d.getMonth() == dVal && d.getFullYear() == 2026) {
-                            const wk = Math.ceil((d.getDate() + new Date(d.getFullYear(), d.getMonth(), 1).getDay()) / 7) - 1;
-                            if(wk>=0 && wk<5) data[wk] += Number(r.count||0); total += Number(r.count||0);
+                            const wk = Math.ceil(d.getDate() / 7) - 1; if(wk>=0 && wk<5) counts[wk] += Number(r.count||0); total += Number(r.count||0);
                         }
                     }
                 });
-                dChart.data.labels = labs; dChart.data.datasets[0].data = data; dChart.update();
+                dChart.data.labels = labs; dChart.data.datasets[0].data = counts; dChart.update();
                 document.getElementById('d-total').innerText = total;
             });
 
-            // Logic for Medicine
+            // Process Medicine (Similar logic...)
             const mMode = document.getElementById('m-mode').value;
-            const mVal = document.getElementById('m-dynamic').value;
-            const mBrgy = document.getElementById('m-brgy').value;
+            const mVal = document.getElementById('m-picker').value;
+            const mArea = document.getElementById('m-area').value;
 
             onSnapshot(collection(db, "medicine_inventory"), snap => {
-                let data = mMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
-                let labs = mMode === 'yearly' ? monthNames.map(m => m.substring(0,3)) : ["W1", "W2", "W3", "W4", "W5"];
+                let counts = mMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
+                let labs = mMode === 'yearly' ? months.map(m => m.slice(0,3)) : ["W1", "W2", "W3", "W4", "W5"];
                 let total = 0;
                 snap.forEach(doc => {
                     const r = doc.data(); const d = r.createdAt?.toDate();
                     if(!d) return;
-                    if((curM==="" || r.name===curM) && (mBrgy==="All Areas" || r.barangay===mBrgy)) {
-                        if(mMode === 'yearly' && d.getFullYear() == mVal) { data[d.getMonth()] += Number(r.count||0); total += Number(r.count||0); }
+                    if((selM==="" || r.name===selM) && (mArea==="All Areas" || r.barangay===mArea)) {
+                        if(mMode === 'yearly' && d.getFullYear() == mVal) { counts[d.getMonth()] += Number(r.count||0); total += Number(r.count||0); }
                         else if(mMode === 'monthly' && d.getMonth() == mVal && d.getFullYear() == 2026) {
-                            const wk = Math.ceil((d.getDate() + new Date(d.getFullYear(), d.getMonth(), 1).getDay()) / 7) - 1;
-                            if(wk>=0 && wk<5) data[wk] += Number(r.count||0); total += Number(r.count||0);
+                            const wk = Math.ceil(d.getDate() / 7) - 1; if(wk>=0 && wk<5) counts[wk] += Number(r.count||0); total += Number(r.count||0);
                         }
                     }
                 });
-                mChart.data.labels = labs; mChart.data.datasets[0].data = data; mChart.update();
+                mChart.data.labels = labs; mChart.data.datasets[0].data = counts; mChart.update();
                 document.getElementById('m-total').innerText = total;
             });
         }
 
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const snap = await getDoc(doc(db, "users", user.uid));
-                if (snap.exists()) {
-                    const d = snap.data(); document.getElementById('welcome-name').innerText = d.name;
-                    if(d.role === "rhu" || d.role === "bhw") {
-                        document.getElementById('internal-section').classList.remove('hidden');
-                        if(d.role === "rhu") document.getElementById('rhu-link').classList.remove('hidden');
-                        if(d.role === "bhw") document.getElementById('bhw-link').classList.remove('hidden');
-                    }
-                }
-                document.body.classList.add('auth-ready');
-                AOS.init({ duration: 800, once: true });
-                lucide.createIcons();
-                sync();
-            } else { window.location.href = "login.html"; }
-        });
-
-        setInterval(() => {
-            document.getElementById('live-clock').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-        }, 1000);
-
+        onAuthStateChanged(auth, user => { if(!user) window.location.href="login.html"; else { lucide.createIcons(); sync(); } });
         document.querySelectorAll('select').forEach(s => s.onchange = sync);
-        document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
     </script>
 </body>
 </html>
