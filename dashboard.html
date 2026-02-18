@@ -15,7 +15,7 @@
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
         
-        /* Sidebar Logic */
+        /* Sidebar Transitions */
         #sidebar { 
             position: fixed; top: 0; left: 0; height: 100vh; width: 280px; 
             z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease;
@@ -26,11 +26,10 @@
         #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 900; }
         #overlay.active { display: block; }
 
-        /* Conditional Visibility for Month Box */
-        .month-box { display: none; }
-        .month-box.active { display: block; }
+        /* Conditional Categories */
+        .hidden-select { display: none !important; }
 
-        /* Search Results */
+        /* Search List */
         .search-results { 
             display: none; position: absolute; top: 100%; left: 0; right: 0; 
             background: white; border: 1px solid #e2e8f0; border-radius: 1rem; 
@@ -59,21 +58,33 @@
                     <button id="close-menu" class="lg:hidden text-slate-400"><i data-lucide="x"></i></button>
                 </div>
 
-                <nav class="space-y-3">
-                    <a href="dashboard.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-100"><i data-lucide="layout-dashboard"></i><span>Dashboard</span></a>
-                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50"><i data-lucide="package" class="text-emerald-500"></i><span>Medicine Stocks</span></a>
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50"><i data-lucide="file-bar-chart" class="text-amber-500"></i><span>Disease Reports</span></a>
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-sky-50"><i data-lucide="phone" class="text-sky-500"></i><span>Hotlines</span></a>
-                    
-                    <div id="internal-section" class="pt-6 border-t mt-4 hidden">
-                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest px-5 mb-2">Internal Consoles</p>
-                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 mb-1"><i data-lucide="user-cog"></i> BHW Console</a>
-                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-50"><i data-lucide="shield-check"></i> RHU Console</a>
+                <nav class="space-y-2">
+                    <a href="dashboard.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-100">
+                        <i data-lucide="layout-dashboard"></i><span>Dashboard</span>
+                    </a>
+                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50">
+                        <i data-lucide="package" class="text-emerald-500"></i><span>Medicine Stocks</span>
+                    </a>
+                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50">
+                        <i data-lucide="file-text" class="text-amber-500"></i><span>Disease Reports</span>
+                    </a>
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-slate-50">
+                        <i data-lucide="phone-call" class="text-sky-500"></i><span>Hotlines</span>
+                    </a>
+
+                    <div id="internal-section" class="hidden pt-6 mt-4 border-t border-slate-100">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest px-5 mb-3">Staff Access</p>
+                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 mb-1">
+                            <i data-lucide="user-check"></i><span>BHW Console</span>
+                        </a>
+                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-50">
+                            <i data-lucide="shield-alert"></i><span>RHU Console</span>
+                        </a>
                     </div>
                 </nav>
             </div>
             <div class="mt-auto p-8 border-t">
-                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full"><i data-lucide="log-out"></i> Logout</button>
+                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors"><i data-lucide="log-out"></i> Logout</button>
             </div>
         </aside>
 
@@ -102,7 +113,7 @@
                                 <option value="monthly">Monthly</option>
                             </select>
                             <select id="d-year" class="p-3 bg-blue-50 rounded-2xl font-bold text-blue-600 text-xs outline-none"></select>
-                            <select id="d-month" class="month-box p-3 bg-amber-50 rounded-2xl font-bold text-amber-600 text-xs outline-none"></select>
+                            <select id="d-month" class="hidden-select p-3 bg-amber-50 rounded-2xl font-bold text-amber-600 text-xs outline-none"></select>
                             <select id="d-brgy" class="p-3 bg-slate-100 rounded-2xl font-bold text-blue-900 text-xs outline-none"></select>
                             <div class="relative flex-1 min-w-[180px]">
                                 <input type="text" id="d-search" placeholder="Search Disease..." class="w-full p-3 bg-slate-100 rounded-2xl font-bold text-blue-900 text-xs outline-none">
@@ -125,7 +136,7 @@
                                 <option value="monthly">Monthly</option>
                             </select>
                             <select id="m-year" class="p-3 bg-blue-50 rounded-2xl font-bold text-blue-600 text-xs outline-none"></select>
-                            <select id="m-month" class="month-box p-3 bg-emerald-50 rounded-2xl font-bold text-emerald-600 text-xs outline-none"></select>
+                            <select id="m-month" class="hidden-select p-3 bg-emerald-50 rounded-2xl font-bold text-emerald-600 text-xs outline-none"></select>
                             <select id="m-brgy" class="p-3 bg-slate-100 rounded-2xl font-bold text-blue-900 text-xs outline-none"></select>
                             <div class="relative flex-1 min-w-[180px]">
                                 <input type="text" id="m-search" placeholder="Search Medicine..." class="w-full p-3 bg-slate-100 rounded-2xl font-bold text-blue-900 text-xs outline-none">
@@ -152,14 +163,12 @@
         const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         const years = ["2024", "2025", "2026"];
         const barangays = ["All Areas", "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
-        
-        // Full Lists
-        const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Avian influenza", "Measles", "Mumps", "Rubella", "Chickenpox", "Hand, foot and mouth disease", "Hepatitis A", "Hepatitis B", "Hepatitis C", "Hepatitis E", "Rabies", "HIV infection", "AIDS", "Chikungunya", "Japanese encephalitis", "Zika virus infection", "Rotavirus infection", "Poliomyelitis", "Tuberculosis", "Pneumonia", "Typhoid fever", "Leptospirosis", "Cholera", "Diphtheria", "Pertussis", "Tetanus", "Meningitis", "Urinary tract infection", "Gonorrhea", "Syphilis", "Malaria", "Schistosomiasis", "Hypertension", "Diabetes", "Heart failure", "Stroke", "Asthma", "COPD", "Cancer", "Depression", "Anxiety", "Malnutrition"];
-        const medicines = ["Paracetamol", "Ibuprofen", "Mefenamic acid", "Aspirin", "Naproxen", "Diclofenac", "Celecoxib", "Chlorphenamine", "Diphenhydramine", "Cetirizine", "Loratadine", "Ambroxol", "Guaifenesin", "Salbutamol inhaler", "Omeprazole", "Loperamide", "ORS", "Povidone iodine", "Amoxicillin", "Azithromycin", "Ciprofloxacin", "Doxycycline", "Amlodipine", "Losartan", "Metformin", "Insulin", "Atorvastatin", "Vitamin C", "Multivitamins", "Iron (Ferrous sulfate)", "Alcohol", "Hand sanitizer"];
+        const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Measles", "Mumps", "Rubella", "Tuberculosis", "Hypertension", "Diabetes", "Heart failure"];
+        const medicines = ["Paracetamol", "Ibuprofen", "Amoxicillin", "Amlodipine", "Losartan", "Metformin", "Vitamin C", "Multivitamins", "Alcohol"];
 
         let curD = "", curM = "";
 
-        // Fill static dropdowns
+        // Fill lists
         const fill = (id, list, useIdx = false) => {
             document.getElementById(id).innerHTML = list.map((v, i) => `<option value="${useIdx ? i : v}">${v}</option>`).join('');
         };
@@ -167,7 +176,7 @@
         fill('d-month', months, true); fill('m-month', months, true);
         fill('d-brgy', barangays); fill('m-brgy', barangays);
 
-        // Sidebar Controls
+        // Sidebar Control
         const toggleSidebar = () => {
             document.getElementById('sidebar').classList.toggle('sidebar-open');
             document.getElementById('overlay').classList.toggle('active');
@@ -176,19 +185,21 @@
         document.getElementById('close-menu').onclick = toggleSidebar;
         document.getElementById('overlay').onclick = toggleSidebar;
 
-        // POP-UP CATEGORY LOGIC
-        const updatePillars = (prefix) => {
+        // THE "POP-UP" LOGIC
+        const handleModeChange = (prefix) => {
             const mode = document.getElementById(`${prefix}-mode`).value;
             const monthBox = document.getElementById(`${prefix}-month`);
-            if (mode === 'monthly') monthBox.classList.add('active');
-            else monthBox.classList.remove('active');
+            if (mode === 'monthly') {
+                monthBox.classList.remove('hidden-select');
+            } else {
+                monthBox.classList.add('hidden-select');
+            }
             sync();
         };
+        document.getElementById('d-mode').onchange = () => handleModeChange('d');
+        document.getElementById('m-mode').onchange = () => handleModeChange('m');
 
-        document.getElementById('d-mode').onchange = () => updatePillars('d');
-        document.getElementById('m-mode').onchange = () => updatePillars('m');
-
-        // Search Handlers
+        // Search Engine
         const setupSearch = (inputId, resId, list, type) => {
             const input = document.getElementById(inputId);
             const res = document.getElementById(resId);
@@ -211,12 +222,12 @@
         setupSearch('d-search', 'd-results', diseases, 'd');
         setupSearch('m-search', 'm-results', medicines, 'm');
 
-        // Charts
+        // Charts Init
         const dChart = new Chart(document.getElementById('diseaseChart'), { type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: '#ef4444', backgroundColor: '#ef444411', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
         const mChart = new Chart(document.getElementById('stockChart'), { type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: '#10b981', backgroundColor: '#10b98111', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
 
         function sync() {
-            // Disease logic
+            // Logic for Diseases
             const dMode = document.getElementById('d-mode').value;
             const dYear = document.getElementById('d-year').value;
             const dMonth = document.getElementById('d-month').value;
@@ -241,7 +252,7 @@
                 document.getElementById('d-total').innerText = total;
             });
 
-            // Medicine logic
+            // Logic for Medicine
             const mMode = document.getElementById('m-mode').value;
             const mYear = document.getElementById('m-year').value;
             const mMonth = document.getElementById('m-month').value;
@@ -271,9 +282,8 @@
             if (user) {
                 const s = await getDoc(doc(db, "users", user.uid));
                 if (s.exists()) {
-                    const u = s.data();
-                    document.getElementById('welcome-name').innerText = u.name;
-                    // SHOW INTERNAL CONSOLES BASED ON ROLE
+                    const u = s.data(); document.getElementById('welcome-name').innerText = u.name;
+                    // ROLE-BASED SIDEBAR
                     if(u.role === 'bhw' || u.role === 'rhu') {
                         document.getElementById('internal-section').classList.remove('hidden');
                         if(u.role === 'bhw') document.getElementById('bhw-link').classList.remove('hidden');
@@ -281,7 +291,6 @@
                     }
                 }
                 document.body.classList.add('auth-ready');
-                AOS.init({ duration: 800, once: true });
                 lucide.createIcons();
                 sync();
             } else { window.location.href = "login.html"; }
