@@ -3,127 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUB-MAP | Gubat Barangay Directory</title>
+    <title>GUB-UP | Digital Health Map</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; overflow-x: hidden; }
-        .text-navy { color: #1e3a8a; }
-        .bg-navy { background-color: #1e3a8a; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #0f172a; 
+            color: #f8fafc;
+        }
 
-        /* Map Container Styling */
-        .map-frame {
-            position: relative;
-            display: inline-block;
-            background: white;
+        /* The New Custom Map Canvas */
+        .map-canvas {
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            border: 2px solid #334155;
             border-radius: 2rem;
-            padding: 1rem;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
-            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+            background-image: 
+                linear-gradient(rgba(51, 65, 85, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(51, 65, 85, 0.3) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
 
-        .map-image {
-            max-height: 80vh;
-            width: auto;
-            border-radius: 1rem;
-            display: block;
-        }
-
-        /* Barangay Label Bubbles */
-        .brgy-pin {
+        /* Barangay Nodes */
+        .brgy-node {
             position: absolute;
-            transform: translate(-50%, -50%);
-            background: white;
-            border: 2px solid #2563eb;
-            padding: 2px 8px;
-            border-radius: 20px;
+            width: 12px;
+            height: 12px;
+            background: #38bdf8;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+        }
+
+        .brgy-node:hover {
+            transform: scale(2);
+            background: #fff;
+            box-shadow: 0 0 25px #fff;
+            z-index: 50;
+        }
+
+        .brgy-label {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             font-size: 10px;
             font-weight: 800;
-            color: #1e3a8a;
+            color: #94a3b8;
             white-space: nowrap;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: all 0.2s ease;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        .brgy-pin:hover {
-            transform: translate(-50%, -50%) scale(1.1);
-            background: #2563eb;
-            color: white;
-            z-index: 100;
+        .brgy-node:hover .brgy-label {
+            opacity: 1;
         }
 
-        /* Custom Scrollbar */
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
-<body class="p-4 lg:p-8">
+<body class="p-4 lg:p-10">
 
-    <div class="max-w-[1600px] mx-auto">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-            <div class="flex items-center gap-4">
-                <div class="bg-navy p-3 rounded-2xl text-white shadow-lg">
-                    <i data-lucide="map" class="w-8 h-8"></i>
+    <div class="max-w-7xl mx-auto">
+        <nav class="flex justify-between items-center mb-10">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2 rounded-xl">
+                    <i data-lucide="map-pin" class="text-white"></i>
                 </div>
-                <div>
-                    <h1 class="text-3xl font-black text-navy tracking-tight">GUB-MAP</h1>
-                    <p class="text-blue-600 font-bold text-xs uppercase tracking-widest">Barangay Territorial Mapping</p>
-                </div>
+                <h1 class="text-2xl font-extrabold tracking-tighter">GUB-UP <span class="text-blue-500">MAP</span></h1>
             </div>
-            <a href="index.html" class="flex items-center gap-2 bg-white border border-slate-200 px-6 py-3 rounded-xl font-bold text-navy hover:shadow-md transition">
-                <i data-lucide="home" class="w-4 h-4"></i> Home
-            </a>
-        </header>
+            <div class="flex gap-4">
+                <button class="px-4 py-2 bg-slate-800 rounded-lg text-sm font-semibold hover:bg-slate-700 transition">Refresh Data</button>
+                <button class="px-4 py-2 bg-blue-600 rounded-lg text-sm font-semibold hover:bg-blue-500 transition">Admin Login</button>
+            </div>
+        </nav>
 
         <div class="grid grid-cols-12 gap-8">
-            <div class="col-span-12 lg:col-span-3">
-                <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 flex flex-col h-[75vh]">
-                    <div class="mb-4">
-                        <h3 class="font-bold text-navy text-lg flex items-center gap-2">
-                            <i data-lucide="list"></i> Directory
-                        </h3>
-                        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-tighter">42 Registered Barangays</p>
-                    </div>
-                    
-                    <div class="relative mb-4">
-                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
-                        <input type="text" id="searchBrgy" placeholder="Search name..." class="w-full bg-slate-50 border-none rounded-xl py-2 pl-10 text-sm focus:ring-2 focus:ring-blue-500">
-                    </div>
-
-                    <div class="flex-1 overflow-y-auto custom-scroll pr-2 space-y-1" id="barangayList">
+            <div class="col-span-12 lg:col-span-4 space-y-6">
+                <div class="bg-slate-900/50 border border-slate-800 p-6 rounded-3xl">
+                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+                        <i data-lucide="layout-grid" class="w-5 h-5 text-blue-400"></i>
+                        Barangay Index
+                    </h2>
+                    <div class="h-[500px] overflow-y-auto custom-scroll space-y-2 pr-2" id="brgy-list">
                         </div>
                 </div>
             </div>
 
-            <div class="col-span-12 lg:col-span-9 flex flex-col items-center">
-                <div class="map-frame" id="mapWrapper">
-                    <img src="G (1).png" alt="Gubat Map" class="map-image" id="mainMap">
+            <div class="col-span-12 lg:col-span-8">
+                <div class="map-canvas h-[650px] w-full flex items-center justify-center relative">
+                    <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
+                        <h1 class="text-[15rem] font-black italic">GUBAT</h1>
+                    </div>
 
-                    <div class="brgy-pin" style="top: 12%; left: 54%;">Patag</div>
-                    <div class="brgy-pin" style="top: 20%; left: 63%;">Bagacay</div>
-                    <div class="brgy-pin" style="top: 22%; left: 42%;">Ariman</div>
+                    <div class="brgy-node" style="top: 15%; left: 60%;"><span class="brgy-label">BAGACAY</span></div>
+                    <div class="brgy-node" style="top: 12%; left: 50%;"><span class="brgy-label">PATAG</span></div>
+                    <div class="brgy-node" style="top: 20%; left: 54%;"><span class="brgy-label">PACO</span></div>
                     
-                    <div class="brgy-pin shadow-xl !border-navy !bg-navy !text-white" style="top: 55%; left: 56%;">POBLACION</div>
-                    <div class="brgy-pin" style="top: 51%; left: 63%;">Cogon</div>
-                    <div class="brgy-pin" style="top: 48%; left: 35%;">Carriedo</div>
-                    
-                    <div class="brgy-pin" style="top: 86%; left: 35%;">Bentuco</div>
-                    <div class="brgy-pin" style="top: 92%; left: 45%;">Togawe</div>
-                    <div class="brgy-pin" style="top: 75%; left: 62%;">Rizal</div>
+                    <div class="brgy-node" style="top: 52%; left: 55%; background: #fbbf24; width: 20px; height: 20px;"><span class="brgy-label" style="color:#fbbf24; font-size:12px;">POBLACION</span></div>
+                    <div class="brgy-node" style="top: 50%; left: 63%;"><span class="brgy-label">COGON</span></div>
+                    <div class="brgy-node" style="top: 48%; left: 45%;"><span class="brgy-label">CARRIEDO</span></div>
+                    <div class="brgy-node" style="top: 42%; left: 61%;"><span class="brgy-label">TIRIS</span></div>
+
+                    <div class="brgy-node" style="top: 85%; left: 35%;"><span class="brgy-label">BENTUCO</span></div>
+                    <div class="brgy-node" style="top: 90%; left: 45%;"><span class="brgy-label">TOGAWE</span></div>
+                    <div class="brgy-node" style="top: 75%; left: 65%;"><span class="brgy-label">RIZAL</span></div>
                 </div>
-
-                <div class="mt-6 bg-navy text-white px-6 py-3 rounded-full text-[10px] font-mono shadow-xl border border-white/20">
-                    <span id="coordDisplay">HOVER OVER THE MAP TO FIND COORDINATES FOR REMAINING BARANGAYS</span>
+                
+                <div class="mt-6 flex justify-between items-center text-slate-500 text-sm italic">
+                    <p>Digital reference map for Gubat, Sorsogon</p>
+                    <div class="flex items-center gap-4">
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-blue-400 rounded-full"></span> Normal</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 bg-yellow-400 rounded-full"></span> Poblacion</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const brgyArray = [
+        const brgys = [
             "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", 
             "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", 
             "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", 
@@ -132,36 +136,17 @@
             "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"
         ];
 
-        const listContainer = document.getElementById('barangayList');
-        const searchInput = document.getElementById('searchBrgy');
-        const mapImg = document.getElementById('mainMap');
-        const coordDisplay = document.getElementById('coordDisplay');
-
-        // Render the list
-        function renderList(filter = "") {
-            listContainer.innerHTML = "";
-            brgyArray.filter(b => b.toLowerCase().includes(filter.toLowerCase())).sort().forEach(name => {
-                const item = document.createElement('div');
-                item.className = "flex items-center gap-3 p-3 hover:bg-blue-50 rounded-xl cursor-pointer group transition";
-                item.innerHTML = `<div class="w-1.5 h-1.5 bg-slate-300 rounded-full group-hover:bg-blue-600"></div>
-                                 <span class="text-xs font-bold text-slate-600 group-hover:text-navy transition uppercase">${name}</span>`;
-                listContainer.appendChild(item);
-            });
-        }
-
-        // Mouse Tracker Tool
-        mapImg.addEventListener('mousemove', function(e) {
-            const rect = mapImg.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-            coordDisplay.innerText = `FOR NEW PIN: style="top: ${y.toFixed(1)}%; left: ${x.toFixed(1)}%;"`;
+        const list = document.getElementById('brgy-list');
+        brgys.sort().forEach(b => {
+            const div = document.createElement('div');
+            div.className = "flex items-center justify-between p-3 bg-slate-800/40 rounded-xl hover:bg-blue-600/20 cursor-pointer transition border border-transparent hover:border-blue-500/50 group";
+            div.innerHTML = `
+                <span class="text-sm font-semibold text-slate-400 group-hover:text-blue-400">${b}</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600"></i>
+            `;
+            list.appendChild(div);
         });
 
-        // Search Logic
-        searchInput.addEventListener('input', (e) => renderList(e.target.value));
-
-        // Start
-        renderList();
         lucide.createIcons();
     </script>
 </body>
