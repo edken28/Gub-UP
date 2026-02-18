@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUB-MAP | Full Barangay Surveillance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .text-navy { color: #1e3a8a; }
+        .bg-brand-blue { background-color: #2563eb; }
+        
+        /* Custom scrollbar for the barangay list */
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .map-wrapper {
+            position: relative;
+            display: inline-block;
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            border: 4px solid white;
+        }
+
+        /* Marker Styles */
+        .hotspot { position: absolute; transform: translate(-50%, -50%); cursor: pointer; z-index: 30; }
+        .pulse {
+            position: absolute;
+            width: 30px; height: 30px;
+            background: rgba(239, 68, 68, 0.4);
+            border-radius: 50%;
+            animation: pulse-ring 2s infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-6 bg-slate-50">
+
+    <div class="max-w-[1600px] mx-auto">
+        <div class="flex items-center justify-between mb-6 bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+            <div class="flex items-center gap-3">
+                <div class="bg-brand-blue p-2 rounded-lg text-white">
+                    <i data-lucide="activity" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-navy text-xl">GUB-MAP <span class="text-brand-blue text-sm font-medium ml-2">Surveillance v1.0</span></h1>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <div class="hidden md:flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">
+                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                    LAST UPDATED: FEB 2026
+                </div>
+                <a href="dashboard.html" class="bg-navy text-white px-5 py-2 rounded-xl text-sm font-bold hover:bg-blue-900 transition">Back to Dashboard</a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-12 gap-6">
+            <div class="col-span-12 lg:col-span-3 space-y-4">
+                <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 h-[750px] flex flex-col">
+                    <div class="mb-4">
+                        <h3 class="font-bold text-navy flex items-center gap-2">
+                            <i data-lucide="list" class="w-5 h-5"></i> Barangay Directory
+                        </h3>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold mt-1">42 Registered Locations</p>
+                    </div>
+                    
+                    <div class="relative mb-4">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400"></i>
+                        <input type="text" placeholder="Search barangay..." class="w-full bg-slate-50 border-none rounded-xl py-2.5 pl-10 text-sm focus:ring-2 focus:ring-blue-500 transition">
+                    </div>
+
+                    <div class="flex-1 overflow-y-auto custom-scroll space-y-1 pr-2" id="barangayList">
+                        </div>
+                </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-9">
+                <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 flex justify-center overflow-hidden">
+                    <div class="map-wrapper" id="mapCanvas">
+                        <img src="G (1).png" alt="Gubat Map" class="max-h-[700px] w-auto">
+                        
+                        <div class="hotspot" style="top: 55%; left: 54%;" title="Poblacion">
+                            <div class="pulse"></div>
+                            <div class="bg-red-500 text-white p-1 rounded shadow-lg relative z-10 border border-white">
+                                <i data-lucide="activity" class="w-3 h-3"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4 flex gap-6 justify-center bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
+                        <span class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></span> HIGH RISK (8+ Cases)
+                    </div>
+                    <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
+                        <span class="w-3 h-3 bg-orange-400 rounded-full"></span> MODERATE (3-7 Cases)
+                    </div>
+                    <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
+                        <span class="w-3 h-3 bg-green-500 rounded-full"></span> LOW RISK (0-2 Cases)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Full list provided by user
+        const barangays = [
+            "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", 
+            "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", 
+            "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", 
+            "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", 
+            "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", 
+            "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"
+        ];
+
+        const listContainer = document.getElementById('barangayList');
+
+        // Populate the sidebar list
+        barangays.forEach(brgy => {
+            const div = document.createElement('div');
+            div.className = "flex items-center justify-between p-3 hover:bg-blue-50 rounded-xl cursor-pointer transition group";
+            div.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <div class="w-2 h-2 bg-slate-300 rounded-full group-hover:bg-brand-blue"></div>
+                    <span class="text-sm font-semibold text-slate-600 group-hover:text-navy">${brgy}</span>
+                </div>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300 group-hover:text-brand-blue"></i>
+            `;
+            listContainer.appendChild(div);
+        });
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
