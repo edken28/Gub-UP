@@ -12,11 +12,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
-        .text-navy { color: #1e3a8a; }
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
 
-        /* Sidebar Styling */
+        /* Mobile Sidebar Logic */
         #sidebar { 
             position: fixed; top: 0; left: 0; height: 100vh; width: 280px; 
             z-index: 1000; transform: translateX(-100%); transition: transform 0.3s ease;
@@ -27,9 +26,6 @@
         #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 900; }
         #overlay.active { display: block; }
 
-        /* Conditional Visibility */
-        .hidden-dropdown { display: none !important; }
-        
         /* Search List Styling */
         .search-results { 
             display: none; position: absolute; top: 100%; left: 0; right: 0; 
@@ -38,7 +34,7 @@
         }
         .search-results.active { display: block; }
         .search-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 500; }
-        .search-item:hover { background: #f0f9ff; color: #0284c7; }
+        .search-item:hover { background: #f0f9ff; color: #2563eb; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -52,7 +48,7 @@
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg"><i data-lucide="plus"></i></div>
                         <div>
-                            <h1 class="font-bold text-navy text-lg leading-none">GUB-UP</h1>
+                            <h1 class="font-bold text-[#1e3a8a] text-lg leading-none">GUB-UP</h1>
                             <p class="text-[10px] text-blue-600 uppercase font-black tracking-widest mt-1">Health Network</p>
                         </div>
                     </div>
@@ -75,7 +71,7 @@
                     <div id="internal-section" class="pt-6 pb-2 hidden">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest px-5 mb-2">Internal Consoles</p>
                         <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 mb-2"><i data-lucide="user-cog"></i> BHW</a>
-                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-red-50"><i data-lucide="shield"></i> RHU</a>
+                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-4 rounded-2xl font-bold hover:bg-shield"></a>
                     </div>
                 </nav>
             </div>
@@ -86,39 +82,37 @@
 
         <main class="flex-1 w-full">
             <div id="mobile-top-bar" class="lg:hidden bg-white border-b border-slate-100 px-5 py-4 flex items-center justify-between sticky top-0 z-40">
-                <button id="open-menu" class="p-2 bg-slate-50 rounded-xl text-navy"><i data-lucide="menu"></i></button>
+                <button id="open-menu" class="p-2 bg-slate-50 rounded-xl text-[#1e3a8a]"><i data-lucide="menu"></i></button>
                 <h2 class="font-black text-blue-600 text-[10px] uppercase tracking-widest">GUB-UP</h2>
                 <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
             </div>
 
-            <header class="bg-white/80 backdrop-blur-md border-b px-6 md:px-10 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sticky top-0 z-30">
-                <div>
-                    <div id="live-clock" class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">Loading...</div>
-                    <h1 class="text-navy font-bold text-2xl">Welcome, <span id="welcome-name">User</span>!</h1>
-                </div>
+            <header class="bg-white/80 backdrop-blur-md border-b px-6 md:px-10 py-6 sticky top-0 z-30">
+                <div id="live-clock" class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">Loading...</div>
+                <h1 class="text-[#1e3a8a] font-bold text-2xl">Welcome, <span id="welcome-name">User</span>!</h1>
             </header>
 
             <div class="p-4 md:p-10 max-w-7xl mx-auto space-y-8">
+                
                 <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-6 md:p-10" data-aos="fade-up">
                     <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
                         <div>
-                            <h3 class="text-2xl font-bold text-navy">Disease Cases</h3>
+                            <h3 class="text-2xl font-bold text-[#1e3a8a]">Disease Cases</h3>
                             <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mt-1"><span id="d-label">All Diseases</span> • Total: <span id="d-total">0</span></p>
                         </div>
                         <div class="flex flex-wrap gap-2 w-full lg:w-auto">
-                            <select id="d-view-mode" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none border border-transparent focus:border-blue-200">
-                                <option value="yearly">Yearly View</option>
-                                <option value="monthly">Monthly View</option>
+                            <select id="d-mode" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none">
+                                <option value="yearly">Yearly</option>
+                                <option value="monthly">Monthly</option>
                             </select>
                             
-                            <select id="d-year-select" class="p-3 bg-blue-50 rounded-2xl font-bold text-blue-600 text-xs outline-none"></select>
-                            <select id="d-month-select" class="hidden-dropdown p-3 bg-amber-50 rounded-2xl font-bold text-amber-600 text-xs outline-none"></select>
+                            <select id="d-dynamic" class="p-3 bg-blue-50 rounded-2xl font-bold text-blue-600 text-xs outline-none"></select>
 
                             <select id="d-brgy" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none"></select>
                             
                             <div class="relative flex-1 min-w-[180px]">
                                 <input type="text" id="d-search" placeholder="Search Disease..." class="w-full p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none">
-                                <div id="d-results" class="search-results"></div>
+                                <div id="d-results" class="search-results custom-scrollbar"></div>
                             </div>
                         </div>
                     </div>
@@ -128,28 +122,25 @@
                 <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-6 md:p-10" data-aos="fade-up">
                     <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
                         <div>
-                            <h3 class="text-2xl font-bold text-navy">Medicine Stocks</h3>
+                            <h3 class="text-2xl font-bold text-[#1e3a8a]">Medicine Stocks</h3>
                             <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-1"><span id="m-label">All Medicines</span> • Total: <span id="m-total">0</span></p>
                         </div>
                         <div class="flex flex-wrap gap-2 w-full lg:w-auto">
-                            <select id="m-view-mode" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none border border-transparent focus:border-emerald-200">
-                                <option value="yearly">Yearly View</option>
-                                <option value="monthly">Monthly View</option>
+                            <select id="m-mode" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none">
+                                <option value="yearly">Yearly</option>
+                                <option value="monthly">Monthly</option>
                             </select>
-                            
-                            <select id="m-year-select" class="p-3 bg-blue-50 rounded-2xl font-bold text-blue-600 text-xs outline-none"></select>
-                            <select id="m-month-select" class="hidden-dropdown p-3 bg-emerald-50 rounded-2xl font-bold text-emerald-600 text-xs outline-none"></select>
-
+                            <select id="m-dynamic" class="p-3 bg-emerald-50 rounded-2xl font-bold text-emerald-600 text-xs outline-none"></select>
                             <select id="m-brgy" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none"></select>
-                            
                             <div class="relative flex-1 min-w-[180px]">
                                 <input type="text" id="m-search" placeholder="Search Medicine..." class="w-full p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none">
-                                <div id="m-results" class="search-results"></div>
+                                <div id="m-results" class="search-results custom-scrollbar"></div>
                             </div>
                         </div>
                     </div>
                     <div class="h-[350px]"><canvas id="stockChart"></canvas></div>
                 </div>
+
             </div>
         </main>
     </div>
@@ -167,22 +158,18 @@
         const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         const years = ["2024", "2025", "2026"];
         const barangays = ["All Areas", "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
-        
-        // --- COMPLETE LISTS ---
         const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Avian influenza", "Measles", "Mumps", "Rubella", "Chickenpox", "Hand, foot and mouth disease", "Hepatitis A", "Hepatitis B", "Hepatitis C", "Hepatitis E", "Rabies", "HIV infection", "AIDS", "Chikungunya", "Japanese encephalitis", "Zika virus infection", "Rotavirus infection", "Poliomyelitis", "Tuberculosis", "Pneumonia", "Typhoid fever", "Leptospirosis", "Cholera", "Diphtheria", "Pertussis", "Tetanus", "Meningitis", "Urinary tract infection", "Gonorrhea", "Syphilis", "Malaria", "Schistosomiasis", "Hypertension", "Diabetes", "Heart failure", "Stroke", "Asthma", "COPD", "Cancer", "Depression", "Anxiety", "Malnutrition"];
         const medicines = ["Paracetamol", "Ibuprofen", "Mefenamic acid", "Aspirin", "Naproxen", "Diclofenac", "Celecoxib", "Chlorphenamine", "Diphenhydramine", "Cetirizine", "Loratadine", "Ambroxol", "Guaifenesin", "Salbutamol inhaler", "Omeprazole", "Loperamide", "ORS", "Povidone iodine", "Amoxicillin", "Azithromycin", "Ciprofloxacin", "Doxycycline", "Amlodipine", "Losartan", "Metformin", "Insulin", "Atorvastatin", "Vitamin C", "Multivitamins", "Iron (Ferrous sulfate)", "Alcohol", "Hand sanitizer"];
 
         let curD = "", curM = "";
 
-        // UI Initialization
+        // UI HELPERS
         const fill = (id, list, valIsIdx = false) => {
             document.getElementById(id).innerHTML = list.map((item, i) => `<option value="${valIsIdx ? i : item}">${item}</option>`).join('');
         };
         fill('d-brgy', barangays); fill('m-brgy', barangays);
-        fill('d-year-select', years); fill('m-year-select', years);
-        fill('d-month-select', monthNames, true); fill('m-month-select', monthNames, true);
-        
-        // Sidebar Controls
+
+        // Sidebar Fix
         const toggleNav = () => {
             document.getElementById('sidebar').classList.toggle('sidebar-open');
             document.getElementById('overlay').classList.toggle('active');
@@ -191,25 +178,22 @@
         document.getElementById('close-menu').onclick = toggleNav;
         document.getElementById('overlay').onclick = toggleNav;
 
-        // View Mode Toggles
-        const switchMode = (prefix) => {
-            const mode = document.getElementById(`${prefix}-view-mode`).value;
-            const y = document.getElementById(`${prefix}-year-select`);
-            const m = document.getElementById(`${prefix}-month-select`);
-            
-            if (mode === 'yearly') {
-                y.classList.remove('hidden-dropdown');
-                m.classList.add('hidden-dropdown');
-            } else {
-                y.classList.add('hidden-dropdown');
-                m.classList.remove('hidden-dropdown');
-            }
+        // MORPHING LOGIC
+        const updateDynamicSlot = (prefix) => {
+            const mode = document.getElementById(`${prefix}-mode`).value;
+            const slot = document.getElementById(`${prefix}-dynamic`);
+            if (mode === 'yearly') fill(`${prefix}-dynamic`, years);
+            else fill(`${prefix}-dynamic`, monthNames, true);
             sync();
         };
-        document.getElementById('d-view-mode').onchange = () => switchMode('d');
-        document.getElementById('m-view-mode').onchange = () => switchMode('m');
 
-        // Search Handlers
+        document.getElementById('d-mode').onchange = () => updateDynamicSlot('d');
+        document.getElementById('m-mode').onchange = () => updateDynamicSlot('m');
+        
+        // Init slots
+        updateDynamicSlot('d'); updateDynamicSlot('m');
+
+        // SEARCH UI
         const setupSearch = (inputId, resId, list, type) => {
             const input = document.getElementById(inputId);
             const res = document.getElementById(resId);
@@ -217,7 +201,7 @@
                 const q = input.value.toLowerCase();
                 const filtered = list.filter(i => i.toLowerCase().includes(q));
                 res.innerHTML = filtered.map(i => `<div class="search-item">${i}</div>`).join('');
-                res.classList.toggle('active', q.length > 0 && filtered.length > 0);
+                res.classList.toggle('active', q.length > 0);
                 res.querySelectorAll('.search-item').forEach(el => {
                     el.onclick = () => {
                         input.value = el.innerText;
@@ -232,73 +216,70 @@
         setupSearch('d-search', 'd-results', diseases, 'd');
         setupSearch('m-search', 'm-results', medicines, 'm');
 
-        // Close search lists when clicking outside
-        window.addEventListener('click', (e) => {
-            if (!e.target.closest('.relative')) {
-                document.querySelectorAll('.search-results').forEach(r => r.classList.remove('active'));
-            }
-        });
+        // Click Outside to close search
+        window.onclick = (e) => {
+            if (!e.target.closest('.relative')) document.querySelectorAll('.search-results').forEach(r => r.classList.remove('active'));
+        };
 
-        // Sync & Charts
-        function getWeekOfMonth(date) {
-            const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-            return Math.ceil((date.getDate() + firstDay) / 7);
-        }
-
+        // CHART SYNC
         const dChart = new Chart(document.getElementById('diseaseChart'), { type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: '#ef4444', backgroundColor: '#ef444411', fill: true, tension: 0.4, borderWidth: 3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
         const mChart = new Chart(document.getElementById('stockChart'), { type: 'line', data: { labels: [], datasets: [{ data: [], borderColor: '#10b981', backgroundColor: '#10b98111', fill: true, tension: 0.4, borderWidth: 3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
 
         function sync() {
-            // Disease logic
-            const dMode = document.getElementById('d-view-mode').value;
-            const dYear = parseInt(document.getElementById('d-year-select').value);
-            const dMonth = parseInt(document.getElementById('d-month-select').value);
+            // Logic for Disease
+            const dMode = document.getElementById('d-mode').value;
+            const dVal = document.getElementById('d-dynamic').value;
             const dBrgy = document.getElementById('d-brgy').value;
 
             onSnapshot(collection(db, "disease_cases"), snap => {
-                let counts = dMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
-                let lbls = dMode === 'yearly' ? monthNames.map(m => m.substring(0,3)) : ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
-                let tot = 0;
+                let data = dMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
+                let labs = dMode === 'yearly' ? monthNames.map(m => m.substring(0,3)) : ["W1", "W2", "W3", "W4", "W5"];
+                let total = 0;
                 snap.forEach(doc => {
                     const r = doc.data(); const d = r.createdAt?.toDate();
                     if(!d) return;
-                    if((curD === "" || r.name === curD) && (dBrgy === "All Areas" || r.barangay === dBrgy)) {
-                        if(dMode === 'yearly' && d.getFullYear() === dYear) { counts[d.getMonth()] += Number(r.count || 0); tot += Number(r.count || 0); }
-                        else if(dMode === 'monthly' && d.getMonth() === dMonth && d.getFullYear() === 2026) { const wk = getWeekOfMonth(d)-1; if(wk>=0 && wk<5) counts[wk] += Number(r.count || 0); tot += Number(r.count || 0); }
+                    if((curD==="" || r.name===curD) && (dBrgy==="All Areas" || r.barangay===dBrgy)) {
+                        if(dMode === 'yearly' && d.getFullYear() == dVal) { data[d.getMonth()] += Number(r.count||0); total += Number(r.count||0); }
+                        else if(dMode === 'monthly' && d.getMonth() == dVal && d.getFullYear() == 2026) {
+                            const wk = Math.ceil((d.getDate() + new Date(d.getFullYear(), d.getMonth(), 1).getDay()) / 7) - 1;
+                            if(wk>=0 && wk<5) data[wk] += Number(r.count||0); total += Number(r.count||0);
+                        }
                     }
                 });
-                dChart.data.labels = lbls; dChart.data.datasets[0].data = counts; dChart.update();
-                document.getElementById('d-total').innerText = tot;
+                dChart.data.labels = labs; dChart.data.datasets[0].data = data; dChart.update();
+                document.getElementById('d-total').innerText = total;
             });
 
-            // Medicine logic
-            const mMode = document.getElementById('m-view-mode').value;
-            const mYear = parseInt(document.getElementById('m-year-select').value);
-            const mMonth = parseInt(document.getElementById('m-month-select').value);
+            // Logic for Medicine
+            const mMode = document.getElementById('m-mode').value;
+            const mVal = document.getElementById('m-dynamic').value;
             const mBrgy = document.getElementById('m-brgy').value;
 
             onSnapshot(collection(db, "medicine_inventory"), snap => {
-                let counts = mMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
-                let lbls = mMode === 'yearly' ? monthNames.map(m => m.substring(0,3)) : ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
-                let tot = 0;
+                let data = mMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
+                let labs = mMode === 'yearly' ? monthNames.map(m => m.substring(0,3)) : ["W1", "W2", "W3", "W4", "W5"];
+                let total = 0;
                 snap.forEach(doc => {
                     const r = doc.data(); const d = r.createdAt?.toDate();
                     if(!d) return;
-                    if((curM === "" || r.name === curM) && (mBrgy === "All Areas" || r.barangay === mBrgy)) {
-                        if(mMode === 'yearly' && d.getFullYear() === mYear) { counts[d.getMonth()] += Number(r.count || 0); tot += Number(r.count || 0); }
-                        else if(mMode === 'monthly' && d.getMonth() === mMonth && d.getFullYear() === 2026) { const wk = getWeekOfMonth(d)-1; if(wk>=0 && wk<5) counts[wk] += Number(r.count || 0); tot += Number(r.count || 0); }
+                    if((curM==="" || r.name===curM) && (mBrgy==="All Areas" || r.barangay===mBrgy)) {
+                        if(mMode === 'yearly' && d.getFullYear() == mVal) { data[d.getMonth()] += Number(r.count||0); total += Number(r.count||0); }
+                        else if(mMode === 'monthly' && d.getMonth() == mVal && d.getFullYear() == 2026) {
+                            const wk = Math.ceil((d.getDate() + new Date(d.getFullYear(), d.getMonth(), 1).getDay()) / 7) - 1;
+                            if(wk>=0 && wk<5) data[wk] += Number(r.count||0); total += Number(r.count||0);
+                        }
                     }
                 });
-                mChart.data.labels = lbls; mChart.data.datasets[0].data = counts; mChart.update();
-                document.getElementById('m-total').innerText = tot;
+                mChart.data.labels = labs; mChart.data.datasets[0].data = data; mChart.update();
+                document.getElementById('m-total').innerText = total;
             });
         }
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const s = await getDoc(doc(db, "users", user.uid));
-                if (s.exists()) {
-                    const d = s.data(); document.getElementById('welcome-name').innerText = d.name;
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists()) {
+                    const d = snap.data(); document.getElementById('welcome-name').innerText = d.name;
                     if(d.role === "rhu" || d.role === "bhw") {
                         document.getElementById('internal-section').classList.remove('hidden');
                         if(d.role === "rhu") document.getElementById('rhu-link').classList.remove('hidden');
