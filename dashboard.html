@@ -14,10 +14,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
-        
-        /* The Month Selector - Fixed Visibility */
         .month-selector { display: none; } 
-
         #sidebar { 
             position: fixed; top: 0; left: 0; height: 100vh; width: 280px; 
             z-index: 1000; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -25,10 +22,8 @@
         }
         @media (min-width: 1024px) { #sidebar { position: sticky; transform: translateX(0); width: 300px; } }
         .sidebar-open { transform: translateX(0) !important; }
-        
         #overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); z-index: 900; }
         #overlay.active { display: block; }
-
         .search-results { 
             display: none; position: absolute; top: 100%; left: 0; right: 0; 
             background: white; border: 1px solid #e2e8f0; border-radius: 1rem; 
@@ -120,11 +115,8 @@
                                 <option value="monthly">Monthly View</option>
                             </select>
                             <select id="d-year" class="flex-1 xl:flex-none p-3 bg-blue-50 text-blue-600 rounded-xl font-bold text-[11px] outline-none"></select>
-                            
                             <select id="d-month" class="month-selector flex-1 xl:flex-none p-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-[11px] outline-none"></select>
-                            
                             <select id="d-brgy" class="flex-1 xl:flex-none p-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none"></select>
-                            
                             <div class="relative w-full xl:w-64">
                                 <input type="text" id="d-search" placeholder="Search disease..." class="w-full px-4 py-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none">
                                 <div id="d-results" class="search-results"></div>
@@ -146,11 +138,8 @@
                                 <option value="monthly">Monthly View</option>
                             </select>
                             <select id="m-year" class="flex-1 xl:flex-none p-3 bg-blue-50 text-blue-600 rounded-xl font-bold text-[11px] outline-none"></select>
-                            
                             <select id="m-month" class="month-selector flex-1 xl:flex-none p-3 bg-emerald-50 text-emerald-600 rounded-xl font-bold text-[11px] outline-none"></select>
-                            
                             <select id="m-brgy" class="flex-1 xl:flex-none p-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none"></select>
-                            
                             <div class="relative w-full xl:w-64">
                                 <input type="text" id="m-search" placeholder="Search medicine..." class="w-full px-4 py-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none">
                                 <div id="m-results" class="search-results"></div>
@@ -158,6 +147,11 @@
                         </div>
                     </div>
                     <div class="h-[400px]"><canvas id="stockChart"></canvas></div>
+                    
+                    <div id="top-meds-container" class="mt-8 pt-8 border-t border-slate-50">
+                        <h4 class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-4">Stock Highlights</h4>
+                        <div id="top-meds-list" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -186,32 +180,25 @@
         fill('d-month', months, true); fill('m-month', months, true);
         fill('d-brgy', barangays); fill('m-brgy', barangays);
 
-        // Sidebar Control
         document.getElementById('open-sidebar').onclick = () => { document.getElementById('sidebar').classList.add('sidebar-open'); document.getElementById('overlay').classList.add('active'); };
         document.getElementById('close-sidebar').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
         document.getElementById('overlay').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
 
-        // THE FORCE VISIBILITY FIX
         const updateVisibility = (prefix) => {
             const mode = document.getElementById(`${prefix}-mode`).value;
             const monthEl = document.getElementById(`${prefix}-month`);
-            if(mode === 'monthly') {
-                monthEl.style.display = 'inline-block';
-            } else {
-                monthEl.style.display = 'none';
-            }
+            monthEl.style.display = mode === 'monthly' ? 'inline-block' : 'none';
             sync();
         };
         document.getElementById('d-mode').addEventListener('change', () => updateVisibility('d'));
         document.getElementById('m-mode').addEventListener('change', () => updateVisibility('m'));
 
-        // Charts (LEGEND: FALSE FIXES UNDEFINED)
-        const opt = { 
-            responsive: true, maintainAspectRatio: false, 
-            plugins: { legend: { display: false } } 
-        };
+        const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
         const dChart = new Chart(document.getElementById('diseaseChart'), { type: 'line', data: { labels: [], datasets: [{ label: '', data: [], borderColor: '#3b82f6', backgroundColor: '#3b82f611', fill: true, tension: 0.4 }] }, options: opt });
         const mChart = new Chart(document.getElementById('stockChart'), { type: 'line', data: { labels: [], datasets: [{ label: '', data: [], borderColor: '#10b981', backgroundColor: '#10b98111', fill: true, tension: 0.4 }] }, options: opt });
+
+        // Global storage for medicine data to combine collections
+        let masterMedData = {};
 
         function sync() {
             const dMode = document.getElementById('d-mode').value;
@@ -235,31 +222,57 @@
                     }
                 });
                 dChart.data.labels = labs; dChart.data.datasets[0].data = counts; dChart.update();
-                document.getElementById('d-total').innerText = total;
+                document.getElementById('d-total').innerText = total.toLocaleString();
             });
 
-            // Medicine Logic
+            // FIXED Medicine Logic
             const mMode = document.getElementById('m-mode').value;
             const mYear = document.getElementById('m-year').value;
             const mMonth = document.getElementById('m-month').value;
             const mBrgy = document.getElementById('m-brgy').value;
-            onSnapshot(collection(db, "medicine_inventory"), snap => {
-                let counts = mMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
-                let labs = mMode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
-                let total = 0;
-                snap.forEach(doc => {
-                    const r = doc.data(); const date = r.createdAt?.toDate();
-                    if(!date) return;
-                    if((curM === "" || r.name === curM) && (mBrgy === "All Areas" || r.barangay === mBrgy)) {
-                        if(mMode === 'yearly' && date.getFullYear() == mYear) { counts[date.getMonth()] += Number(r.count); total += Number(r.count); }
-                        else if(mMode === 'monthly' && date.getMonth() == mMonth && date.getFullYear() == mYear) {
-                            const wk = Math.ceil((date.getDate() + new Date(date.getFullYear(), date.getMonth(), 1).getDay()) / 7) - 1;
-                            if(wk>=0 && wk<5) { counts[wk] += Number(r.count); total += Number(r.count); }
+
+            const targetCols = ["medicine_inventory", "medicine_stocks"];
+            
+            targetCols.forEach(colName => {
+                onSnapshot(collection(db, colName), snap => {
+                    masterMedData[colName] = snap.docs.map(d => ({...d.data(), id: d.id}));
+                    
+                    let combinedCounts = mMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
+                    let labs = mMode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
+                    let grandTotal = 0;
+                    let ranking = {};
+
+                    Object.values(masterMedData).flat().forEach(r => {
+                        const date = r.createdAt?.toDate();
+                        if(!date) return;
+                        
+                        if((curM === "" || r.name === curM) && (mBrgy === "All Areas" || r.barangay === mBrgy)) {
+                            const countVal = Number(r.count || 0);
+                            
+                            if(mMode === 'yearly' && date.getFullYear() == mYear) { 
+                                combinedCounts[date.getMonth()] += countVal; grandTotal += countVal; 
+                                ranking[r.name] = (ranking[r.name] || 0) + countVal;
+                            }
+                            else if(mMode === 'monthly' && date.getMonth() == mMonth && date.getFullYear() == mYear) {
+                                const wk = Math.ceil((date.getDate() + new Date(date.getFullYear(), date.getMonth(), 1).getDay()) / 7) - 1;
+                                if(wk>=0 && wk<5) { combinedCounts[wk] += countVal; grandTotal += countVal; }
+                                ranking[r.name] = (ranking[r.name] || 0) + countVal;
+                            }
                         }
-                    }
+                    });
+
+                    mChart.data.labels = labs; mChart.data.datasets[0].data = combinedCounts; mChart.update();
+                    document.getElementById('m-total').innerText = grandTotal.toLocaleString();
+                    
+                    // Update Top Medicines UI
+                    const topList = Object.entries(ranking).sort((a,b) => b[1]-a[1]).slice(0,3);
+                    document.getElementById('top-meds-list').innerHTML = topList.length ? topList.map(([name, qty]) => `
+                        <div class="bg-slate-50 p-4 rounded-2xl flex items-center justify-between">
+                            <span class="font-bold text-xs text-slate-700">${name}</span>
+                            <span class="font-black text-emerald-600 text-sm">${qty.toLocaleString()}</span>
+                        </div>
+                    `).join('') : '<p class="text-[10px] font-bold text-slate-300">No data for selected period</p>';
                 });
-                mChart.data.labels = labs; mChart.data.datasets[0].data = counts; mChart.update();
-                document.getElementById('m-total').innerText = total;
             });
         }
 
@@ -268,10 +281,16 @@
                 const s = await getDoc(doc(db, "users", user.uid));
                 if (s.exists()) {
                     const u = s.data(); document.getElementById('welcome-name').innerText = u.name;
-                    if(u.role === 'bhw' || u.role === 'rhu') {
+                    const isInternal = ['admin', 'bhw', 'rhu'].includes(u.role);
+                    if(isInternal) {
                         document.getElementById('internal-section').classList.remove('hidden');
-                        if(u.role === 'bhw') document.getElementById('bhw-link').classList.remove('hidden');
-                        if(u.role === 'rhu') document.getElementById('rhu-link').classList.remove('hidden');
+                        if(u.role === 'admin') {
+                            document.getElementById('bhw-link').classList.remove('hidden');
+                            document.getElementById('rhu-link').classList.remove('hidden');
+                        } else {
+                            const link = document.getElementById(`${u.role}-link`);
+                            if(link) link.classList.remove('hidden');
+                        }
                     }
                 }
                 document.body.classList.add('auth-ready');
