@@ -33,8 +33,17 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-row { animation: slideIn 0.4s ease forwards; }
-        .pulse-red { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        
+        /* Status Badge Styling */
+        .badge { font-size: 9px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.025em; }
+        .badge-critical { background: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; }
+        .badge-low { background: #fff7ed; color: #f97316; border: 1px solid #ffedd5; }
+        .badge-moderate { background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; }
+        .badge-high { background: #f0f9ff; color: #0ea5e9; border: 1px solid #e0f2fe; }
+        .badge-good { background: #ecfdf5; color: #10b981; border: 1px solid #d1fae5; }
+
+        .pulse-critical { animation: pulse-red 1.5s infinite; }
+        @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
         .dropdown-list {
             display: none; position: absolute; top: 100%; left: 0; right: 0;
@@ -78,7 +87,6 @@
                     <a href="hotlines.html" class="flex items-center gap-3 text-slate-500 hover:text-sky-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-sky-50 transition-all">
                         <i data-lucide="phone-call" class="w-5 h-5 text-sky-500"></i> Hotlines
                     </a>
-                    
                     <div class="pt-6 border-t mt-4">
                         <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-5">Internal Management</p>
                         <a href="bhw-console.html" class="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-emerald-100">
@@ -129,6 +137,7 @@
                                     <th class="px-10 py-6">Medicine Identity</th>
                                     <th class="px-8 py-6">Date Added</th>
                                     <th class="px-8 py-6">Expiration</th>
+                                    <th class="px-8 py-6">Status</th>
                                     <th class="px-8 py-6 text-center">In-Stock</th>
                                     <th class="px-10 py-6 text-right">Actions</th>
                                 </tr>
@@ -242,13 +251,26 @@
             });
         }
 
+        /* Helper to determine status based on quantity.
+           Adjust thresholds as needed for your healthcare requirements.
+        */
+        function getStatus(count) {
+            if (count <= 10) return { label: 'Critical', class: 'badge-critical pulse-critical' };
+            if (count <= 30) return { label: 'Low', class: 'badge-low' };
+            if (count <= 70) return { label: 'Moderate', class: 'badge-moderate' };
+            if (count <= 150) return { label: 'High', class: 'badge-high' };
+            return { label: 'Good', class: 'badge-good' };
+        }
+
         function renderTable(data) {
             const body = document.getElementById('inventory-table-body');
             if (data.length === 0) {
-                body.innerHTML = `<tr><td colspan="5" class="py-20 text-center text-slate-400 font-bold">No records found for ${userBrgy}.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="6" class="py-20 text-center text-slate-400 font-bold">No records found for ${userBrgy}.</td></tr>`;
                 return;
             }
-            body.innerHTML = data.map((item, index) => `
+            body.innerHTML = data.map((item, index) => {
+                const status = getStatus(item.count || 0);
+                return `
                 <tr class="hover:bg-slate-50 transition-all animate-row" style="animation-delay: ${index * 0.05}s">
                     <td class="px-10 py-7">
                         <div class="flex items-center gap-4">
@@ -261,8 +283,11 @@
                     </td>
                     <td class="px-8 py-7"><span class="text-slate-500 font-bold text-[12px]">${item.addedDate || 'N/A'}</span></td>
                     <td class="px-8 py-7"><span class="px-3 py-1 bg-slate-100 rounded-full text-slate-500 font-bold text-[11px]">${item.expiryDate || 'N/A'}</span></td>
+                    <td class="px-8 py-7">
+                        <span class="badge ${status.class}">${status.label}</span>
+                    </td>
                     <td class="px-8 py-7 text-center">
-                        <span class="font-bold text-lg ${item.count < 10 ? 'text-red-500 pulse-red' : 'text-slate-700'}">${(item.count || 0).toLocaleString()}</span>
+                        <span class="font-bold text-lg ${item.count <= 10 ? 'text-red-500' : 'text-slate-700'}">${(item.count || 0).toLocaleString()}</span>
                     </td>
                     <td class="px-10 py-7 text-right">
                         <div class="flex justify-end gap-2">
@@ -270,7 +295,7 @@
                             <button onclick="deleteEntry('${item.id}')" class="p-2.5 bg-white border border-slate-100 text-slate-400 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         </div>
                     </td>
-                </tr>`).join('');
+                </tr>`}).join('');
             lucide.createIcons();
         }
 
@@ -290,7 +315,6 @@
         window.openAddModal = () => { 
             document.getElementById('item-form').reset(); 
             document.getElementById('entry-id').value = ""; 
-            // Default Date Added to today
             document.getElementById('med-added-date').value = new Date().toISOString().split('T')[0];
             document.getElementById('item-modal').classList.remove('hidden'); 
         };
