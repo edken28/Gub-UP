@@ -3,375 +3,284 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account | GUB-UP</title>
+    <title>Hotlines | GUB-UP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; overflow-x: hidden; position: relative; }
-        .bg-brand-blue { background-color: #2563eb; }
-        .text-brand-blue { color: #2563eb; }
-        .text-navy { color: #1e3a8a; }
-
-        /* FLOATING BACKGROUND ORBS */
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            opacity: 0.4;
-            animation: drift 15s infinite alternate ease-in-out;
+        body { font-family: 'Inter', sans-serif; opacity: 0; transition: opacity 0.3s ease-in; }
+        .auth-ready { opacity: 1; }
+        .hover-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hover-card:hover { transform: translateY(-8px); }
+        
+        #splash-screen {
+            position: fixed; inset: 0; background: white; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .orb-1 { width: 300px; height: 300px; background: #e2e8f0; top: -10%; left: -5%; }
-        .orb-2 { width: 400px; height: 400px; background: #cbd5e1; bottom: -10%; right: -5%; animation-delay: -5s; }
-        .orb-3 { width: 250px; height: 250px; background: #f1f5f9; top: 40%; right: 10%; animation-delay: -2s; }
+        @keyframes loading { 0% { width: 0; transform: translateX(0); } 50% { width: 100%; transform: translateX(0); } 100% { width: 0; transform: translateX(100%); } }
+        @keyframes floatLogo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+        .logo-anim { animation: floatLogo 4s ease-in-out infinite; }
 
-        @keyframes drift {
-            from { transform: translate(0, 0) rotate(0deg); }
-            to { transform: translate(40px, 60px) rotate(10deg); }
+        @media (max-width: 1024px) {
+            .sidebar-closed { transform: translateX(-100%); }
+            .sidebar-open { transform: translateX(0); }
         }
-
-        /* ACTIVE SELECTION STATE */
-        input[type="radio"]:checked + .selection-card {
-            border-color: #2563eb !important;
-            background-color: #eff6ff !important;
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1);
-        }
-
-        /* ANIMATIONS */
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes floatLogo {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .animate-slide-up {
-            opacity: 0;
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .animate-float { animation: floatLogo 4s ease-in-out infinite; }
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-
-        #otpModal { display: none; backdrop-filter: blur(8px); }
-        .modal-active { display: flex !important; animation: fadeIn 0.3s ease forwards; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes modalPop { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        .modal-content { animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col items-center justify-center p-4 md:p-6">
+<body class="bg-slate-50 min-h-screen flex flex-col lg:flex-row overflow-x-hidden">
 
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-
-    <div class="max-w-4xl w-full relative z-10">
-        <div class="mb-4 md:mb-6 animate-slide-up">
-            <a href="index.html" class="inline-flex items-center gap-2 text-brand-blue font-bold hover:gap-4 transition-all group">
-                <i data-lucide="arrow-left" class="w-5 h-5 transition-transform group-hover:-translate-x-1"></i> 
-                Back to Home
-            </a>
+    <div id="splash-screen">
+        <div class="logo-anim">
+            <div class="bg-white p-3 rounded-2xl shadow-xl flex items-center justify-center w-16 h-16 border border-slate-100">
+                <div class="text-blue-600 font-bold text-4xl leading-none">+</div>
+            </div>
         </div>
+        <h1 class="mt-4 font-bold text-blue-900 text-2xl tracking-tight">GUB-UP</h1>
+        <div class="mt-2 w-12 h-1 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-blue-600 animate-[loading_1.5s_ease-in-out_infinite]"></div>
+        </div>
+    </div>
 
-        <div class="bg-white/90 backdrop-blur-sm rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row overflow-hidden animate-slide-up delay-1">
-            
-            <div class="bg-brand-blue w-full md:w-[38%] p-8 md:p-10 text-white flex flex-col justify-center relative overflow-hidden">
-                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-3xl animate-float"></div>
-                
-                <div class="flex items-center gap-3 mb-6 md:mb-8 relative z-10 animate-float">
-                    <div class="bg-white p-2 rounded-xl shadow-lg">
-                        <div class="w-8 h-8 text-brand-blue flex items-center justify-center font-bold text-2xl">+</div>
+    <div class="lg:hidden bg-white border-b border-slate-100 p-4 flex items-center sticky top-0 z-50">
+        <button onclick="toggleSidebar()" class="p-2 text-slate-600 bg-slate-50 rounded-xl mr-4 hover:bg-slate-100 transition-colors">
+            <i data-lucide="menu"></i>
+        </button>
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-white border border-slate-200 rounded-lg flex items-center justify-center text-blue-600 font-bold shadow-sm">+</div>
+            <span class="font-bold text-blue-900 uppercase tracking-tight">GUB-UP</span>
+        </div>
+    </div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-[60] w-72 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 sidebar-closed lg:relative lg:translate-x-0 lg:flex lg:h-screen lg:sticky lg:top-0">
+        <div class="p-8">
+            <div class="flex items-center justify-between mb-10">
+                <div class="flex items-center gap-3">
+                    <div class="bg-white p-2 rounded-xl shadow-md border border-slate-100">
+                        <div class="w-7 h-7 text-blue-600 flex items-center justify-center font-bold text-xl leading-none">+</div>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold leading-none tracking-tight">GUB-UP</h1>
-                        <p class="text-[10px] opacity-80 uppercase tracking-widest font-semibold mt-1">Gubat Health Portal</p>
+                        <h1 class="font-bold text-blue-900 text-xl leading-none">GUB-UP</h1>
+                        <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mt-1">Gubat Health Portal</p>
                     </div>
                 </div>
+                <button onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-400"><i data-lucide="x"></i></button>
+            </div>
 
-                <h2 class="text-2xl md:text-3xl font-bold mb-4 relative z-10 leading-tight">Join the Local Health Network</h2>
-                <p class="text-blue-100 text-sm mb-6 md:mb-10 opacity-90 relative z-10">Dedicated monitoring for the municipality of Gubat, Sorsogon.</p>
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 hover:text-blue-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-blue-50 transition-all">
+                    <i data-lucide="layout-dashboard"></i> Dashboard
+                </a>
+                <a href="stock.html" class="flex items-center gap-3 text-slate-600 hover:text-emerald-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-emerald-50 transition-all">
+                    <i data-lucide="pill"></i> Medicine Stocks
+                </a>
+                <a href="reports.html" class="flex items-center gap-3 text-slate-600 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
+                    <i data-lucide="file-bar-chart-2"></i> Disease Reports
+                </a>
+                <a href="hotlines.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-blue-100">
+                    <i data-lucide="phone-call"></i> Hotlines
+                </a>
                 
-                <div class="space-y-6 hidden sm:block relative z-10">
-                    <div class="flex items-start gap-4">
-                        <div class="bg-white/20 p-2 rounded-lg mt-1"><i data-lucide="shield-check" class="w-5 h-5"></i></div>
-                        <div><h4 class="font-bold text-sm">Secure Verification</h4><p class="text-xs text-blue-100 opacity-70">OTP-protected account creation.</p></div>
-                    </div>
-                    <div class="flex items-start gap-4">
-                        <div class="bg-white/20 p-2 rounded-lg mt-1"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
-                        <div><h4 class="font-bold text-sm">Localized Data</h4><p class="text-xs text-blue-100 opacity-70">Barangay-specific health tracking.</p></div>
-                    </div>
+                <div id="internal-section" class="pt-6 border-t mt-4 hidden">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-5">Internal Management</p>
+                    <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-3.5 font-semibold hover:bg-emerald-50 rounded-2xl transition-all">
+                        <i data-lucide="users"></i> BHW Console
+                    </a>
+                    <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-3.5 font-semibold hover:bg-red-50 rounded-2xl transition-all">
+                        <i data-lucide="shield-check"></i> RHU Console
+                    </a>
                 </div>
+            </nav>
+        </div>
+        <div class="mt-auto p-8">
+            <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors">
+                <i data-lucide="log-out"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+        <header class="flex justify-between items-center mb-10" data-aos="fade-down">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-blue-900 tracking-tight">Emergency Hotlines</h1>
+                <p class="text-slate-500 font-medium">Quick access to emergency services</p>
             </div>
+        </header>
 
-            <div class="w-full md:w-[62%] p-8 md:p-14 flex flex-col justify-center">
-                <div class="animate-slide-up delay-2 text-center md:text-left">
-                    <h3 class="text-2xl md:text-3xl font-bold text-navy mb-1">Create Account</h3>
-                    <p class="text-gray-400 mb-6 md:mb-8 font-medium text-sm md:text-base">Enter your details to get started</p>
-                </div>
-
-                <form id="registrationForm" class="space-y-4 md:space-y-5 animate-slide-up delay-3">
-                    <div class="grid grid-cols-3 gap-2 md:gap-3">
-                        <label class="cursor-pointer group">
-                            <input type="radio" name="role" value="citizen" class="hidden" checked>
-                            <div class="selection-card border-2 border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex flex-col items-center gap-2 transition-all text-center h-full">
-                                <i data-lucide="user" class="w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-brand-blue"></i>
-                                <span class="font-bold text-gray-800 text-[9px] md:text-[10px] uppercase tracking-wide">Citizen</span>
-                            </div>
-                        </label>
-                        <label class="cursor-pointer group">
-                            <input type="radio" name="role" value="bhw" class="hidden">
-                            <div class="selection-card border-2 border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex flex-col items-center gap-2 transition-all text-center h-full">
-                                <i data-lucide="pill" class="w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-brand-blue"></i>
-                                <span class="font-bold text-gray-800 text-[9px] md:text-[10px] uppercase tracking-wide">BHW</span>
-                            </div>
-                        </label>
-                        <label class="cursor-pointer group">
-                            <input type="radio" name="role" value="rhu" class="hidden">
-                            <div class="selection-card border-2 border-gray-100 p-3 md:p-4 rounded-xl md:rounded-2xl flex flex-col items-center gap-2 transition-all text-center h-full">
-                                <i data-lucide="hospital" class="w-5 h-5 md:w-6 md:h-6 text-gray-400 group-hover:text-brand-blue"></i>
-                                <span class="font-bold text-gray-800 text-[9px] md:text-[10px] uppercase tracking-wide">RHU Staff</span>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="space-y-3 md:space-y-4">
-                        <div class="relative group">
-                            <i data-lucide="user" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors"></i>
-                            <input type="text" id="fullName" placeholder="Full Name" required class="w-full pl-12 pr-4 py-3 md:py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
-                        </div>
-                        <div class="relative group">
-                            <i data-lucide="mail" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors"></i>
-                            <input type="email" id="email" placeholder="Email Address" required class="w-full pl-12 pr-4 py-3 md:py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
-                        </div>
-                        <div class="relative group">
-                            <i data-lucide="lock" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors"></i>
-                            <input type="password" id="password" placeholder="Password" required class="w-full pl-12 pr-12 py-3 md:py-3.5 rounded-xl border border-gray-200 outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all">
-                            <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-blue transition-colors"><i data-lucide="eye" class="w-5 h-5"></i></button>
-                        </div>
-                        <div class="relative group">
-                            <i data-lucide="map-pin" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors"></i>
-                            <select id="barangay" required class="w-full pl-12 pr-4 py-3 md:py-3.5 rounded-xl border border-gray-200 bg-white outline-none focus:ring-4 focus:ring-blue-50 focus:border-brand-blue transition-all appearance-none">
-                                <option value="" disabled selected>Select Barangay</option>
-                                <option>Ariman</option><option>Bagacay</option><option>Balud Del Norte</option><option>Balud Del Sur</option>
-                                <option>Benguet</option><option>Bentuco</option><option>Beriran</option><option>Buenavista</option>
-                                <option>Bulacao</option><option>Cabigaan</option><option>Cabiguhan</option><option>Carriedo</option>
-                                <option>Casili</option><option>Cogon</option><option>Cota Na Daco</option><option>Dita</option>
-                                <option>Jupi</option><option>Lapinig</option><option>Luna-Candol</option><option>Manapao</option>
-                                <option>Manook</option><option>Naagtan</option><option>Nato</option><option>Nazareno</option>
-                                <option>Ogao</option><option>Paco</option><option>Panganiban</option><option>Paradijon</option>
-                                <option>Patag</option><option>Payawin</option><option>Pinontingan</option><option>Rizal</option>
-                                <option>San Ignacio</option><option>Sangat</option><option>Santa Ana</option><option>Tabi</option>
-                                <option>Tagaytay</option><option>Tigkiw</option><option>Tiris</option><option>Togawe</option>
-                                <option>Union</option><option>Villareal</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="pt-2">
-                        <button type="submit" id="submitBtn" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold text-lg shadow-xl hover:bg-blue-700 transition-all active:scale-95 flex items-center justify-center gap-2 mb-4">
-                            <span>Create Account</span>
-                            <i data-lucide="chevron-right" class="w-5 h-5"></i>
-                        </button>
-                        
-                        <div class="text-center">
-                            <p class="text-gray-500 text-sm font-medium">
-                                Already have an account? 
-                                <a href="login.html" class="text-brand-blue font-bold hover:underline underline-offset-4 ml-1">Back to Login</a>
-                            </p>
-                        </div>
-                    </div>
-                </form>
+        <div class="bg-red-50 border border-red-100 rounded-[2rem] p-6 md:p-8 mb-10 flex flex-col md:flex-row items-center gap-6 hover:shadow-lg transition-shadow" data-aos="fade-up">
+            <div class="w-16 h-16 bg-red-500 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg animate-bounce">
+                <i data-lucide="bell-ring" class="w-8 h-8"></i>
+            </div>
+            <div class="flex-1 text-center md:text-left">
+                <h3 class="text-xl font-black text-red-900 mb-1 leading-tight">In case of emergency</h3>
+                <p class="text-red-700 font-medium">If you need immediate medical assistance, call directly.</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                <a href="tel:09455087495" class="bg-red-600 text-white px-6 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-red-700 hover:scale-105 transition-all shadow-lg">
+                    <i data-lucide="phone"></i> RHU Hotline
+                </a>
+                <a href="tel:09668476669" class="bg-slate-900 text-white px-6 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-black hover:scale-105 transition-all shadow-lg">
+                    <i data-lucide="truck"></i> Ambulance
+                </a>
             </div>
         </div>
-    </div>
 
-    <div id="otpModal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4">
-        <div class="modal-content bg-white w-full max-w-md rounded-[2rem] p-8 md:p-10 relative shadow-2xl">
-            <button id="closeModal" class="absolute right-6 top-6 text-gray-400 hover:text-gray-600 transition-transform hover:rotate-90"><i data-lucide="x" class="w-6 h-6"></i></button>
-            <div id="modalStep1">
-                <div class="text-center mb-8">
-                    <div class="bg-blue-50 w-16 h-16 md:w-20 md:h-20 rounded-3xl flex items-center justify-center mx-auto mb-4 animate-float">
-                        <i data-lucide="mail-check" class="w-8 h-8 md:w-10 md:h-10 text-blue-600"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-navy">Verify Email</h3>
-                    <p class="text-gray-400 text-sm mt-2">We sent a 4-digit code to your email.</p>
+        <h2 class="text-xl font-black text-blue-900 mb-6 px-2 uppercase tracking-widest text-[12px]">Main Emergency Services</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover-card" data-aos="zoom-in">
+                <div class="bg-[#e75a24] p-6 text-white">
+                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mb-3"><i data-lucide="flame"></i></div>
+                    <h3 class="font-bold text-lg leading-tight">Bureau of Fire Protection</h3>
                 </div>
-                <form id="otpForm" class="space-y-6 md:space-y-8">
-                    <div class="flex justify-center gap-2 md:gap-3">
-                        <input type="text" maxlength="1" class="otp-in w-12 h-16 md:w-14 md:h-18 text-center text-3xl font-bold border-2 border-gray-100 rounded-2xl focus:border-blue-600 focus:bg-blue-50 outline-none transition-all">
-                        <input type="text" maxlength="1" class="otp-in w-12 h-16 md:w-14 md:h-18 text-center text-3xl font-bold border-2 border-gray-100 rounded-2xl focus:border-blue-600 focus:bg-blue-50 outline-none transition-all">
-                        <input type="text" maxlength="1" class="otp-in w-12 h-16 md:w-14 md:h-18 text-center text-3xl font-bold border-2 border-gray-100 rounded-2xl focus:border-blue-600 focus:bg-blue-50 outline-none transition-all">
-                        <input type="text" maxlength="1" class="otp-in w-12 h-16 md:w-14 md:h-18 text-center text-3xl font-bold border-2 border-gray-100 rounded-2xl focus:border-blue-600 focus:bg-blue-50 outline-none transition-all">
-                    </div>
-                    <button type="submit" id="verifyBtn" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2">Verify Code <i data-lucide="check" class="w-5 h-5"></i></button>
-                    <div class="text-center">
-                        <button type="button" id="resendBtn" class="text-sm font-bold text-brand-blue disabled:text-gray-300 hover:underline">Resend Code</button>
-                        <p id="timer" class="text-[10px] text-gray-400 mt-2 uppercase font-bold tracking-widest"></p>
-                    </div>
-                </form>
+                <div class="p-6 space-y-4">
+                    <p class="font-bold text-blue-900 text-lg">0945-661-9900</p>
+                    <a href="tel:09456619900" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 shadow-md"><i data-lucide="phone"></i> Call Now</a>
+                </div>
             </div>
-            <div id="modalStep2" class="hidden"></div>
+
+            <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover-card" data-aos="zoom-in" data-aos-delay="100">
+                <div class="bg-[#bf8b0a] p-6 text-white">
+                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mb-3"><i data-lucide="alert-triangle"></i></div>
+                    <h3 class="font-bold text-lg leading-tight">MDRRMO</h3>
+                </div>
+                <div class="p-6 space-y-4">
+                    <p class="font-bold text-blue-900 text-lg">0938-161-8174</p>
+                    <a href="tel:09381618174" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 shadow-md"><i data-lucide="phone"></i> Call Now</a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover-card" data-aos="zoom-in" data-aos-delay="200">
+                <div class="bg-[#10933d] p-6 text-white">
+                    <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mb-3"><i data-lucide="book-plus"></i></div>
+                    <h3 class="font-bold text-lg leading-tight">Rural Health Unit</h3>
+                </div>
+                <div class="p-6 space-y-4">
+                    <p class="font-bold text-blue-900 text-lg">0945-508-7495</p>
+                    <a href="tel:09455087495" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 shadow-md"><i data-lucide="phone"></i> Call Now</a>
+                </div>
+            </div>
         </div>
-    </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        <h2 class="text-xl font-black text-blue-900 mb-6 px-2 uppercase tracking-widest text-[12px]">Barangay Health Centers</h2>
+        <div class="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm mb-12" data-aos="fade-up">
+            <div id="bhc-container" class="divide-y divide-slate-50">
+                </div>
+        </div>
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
-        authDomain: "gub-up.firebaseapp.com",
-        projectId: "gub-up",
-        storageBucket: "gub-up.firebasestorage.app",
-        messagingSenderId: "75119179497",
-        appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
-    };
+        <div class="bg-[#eff6ff] border border-[#dbeafe] rounded-2xl p-6 md:p-8 mb-12 shadow-sm" data-aos="fade-up">
+            <h3 class="text-xl font-bold text-[#1e3a8a] mb-6">Important Information</h3>
+            <ul class="space-y-4">
+                <li class="flex items-start gap-3">
+                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                    <p class="text-[#1e40af] font-medium">1. All emergency hotlines are available 24/7 unless otherwise specified</p>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                    <p class="text-[#1e40af] font-medium">2. For non-emergency health concerns, please visit your barangay health center during office hours</p>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                    <p class="text-[#1e40af] font-medium">3. Keep these numbers saved on your phone for quick access</p>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                    <p class="text-[#1e40af] font-medium">4. In case of medical emergency, always call for professional help immediately</p>
+                </li>
+            </ul>
+        </div>
+    </main>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    emailjs.init("qwA5GyR0JwylFMYXm");
-    lucide.createIcons();
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    let generatedOtp = "";
-    let tempUserData = {};
-    let countdown;
-
-    document.getElementById('togglePassword').addEventListener('click', function() {
-        const passInput = document.getElementById('password');
-        const isPass = passInput.type === 'password';
-        passInput.type = isPass ? 'text' : 'password';
-        this.innerHTML = `<i data-lucide="${isPass ? 'eye-off' : 'eye'}" class="w-5 h-5"></i>`;
-        lucide.createIcons();
-    });
-
-    document.getElementById('registrationForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
-        btn.innerHTML = `<span class="animate-pulse">Preparing Email...</span>`;
-
-        tempUserData = {
-            name: document.getElementById('fullName').value.trim(),
-            email: document.getElementById('email').value.trim().toLowerCase(),
-            pass: document.getElementById('password').value,
-            brgy: document.getElementById('barangay').value,
-            role: document.querySelector('input[name="role"]:checked').value
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
+            authDomain: "gub-up.firebaseapp.com",
+            projectId: "gub-up",
+            storageBucket: "gub-up.firebasestorage.app",
+            messagingSenderId: "75119179497",
+            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
         };
 
-        generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        try {
-            await emailjs.send("service_bmhrqyo", "template_grdnefe", {
-                to_name: tempUserData.name,
-                email: tempUserData.email,
-                passcode: generatedOtp,
-                time: new Date().toLocaleTimeString()
-            });
-            document.getElementById('otpModal').classList.add('modal-active');
-            startTimer();
-        } catch (err) {
-            alert("Error sending email: " + err.message);
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = `<span>Create Account</span> <i data-lucide="chevron-right" class="w-5 h-5"></i>`;
-            lucide.createIcons();
-        }
-    });
+        // Sidebar Toggle
+        window.toggleSidebar = () => {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('sidebar-closed');
+            sidebar.classList.toggle('sidebar-open');
+            overlay.classList.toggle('hidden');
+        };
 
-    document.getElementById('otpForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const entered = Array.from(document.querySelectorAll('.otp-in')).map(i => i.value).join('');
-        const btn = document.getElementById('verifyBtn');
+        // Populate Barangay Centers (Unique and Formatted)
+        const bhcData = [
+            { first: "Thomas", middle: "A.", last: "Paradijon", brgy: "Paradijon", phone: "0912-345-6789" },
+            // Add more here following the same object structure
+        ];
 
-        if (entered !== generatedOtp) return alert("Invalid Code.");
+        const bhcContainer = document.getElementById('bhc-container');
+        const renderedNames = new Set();
 
-        btn.disabled = true;
-        btn.innerText = "Processing...";
-
-        try {
-            const userCred = await createUserWithEmailAndPassword(auth, tempUserData.email, tempUserData.pass);
-            const finalRole = tempUserData.role === 'citizen' ? 'citizen' : `processing-${tempUserData.role}`;
-
-            await setDoc(doc(db, "users", userCred.user.uid), {
-                name: tempUserData.name,
-                email: tempUserData.email,
-                barangay: tempUserData.brgy,
-                role: finalRole,
-                isApproved: tempUserData.role === 'citizen',
-                createdAt: new Date()
-            });
-
-            if (tempUserData.role !== 'citizen') {
-                await emailjs.send("service_bmhrqyo", "template_i6y2iba", {
-                    new_user: tempUserData.name,
-                    role: tempUserData.role.toUpperCase(),
-                    user_email: tempUserData.email,
-                    barangay: tempUserData.brgy
-                });
-                showThankYou();
-            } else {
-                window.location.href = "dashboard.html";
+        bhcData.forEach(bhc => {
+            const fullName = `${bhc.first} ${bhc.middle} ${bhc.last}`;
+            if (!renderedNames.has(fullName)) {
+                renderedNames.add(fullName);
+                const html = `
+                    <div class="p-6 flex flex-col sm:flex-row items-center justify-between hover:bg-blue-50/50 transition-all gap-4">
+                        <div class="flex items-center gap-5">
+                            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 shadow-sm shrink-0">
+                                <i data-lucide="hospital"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-blue-900 text-lg">${fullName}</h4>
+                                <p class="text-sm text-slate-500 font-medium">${bhc.brgy}, Gubat • ${bhc.phone}</p>
+                            </div>
+                        </div>
+                        <a href="tel:${bhc.phone.replace(/-/g, '')}" class="w-full sm:w-auto bg-blue-600 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 shadow-md">
+                            <i data-lucide="phone-call"></i> Call
+                        </a>
+                    </div>
+                `;
+                bhcContainer.insertAdjacentHTML('beforeend', html);
             }
-        } catch (err) {
-            alert(err.message);
-            btn.disabled = false;
-            btn.innerText = "Verify Code";
-        }
-    });
+        });
 
-    function showThankYou() {
-        document.getElementById('modalStep1').classList.add('hidden');
-        const step2 = document.getElementById('modalStep2');
-        step2.classList.remove('hidden');
-        step2.innerHTML = `
-            <div class="text-center py-6 animate-slide-up">
-                <div class="bg-green-100 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner animate-float">
-                    <i data-lucide="check-circle-2" class="w-12 h-12 text-green-600"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-navy mb-2">Registration Success!</h3>
-                <p class="text-gray-500 text-sm mb-8 px-4 leading-relaxed">Account created. Staff roles require admin approval within 24 hours.</p>
-                <button onclick="window.location.href='dashboard.html'" class="w-full bg-brand-blue text-white py-4 rounded-xl font-bold shadow-lg hover:bg-blue-700 transition-all active:scale-95">Continue to Dashboard</button>
-            </div>
-        `;
-        lucide.createIcons();
-    }
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+            } else {
+                setTimeout(() => {
+                    document.getElementById('splash-screen').style.display = 'none';
+                    document.body.classList.add('auth-ready');
+                    AOS.init({ duration: 800, once: true });
+                    lucide.createIcons();
+                }, 1000);
 
-    function startTimer() {
-        let timeLeft = 60;
-        const btn = document.getElementById('resendBtn');
-        const text = document.getElementById('timer');
-        btn.disabled = true;
-        clearInterval(countdown);
-        countdown = setInterval(() => {
-            timeLeft--;
-            text.innerText = `Resend available in ${timeLeft}s`;
-            if (timeLeft <= 0) { clearInterval(countdown); btn.disabled = false; text.innerText = ""; }
-        }, 1000);
-    }
- 
-    document.getElementById('resendBtn').addEventListener('click', async () => {
-        generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
-        await emailjs.send("service_bmhrqyo", "template_grdnefe", { to_name: tempUserData.name, email: tempUserData.email, passcode: generatedOtp });
-        startTimer();
-    });
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const userRole = userDoc.data().role;
+                    if (userRole === 'rhu') {
+                        document.getElementById('internal-section').classList.remove('hidden');
+                        document.getElementById('rhu-link').classList.remove('hidden');
+                    } else if (userRole === 'bhw') {
+                        document.getElementById('internal-section').classList.remove('hidden');
+                        document.getElementById('bhw-link').classList.remove('hidden');
+                    }
+                }
+            }
+        });
 
-    document.getElementById('closeModal').addEventListener('click', () => {
-        document.getElementById('otpModal').classList.remove('modal-active');
-    });
-
-    document.querySelectorAll('.otp-in').forEach((input, index, inputs) => {
-        input.addEventListener('input', (e) => { if (e.target.value && index < 3) inputs[index + 1].focus(); });
-        input.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && !e.target.value && index > 0) inputs[index - 1].focus(); });
-    });
-</script>
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            signOut(auth).then(() => { window.location.href = "login.html"; });
+        });
+    </script>
 </body>
-</html> 
+</html>
