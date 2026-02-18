@@ -12,31 +12,23 @@
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; }
         .text-navy { color: #0f172a; }
-        
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
-
-        /* Sidebar Mobile Logic */
         @media (max-width: 768px) {
             .sidebar-closed { transform: translateX(-100%); }
             .sidebar-open { transform: translateX(0); }
         }
-
         .glass-header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
         .table-card { border-radius: 2.5rem; }
-        
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-
         .status-pill { padding: 6px 12px; border-radius: 12px; font-weight: 800; font-size: 11px; text-transform: uppercase; }
         .status-low { background: #fff1f2; color: #be123c; }
         .status-good { background: #f0fdf4; color: #15803d; }
+        .status-expired { background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
     </style>
 </head>
 <body class="min-h-screen overflow-x-hidden">
 
     <div id="main-layout" class="w-full min-h-screen flex flex-col md:flex-row">
-        
         <aside id="sidebar" class="fixed inset-y-0 left-0 z-[100] w-72 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 sidebar-closed md:relative md:translate-x-0 md:flex">
             <div class="p-8">
                 <div class="flex items-center justify-between mb-10">
@@ -56,31 +48,14 @@
                     <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 hover:text-blue-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-blue-50 transition-all">
                         <i data-lucide="layout-dashboard"></i> Dashboard
                     </a>
-                    
                     <a href="stock.html" class="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-emerald-100 transition-all">
                         <i data-lucide="pill"></i> Medicine Stocks
                     </a>
-
                     <a href="reports.html" class="flex items-center gap-3 text-slate-600 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
-                        <i data-lucide="file-bar-chart-2" class="text-amber-500"></i> Disease Reports
+                        <i data-lucide="file-bar-chart-2"></i> Disease Reports
                     </a>
-
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 hover:text-sky-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-sky-50 transition-all">
-                        <i data-lucide="phone-call" class="text-sky-500"></i> Hotlines
-                    </a>
-                    
-                    <div id="internal-section" class="pt-6 border-t mt-4 hidden">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-5">Internal Management</p>
-                        <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-3.5 font-semibold hover:bg-emerald-50 rounded-2xl transition-all">
-                            <i data-lucide="users" class="w-5 h-5"></i> BHW Console
-                        </a>
-                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-3.5 font-semibold hover:bg-red-50 rounded-2xl transition-all">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i> RHU Console
-                        </a>
-                    </div>
                 </nav>
             </div>
-            
             <div class="mt-auto p-8">
                 <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors">
                     <i data-lucide="log-out"></i> Logout
@@ -91,17 +66,13 @@
         <main class="flex-1 w-full overflow-y-auto">
             <header class="glass-header border-b border-slate-100 px-4 md:px-8 py-5 flex items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center gap-4">
-                    <button onclick="toggleSidebar()" class="flex md:hidden p-3 bg-white border border-slate-100 rounded-xl text-navy shadow-sm active:scale-95 transition-transform">
+                    <button onclick="toggleSidebar()" class="flex md:hidden p-3 bg-white border border-slate-100 rounded-xl text-navy shadow-sm">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                     <div>
-                        <h2 class="text-sm font-extrabold text-navy uppercase tracking-tight">Inventory Management</h2>
-                        <p class="text-[10px] font-bold text-slate-400">Medicine & Supplies Control</p>
+                        <h2 class="text-sm font-extrabold text-navy uppercase tracking-tight">Public Stock View</h2>
+                        <p class="text-[10px] font-bold text-slate-400">Available Medicine per Barangay</p>
                     </div>
-                </div>
-                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
-                    <div class="w-8 h-8 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center shadow-inner"><i data-lucide="user" class="w-4 h-4"></i></div>
-                    <span id="user-name-display" class="font-bold text-navy text-sm hidden sm:inline">Officer</span>
                 </div>
             </header>
 
@@ -109,11 +80,8 @@
                 <div class="flex flex-col lg:flex-row justify-between items-center gap-6 mb-10" data-aos="fade-down">
                     <div class="relative flex-1 w-full group">
                         <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                        <input type="text" id="stock-search" placeholder="Search medicines..." class="w-full pl-14 pr-4 py-5 bg-white border border-slate-100 rounded-3xl outline-none focus:ring-4 ring-emerald-50 shadow-sm font-semibold text-navy transition-all">
+                        <input type="text" id="stock-search" placeholder="Search medicines or barangay..." class="w-full pl-14 pr-4 py-5 bg-white border border-slate-100 rounded-3xl outline-none focus:ring-4 ring-emerald-50 shadow-sm font-semibold text-navy transition-all">
                     </div>
-                    <button onclick="openStockModal()" class="w-full lg:w-auto bg-emerald-600 text-white px-10 py-5 rounded-3xl font-bold text-sm flex items-center justify-center gap-3 hover:bg-emerald-700 shadow-xl shadow-emerald-100 transition-all hover:-translate-y-1">
-                        <i data-lucide="plus" class="w-5 h-5"></i> Add New Stock
-                    </button>
                 </div>
 
                 <div class="bg-white table-card border border-slate-100 shadow-sm overflow-hidden" data-aos="fade-up">
@@ -121,14 +89,15 @@
                         <table class="w-full text-left whitespace-nowrap">
                             <thead class="bg-slate-50/50">
                                 <tr class="text-[11px] font-black text-slate-400 uppercase tracking-[0.15em]">
-                                    <th class="px-10 py-7">Medicine Details</th>
+                                    <th class="px-10 py-7">Medicine</th>
+                                    <th class="px-8 py-7">Barangay</th>
                                     <th class="px-8 py-7">Quantity</th>
-                                    <th class="px-8 py-7">Category</th>
+                                    <th class="px-8 py-7">Expiry Date</th>
                                     <th class="px-8 py-7">Status</th>
-                                    <th class="px-10 py-7 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="stock-table-body" class="divide-y divide-slate-50"></tbody>
+                            <tbody id="stock-table-body" class="divide-y divide-slate-50">
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -136,51 +105,10 @@
         </main>
     </div>
 
-    <div id="stock-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="closeStockModal()"></div>
-        <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col scale-95 transition-all duration-300" id="stock-modal-container">
-            <div class="absolute top-0 left-0 w-full h-2 bg-emerald-600"></div>
-            <div class="p-8 pb-0 flex justify-between items-start">
-                <div>
-                    <h3 id="stock-modal-title" class="text-2xl font-extrabold text-navy tracking-tight">Stock Entry</h3>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Official Inventory Log</p>
-                </div>
-                <button onclick="closeStockModal()" class="p-2 bg-slate-50 rounded-xl text-slate-400 hover:text-navy transition-colors"><i data-lucide="x"></i></button>
-            </div>
-            <form id="stock-form" class="p-8 space-y-6 overflow-y-auto custom-scrollbar">
-                <input type="hidden" id="stock-id">
-                <div>
-                    <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Medicine Name</label>
-                    <input type="text" id="med-name" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none focus:ring-4 ring-emerald-50">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Quantity</label>
-                        <input type="number" id="med-qty" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 px-1">Category</label>
-                        <select id="med-category" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-navy outline-none">
-                            <option value="Analgesic">Analgesic</option>
-                            <option value="Antibiotic">Antibiotic</option>
-                            <option value="Antiviral">Antiviral</option>
-                            <option value="Vaccine">Vaccine</option>
-                            <option value="Supplements">Supplements</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="flex gap-4 pt-4">
-                    <button type="button" onclick="closeStockModal()" class="flex-1 font-bold text-slate-400">Cancel</button>
-                    <button type="submit" class="flex-[2] py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-xl shadow-emerald-100">Save Stock</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
@@ -190,6 +118,7 @@
             messagingSenderId: "75119179497",
             appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
         };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -198,28 +127,6 @@
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const docSnap = await getDoc(doc(db, "users", user.uid));
-                if (docSnap.exists()) {
-                    const userData = docSnap.data();
-                    document.getElementById('user-name-display').innerText = userData.name;
-                    
-                    // Dashboard Sync: Show internal section based on role
-                    const internalSection = document.getElementById('internal-section');
-                    const bhwLink = document.getElementById('bhw-link');
-                    const rhuLink = document.getElementById('rhu-link');
-                    
-                    if (userData.role === 'admin' || userData.role === 'bhw' || userData.role === 'rhu') {
-                        internalSection.classList.remove('hidden');
-                        if (userData.role === 'admin') {
-                            bhwLink.classList.remove('hidden');
-                            rhuLink.classList.remove('hidden');
-                        } else if (userData.role === 'bhw') {
-                            bhwLink.classList.remove('hidden');
-                        } else if (userData.role === 'rhu') {
-                            rhuLink.classList.remove('hidden');
-                        }
-                    }
-                }
                 document.body.classList.add('auth-ready');
                 AOS.init({ duration: 800, once: true });
                 init();
@@ -227,82 +134,65 @@
         });
 
         function init() {
-            onSnapshot(query(collection(db, "medicine_stocks"), orderBy("name", "asc")), (snap) => {
+            // Updated Query: Sorting is handled in Javascript to allow multi-level logic (Qty + Expiry)
+            onSnapshot(collection(db, "medicine_stocks"), (snap) => {
                 allStocks = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                
+                // CUSTOM SORTING LOGIC:
+                // 1. Sort by Quantity (Lowest to Highest)
+                // 2. Then sort by Expiry Date (Soonest to Furthest)
+                allStocks.sort((a, b) => {
+                    if (a.quantity !== b.quantity) return a.quantity - b.quantity;
+                    return new Date(a.expiryDate) - new Date(b.expiryDate);
+                });
+
                 renderStockTable(allStocks);
             });
         }
 
         function renderStockTable(data) {
             const body = document.getElementById('stock-table-body');
-            body.innerHTML = data.map(item => `
+            body.innerHTML = data.map(item => {
+                const expiry = item.expiryDate || 'N/A';
+                const isLow = item.quantity < 50;
+                
+                return `
                 <tr class="hover:bg-slate-50 transition-all">
                     <td class="px-10 py-7">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
-                            <span class="font-extrabold text-navy text-lg">${item.name}</span>
+                            <div>
+                                <span class="font-extrabold text-navy text-lg block">${item.name}</span>
+                                <span class="text-[10px] text-slate-400 font-bold uppercase">${item.category}</span>
+                            </div>
                         </div>
                     </td>
+                    <td class="px-8 py-7 font-bold text-slate-600">${item.barangay || 'General'}</td>
                     <td class="px-8 py-7"><span class="font-black text-navy">${item.quantity} units</span></td>
-                    <td class="px-8 py-7 text-slate-500 font-bold uppercase text-xs">${item.category}</td>
+                    <td class="px-8 py-7 font-semibold text-slate-500">${expiry}</td>
                     <td class="px-8 py-7">
-                        <span class="status-pill ${item.quantity < 50 ? 'status-low' : 'status-good'}">
-                            ${item.quantity < 50 ? 'Low Stock' : 'Good Stock'}
+                        <span class="status-pill ${isLow ? 'status-low' : 'status-good'}">
+                            ${isLow ? 'Low Stock' : 'Available'}
                         </span>
                     </td>
-                    <td class="px-10 py-7 text-right">
-                        <button onclick="editStock('${item.id}')" class="p-2 hover:text-blue-600 transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-                        <button onclick="deleteStock('${item.id}')" class="p-2 hover:text-red-600 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </td>
-                </tr>`).join('');
+                </tr>`;
+            }).join('');
             lucide.createIcons();
         }
 
-        window.openStockModal = () => {
-            document.getElementById('stock-form').reset();
-            document.getElementById('stock-id').value = "";
-            document.getElementById('stock-modal').classList.remove('hidden');
-            setTimeout(() => document.getElementById('stock-modal-container').classList.remove('scale-95'), 10);
-        };
-
-        window.closeStockModal = () => {
-            document.getElementById('stock-modal-container').classList.add('scale-95');
-            setTimeout(() => document.getElementById('stock-modal').classList.add('hidden'), 200);
-        };
-
-        window.editStock = (id) => {
-            const item = allStocks.find(s => s.id === id);
-            document.getElementById('stock-id').value = id;
-            document.getElementById('med-name').value = item.name;
-            document.getElementById('med-qty').value = item.quantity;
-            document.getElementById('med-category').value = item.category;
-            document.getElementById('stock-modal').classList.remove('hidden');
-            setTimeout(() => document.getElementById('stock-modal-container').classList.remove('scale-95'), 10);
-        };
-
-        window.deleteStock = async (id) => { if(confirm("Delete this stock entry?")) await deleteDoc(doc(db, "medicine_stocks", id)); };
-
-        document.getElementById('stock-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('stock-id').value;
-            const data = {
-                name: document.getElementById('med-name').value,
-                quantity: parseInt(document.getElementById('med-qty').value),
-                category: document.getElementById('med-category').value
-            };
-            id ? await updateDoc(doc(db, "medicine_stocks", id), data) : await addDoc(collection(db, "medicine_stocks"), data);
-            closeStockModal();
+        document.getElementById('stock-search').oninput = (e) => {
+            const t = e.target.value.toLowerCase();
+            const filtered = allStocks.filter(s => 
+                s.name.toLowerCase().includes(t) || 
+                (s.barangay && s.barangay.toLowerCase().includes(t))
+            );
+            renderStockTable(filtered);
         };
 
         window.toggleSidebar = () => {
             const s = document.getElementById('sidebar');
             s.classList.toggle('sidebar-closed'); 
             s.classList.toggle('sidebar-open');
-        };
-
-        document.getElementById('stock-search').oninput = (e) => {
-            const t = e.target.value.toLowerCase();
-            renderStockTable(allStocks.filter(s => s.name.toLowerCase().includes(t) || s.category.toLowerCase().includes(t)));
         };
 
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
