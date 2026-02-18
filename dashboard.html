@@ -15,17 +15,19 @@
         .text-navy { color: #1e3a8a; }
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
-        #sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 280px; z-index: 100; transform: translateX(-100%); transition: transform 0.3s ease; background: white; border-right: 1px solid #f1f5f9; }
-        @media (min-width: 1024px) { #sidebar { position: sticky; transform: translateX(0); width: 300px; } #mobile-top-bar { display: none; } }
         .sidebar-open { transform: translateX(0) !important; }
+        #sidebar { 
+            position: fixed; top: 0; left: 0; height: 100vh; width: 280px; 
+            z-index: 100; transform: translateX(-100%); transition: transform 0.3s ease;
+            background: white; border-right: 1px solid #f1f5f9;
+        }
+        @media (min-width: 1024px) { #sidebar { position: sticky; transform: translateX(0); width: 300px; } }
         #overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 90; }
         #overlay.active { display: block; }
-        .search-results { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 1.25rem; max-height: 250px; overflow-y: auto; z-index: 200; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .search-results { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #e2e8f0; border-radius: 1.25rem; max-height: 250px; overflow-y: auto; z-index: 200; }
         .search-results.active { display: block; }
         .search-item { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; }
         .search-item:hover { background-color: #fef2f2; color: #dc2626; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .hidden-select { display: none; }
     </style>
 </head>
@@ -47,12 +49,18 @@
                     <button id="close-menu" class="lg:hidden text-slate-400"><i data-lucide="x"></i></button>
                 </div>
                 <nav class="space-y-3">
-                    <a href="dashboard.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl">
+                    <a href="dashboard.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-4 rounded-2xl font-bold shadow-xl shadow-blue-100">
                         <i data-lucide="layout-dashboard" class="w-5 h-5"></i><span>Dashboard</span>
                     </a>
-                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50"><i data-lucide="package" class="w-5 h-5 text-emerald-500"></i><span>Medicine Stocks</span></a>
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50"><i data-lucide="file-bar-chart" class="w-5 h-5 text-amber-500"></i><span>Disease Reports</span></a>
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-sky-50"><i data-lucide="phone" class="w-5 h-5 text-sky-500"></i><span>Hotlines</span></a>
+                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 group">
+                        <i data-lucide="package" class="w-5 h-5 text-emerald-500"></i><span>Medicine Stocks</span>
+                    </a>
+                    <a href="reports.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-amber-50 group">
+                        <i data-lucide="file-bar-chart" class="w-5 h-5 text-amber-500"></i><span>Disease Reports</span>
+                    </a>
+                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-600 px-5 py-4 rounded-2xl font-bold hover:bg-sky-50 group">
+                        <i data-lucide="phone" class="w-5 h-5 text-sky-500"></i><span>Hotlines</span>
+                    </a>
                     <div id="internal-section" class="pt-6 pb-2 hidden">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em] px-5 mb-2">Internal Consoles</p>
                         <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 text-emerald-600 px-5 py-4 rounded-2xl font-bold hover:bg-emerald-50 mb-2"><i data-lucide="user-cog" class="w-5 h-5"></i> BHW Console</a>
@@ -60,56 +68,58 @@
                     </div>
                 </nav>
             </div>
-            <div class="mt-auto p-8 border-t border-slate-50"><button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full"><i data-lucide="log-out"></i> Logout</button></div>
+            <div class="mt-auto p-8 border-t border-slate-50">
+                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full"><i data-lucide="log-out"></i> Logout</button>
+            </div>
         </aside>
 
         <main class="flex-1 w-full">
+            <div id="mobile-top-bar" class="lg:hidden bg-white border-b border-slate-100 px-5 py-4 flex items-center justify-between sticky top-0 z-40">
+                <button id="open-menu" class="p-2 bg-slate-50 rounded-xl text-navy"><i data-lucide="menu"></i></button>
+                <h2 class="font-black text-blue-600 text-[10px] uppercase tracking-widest">GUB-UP</h2>
+                <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center"><i data-lucide="user" class="w-4 h-4"></i></div>
+            </div>
+
             <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 md:px-10 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sticky top-0 z-30">
                 <div class="flex flex-col">
-                    <div id="live-clock" class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">Loading...</div>
-                    <h1 class="text-navy font-bold text-2xl">Welcome, <span id="welcome-name">User</span>!</h1>
+                    <div id="live-clock" class="text-[9px] md:text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mb-1">Loading...</div>
+                    <h1 class="text-navy font-bold text-xl md:text-2xl leading-none">Welcome, <span id="welcome-name">User</span>!</h1>
                 </div>
             </header>
 
             <div class="p-4 md:p-10 max-w-7xl mx-auto space-y-8">
                 <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-6 md:p-10" data-aos="fade-up">
-                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
-                        <div>
-                            <h3 class="text-2xl font-bold text-navy">Disease Cases</h3>
-                            <p class="text-[10px] font-black text-red-500 uppercase tracking-widest mt-1">Total: <span id="d-total">0</span></p>
-                        </div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+                        <div><h3 class="text-2xl font-bold text-navy">Disease Cases</h3><p class="text-[10px] font-black text-red-500 uppercase tracking-widest mt-1"><span id="d-label">All Diseases</span> • Total: <span id="d-total">0</span></p></div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 w-full">
-                            <select id="d-category" class="p-3 bg-slate-50 rounded-2xl font-bold text-xs outline-none"><option value="monthly">Monthly</option><option value="weekly">Weekly</option></select>
-                            <select id="d-month" class="hidden-select p-3 bg-blue-50 rounded-2xl font-bold text-xs outline-none text-blue-600"></select>
-                            <select id="d-year" class="p-3 bg-slate-50 rounded-2xl font-bold text-xs outline-none"><option value="2025">2025</option><option value="2026" selected>2026</option></select>
-                            <select id="d-brgy" class="p-3 bg-slate-50 rounded-2xl font-bold text-xs outline-none"></select>
-                            <div class="relative col-span-1 lg:col-span-2">
-                                <input type="text" id="d-search" placeholder="Search Disease..." class="w-full p-3 bg-slate-50 rounded-2xl font-bold text-xs outline-none">
-                                <div id="d-results" class="search-results custom-scrollbar"></div>
+                            <select id="d-category" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none"><option value="monthly">Monthly View</option><option value="weekly">Weekly View</option></select>
+                            <select id="d-month-filter" class="hidden-select p-3 bg-blue-50 rounded-2xl font-bold text-blue-600 text-xs outline-none"></select>
+                            <select id="d-year" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none"><option value="2025">2025</option><option value="2026" selected>2026</option></select>
+                            <select id="d-brgy" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none"></select>
+                            <div class="relative lg:col-span-2">
+                                <input type="text" id="d-search" placeholder="Search Disease..." class="w-full p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-red-100">
+                                <div id="d-results" class="search-results"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="h-[350px] w-full"><canvas id="diseaseChart"></canvas></div>
+                    <div class="h-[350px]"><canvas id="diseaseChart"></canvas></div>
                 </div>
 
                 <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-6 md:p-10" data-aos="fade-up">
-                    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-10">
-                        <div>
-                            <h3 class="text-2xl font-bold text-navy">Medicine Stocks</h3>
-                            <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-1">Total: <span id="m-total">0</span></p>
-                        </div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+                        <div><h3 class="text-2xl font-bold text-navy">Medicine Stocks</h3><p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest mt-1"><span id="m-label">All Medicines</span> • Total: <span id="m-total">0</span></p></div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 w-full">
-                            <select id="m-category" class="p-3 bg-slate-50 rounded-2xl font-bold text-xs outline-none"><option value="monthly">Monthly</option><option value="weekly">Weekly</option></select>
-                            <select id="m-month" class="hidden-select p-3 bg-emerald-50 rounded-2xl font-bold text-xs outline-none text-emerald-600"></select>
-                            <select id="m-year" class="p-3 bg-slate-50 rounded-2xl font-bold text-xs outline-none"><option value="2025">2025</option><option value="2026" selected>2026</option></select>
-                            <select id="m-brgy" class="p-3 bg-slate-50 rounded-2xl font-bold text-xs outline-none"></select>
-                            <div class="relative col-span-1 lg:col-span-2">
-                                <input type="text" id="m-search" placeholder="Search Medicine..." class="w-full p-3 bg-slate-50 rounded-2xl font-bold text-xs outline-none">
-                                <div id="m-results" class="search-results custom-scrollbar"></div>
+                            <select id="m-category" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none"><option value="monthly">Monthly View</option><option value="weekly">Weekly View</option></select>
+                            <select id="m-month-filter" class="hidden-select p-3 bg-emerald-50 rounded-2xl font-bold text-emerald-600 text-xs outline-none"></select>
+                            <select id="m-year" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none"><option value="2025">2025</option><option value="2026" selected>2026</option></select>
+                            <select id="m-brgy" class="p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none"></select>
+                            <div class="relative lg:col-span-2">
+                                <input type="text" id="m-search" placeholder="Search Medicine..." class="w-full p-3 bg-slate-50 rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-emerald-100">
+                                <div id="m-results" class="search-results"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="h-[350px] w-full"><canvas id="stockChart"></canvas></div>
+                    <div class="h-[350px]"><canvas id="stockChart"></canvas></div>
                 </div>
             </div>
         </main>
@@ -128,38 +138,113 @@
         const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         const barangays = ["All Areas", "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
         
-        // FULL LISTS RESTORED
-        const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Avian influenza", "Measles", "Mumps", "Rubella", "Chickenpox", "Hand, foot and mouth disease", "Hepatitis A", "Hepatitis B", "Hepatitis C", "Hepatitis E", "Rabies", "HIV infection", "AIDS", "Chikungunya", "Japanese encephalitis", "Zika virus infection", "Rotavirus", "Norovirus", "Poliomyelitis", "HPV", "Viral gastroenteritis", "Viral pneumonia", "Tuberculosis (PTB)", "Extrapulmonary TB", "MDR-TB", "Pneumonia (bacterial)", "Typhoid fever", "Paratyphoid fever", "Leptospirosis", "Cholera", "Shigellosis", "Diphtheria", "Pertussis", "Tetanus", "Meningitis", "UTI", "Gonorrhea", "Syphilis", "Chlamydia", "Cellulitis", "Impetigo", "Rheumatic fever", "Sepsis", "Malaria", "Schistosomiasis", "Ascariasis", "Filariasis", "Amebiasis", "Candidiasis", "Tinea (Ringworm)", "Athlete’s foot", "Hypertension", "Heart attack", "Stroke", "Diabetes Type 1", "Diabetes Type 2", "Obesity", "Hyperthyroidism", "Hypothyroidism", "Asthma", "COPD", "Breast cancer", "Lung cancer", "Liver cancer", "Cervical cancer", "Prostate cancer", "Leukemia", "Depression", "Anxiety", "Bipolar disorder", "Schizophrenia", "Epilepsy", "Alzheimer’s", "Malnutrition", "Stunting", "Anemia", "Kidney stones", "CKD", "GERD", "Arthritis", "Gout", "Osteoporosis", "Scabies", "Eczema", "Liver cirrhosis"];
-        const medicines = ["Paracetamol", "Ibuprofen", "Mefenamic acid", "Aspirin", "Naproxen", "Diclofenac", "Celecoxib", "Phenylephrine", "Chlorphenamine", "Cetirizine", "Loratadine", "Ambroxol", "Guaifenesin", "Dextromethorphan", "Salbutamol", "Omeprazole", "Lansoprazole", "Loperamide", "ORS", "Hyoscine butylbromide", "Povidone iodine", "Hydrogen peroxide", "Mupirocin", "Clotrimazole", "Amoxicillin", "Co-amoxiclav", "Azithromycin", "Clarithromycin", "Cefuroxime", "Ceftriaxone", "Ciprofloxacin", "Doxycycline", "Metronidazole", "Isoniazid", "Rifampicin", "Amlodipine", "Losartan", "Telmisartan", "Metoprolol", "Metformin", "Insulin", "Atorvastatin", "Simvastatin", "Vitamin A", "Vitamin B-Complex", "Vitamin C", "Vitamin D3", "Vitamin E", "Ferrous sulfate", "Calcium", "Zinc", "Multivitamins", "Alcohol", "Hand sanitizer", "BP Monitor", "Glucometer"];
+        // FULL LISTS
+        const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Measles", "Mumps", "Rubella", "Chickenpox", "Hand, foot and mouth disease", "Hepatitis A", "Hepatitis B", "Hepatitis C", "Rabies", "HIV infection", "Chikungunya", "Typhoid fever", "Leptospirosis", "Cholera", "Diphtheria", "Pertussis", "Tetanus", "Malaria", "Schistosomiasis", "Hypertension", "Diabetes", "Heart attack", "Stroke", "Asthma", "COPD", "Tuberculosis", "Pneumonia", "Anemia", "Obesity"];
+        const medicines = ["Paracetamol", "Ibuprofen", "Mefenamic acid", "Aspirin", "Amoxicillin", "Azithromycin", "Ciprofloxacin", "Losartan", "Amlodipine", "Metformin", "Insulin", "Atorvastatin", "Salbutamol", "Cetirizine", "Loratadine", "Omeprazole", "Loperamide", "ORS", "Vitamin C", "Multivitamins", "Zinc", "Alcohol", "Sanitizer"];
 
         let curD = "", curM = "";
         
         // Populate Selects
-        const brgyOptions = barangays.map(b => `<option value="${b}">${b}</option>`).join('');
-        const monthOptions = monthNames.map((m, i) => `<option value="${i}">${m}</option>`).join('');
-        document.getElementById('d-brgy').innerHTML = brgyOptions;
-        document.getElementById('m-brgy').innerHTML = brgyOptions;
-        document.getElementById('d-month').innerHTML = monthOptions;
-        document.getElementById('m-month').innerHTML = monthOptions;
+        const brgyHtml = barangays.map(b => `<option value="${b}">${b}</option>`).join('');
+        document.getElementById('d-brgy').innerHTML = brgyHtml;
+        document.getElementById('m-brgy').innerHTML = brgyHtml;
+        
+        const monthHtml = monthNames.map((m, i) => `<option value="${i}">${m}</option>`).join('');
+        document.getElementById('d-month-filter').innerHTML = monthHtml;
+        document.getElementById('m-month-filter').innerHTML = monthHtml;
 
-        // Toggle Month visibility based on Category
-        const toggleMonth = (type) => {
-            const cat = document.getElementById(`${type}-category`).value;
-            const monthSel = document.getElementById(`${type}-month`);
-            if(cat === 'weekly') monthSel.classList.remove('hidden-select');
-            else monthSel.classList.add('hidden-select');
+        // Toggle Month Filter Visibility
+        document.getElementById('d-category').onchange = (e) => {
+            document.getElementById('d-month-filter').style.display = e.target.value === 'weekly' ? 'block' : 'none';
             sync();
         };
-        document.getElementById('d-category').onchange = () => toggleMonth('d');
-        document.getElementById('m-category').onchange = () => toggleMonth('m');
+        document.getElementById('m-category').onchange = (e) => {
+            document.getElementById('m-month-filter').style.display = e.target.value === 'weekly' ? 'block' : 'none';
+            sync();
+        };
 
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('live-clock').innerText = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        function getWeekOfMonth(date) {
+            const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+            const diff = date.getDate() + startOfMonth.getDay() - 1;
+            return Math.floor(diff / 7) + 1;
         }
-        setInterval(updateClock, 1000); updateClock();
 
-        // Search Logic
+        const createChart = (id, color) => new Chart(document.getElementById(id), {
+            type: 'line',
+            data: { labels: [], datasets: [{ data: [], borderColor: color, backgroundColor: color+'11', fill: true, tension: 0.4, borderWidth: 3, pointRadius: 5 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+        const dChart = createChart('diseaseChart', '#ef4444');
+        const mChart = createChart('stockChart', '#10b981');
+
+        function sync() {
+            const dy = parseInt(document.getElementById('d-year').value);
+            const dbr = document.getElementById('d-brgy').value;
+            const dCat = document.getElementById('d-category').value;
+            const dMth = parseInt(document.getElementById('d-month-filter').value);
+
+            onSnapshot(collection(db, "disease_cases"), snap => {
+                let counts, labels;
+                if(dCat === 'monthly') {
+                    counts = new Array(12).fill(0);
+                    labels = monthNames.map(m => m.substring(0,3));
+                } else {
+                    counts = new Array(5).fill(0);
+                    labels = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
+                }
+                
+                let total = 0;
+                snap.forEach(doc => {
+                    const r = doc.data(); const d = r.createdAt?.toDate();
+                    if(d && d.getFullYear() === dy && (curD === "" || r.name === curD) && (dbr === "All Areas" || r.barangay === dbr)) {
+                        if(dCat === 'monthly') {
+                            counts[d.getMonth()] += Number(r.count || 0);
+                            total += Number(r.count || 0);
+                        } else if(d.getMonth() === dMth) {
+                            const wk = getWeekOfMonth(d) - 1;
+                            if(wk >= 0 && wk < 5) counts[wk] += Number(r.count || 0);
+                            total += Number(r.count || 0);
+                        }
+                    }
+                });
+                dChart.data.labels = labels; dChart.data.datasets[0].data = counts; dChart.update();
+                document.getElementById('d-total').innerText = total;
+            });
+
+            // Same logic for Medicine...
+            const my = parseInt(document.getElementById('m-year').value);
+            const mbr = document.getElementById('m-brgy').value;
+            const mCat = document.getElementById('m-category').value;
+            const mMth = parseInt(document.getElementById('m-month-filter').value);
+
+            onSnapshot(collection(db, "medicine_inventory"), snap => {
+                let counts, labels;
+                if(mCat === 'monthly') {
+                    counts = new Array(12).fill(0);
+                    labels = monthNames.map(m => m.substring(0,3));
+                } else {
+                    counts = new Array(5).fill(0);
+                    labels = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"];
+                }
+                let total = 0;
+                snap.forEach(doc => {
+                    const r = doc.data(); const d = r.createdAt?.toDate();
+                    if(d && d.getFullYear() === my && (curM === "" || r.name === curM) && (mbr === "All Areas" || r.barangay === mbr)) {
+                        if(mCat === 'monthly') {
+                            counts[d.getMonth()] += Number(r.count || 0); total += Number(r.count || 0);
+                        } else if(d.getMonth() === mMth) {
+                            const wk = getWeekOfMonth(d) - 1;
+                            if(wk >= 0 && wk < 5) counts[wk] += Number(r.count || 0);
+                            total += Number(r.count || 0);
+                        }
+                    }
+                });
+                mChart.data.labels = labels; mChart.data.datasets[0].data = counts; mChart.update();
+                document.getElementById('m-total').innerText = total;
+            });
+        }
+
+        // Search logic
         const searchUI = (id, resId, list, type) => {
             const input = document.getElementById(id);
             const res = document.getElementById(resId);
@@ -169,107 +254,24 @@
                 res.innerHTML = filtered.map(i => `<div class="search-item">${i}</div>`).join('');
                 res.classList.add('active');
                 res.querySelectorAll('.search-item').forEach(el => {
-                    el.onclick = () => { input.value = el.innerText; res.classList.remove('active'); if(type==='d') curD = el.innerText; else curM = el.innerText; sync(); };
+                    el.onclick = () => { 
+                        input.value = el.innerText; res.classList.remove('active'); 
+                        if(type==='d') { curD = el.innerText; document.getElementById('d-label').innerText = el.innerText; }
+                        else { curM = el.innerText; document.getElementById('m-label').innerText = el.innerText; }
+                        sync(); 
+                    };
                 });
             };
         };
         searchUI('d-search', 'd-results', diseases, 'd');
         searchUI('m-search', 'm-results', medicines, 'm');
 
-        // Chart Creation
-        const createChart = (id, color) => new Chart(document.getElementById(id), {
-            type: 'line',
-            data: { labels: [], datasets: [{ data: [], borderColor: color, backgroundColor: color+'11', fill: true, tension: 0.4 }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
-        const dChart = createChart('diseaseChart', '#ef4444');
-        const mChart = createChart('stockChart', '#10b981');
-
-        function getWeeksInMonth(year, month) {
-            const weeks = [];
-            const firstDate = new Date(year, month, 1);
-            const lastDate = new Date(year, month + 1, 0);
-            let weekCount = 1;
-            for (let d = 1; d <= lastDate.getDate(); d++) {
-                const date = new Date(year, month, d);
-                if (date.getDay() === 0 && d !== 1) weekCount++;
-                if (!weeks.includes(`Week ${weekCount}`)) weeks.push(`Week ${weekCount}`);
-            }
-            return weeks;
-        }
-
-        function getWeekIndexInMonth(date) {
-            const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-            return Math.ceil((date.getDate() + firstDay.getDay()) / 7) - 1;
-        }
-
-        function sync() {
-            // Disease Sync
-            const dy = parseInt(document.getElementById('d-year').value);
-            const dm = parseInt(document.getElementById('d-month').value);
-            const dbry = document.getElementById('d-brgy').value;
-            const dCat = document.getElementById('d-category').value;
-
-            onSnapshot(collection(db, "disease_cases"), snap => {
-                let counts, labels;
-                if(dCat === 'monthly') {
-                    counts = new Array(12).fill(0); labels = monthNames.map(m => m.substring(0,3));
-                } else {
-                    const weeks = getWeeksInMonth(dy, dm);
-                    counts = new Array(weeks.length).fill(0); labels = weeks;
-                }
-                let total = 0;
-                snap.forEach(doc => {
-                    const r = doc.data(); const d = r.createdAt?.toDate();
-                    if(d && d.getFullYear() === dy && (curD === "" || r.name === curD) && (dbry === "All Areas" || r.barangay === dbry)) {
-                        if(dCat === 'monthly') {
-                            counts[d.getMonth()] += Number(r.count || 0); total += Number(r.count || 0);
-                        } else if(d.getMonth() === dm) {
-                            const wIdx = getWeekIndexInMonth(d);
-                            if(counts[wIdx] !== undefined) { counts[wIdx] += Number(r.count || 0); total += Number(r.count || 0); }
-                        }
-                    }
-                });
-                document.getElementById('d-total').innerText = total;
-                dChart.data.labels = labels; dChart.data.datasets[0].data = counts; dChart.update();
-            });
-
-            // Medicine Sync
-            const my = parseInt(document.getElementById('m-year').value);
-            const mm = parseInt(document.getElementById('m-month').value);
-            const mbry = document.getElementById('m-brgy').value;
-            const mCat = document.getElementById('m-category').value;
-
-            onSnapshot(collection(db, "medicine_inventory"), snap => {
-                let counts, labels;
-                if(mCat === 'monthly') {
-                    counts = new Array(12).fill(0); labels = monthNames.map(m => m.substring(0,3));
-                } else {
-                    const weeks = getWeeksInMonth(my, mm);
-                    counts = new Array(weeks.length).fill(0); labels = weeks;
-                }
-                let total = 0;
-                snap.forEach(doc => {
-                    const r = doc.data(); const d = r.createdAt?.toDate();
-                    if(d && d.getFullYear() === my && (curM === "" || r.name === curM) && (mbry === "All Areas" || r.barangay === mbry)) {
-                        if(mCat === 'monthly') {
-                            counts[d.getMonth()] += Number(r.count || 0); total += Number(r.count || 0);
-                        } else if(d.getMonth() === mm) {
-                            const wIdx = getWeekIndexInMonth(d);
-                            if(counts[wIdx] !== undefined) { counts[wIdx] += Number(r.count || 0); total += Number(r.count || 0); }
-                        }
-                    }
-                });
-                document.getElementById('m-total').innerText = total;
-                mChart.data.labels = labels; mChart.data.datasets[0].data = counts; mChart.update();
-            });
-        }
-
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const snap = await getDoc(doc(db, "users", user.uid));
                 if (snap.exists()) {
-                    const d = snap.data(); document.getElementById('welcome-name').innerText = d.name;
+                    const d = snap.data();
+                    document.getElementById('welcome-name').innerText = d.name;
                     if(d.role === "rhu" || d.role === "bhw") {
                         document.getElementById('internal-section').classList.remove('hidden');
                         if(d.role === "rhu") document.getElementById('rhu-link').classList.remove('hidden');
@@ -277,12 +279,14 @@
                     }
                 }
                 document.body.classList.add('auth-ready');
-                AOS.init({ duration: 800, once: true });
-                lucide.createIcons();
-                sync();
+                AOS.init(); lucide.createIcons(); updateClock(); sync();
             } else { window.location.href = "login.html"; }
         });
 
+        function updateClock() {
+            document.getElementById('live-clock').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+        setInterval(updateClock, 60000);
         document.querySelectorAll('select').forEach(s => s.onchange = sync);
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
     </script>
