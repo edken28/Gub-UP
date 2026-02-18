@@ -22,16 +22,16 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col lg:flex-row overflow-x-hidden">
 
-    <div class="lg:hidden bg-white border-b border-slate-100 p-4 flex justify-between items-center sticky top-0 z-50">
+    <div class="lg:hidden bg-white border-b border-slate-100 p-4 flex items-center sticky top-0 z-50">
+        <button onclick="toggleSidebar()" class="p-2 text-slate-600 bg-slate-50 rounded-xl mr-4">
+            <i data-lucide="menu"></i>
+        </button>
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
                 <i data-lucide="activity" class="w-5 h-5"></i>
             </div>
-            <span class="font-bold text-blue-900">GUB-UP</span>
+            <span class="font-bold text-blue-900 uppercase tracking-tight">GUB-UP</span>
         </div>
-        <button onclick="toggleSidebar()" class="p-2 text-slate-600 bg-slate-50 rounded-xl">
-            <i data-lucide="menu"></i>
-        </button>
     </div>
 
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-[60] w-72 bg-white border-r border-slate-100 flex flex-col transition-transform duration-300 sidebar-closed lg:relative lg:translate-x-0 lg:flex lg:h-screen lg:sticky lg:top-0">
@@ -46,7 +46,7 @@
                         <p class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">Health System</p>
                     </div>
                 </div>
-                <button id="close-sidebar" onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-400"><i data-lucide="x"></i></button>
+                <button onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-400"><i data-lucide="x"></i></button>
             </div>
 
             <nav class="space-y-2">
@@ -110,7 +110,6 @@
         </div>
 
         <h2 class="text-xl font-black text-blue-900 mb-6 px-2 uppercase tracking-widest text-[12px]">6 Emergency Services</h2>
-        
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <div class="bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover-card" data-aos="zoom-in">
                 <div class="bg-[#e75a24] p-6 text-white">
@@ -118,14 +117,10 @@
                         <i data-lucide="flame" class="w-6 h-6"></i>
                     </div>
                     <h3 class="font-bold text-lg leading-tight">Bureau of Fire Protection</h3>
-                    <p class="text-white/80 text-sm">Gubat Fire Station</p>
                 </div>
                 <div class="p-6 space-y-4">
-                    <div>
-                        <p class="text-[10px] uppercase font-bold text-slate-400">Mobile</p>
-                        <p class="font-bold text-blue-900 text-lg">0945-661-9900</p>
-                    </div>
-                    <a href="tel:09456619900" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors">
+                    <p class="font-bold text-blue-900 text-lg">0945-661-9900</p>
+                    <a href="tel:09456619900" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call Now
                     </a>
                 </div>
@@ -137,14 +132,10 @@
                         <i data-lucide="alert-triangle" class="w-6 h-6"></i>
                     </div>
                     <h3 class="font-bold text-lg leading-tight">MDRRMO</h3>
-                    <p class="text-white/80 text-sm">Disaster Response</p>
                 </div>
                 <div class="p-6 space-y-4">
-                    <div>
-                        <p class="text-[10px] uppercase font-bold text-slate-400">Mobile</p>
-                        <p class="font-bold text-blue-900 text-lg">0938-161-8174</p>
-                    </div>
-                    <a href="tel:09381618174" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors">
+                    <p class="font-bold text-blue-900 text-lg">0938-161-8174</p>
+                    <a href="tel:09381618174" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call Now
                     </a>
                 </div>
@@ -156,14 +147,10 @@
                         <i data-lucide="book-plus" class="w-6 h-6"></i>
                     </div>
                     <h3 class="font-bold text-lg leading-tight">Rural Health Unit</h3>
-                    <p class="text-white/80 text-sm">Primary Healthcare</p>
                 </div>
                 <div class="p-6 space-y-4">
-                    <div>
-                        <p class="text-[10px] uppercase font-bold text-slate-400">Mobile</p>
-                        <p class="font-bold text-blue-900 text-lg">0945-508-7495</p>
-                    </div>
-                    <a href="tel:09455087495" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors">
+                    <p class="font-bold text-blue-900 text-lg">0945-508-7495</p>
+                    <a href="tel:09455087495" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call Now
                     </a>
                 </div>
@@ -175,14 +162,10 @@
                         <i data-lucide="hospital" class="w-6 h-6"></i>
                     </div>
                     <h3 class="font-bold text-lg leading-tight">Gubat District Hospital</h3>
-                    <p class="text-white/80 text-sm">Health Services</p>
                 </div>
                 <div class="p-6 space-y-4">
-                    <div>
-                        <p class="text-[10px] uppercase font-bold text-slate-400">Mobile</p>
-                        <p class="font-bold text-blue-900 text-lg">0947-616-9184</p>
-                    </div>
-                    <a href="tel:09476169184" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors">
+                    <p class="font-bold text-blue-900 text-lg">0947-616-9184</p>
+                    <a href="tel:09476169184" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call Now
                     </a>
                 </div>
@@ -193,15 +176,11 @@
                     <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mb-3">
                         <i data-lucide="ambulance" class="w-6 h-6"></i>
                     </div>
-                    <h3 class="font-bold text-lg leading-tight">EMS</h3>
-                    <p class="text-white/80 text-sm">Ambulance</p>
+                    <h3 class="font-bold text-lg leading-tight">EMS Ambulance</h3>
                 </div>
                 <div class="p-6 space-y-4">
-                    <div>
-                        <p class="text-[10px] uppercase font-bold text-slate-400">Mobile</p>
-                        <p class="font-bold text-blue-900 text-lg">0966-847-6669</p>
-                    </div>
-                    <a href="tel:09668476669" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors">
+                    <p class="font-bold text-blue-900 text-lg">0966-847-6669</p>
+                    <a href="tel:09668476669" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call Now
                     </a>
                 </div>
@@ -213,14 +192,10 @@
                         <i data-lucide="shield" class="w-6 h-6"></i>
                     </div>
                     <h3 class="font-bold text-lg leading-tight">Police Station</h3>
-                    <p class="text-white/80 text-sm">Gubat PNP</p>
                 </div>
                 <div class="p-6 space-y-4">
-                    <div>
-                        <p class="text-[10px] uppercase font-bold text-slate-400">Mobile</p>
-                        <p class="font-bold text-blue-900 text-lg">0998-598-6070</p>
-                    </div>
-                    <a href="tel:09985986070" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors">
+                    <p class="font-bold text-blue-900 text-lg">0998-598-6070</p>
+                    <a href="tel:09985986070" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md hover:bg-blue-700">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call Now
                     </a>
                 </div>
@@ -232,7 +207,7 @@
             <div class="divide-y divide-slate-50">
                 <script>
                     const bhcs = [
-                        { name: "Paradijon", location: "Paradijon, Gubat", phone: "0912-345-6789" },
+                        { name: "Thomas", location: "Paradijon, Gubat", phone: "0912-345-6789" },
                     ];
 
                     document.write(bhcs.map(bhc => `
@@ -257,6 +232,28 @@
                 </script>
             </div>
         </div>
+
+        <div class="bg-[#eff6ff] border border-[#dbeafe] rounded-2xl p-6 md:p-8 mb-12 shadow-sm" data-aos="fade-up">
+            <h3 class="text-xl font-bold text-[#1e3a8a] mb-6">Important Information</h3>
+            <ul class="space-y-4">
+                <li class="flex items-start gap-3">
+                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                    <p class="text-[#1e40af] font-medium">1. All emergency hotlines are available 24/7 unless otherwise specified</p>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                    <p class="text-[#1e40af] font-medium">2. For non-emergency health concerns, please visit your barangay health center during office hours</p>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                    <p class="text-[#1e40af] font-medium">3. Keep these numbers saved on your phone for quick access</p>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i data-lucide="check" class="w-5 h-5 text-blue-600 mt-0.5"></i>
+                    <p class="text-[#1e40af] font-medium">4. In case of medical emergency, always call for professional help immediately</p>
+                </li>
+            </ul>
+        </div>
     </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -265,6 +262,7 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
             authDomain: "gub-up.firebaseapp.com",
@@ -278,6 +276,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // Sidebar Toggle
         window.toggleSidebar = () => {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
