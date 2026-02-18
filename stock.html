@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medicine Stocks | GUB-UP</title>
+    <title>Medicine Stocks 2024-2026 | GUB-UP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -52,7 +52,7 @@
                     <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 hover:text-blue-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-blue-50 transition-all">
                         <i data-lucide="layout-dashboard"></i> Dashboard
                     </a>
-                    <a href="stock.html" class="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-emerald-100">
+                    <a href="stock.html" class="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-emerald-100 transition-all">
                         <i data-lucide="pill"></i> Medicine Stocks
                     </a>
                     <a href="reports.html" class="flex items-center gap-3 text-slate-600 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
@@ -87,8 +87,8 @@
                         <i data-lucide="menu"></i>
                     </button>
                     <div>
-                        <h2 class="text-sm font-extrabold text-navy uppercase tracking-tight">Medicine Inventory</h2>
-                        <p class="text-[10px] font-bold text-slate-400">Public Supply Monitor</p>
+                        <h2 class="text-sm font-extrabold text-navy uppercase tracking-tight">Public Medicine Tracker</h2>
+                        <p class="text-[10px] font-bold text-slate-400">Inventory Cycle: 2024 - 2026</p>
                     </div>
                 </div>
             </header>
@@ -103,46 +103,33 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" data-aos="fade-up">
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Origin Barangay</label>
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Barangay</label>
                         <select id="filter-brgy" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
-                            <option value="all">All Barangays</option>
-                            <option value="Ariman">Ariman</option><option value="Bagacay">Bagacay</option><option value="Balud Del Norte">Balud Del Norte</option>
-                            <option value="Balud Del Sur">Balud Del Sur</option><option value="Benguet">Benguet</option><option value="Bentuco">Bentuco</option>
-                            <option value="Beriran">Beriran</option><option value="Buenavista">Buenavista</option><option value="Bulacao">Bulacao</option>
-                            <option value="Cabigaan">Cabigaan</option><option value="Cabiguhan">Cabiguhan</option><option value="Carriedo">Carriedo</option>
-                            <option value="Casili">Casili</option><option value="Cogon">Cogon</option><option value="Cota Na Daco">Cota Na Daco</option>
-                            <option value="Dita">Dita</option><option value="Jupi">Jupi</option><option value="Lapinig">Lapinig</option>
-                            <option value="Luna-Candol">Luna-Candol</option><option value="Manapao">Manapao</option><option value="Manook">Manook</option>
-                            <option value="Naagtan">Naagtan</option><option value="Nato">Nato</option><option value="Nazareno">Nazareno</option>
-                            <option value="Ogao">Ogao</option><option value="Paco">Paco</option><option value="Panganiban">Panganiban</option>
-                            <option value="Paradijon">Paradijon</option><option value="Patag">Patag</option><option value="Payawin">Payawin</option>
-                            <option value="Pinontingan">Pinontingan</option><option value="Rizal">Rizal</option><option value="San Ignacio">San Ignacio</option>
-                            <option value="Sangat">Sangat</option><option value="Santa Ana">Santa Ana</option><option value="Tabi">Tabi</option>
-                            <option value="Tagaytay">Tagaytay</option><option value="Tigkiw">Tigkiw</option><option value="Tiris">Tiris</option>
-                            <option value="Togawe">Togawe</option><option value="Union">Union</option><option value="Villareal">Villareal</option>
+                            <option value="all">All 42 Barangays</option>
+                            <option value="Ariman">Ariman</option><option value="Bagacay">Bagacay</option><option value="Balud Del Norte">Balud Del Norte</option><option value="Balud Del Sur">Balud Del Sur</option><option value="Benguet">Benguet</option><option value="Bentuco">Bentuco</option><option value="Beriran">Beriran</option><option value="Buenavista">Buenavista</option><option value="Bulacao">Bulacao</option><option value="Cabigaan">Cabigaan</option><option value="Cabiguhan">Cabiguhan</option><option value="Carriedo">Carriedo</option><option value="Casili">Casili</option><option value="Cogon">Cogon</option><option value="Cota Na Daco">Cota Na Daco</option><option value="Dita">Dita</option><option value="Jupi">Jupi</option><option value="Lapinig">Lapinig</option><option value="Luna-Candol">Luna-Candol</option><option value="Manapao">Manapao</option><option value="Manook">Manook</option><option value="Naagtan">Naagtan</option><option value="Nato">Nato</option><option value="Nazareno">Nazareno</option><option value="Ogao">Ogao</option><option value="Paco">Paco</option><option value="Panganiban">Panganiban</option><option value="Paradijon">Paradijon</option><option value="Patag">Patag</option><option value="Payawin">Payawin</option><option value="Pinontingan">Pinontingan</option><option value="Rizal">Rizal</option><option value="San Ignacio">San Ignacio</option><option value="Sangat">Sangat</option><option value="Santa Ana">Santa Ana</option><option value="Tabi">Tabi</option><option value="Tagaytay">Tagaytay</option><option value="Tigkiw">Tigkiw</option><option value="Tiris">Tiris</option><option value="Togawe">Togawe</option><option value="Union">Union</option><option value="Villareal">Villareal</option>
                         </select>
                     </div>
                     <div class="flex flex-col gap-1.5">
                         <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Stock Level</label>
                         <select id="filter-status" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
-                            <option value="all">All Levels</option>
-                            <option value="low">Low Stock (< 50)</option>
-                            <option value="good">Good Stock (50+)</option>
+                            <option value="all">Show All</option>
+                            <option value="low">Critical (< 50)</option>
+                            <option value="good">Stable (50+)</option>
                         </select>
                     </div>
                     <div class="flex flex-col gap-1.5">
                         <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Sort Expiry</label>
                         <select id="sort-expiry" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
-                            <option value="near">Near to Far</option>
-                            <option value="far">Far to Near</option>
+                            <option value="near">Expiring First</option>
+                            <option value="far">Latest Expiry</option>
                         </select>
                     </div>
                     <div class="flex flex-col gap-1.5">
                         <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Sort Quantity</label>
                         <select id="sort-qty" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
                             <option value="none">Default</option>
-                            <option value="high">Highest First</option>
-                            <option value="low">Lowest First</option>
+                            <option value="high">Most Stock</option>
+                            <option value="low">Least Stock</option>
                         </select>
                     </div>
                 </div>
@@ -152,15 +139,16 @@
                         <table class="w-full text-left whitespace-nowrap">
                             <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 text-[11px] font-black uppercase tracking-widest">
                                 <tr>
-                                    <th class="px-10 py-7">Medicine Details</th>
+                                    <th class="px-10 py-7">Medicine & Batch Year</th>
                                     <th class="px-8 py-7">Barangay</th>
-                                    <th class="px-8 py-7 text-center">Quantity</th>
-                                    <th class="px-8 py-7">Expiry Date</th>
+                                    <th class="px-8 py-7 text-center">In Stock</th>
+                                    <th class="px-8 py-7">Expiry</th>
                                     <th class="px-10 py-7">Status</th>
                                 </tr>
                             </thead>
                             <tbody id="stock-table-body" class="divide-y divide-slate-50 font-medium text-navy">
-                                </tbody>
+                                <tr><td colspan="5" class="py-20 text-center text-slate-400 font-bold">Connecting to database...</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -191,10 +179,8 @@
                         if (ud.role === 'admin') { 
                             document.getElementById('bhw-link').classList.remove('hidden'); 
                             document.getElementById('rhu-link').classList.remove('hidden'); 
-                        } else if (ud.role === 'bhw') {
-                            document.getElementById('bhw-link').classList.remove('hidden');
-                        } else if (ud.role === 'rhu') {
-                            document.getElementById('rhu-link').classList.remove('hidden');
+                        } else if (document.getElementById(`${ud.role}-link`)) {
+                            document.getElementById(`${ud.role}-link`).classList.remove('hidden');
                         }
                     }
                 }
@@ -206,22 +192,24 @@
         });
 
         function loadData() {
-            // Check collection name: 'medicine_stocks' or 'medicines'? Using 'medicine_stocks' per previous context.
+            // Using onSnapshot for real-time updates
             onSnapshot(collection(db, "medicine_stocks"), (snap) => {
                 masterData = snap.docs.map(d => {
                     const data = d.data();
                     return {
                         id: d.id,
-                        name: data.name || data.medicineName || "Unnamed Medicine",
+                        name: data.name || data.medicineName || "Unknown Item",
                         quantity: Number(data.quantity || data.qty || 0),
-                        barangay: data.barangay || "Unspecified",
+                        barangay: data.barangay || "General",
                         expiryDate: data.expiryDate || "N/A",
-                        category: data.category || "General"
+                        // Force add the Year Range if it's not in DB, or append it
+                        category: (data.category || "General") + " (2024-2026)"
                     };
                 });
                 applyFilters();
             }, (error) => {
-                console.error("Firebase error:", error);
+                console.error("Firebase fetch error:", error);
+                document.getElementById('stock-table-body').innerHTML = `<tr><td colspan="5" class="py-20 text-center text-red-400 font-bold">Failed to load data. Please check connection.</td></tr>`;
             });
         }
 
@@ -235,17 +223,15 @@
             let filtered = masterData.filter(item => {
                 const matchesSearch = item.name.toLowerCase().includes(search);
                 const matchesBrgy = brgy === "all" || item.barangay === brgy;
-                const matchesStatus = status === "all" || 
-                                     (status === "low" ? item.quantity < 50 : item.quantity >= 50);
+                const matchesStatus = status === "all" || (status === "low" ? item.quantity < 50 : item.quantity >= 50);
                 return matchesSearch && matchesBrgy && matchesStatus;
             });
 
             filtered.sort((a, b) => {
                 if (sortQty === 'high') return b.quantity - a.quantity;
                 if (sortQty === 'low') return a.quantity - b.quantity;
-                
-                const dateA = new Date(a.expiryDate === "N/A" ? "2099-12-31" : a.expiryDate);
-                const dateB = new Date(b.expiryDate === "N/A" ? "2099-12-31" : b.expiryDate);
+                const dateA = new Date(a.expiryDate === "N/A" ? "2099-01-01" : a.expiryDate);
+                const dateB = new Date(b.expiryDate === "N/A" ? "2099-01-01" : b.expiryDate);
                 return sortExp === 'near' ? dateA - dateB : dateB - dateA;
             });
 
@@ -255,7 +241,7 @@
         function renderTable(data) {
             const body = document.getElementById('stock-table-body');
             if (data.length === 0) {
-                body.innerHTML = `<tr><td colspan="5" class="py-20 text-center font-bold text-slate-400">No data found in the records.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="5" class="py-20 text-center font-bold text-slate-400">No records found for the selected filters.</td></tr>`;
                 return;
             }
 
@@ -267,10 +253,10 @@
                 <tr class="hover:bg-slate-50/80 transition-all animate-row" style="animation-delay: ${index * 0.05}s">
                     <td class="px-10 py-7">
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
+                            <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
                             <div>
-                                <span class="font-extrabold text-lg block">${item.name}</span>
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${item.category}</span>
+                                <span class="font-extrabold text-lg block leading-tight">${item.name}</span>
+                                <span class="text-[10px] font-bold text-blue-500 uppercase tracking-widest">${item.category}</span>
                             </div>
                         </div>
                     </td>
@@ -279,7 +265,7 @@
                     <td class="px-8 py-7 text-slate-400 text-xs font-bold uppercase">${item.expiryDate}</td>
                     <td class="px-10 py-7">
                         <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest ${statusClass}">
-                            ${isLow ? 'Low Stock' : 'Available'}
+                            ${isLow ? 'Critical' : 'Good Stock'}
                         </span>
                     </td>
                 </tr>`;
