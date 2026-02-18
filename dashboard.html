@@ -116,7 +116,7 @@
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 w-full md:w-auto">
                             <select id="d-category" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"><option value="monthly">Monthly</option><option value="weekly">Weekly</option></select>
-                            <select id="d-year" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"><option value="2025">2025</option><option value="2026">2026</option></select>
+                            <select id="d-year" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"><option value="2025">2025</option><option value="2026" selected>2026</option></select>
                             <select id="d-brgy" class="p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none"></select>
                             <div class="relative col-span-1 sm:col-span-2">
                                 <input type="text" id="d-search" placeholder="Search Disease..." class="w-full p-3 bg-slate-50 border-none rounded-2xl font-bold text-navy text-xs outline-none focus:ring-2 ring-red-100">
@@ -161,20 +161,11 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Sidebar Controls
-        const openMenu = document.getElementById('open-menu');
-        const closeMenu = document.getElementById('close-menu');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-
-        const toggleNav = () => { sidebar.classList.toggle('sidebar-open'); overlay.classList.toggle('active'); };
-        openMenu.onclick = toggleNav;
-        closeMenu.onclick = toggleNav;
-        overlay.onclick = toggleNav;
-
+        // UI Helpers
+        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         const barangays = ["All Areas", "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
-        const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Avian influenza", "Measles", "Mumps", "Rubella", "Chickenpox (Varicella)", "Hand, foot and mouth disease", "Hepatitis A", "Hepatitis B", "Hepatitis C", "Hepatitis E", "Rabies", "HIV infection", "AIDS", "Chikungunya", "Japanese encephalitis", "Zika virus infection", "Rotavirus infection", "Norovirus infection", "Poliomyelitis", "Human papillomavirus (HPV) infection", "Cytomegalovirus infection", "Epstein-Barr virus infection", "Viral gastroenteritis", "Viral meningitis", "Viral pneumonia", "Tuberculosis (Pulmonary TB)", "Extrapulmonary tuberculosis", "Multidrug-resistant TB", "Pneumonia (bacterial)", "Typhoid fever", "Paratyphoid fever", "Leptospirosis", "Cholera", "Shigellosis", "Diphtheria", "Pertussis (Whooping cough)", "Tetanus", "Neonatal tetanus", "Meningococcal meningitis", "Bacterial meningitis", "Urinary tract infection", "Gonorrhea", "Syphilis", "Chlamydia", "Bacterial skin infections", "Cellulitis", "Impetigo", "Rheumatic fever", "Rheumatic heart disease", "Scarlet fever", "Sepsis", "Anthrax", "Helicobacter pylori infection", "Malaria", "Schistosomiasis", "Ascariasis", "Trichuriasis", "Hookworm infection", "Filariasis", "Amebiasis", "Giardiasis", "Toxoplasmosis", "Strongyloidiasis", "Taeniasis (Tapeworm)", "Cysticercosis", "Cryptosporidiosis", "Candidiasis", "Tinea (Ringworm)", "Athlete’s foot", "Onychomycosis", "Aspergillosis", "Histoplasmosis", "Cryptococcosis", "Hypertension", "Coronary artery disease", "Myocardial infarction (Heart attack)", "Stroke", "Heart failure", "Arrhythmia", "Cardiomyopathy", "Peripheral artery disease", "Type 1 diabetes", "Type 2 diabetes", "Prediabetes", "Dyslipidemia", "Obesity", "Metabolic syndrome", "Hyperthyroidism", "Hypothyroidism", "Goiter", "Polycystic ovary syndrome (PCOS)", "Asthma", "COPD", "Chronic bronchitis", "Emphysema", "Allergic rhinitis", "Sinusitis", "Pulmonary fibrosis", "Breast cancer", "Lung cancer", "Liver cancer", "Colorectal cancer", "Cervical cancer", "Prostate cancer", "Stomach cancer", "Nasopharyngeal cancer", "Ovarian cancer", "Pancreatic cancer", "Leukemia", "Lymphoma", "Thyroid cancer", "Skin cancer", "Depression", "Anxiety disorders", "Bipolar disorder", "Schizophrenia", "Epilepsy", "Migraine", "Alzheimer’s disease", "Parkinson’s disease", "Dementia", "Stroke-related neurological deficits", "Malnutrition", "Stunting", "Wasting", "Vitamin A deficiency", "Iron deficiency anemia", "Iodine deficiency disorder", "Rickets", "Kwashiorkor", "Marasmus", "Acute gastroenteritis", "Flood-related leptospirosis", "Skin fungal infections (post-flood)", "Conjunctivitis", "Diarrheal diseases", "Kidney stones", "Chronic kidney disease", "Urinary tract stones", "Gallstones", "Peptic ulcer disease", "Gastroesophageal reflux disease (GERD)", "Arthritis", "Osteoarthritis", "Rheumatoid arthritis", "Gout", "Osteoporosis", "Back pain", "Scoliosis", "Hernia", "Hemorrhoids", "Appendicitis", "Gallbladder disease", "Dental caries", "Periodontal disease", "Acne", "Eczema", "Psoriasis", "Scabies", "Contact dermatitis", "Heat rash (Prickly heat)", "Urticaria (Hives)", "Keloids", "Alcohol use disorder", "Liver cirrhosis", "Fatty liver disease", "Drug dependence", "Nicotine dependence", "Substance-induced psychosis", "Endometriosis", "Uterine fibroids", "Pelvic inflammatory disease", "Ectopic pregnancy", "Pre-eclampsia", "Gestational diabetes", "Infertility", "STIs"];
-        const medicines = ["Paracetamol (Acetaminophen)", "Ibuprofen", "Mefenamic acid", "Aspirin", "Naproxen", "Diclofenac", "Celecoxib", "Ketoprofen", "Phenylephrine", "Pseudoephedrine", "Chlorphenamine", "Diphenhydramine", "Cetirizine", "Loratadine", "Carbocisteine", "Ambroxol", "Guaifenesin", "Dextromethorphan", "Salbutamol inhaler", "Oxymetazoline nasal spray", "Steam inhalation solutions", "Fexofenadine", "Levocetirizine", "Hydrocortisone cream", "Antacids (Aluminum hydroxide, Magnesium hydroxide)", "Sodium bicarbonate", "Omeprazole", "Lansoprazole", "Pantoprazole", "Esomeprazole", "Loperamide", "Oral Rehydration Salts (ORS)", "Simethicone", "Domperidone", "Metoclopramide", "Hyoscine butylbromide", "Povidone iodine", "Hydrogen peroxide", "Mupirocin ointment", "Clotrimazole cream", "Ketoconazole cream", "Calamine lotion", "Zinc oxide", "Permethrin", "Acyclovir cream", "Amoxicillin", "Amoxicillin + Clavulanic acid", "Azithromycin", "Clarithromycin", "Cefuroxime", "Ceftriaxone", "Ciprofloxacin", "Levofloxacin", "Doxycycline", "Metronidazole", "Co-trimoxazole", "Isoniazid", "Rifampicin", "Pyrazinamide", "Ethambutol", "Fixed-dose TB combinations", "Amlodipine", "Losartan", "Telmisartan", "Captopril", "Enalapril", "Metoprolol", "Atenolol", "Hydrochlorothiazide", "Metformin", "Glimepiride", "Gliclazide", "Insulin (Regular, NPH, Glargine)", "Sitagliptin", "Empagliflozin", "Atorvastatin", "Simvastatin", "Rosuvastatin", "Budesonide inhaler", "Fluticasone", "Ipratropium bromide", "Fluoxetine", "Sertraline", "Escitalopram", "Amitriptyline", "Risperidone", "Quetiapine", "Alprazolam", "Diazepam", "Vitamin A", "Vitamin B1 (Thiamine)", "Vitamin B6", "Vitamin B12", "Vitamin C", "Vitamin D3", "Vitamin E", "Vitamin K", "B-complex capsules", "B1 + B6 + B12 combinations", "Iron (Ferrous sulfate)", "Calcium carbonate", "Calcium + Vitamin D", "Magnesium", "Zinc", "Potassium supplements", "Adult multivitamins", "Children’s multivitamins", "Prenatal vitamins", "Senior vitamins", "Probiotics", "Fish oil (Omega-3)", "Glutathione", "Antiseptic alcohol", "Hand sanitizer", "Thermometer", "Blood pressure monitor", "Glucometer", "Nebulizer solution", "Activated charcoal", "Epinephrine injection"];
+        const diseases = ["Dengue fever", "Severe dengue (DHF)", "COVID-19", "Influenza", "Measles", "Mumps", "Rubella", "Chickenpox", "Hand, foot and mouth disease", "Hepatitis A", "Rabies", "HIV/AIDS", "Chikungunya", "Typhoid fever", "Leptospirosis", "Cholera", "Diphtheria", "Pertussis", "Tetanus", "Malaria", "Schistosomiasis", "Hypertension", "Diabetes", "Stroke", "Asthma", "COPD", "Pneumonia", "Tuberculosis"];
+        const medicines = ["Paracetamol", "Ibuprofen", "Mefenamic acid", "Aspirin", "Amoxicillin", "Azithromycin", "Ciprofloxacin", "Losartan", "Amlodipine", "Metformin", "Atorvastatin", "Salbutamol", "Cetirizine", "Loratadine", "Omeprazole", "Loperamide", "ORS", "Vitamin C", "Multivitamins", "Zinc"];
 
         let curD = "", curM = "";
         document.getElementById('d-brgy').innerHTML = barangays.map(b => `<option value="${b}">${b}</option>`).join('');
@@ -186,6 +177,11 @@
         }
         setInterval(updateClock, 1000); updateClock();
 
+        const toggleNav = () => { document.getElementById('sidebar').classList.toggle('sidebar-open'); document.getElementById('overlay').classList.toggle('active'); };
+        document.getElementById('open-menu').onclick = toggleNav;
+        document.getElementById('close-menu').onclick = toggleNav;
+        document.getElementById('overlay').onclick = toggleNav;
+
         const searchUI = (id, resId, list, type) => {
             const input = document.getElementById(id);
             const res = document.getElementById(resId);
@@ -195,7 +191,11 @@
                 res.innerHTML = filtered.map(i => `<div class="search-item">${i}</div>`).join('');
                 res.classList.add('active');
                 res.querySelectorAll('.search-item').forEach(el => {
-                    el.onclick = () => { input.value = el.innerText; res.classList.remove('active'); if(type==='d') curD = el.innerText; else curM = el.innerText; sync(); };
+                    el.onclick = () => { 
+                        input.value = el.innerText; res.classList.remove('active'); 
+                        if(type==='d') curD = el.innerText; else curM = el.innerText; 
+                        sync(); 
+                    };
                 });
             };
         };
@@ -209,46 +209,67 @@
             return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
         }
 
+        // CHART CONFIG
         const createChart = (id, color) => new Chart(document.getElementById(id), {
             type: 'line',
-            data: { labels: [], datasets: [{ data: [], borderColor: color, backgroundColor: color+'11', fill: true, tension: 0.4 }] },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            data: { labels: [], datasets: [{ data: [], borderColor: color, backgroundColor: color+'11', fill: true, tension: 0.4, borderWidth: 3, pointRadius: 4 }] },
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                plugins: { legend: { display: false } },
+                scales: { 
+                    y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                    x: { grid: { display: false } }
+                } 
+            }
         });
         const dChart = createChart('diseaseChart', '#ef4444');
         const mChart = createChart('stockChart', '#10b981');
 
+        // SYNC DATA & LABELS
         function sync() {
             const dy = parseInt(document.getElementById('d-year').value);
             const dbry = document.getElementById('d-brgy').value;
             const dCat = document.getElementById('d-category').value;
+            
             const my = parseInt(document.getElementById('m-year').value);
             const mbry = document.getElementById('m-brgy').value;
             const mCat = document.getElementById('m-category').value;
 
+            // Generate Labels for Week + Month (e.g., "W5 Feb")
+            function getWeeklyLabels(year) {
+                return Array.from({length: 53}, (_, i) => {
+                    const d = new Date(year, 0, 1 + (i * 7));
+                    return `W${i+1} ${monthNames[d.getMonth()]}`;
+                });
+            }
+
+            // Disease Sync
             onSnapshot(collection(db, "disease_cases"), snap => {
                 let counts = dCat === 'monthly' ? new Array(12).fill(0) : new Array(53).fill(0);
-                let labels = dCat === 'monthly' ? ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] : Array.from({length: 53}, (_, i) => `W${i+1}`);
+                let labels = dCat === 'monthly' ? monthNames : getWeeklyLabels(dy);
                 let total = 0;
                 snap.forEach(doc => {
                     const r = doc.data(); const d = r.createdAt?.toDate();
                     if(d && d.getFullYear() === dy && (curD === "" || r.name === curD) && (dbry === "All Areas" || r.barangay === dbry)) {
                         const idx = dCat === 'monthly' ? d.getMonth() : getWeekNumber(d) - 1;
-                        counts[idx] += Number(r.count || 0); total += Number(r.count || 0);
+                        if(idx >= 0 && idx < counts.length) { counts[idx] += Number(r.count || 0); total += Number(r.count || 0); }
                     }
                 });
                 document.getElementById('d-total').innerText = total;
                 dChart.data.labels = labels; dChart.data.datasets[0].data = counts; dChart.update();
             });
 
+            // Medicine Sync
             onSnapshot(collection(db, "medicine_inventory"), snap => {
                 let counts = mCat === 'monthly' ? new Array(12).fill(0) : new Array(53).fill(0);
-                let labels = mCat === 'monthly' ? ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] : Array.from({length: 53}, (_, i) => `W${i+1}`);
+                let labels = mCat === 'monthly' ? monthNames : getWeeklyLabels(my);
                 let total = 0;
                 snap.forEach(doc => {
                     const r = doc.data(); const d = r.createdAt?.toDate();
                     if(d && d.getFullYear() === my && (curM === "" || r.name === curM) && (mbry === "All Areas" || r.barangay === mbry)) {
                         const idx = mCat === 'monthly' ? d.getMonth() : getWeekNumber(d) - 1;
-                        counts[idx] += Number(r.count || 0); total += Number(r.count || 0);
+                        if(idx >= 0 && idx < counts.length) { counts[idx] += Number(r.count || 0); total += Number(r.count || 0); }
                     }
                 });
                 document.getElementById('m-total').innerText = total;
