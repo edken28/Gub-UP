@@ -20,10 +20,13 @@
         }
         .glass-header { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); }
         .table-card { border-radius: 2.5rem; }
-        .status-pill { padding: 6px 12px; border-radius: 12px; font-weight: 800; font-size: 11px; text-transform: uppercase; }
-        .status-low { background: #fff1f2; color: #be123c; }
-        .status-good { background: #f0fdf4; color: #15803d; }
-        select { cursor: pointer; border: 1px solid #f1f5f9 !important; }
+        .filter-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-row { animation: slideIn 0.3s ease forwards; opacity: 0; }
     </style>
 </head>
 <body class="min-h-screen overflow-x-hidden">
@@ -46,11 +49,11 @@
                 </div>
 
                 <nav class="space-y-2">
-                    <a href="dashboard.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-blue-100">
+                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-600 hover:text-blue-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-blue-50 transition-all">
                         <i data-lucide="layout-dashboard"></i> Dashboard
                     </a>
-                    <a href="stock.html" class="flex items-center gap-3 text-slate-600 hover:text-emerald-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-emerald-50 transition-all">
-                        <i data-lucide="pill" class="text-emerald-500"></i> Medicine Stocks
+                    <a href="stock.html" class="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-emerald-100">
+                        <i data-lucide="pill"></i> Medicine Stocks
                     </a>
                     <a href="reports.html" class="flex items-center gap-3 text-slate-600 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
                         <i data-lucide="file-bar-chart-2" class="text-amber-500"></i> Disease Reports
@@ -88,36 +91,46 @@
                         <p class="text-[10px] font-bold text-slate-400">Current Medicine Availability</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 px-4 py-2 rounded-2xl">
-                    <div class="w-8 h-8 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center shadow-inner"><i data-lucide="user" class="w-4 h-4"></i></div>
-                    <span id="user-name-display" class="font-bold text-navy text-sm hidden sm:inline">Guest</span>
-                </div>
             </header>
 
             <div class="p-4 md:p-10 max-w-7xl mx-auto">
-                <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm mb-10 flex flex-col lg:flex-row items-center gap-4" data-aos="fade-down">
+                <div class="flex flex-col lg:flex-row justify-between items-center gap-6 mb-10" data-aos="fade-down">
                     <div class="relative flex-1 w-full group">
-                        <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5 group-focus-within:text-emerald-500 transition-colors"></i>
-                        <input type="text" id="stock-search" placeholder="Search medicine name..." class="w-full pl-14 pr-4 py-4 bg-slate-50 border-none rounded-2xl outline-none focus:ring-4 ring-emerald-50 font-semibold text-navy transition-all">
+                        <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
+                        <input type="text" id="stock-search" placeholder="Search medicine name..." class="w-full pl-14 pr-4 py-5 bg-white border border-slate-100 rounded-3xl outline-none focus:ring-4 ring-emerald-50 shadow-sm font-semibold text-navy transition-all">
                     </div>
-                    
-                    <div class="flex flex-wrap gap-2 w-full lg:w-auto">
-                        <select id="filter-barangay" class="px-4 py-4 bg-slate-50 border-none rounded-2xl font-bold text-xs text-slate-500 outline-none hover:bg-slate-100 transition-colors">
-                            <option value="all">All Areas</option>
-                            <option value="Poblacion">Poblacion</option>
-                            <option value="Pinontalan">Pinontalan</option>
-                            <option value="Benguet">Benguet</option>
-                            <option value="Tigkiw">Tigkiw</option>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" data-aos="fade-up">
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Location</label>
+                        <select id="filter-brgy" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
+                            <option value="all">All Barangays</option>
+                            <option value="Poblacion">Poblacion</option><option value="Pinontalan">Pinontalan</option>
+                            <option value="Benguet">Benguet</option><option value="Ariman">Ariman</option>
                         </select>
-                        <select id="sort-quantity" class="px-4 py-4 bg-slate-50 border-none rounded-2xl font-bold text-xs text-slate-500 outline-none hover:bg-slate-100 transition-colors">
-                            <option value="default">Sort Quantity</option>
-                            <option value="low-high">Lowest to Highest</option>
-                            <option value="high-low">Highest to Lowest</option>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Stock Level</label>
+                        <select id="filter-status" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
+                            <option value="all">All Levels</option>
+                            <option value="low">Low Stock (< 50)</option>
+                            <option value="good">Good Stock (50+)</option>
                         </select>
-                        <select id="sort-expiry" class="px-4 py-4 bg-slate-50 border-none rounded-2xl font-bold text-xs text-slate-500 outline-none hover:bg-slate-100 transition-colors">
-                            <option value="default">Sort Expiry</option>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Sort Expiry</label>
+                        <select id="sort-expiry" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
                             <option value="near">Near to Far</option>
                             <option value="far">Far to Near</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Sort Quantity</label>
+                        <select id="sort-qty" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
+                            <option value="none">No Sort</option>
+                            <option value="high">Highest First</option>
+                            <option value="low">Lowest First</option>
                         </select>
                     </div>
                 </div>
@@ -125,16 +138,16 @@
                 <div class="bg-white table-card border border-slate-100 shadow-sm overflow-hidden" data-aos="fade-up">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left whitespace-nowrap">
-                            <thead class="bg-slate-50/50">
-                                <tr class="text-[11px] font-black text-slate-400 uppercase tracking-[0.15em]">
+                            <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 text-[11px] font-black uppercase tracking-widest">
+                                <tr>
                                     <th class="px-10 py-7">Medicine Details</th>
                                     <th class="px-8 py-7">Barangay</th>
-                                    <th class="px-8 py-7">Quantity</th>
+                                    <th class="px-8 py-7 text-center">Quantity</th>
                                     <th class="px-8 py-7">Expiry Date</th>
-                                    <th class="px-10 py-7 text-right">Status</th>
+                                    <th class="px-10 py-7">Status</th>
                                 </tr>
                             </thead>
-                            <tbody id="stock-table-body" class="divide-y divide-slate-50">
+                            <tbody id="stock-table-body" class="divide-y divide-slate-50 font-medium text-navy">
                                 </tbody>
                         </table>
                     </div>
@@ -148,135 +161,127 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
-            authDomain: "gub-up.firebaseapp.com",
-            projectId: "gub-up",
-            storageBucket: "gub-up.firebasestorage.app",
-            messagingSenderId: "75119179497",
-            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
-        };
-
+        const firebaseConfig = { apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE", authDomain: "gub-up.firebaseapp.com", projectId: "gub-up", storageBucket: "gub-up.firebasestorage.app", messagingSenderId: "75119179497", appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let allStocks = [];
+        let masterData = [];
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const docSnap = await getDoc(doc(db, "users", user.uid));
                 if (docSnap.exists()) {
-                    const userData = docSnap.data();
-                    document.getElementById('user-name-display').innerText = userData.name;
-                    if (['admin', 'bhw', 'rhu'].includes(userData.role)) {
-                        document.getElementById('internal-section').classList.remove('hidden');
-                        if (userData.role === 'admin') {
-                            document.getElementById('bhw-link').classList.remove('hidden');
-                            document.getElementById('rhu-link').classList.remove('hidden');
-                        } else {
-                            const specificLink = document.getElementById(`${userData.role}-link`);
-                            if(specificLink) specificLink.classList.remove('hidden');
+                    const ud = docSnap.data();
+                    const internalSec = document.getElementById('internal-section');
+                    if (['admin', 'bhw', 'rhu'].includes(ud.role)) {
+                        internalSec.classList.remove('hidden');
+                        if (ud.role === 'admin') { 
+                            document.getElementById('bhw-link').classList.remove('hidden'); 
+                            document.getElementById('rhu-link').classList.remove('hidden'); 
+                        }
+                        else if (document.getElementById(`${ud.role}-link`)) {
+                            document.getElementById(`${ud.role}-link`).classList.remove('hidden');
                         }
                     }
                 }
                 document.body.classList.add('auth-ready');
                 AOS.init({ duration: 800, once: true });
-                startListening();
-            } else { 
-                window.location.href = "login.html"; 
-            }
+                loadData();
+            } else { window.location.href = "login.html"; }
         });
 
-        function startListening() {
-            // Real-time listener for the database
+        function loadData() {
+            // Updated to look for 'medicine_stocks'
             onSnapshot(collection(db, "medicine_stocks"), (snap) => {
-                allStocks = snap.docs.map(d => {
+                masterData = snap.docs.map(d => {
                     const data = d.data();
                     return {
                         id: d.id,
                         name: data.name || data.medicineName || "Unnamed",
                         quantity: Number(data.quantity || data.qty || 0),
-                        barangay: data.barangay || "All Areas",
-                        expiryDate: data.expiryDate || "N/A",
+                        barangay: data.barangay || "General",
+                        expiryDate: data.expiryDate || "---",
                         category: data.category || "General"
                     };
                 });
                 applyFilters();
-            }, (error) => {
-                console.error("Database Error:", error);
             });
         }
 
         function applyFilters() {
-            let filtered = [...allStocks];
             const search = document.getElementById('stock-search').value.toLowerCase();
-            const barangay = document.getElementById('filter-barangay').value;
-            const qtySort = document.getElementById('sort-quantity').value;
-            const expirySort = document.getElementById('sort-expiry').value;
+            const brgy = document.getElementById('filter-brgy').value;
+            const status = document.getElementById('filter-status').value;
+            const sortExp = document.getElementById('sort-expiry').value;
+            const sortQty = document.getElementById('sort-qty').value;
 
-            // Search
-            if(search) filtered = filtered.filter(s => s.name.toLowerCase().includes(search));
-            
-            // Barangay
-            if(barangay !== 'all') filtered = filtered.filter(s => s.barangay === barangay);
+            let filtered = masterData.filter(item => {
+                const matchesSearch = item.name.toLowerCase().includes(search);
+                const matchesBrgy = brgy === "all" || item.barangay === brgy;
+                const matchesStatus = status === "all" || 
+                                     (status === "low" ? item.quantity < 50 : item.quantity >= 50);
+                return matchesSearch && matchesBrgy && matchesStatus;
+            });
 
-            // Quantity Sorting
-            if(qtySort === 'low-high') filtered.sort((a,b) => a.quantity - b.quantity);
-            if(qtySort === 'high-low') filtered.sort((a,b) => b.quantity - a.quantity);
-
-            // Expiry Date Sorting (Handles Year-Month-Date)
-            if(expirySort !== 'default') {
-                filtered.sort((a,b) => {
-                    const dateA = new Date(a.expiryDate === "N/A" ? "2099-01-01" : a.expiryDate);
-                    const dateB = new Date(b.expiryDate === "N/A" ? "2099-01-01" : b.expiryDate);
-                    return expirySort === 'near' ? dateA - dateB : dateB - dateA;
-                });
-            }
+            // Sorting Logic
+            filtered.sort((a, b) => {
+                // Quantity Sort Priority
+                if (sortQty === 'high') return b.quantity - a.quantity;
+                if (sortQty === 'low') return a.quantity - b.quantity;
+                
+                // Expiry Sort (Secondary)
+                const dateA = new Date(a.expiryDate === "---" ? "2099-01-01" : a.expiryDate);
+                const dateB = new Date(b.expiryDate === "---" ? "2099-01-01" : b.expiryDate);
+                return sortExp === 'near' ? dateA - dateB : dateB - dateA;
+            });
 
             renderTable(filtered);
         }
 
         function renderTable(data) {
             const body = document.getElementById('stock-table-body');
-            if(data.length === 0) {
+            if (data.length === 0) {
                 body.innerHTML = `<tr><td colspan="5" class="py-20 text-center font-bold text-slate-400">No medicines found.</td></tr>`;
                 return;
             }
 
-            body.innerHTML = data.map(item => `
-                <tr class="hover:bg-slate-50/50 transition-all border-b border-slate-50">
+            body.innerHTML = data.map((item, index) => {
+                let statusClass = item.quantity < 50 ? "bg-red-500 text-white shadow-lg shadow-red-100" : "bg-emerald-500 text-white shadow-lg shadow-emerald-100";
+                
+                return `
+                <tr class="hover:bg-slate-50/80 transition-all animate-row" style="animation-delay: ${index * 0.05}s">
                     <td class="px-10 py-7">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
                             <div>
-                                <span class="font-extrabold text-navy text-lg block">${item.name}</span>
+                                <span class="font-extrabold text-lg block">${item.name}</span>
                                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${item.category}</span>
                             </div>
                         </div>
                     </td>
-                    <td class="px-8 py-7 font-bold text-slate-500">${item.barangay}</td>
-                    <td class="px-8 py-7"><span class="font-black text-navy">${item.quantity} units</span></td>
-                    <td class="px-8 py-7 font-bold text-slate-500">${item.expiryDate}</td>
-                    <td class="px-10 py-7 text-right">
-                        <span class="status-pill ${item.quantity < 50 ? 'status-low' : 'status-good'}">
+                    <td class="px-8 py-7 text-slate-500 font-bold text-xs uppercase tracking-wider">Brgy. ${item.barangay}</td>
+                    <td class="px-8 py-7 text-center font-black text-xl">${item.quantity.toLocaleString()}</td>
+                    <td class="px-8 py-7 text-slate-400 text-xs font-bold uppercase">${item.expiryDate}</td>
+                    <td class="px-10 py-7">
+                        <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest ${statusClass}">
                             ${item.quantity < 50 ? 'Low Stock' : 'Good Stock'}
                         </span>
                     </td>
-                </tr>`).join('');
+                </tr>`;
+            }).join('');
             lucide.createIcons();
         }
-
-        // Event listeners for all filter inputs
-        ['stock-search', 'filter-barangay', 'sort-quantity', 'sort-expiry'].forEach(id => {
-            document.getElementById(id).addEventListener('input', applyFilters);
-        });
 
         window.toggleSidebar = () => {
             const s = document.getElementById('sidebar');
             s.classList.toggle('sidebar-closed'); 
             s.classList.toggle('sidebar-open');
         };
+
+        ['stock-search', 'filter-brgy', 'filter-status', 'sort-expiry', 'sort-qty'].forEach(id => {
+            document.getElementById(id).addEventListener('input', applyFilters);
+        });
 
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
     </script>
