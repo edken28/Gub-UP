@@ -34,16 +34,16 @@
         }
         .animate-row { animation: slideIn 0.4s ease forwards; }
         
-        /* Status Badge Styling */
-        .badge { font-size: 9px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.025em; }
-        .badge-critical { background: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; }
-        .badge-low { background: #fff7ed; color: #f97316; border: 1px solid #ffedd5; }
-        .badge-moderate { background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; }
-        .badge-high { background: #f0f9ff; color: #0ea5e9; border: 1px solid #e0f2fe; }
-        .badge-good { background: #ecfdf5; color: #10b981; border: 1px solid #d1fae5; }
+        /* Dynamic Status Colors */
+        .badge { font-size: 9px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.025em; border-width: 1px; }
+        .status-critical { background: #fef2f2; color: #ef4444; border-color: #fee2e2; }
+        .status-low { background: #fff7ed; color: #f97316; border-color: #ffedd5; }
+        .status-moderate { background: #fffbeb; color: #d97706; border-color: #fef3c7; }
+        .status-high { background: #f0f9ff; color: #0ea5e9; border-color: #e0f2fe; }
+        .status-good { background: #ecfdf5; color: #10b981; border-color: #d1fae5; }
 
         .pulse-critical { animation: pulse-red 1.5s infinite; }
-        @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        @keyframes pulse-red { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         .dropdown-list {
             display: none; position: absolute; top: 100%; left: 0; right: 0;
@@ -73,71 +73,47 @@
                     </div>
                     <button id="close-sidebar" class="lg:hidden p-2 text-slate-400"><i data-lucide="x"></i></button>
                 </div>
-
                 <nav class="space-y-2">
-                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-500 hover:text-blue-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-blue-50 transition-all">
-                        <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
-                    </a>
-                    <a href="stock.html" class="flex items-center gap-3 text-slate-500 hover:text-emerald-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-emerald-50 transition-all">
-                        <i data-lucide="pill" class="w-5 h-5 text-emerald-500"></i> Medicine Stocks
-                    </a>
-                    <a href="reports.html" class="flex items-center gap-3 text-slate-500 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
-                        <i data-lucide="clipboard-list" class="w-5 h-5 text-amber-500"></i> Disease Reports
-                    </a>
-                    <a href="hotlines.html" class="flex items-center gap-3 text-slate-500 hover:text-sky-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-sky-50 transition-all">
-                        <i data-lucide="phone-call" class="w-5 h-5 text-sky-500"></i> Hotlines
-                    </a>
-                    <div class="pt-6 border-t mt-4">
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-5">Internal Management</p>
-                        <a href="bhw-console.html" class="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-emerald-100">
-                            <i data-lucide="user-plus" class="w-5 h-5"></i> BHW Console
-                        </a>
-                    </div>
+                    <a href="dashboard.html" class="flex items-center gap-3 text-slate-500 px-5 py-3.5 rounded-2xl font-semibold hover:bg-blue-50">Dashboard</a>
+                    <a href="stock.html" class="flex items-center gap-3 text-slate-500 px-5 py-3.5 rounded-2xl font-semibold hover:bg-emerald-50">Medicine Stocks</a>
+                    <a href="bh-console.html" class="flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-emerald-100">BHW Console</a>
                 </nav>
             </div>
-            <div class="mt-auto p-8 border-t border-slate-50">
-                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors">
-                    <i data-lucide="log-out" class="w-5 h-5"></i> Logout
-                </button>
+            <div class="mt-auto p-8 border-t">
+                <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold">Logout</button>
             </div>
         </aside>
 
         <main class="flex-1 min-w-0">
-            <header class="bg-white/80 backdrop-blur-md border-b px-6 py-4 sticky top-0 z-30 flex items-center justify-between lg:justify-end">
-                <button id="open-sidebar" class="lg:hidden p-2.5 bg-white border border-slate-200 rounded-xl text-blue-900 shadow-sm">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
-                <div class="flex items-center gap-4">
-                    <div class="hidden md:block text-right">
-                        <p id="brgy-badge" class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Loading Area...</p>
-                        <h2 class="text-slate-900 font-bold text-sm">Welcome, <span id="user-name-display" class="text-emerald-600">BHW User</span></h2>
-                    </div>
-                    <div class="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-600 border-2 border-white shadow-sm">
-                        <i data-lucide="user" class="w-5 h-5"></i>
+            <header class="bg-white/80 backdrop-blur-md border-b px-6 py-4 sticky top-0 z-30 flex items-center justify-end">
+                <div class="flex items-center gap-4 text-right">
+                    <div>
+                        <p id="brgy-badge" class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest"></p>
+                        <h2 class="text-slate-900 font-bold text-sm">Welcome, <span id="user-name-display" class="text-emerald-600"></span></h2>
                     </div>
                 </div>
             </header>
 
             <div class="p-6 lg:p-10 space-y-8 max-w-[1400px] mx-auto">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4" data-aos="fade-down">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <div class="relative flex-1 w-full">
                         <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5"></i>
-                        <input type="text" id="main-search" placeholder="Search Barangay inventory..." class="w-full pl-14 pr-4 py-4 bg-white border border-slate-100 rounded-[1.5rem] outline-none focus:ring-2 ring-emerald-100 shadow-sm font-semibold text-slate-700">
+                        <input type="text" id="main-search" placeholder="Search inventory..." class="w-full pl-14 pr-4 py-4 bg-white border border-slate-100 rounded-[1.5rem] outline-none">
                     </div>
-                    <button onclick="openAddModal()" class="w-full md:w-auto bg-emerald-600 text-white px-10 py-4 rounded-[1.5rem] font-bold text-sm flex items-center justify-center gap-3 hover:bg-emerald-700 shadow-xl shadow-emerald-100 transition-all active:scale-95">
-                        <i data-lucide="plus-circle" class="w-5 h-5"></i> Add New Stock
+                    <button onclick="openAddModal()" class="bg-emerald-600 text-white px-10 py-4 rounded-[1.5rem] font-bold flex items-center gap-3">
+                        <i data-lucide="plus-circle"></i> Add New Stock
                     </button>
                 </div>
 
-                <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden" data-aos="fade-up">
+                <div class="bg-white rounded-[2rem] border border-slate-100 shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left whitespace-nowrap">
-                            <thead class="bg-slate-50/50 border-b border-slate-50">
+                            <thead class="bg-slate-50/50 border-b">
                                 <tr class="text-[11px] font-black text-slate-400 uppercase tracking-widest">
                                     <th class="px-10 py-6">Medicine Identity</th>
                                     <th class="px-8 py-6">Date Added</th>
                                     <th class="px-8 py-6">Expiration</th>
-                                    <th class="px-8 py-6">Status</th>
+                                    <th class="px-8 py-6">Status Level</th>
                                     <th class="px-8 py-6 text-center">In-Stock</th>
                                     <th class="px-10 py-6 text-right">Actions</th>
                                 </tr>
@@ -152,197 +128,154 @@
 
     <div id="item-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="closeModal()"></div>
-        <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden scale-95 transition-all duration-300" id="modal-container">
-            <div class="p-10">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
-                        <i data-lucide="pill" class="w-6 h-6"></i>
+        <div class="relative bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl p-10 overflow-hidden">
+            <h3 class="text-xl font-bold text-slate-900 mb-6">Medicine Entry</h3>
+            <form id="item-form" class="space-y-5">
+                <input type="hidden" id="entry-id">
+                
+                <div class="relative">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Medicine Name</label>
+                    <input type="text" id="medicine-input" autocomplete="off" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold text-slate-700 outline-none">
+                    <div id="medicine-dropdown" class="dropdown-list"></div>
+                    <input type="hidden" id="med-name" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Date Added</label>
+                        <input type="date" id="med-added-date" required class="w-full p-4 bg-slate-50 border rounded-2xl font-bold text-slate-700 outline-none">
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-slate-900">Medicine Entry</h3>
-                        <p class="text-xs font-semibold text-slate-400">Update your barangay supply</p>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Expiration</label>
+                        <input type="date" id="med-expiry" required class="w-full p-4 bg-slate-50 border rounded-2xl font-bold text-slate-700 outline-none">
                     </div>
                 </div>
-                <form id="item-form" class="space-y-5">
-                    <input type="hidden" id="entry-id">
-                    
-                    <div class="relative">
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Select Medicine</label>
-                        <input type="text" id="medicine-input" autocomplete="off" placeholder="Start typing name..." class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none focus:ring-2 ring-emerald-100">
-                        <div id="medicine-dropdown" class="dropdown-list custom-scrollbar"></div>
-                        <input type="hidden" id="med-name" required>
-                    </div>
 
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Date Added (On Web)</label>
-                        <input type="date" id="med-added-date" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Quantity</label>
+                        <input type="number" id="med-count" required class="w-full p-4 bg-slate-50 border rounded-2xl font-bold text-slate-700 outline-none">
                     </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Quantity</label>
-                            <input type="number" id="med-count" required min="1" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Unit</label>
-                            <select id="med-unit" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none">
-                                <option value="Tablets/Pcs">Tablets/Pcs</option>
-                                <option value="Bottles">Bottles</option>
-                                <option value="Boxes">Boxes</option>
-                                <option value="Capsules">Capsules</option>
-                            </select>
-                        </div>
-                    </div>
-
                     <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Expiration Date</label>
-                        <input type="date" id="med-expiry" required class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl font-bold text-slate-700 outline-none">
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Unit</label>
+                        <select id="med-unit" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold text-slate-700 outline-none">
+                            <option value="Tablets/Pcs">Tablets/Pcs</option>
+                            <option value="Bottles">Bottles</option>
+                            <option value="Boxes">Boxes</option>
+                        </select>
                     </div>
+                </div>
 
-                    <div class="flex gap-4 pt-6">
-                        <button type="button" onclick="closeModal()" class="flex-1 font-bold text-slate-400 hover:text-slate-600 transition-colors">Cancel</button>
-                        <button type="submit" class="flex-[2] py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-xl shadow-emerald-100 hover:bg-emerald-700 transition-all">Save Record</button>
-                    </div>
-                </form>
-            </div>
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Stock Ranking/Level</label>
+                    <select id="med-rank" required class="w-full p-4 bg-slate-50 border rounded-2xl font-bold text-slate-700 outline-none ring-2 ring-emerald-50">
+                        <option value="critical">Critical (Urgent Reorder)</option>
+                        <option value="low">Low Stock</option>
+                        <option value="moderate" selected>Moderate</option>
+                        <option value="high">High</option>
+                        <option value="good">Good / Healthy</option>
+                    </select>
+                </div>
+
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="closeModal()" class="flex-1 font-bold text-slate-400">Cancel</button>
+                    <button type="submit" class="flex-[2] py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-xl">Save Record</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc, getDoc, query, orderBy, Timestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc, getDoc, query, Timestamp, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE", authDomain: "gub-up.firebaseapp.com", projectId: "gub-up", storageBucket: "gub-up.firebasestorage.app", messagingSenderId: "75119179497", appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const medicineList = ["Paracetamol (Acetaminophen)", "Ibuprofen", "Mefenamic acid", "Aspirin", "Naproxen", "Diclofenac", "Celecoxib", "Ketoprofen", "Phenylephrine", "Pseudoephedrine", "Chlorphenamine", "Diphenhydramine", "Cetirizine", "Loratadine", "Carbocisteine", "Ambroxol", "Guaifenesin", "Dextromethorphan", "Salbutamol inhaler", "Oxymetazoline nasal spray", "Steam inhalation solutions", "Fexofenadine", "Levocetirizine", "Hydrocortisone cream", "Antacids (Aluminum hydroxide, Magnesium hydroxide)", "Sodium bicarbonate", "Omeprazole", "Lansoprazole", "Pantoprazole", "Esomeprazole", "Loperamide", "Oral Rehydration Salts (ORS)", "Simethicone", "Domperidone", "Metoclopramide", "Hyoscine butylbromide", "Povidone iodine", "Hydrogen peroxide", "Mupirocin ointment", "Clotrimazole cream", "Ketoconazole cream", "Calamine lotion", "Zinc oxide", "Permethrin", "Acyclovir cream", "Amoxicillin", "Amoxicillin + Clavulanic acid", "Azithromycin", "Clarithromycin", "Cefuroxime", "Ceftriaxone", "Ciprofloxacin", "Levofloxacin", "Doxycycline", "Metronidazole", "Co-trimoxazole", "Isoniazid", "Rifampicin", "Pyrazinamide", "Ethambutol", "Fixed-dose TB combinations", "Amlodipine", "Losartan", "Telmisartan", "Captopril", "Enalapril", "Metoprolol", "Atenolol", "Hydrochlorothiazide", "Metformin", "Glimepiride", "Gliclazide", "Insulin (Regular, NPH, Glargine)", "Sitagliptin", "Empagliflozin", "Atorvastatin", "Simvastatin", "Rosuvastatin", "Budesonide inhaler", "Fluticasone", "Ipratropium bromide", "Fluoxetine", "Sertraline", "Escitalopram", "Amitriptyline", "Risperidone", "Quetiapine", "Alprazolam", "Diazepam", "Vitamin A", "Vitamin B1 (Thiamine)", "Vitamin B6", "Vitamin B12", "Vitamin C", "Vitamin D3", "Vitamin E", "Vitamin K", "B-complex capsules", "B1 + B6 + B12 combinations", "Iron (Ferrous sulfate)", "Calcium carbonate", "Calcium + Vitamin D", "Magnesium", "Zinc", "Potassium supplements", "Adult multivitamins", "Children’s multivitamins", "Prenatal vitamins", "Senior vitamins", "Probiotics", "Fish oil (Omega-3)", "Glutathione", "Antiseptic alcohol", "Hand sanitizer", "Thermometer", "Blood pressure monitor", "Glucometer", "Nebulizer solution", "Activated charcoal", "Epinephrine injection"];
-
         let userBrgy = "";
         let allItems = [];
-
-        document.getElementById('open-sidebar').onclick = () => { document.getElementById('sidebar').classList.add('sidebar-open'); document.getElementById('overlay').classList.add('active'); };
-        document.getElementById('close-sidebar').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
-        document.getElementById('overlay').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const docSnap = await getDoc(doc(db, "users", user.uid));
-                if (docSnap.exists() && docSnap.data().role === "bhw") {
+                if (docSnap.exists()) {
                     userBrgy = docSnap.data().barangay;
                     document.getElementById('user-name-display').innerText = docSnap.data().name;
                     document.getElementById('brgy-badge').innerText = `Brgy. ${userBrgy}`;
                     document.body.classList.add('auth-ready');
-                    lucide.createIcons();
-                    AOS.init({ duration: 800, once: true });
                     init();
-                } else { window.location.href = "dashboard.html"; }
+                }
             } else { window.location.href = "login.html"; }
         });
 
         function init() {
             const q = query(collection(db, "medicine_inventory"), where("barangay", "==", userBrgy));
             onSnapshot(q, (snap) => {
-                allItems = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-                                    .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                allItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                 renderTable(allItems);
             });
         }
 
-        /* Helper to determine status based on quantity.
-           Adjust thresholds as needed for your healthcare requirements.
-        */
-        function getStatus(count) {
-            if (count <= 10) return { label: 'Critical', class: 'badge-critical pulse-critical' };
-            if (count <= 30) return { label: 'Low', class: 'badge-low' };
-            if (count <= 70) return { label: 'Moderate', class: 'badge-moderate' };
-            if (count <= 150) return { label: 'High', class: 'badge-high' };
-            return { label: 'Good', class: 'badge-good' };
-        }
-
         function renderTable(data) {
             const body = document.getElementById('inventory-table-body');
-            if (data.length === 0) {
-                body.innerHTML = `<tr><td colspan="6" class="py-20 text-center text-slate-400 font-bold">No records found for ${userBrgy}.</td></tr>`;
-                return;
-            }
             body.innerHTML = data.map((item, index) => {
-                const status = getStatus(item.count || 0);
+                const rank = item.rank || 'moderate';
+                const pulseClass = rank === 'critical' ? 'pulse-critical' : '';
+                
                 return `
-                <tr class="hover:bg-slate-50 transition-all animate-row" style="animation-delay: ${index * 0.05}s">
+                <tr class="hover:bg-slate-50 transition-all animate-row">
                     <td class="px-10 py-7">
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center border border-emerald-100"><i data-lucide="pill" class="w-5 h-5"></i></div>
-                            <div>
-                                <span class="font-bold text-slate-800 text-sm leading-tight block">${item.name}</span>
-                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">${item.unit}</span>
-                            </div>
-                        </div>
+                        <span class="font-bold text-slate-800 block">${item.name}</span>
+                        <span class="text-[10px] text-slate-400 font-bold uppercase">${item.unit}</span>
                     </td>
-                    <td class="px-8 py-7"><span class="text-slate-500 font-bold text-[12px]">${item.addedDate || 'N/A'}</span></td>
+                    <td class="px-8 py-7 text-slate-500 font-bold text-xs">${item.addedDate || 'N/A'}</td>
                     <td class="px-8 py-7"><span class="px-3 py-1 bg-slate-100 rounded-full text-slate-500 font-bold text-[11px]">${item.expiryDate || 'N/A'}</span></td>
                     <td class="px-8 py-7">
-                        <span class="badge ${status.class}">${status.label}</span>
+                        <span class="badge status-${rank} ${pulseClass}">${rank}</span>
                     </td>
-                    <td class="px-8 py-7 text-center">
-                        <span class="font-bold text-lg ${item.count <= 10 ? 'text-red-500' : 'text-slate-700'}">${(item.count || 0).toLocaleString()}</span>
-                    </td>
+                    <td class="px-8 py-7 text-center font-bold text-lg">${(item.count || 0).toLocaleString()}</td>
                     <td class="px-10 py-7 text-right">
-                        <div class="flex justify-end gap-2">
-                            <button onclick="editEntry('${item.id}')" class="p-2.5 bg-white border border-slate-100 text-slate-400 rounded-xl hover:bg-blue-500 hover:text-white transition-all shadow-sm"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-                            <button onclick="deleteEntry('${item.id}')" class="p-2.5 bg-white border border-slate-100 text-slate-400 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </div>
+                        <button onclick="editEntry('${item.id}')" class="p-2 border rounded-xl hover:bg-blue-500 hover:text-white transition-all"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
                     </td>
                 </tr>`}).join('');
             lucide.createIcons();
         }
 
-        const mInput = document.getElementById('medicine-input');
-        const mDrop = document.getElementById('medicine-dropdown');
-        const hInput = document.getElementById('med-name');
-
-        mInput.oninput = () => {
-            const q = mInput.value.toLowerCase();
-            const filtered = medicineList.filter(m => m.toLowerCase().includes(q));
-            mDrop.innerHTML = filtered.map(m => `<div class="dropdown-item" onclick="selectMedicine('${m}')">${m}</div>`).join('');
-            mDrop.classList.toggle('active', filtered.length > 0 && q.length > 0);
-        };
-
-        window.selectMedicine = (n) => { mInput.value = n; hInput.value = n; mDrop.classList.remove('active'); };
-        
         window.openAddModal = () => { 
-            document.getElementById('item-form').reset(); 
-            document.getElementById('entry-id').value = ""; 
+            document.getElementById('item-form').reset();
+            document.getElementById('entry-id').value = "";
             document.getElementById('med-added-date').value = new Date().toISOString().split('T')[0];
             document.getElementById('item-modal').classList.remove('hidden'); 
         };
         
-        window.closeModal = () => { document.getElementById('item-modal').classList.add('hidden'); };
+        window.closeModal = () => document.getElementById('item-modal').classList.add('hidden');
 
         window.editEntry = (id) => {
             const item = allItems.find(c => c.id === id);
             document.getElementById('entry-id').value = id;
-            mInput.value = item.name; hInput.value = item.name;
+            document.getElementById('medicine-input').value = item.name;
+            document.getElementById('med-name').value = item.name;
             document.getElementById('med-added-date').value = item.addedDate;
             document.getElementById('med-count').value = item.count;
             document.getElementById('med-unit').value = item.unit;
             document.getElementById('med-expiry').value = item.expiryDate;
+            document.getElementById('med-rank').value = item.rank || 'moderate';
             document.getElementById('item-modal').classList.remove('hidden');
         };
-
-        window.deleteEntry = async (id) => { if(confirm("Permanently delete this record?")) await deleteDoc(doc(db, "medicine_inventory", id)); };
 
         document.getElementById('item-form').onsubmit = async (e) => {
             e.preventDefault();
             const id = document.getElementById('entry-id').value;
             const data = { 
-                name: hInput.value || mInput.value, 
+                name: document.getElementById('medicine-input').value, 
                 addedDate: document.getElementById('med-added-date').value,
                 count: parseInt(document.getElementById('med-count').value), 
                 unit: document.getElementById('med-unit').value, 
                 expiryDate: document.getElementById('med-expiry').value, 
+                rank: document.getElementById('med-rank').value, // SAVING THE RANK
                 barangay: userBrgy, 
                 createdAt: Timestamp.now() 
             };
@@ -350,7 +283,6 @@
             closeModal();
         };
 
-        document.getElementById('main-search').oninput = (e) => { const t = e.target.value.toLowerCase(); renderTable(allItems.filter(c => c.name.toLowerCase().includes(t))); };
         document.getElementById('logout-btn').onclick = () => signOut(auth).then(() => window.location.href = "login.html");
     </script>
 </body>
