@@ -138,7 +138,7 @@
                         <table class="w-full text-left whitespace-nowrap">
                             <thead class="bg-slate-50 border-b border-slate-100 text-slate-400 text-[11px] font-black uppercase tracking-widest">
                                 <tr>
-                                    <th class="px-10 py-7">Medicine Name</th>
+                                    <th class="px-10 py-7">Medicine Details</th>
                                     <th class="px-8 py-7">Barangay</th>
                                     <th class="px-8 py-7 text-center">Quantity</th>
                                     <th class="px-8 py-7">Expiry Date</th>
@@ -177,7 +177,8 @@
                             document.getElementById('bhw-link').classList.remove('hidden'); 
                             document.getElementById('rhu-link').classList.remove('hidden'); 
                         } else {
-                            document.getElementById(`${ud.role}-link`).classList.remove('hidden');
+                            const link = document.getElementById(`${ud.role}-link`);
+                            if (link) link.classList.remove('hidden');
                         }
                     }
                 }
@@ -189,15 +190,19 @@
 
         function loadData() {
             onSnapshot(collection(db, "medicine_stocks"), (snap) => {
-                masterData = snap.docs.map(d => ({ 
-                    id: d.id, 
-                    ...d.data(),
-                    // Fallback for fields
-                    name: d.data().name || d.data().medicineName || "Unknown",
-                    quantity: Number(d.data().quantity || d.data().qty || 0),
-                    barangay: d.data().barangay || "Unspecified",
-                    expiry: d.data().expiryDate || "---"
-                }));
+                masterData = snap.docs.map(d => {
+                    const data = d.data();
+                    // Matching your database screenshot fields exactly:
+                    return {
+                        id: d.id,
+                        name: data.name || "Unknown Medicine",
+                        quantity: Number(data.count || 0), // Use 'count' from your database
+                        barangay: data.barangay || "General",
+                        expiry: data.expiryDate || "N/A",
+                        unit: data.unit || "",
+                        createdAt: data.createdAt // Used for year filtering
+                    };
+                });
                 applyFilters();
             });
         }
@@ -210,22 +215,25 @@
             const sortValue = document.getElementById('filter-sort').value;
 
             let filtered = masterData.filter(item => {
+                // Year logic matches your reports page
                 const date = item.createdAt?.toDate ? item.createdAt.toDate() : null;
+                const matchesYear = date ? date.getFullYear().toString() === yearValue : true;
+                
                 const matchesSearch = item.name.toLowerCase().includes(searchTerm);
                 const matchesBrgy = brgyValue === "all" || item.barangay === brgyValue;
-                const matchesYear = date ? date.getFullYear().toString() === yearValue : true;
                 const matchesStatus = statusValue === "all" || 
                                      (statusValue === "low" ? item.quantity < 50 : item.quantity >= 50);
                 
                 return matchesSearch && matchesBrgy && matchesYear && matchesStatus;
             });
 
+            // Sorting
             filtered.sort((a, b) => {
                 if (sortValue === 'qty_high') return b.quantity - a.quantity;
                 if (sortValue === 'qty_low') return a.quantity - b.quantity;
                 const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : 0;
                 const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : 0;
-                return dateB - dateA;
+                return dateB - dateA; // Default to Newly Added
             });
 
             renderTable(filtered);
@@ -233,24 +241,32 @@
 
         function renderTable(data) {
             const body = document.getElementById('stock-table-body');
+            if (data.length === 0) {
+                body.innerHTML = `<tr><td colspan="5" class="py-20 text-center font-bold text-slate-300">No matching stocks found for this year.</td></tr>`;
+                return;
+            }
+
             body.innerHTML = data.map((item, index) => {
                 const isLow = item.quantity < 50;
-                const statusClass = isLow ? "bg-red-500 text-white shadow-lg shadow-red-100" : "bg-emerald-500 text-white shadow-lg shadow-emerald-100";
+                const statusClass = isLow ? "bg-red-500 text-white" : "bg-emerald-500 text-white";
                 
                 return `
                 <tr class="hover:bg-slate-50/80 transition-all animate-row" style="animation-delay: ${index * 0.05}s">
                     <td class="px-10 py-7">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
-                            <span class="font-extrabold text-lg">${item.name}</span>
+                            <div>
+                                <span class="font-extrabold text-lg block leading-none mb-1">${item.name}</span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${item.unit}</span>
+                            </div>
                         </div>
                     </td>
                     <td class="px-8 py-7 text-slate-500 font-bold text-xs uppercase tracking-wider">Brgy. ${item.barangay}</td>
-                    <td class="px-8 py-7 text-center font-black text-xl">${item.quantity.toLocaleString()}</td>
+                    <td class="px-8 py-7 text-center font-black text-xl text-navy">${item.quantity.toLocaleString()}</td>
                     <td class="px-8 py-7 text-slate-400 text-xs font-bold uppercase">${item.expiry}</td>
                     <td class="px-10 py-7">
-                        <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest ${statusClass}">
-                            ${isLow ? 'Low Stock' : 'Good Stock'}
+                        <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest ${statusClass} shadow-md shadow-slate-100">
+                            ${isLow ? 'Critical' : 'Available'}
                         </span>
                     </td>
                 </tr>`;
