@@ -27,6 +27,13 @@
         }
         @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-row { animation: slideIn 0.3s ease forwards; opacity: 0; }
+
+        /* Dynamic Status Colors to match BHW Console */
+        .status-critical { background: #fee2e2; color: #ef4444; }
+        .status-low { background: #ffedd5; color: #f97316; }
+        .status-moderate { background: #fef3c7; color: #d97706; }
+        .status-high { background: #e0f2fe; color: #0ea5e9; }
+        .status-good { background: #d1fae5; color: #10b981; }
     </style>
 </head>
 <body class="min-h-screen overflow-x-hidden">
@@ -73,7 +80,7 @@
                     </div>
                 </nav>
             </div>
-            <div class="mt-auto p-8">
+            <div class="mt-auto p-8 border-t">
                 <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors">
                     <i data-lucide="log-out"></i> Logout
                 </button>
@@ -116,11 +123,14 @@
                         </select>
                     </div>
                     <div class="flex flex-col gap-1.5">
-                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Stock Level</label>
+                        <label class="text-[10px] font-black uppercase text-slate-400 px-2 tracking-widest">Stock Level Ranking</label>
                         <select id="filter-status" class="filter-select w-full px-5 py-4 rounded-2xl border border-slate-100 bg-white font-bold text-navy outline-none shadow-sm">
-                            <option value="all">All Levels</option>
-                            <option value="low">Low (< 50)</option>
-                            <option value="good">Good (50+)</option>
+                            <option value="all">All Ranks</option>
+                            <option value="critical">Critical</option>
+                            <option value="low">Low</option>
+                            <option value="moderate">Moderate</option>
+                            <option value="high">High</option>
+                            <option value="good">Good</option>
                         </select>
                     </div>
                     <div class="flex flex-col gap-1.5">
@@ -140,9 +150,10 @@
                                 <tr>
                                     <th class="px-10 py-7">Medicine Details</th>
                                     <th class="px-8 py-7">Barangay</th>
+                                    <th class="px-8 py-7">Date Added</th>
                                     <th class="px-8 py-7 text-center">Quantity</th>
                                     <th class="px-8 py-7">Expiry Date</th>
-                                    <th class="px-10 py-7">Status</th>
+                                    <th class="px-10 py-7">Stock Ranking</th>
                                 </tr>
                             </thead>
                             <tbody id="stock-table-body" class="divide-y divide-slate-50 font-medium text-navy"></tbody>
@@ -158,15 +169,7 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE",
-            authDomain: "gub-up.firebaseapp.com",
-            projectId: "gub-up",
-            storageBucket: "gub-up.firebasestorage.app",
-            messagingSenderId: "75119179497",
-            appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278"
-        };
-
+        const firebaseConfig = { apiKey: "AIzaSyB2OEoFPk-eNzqSwK-JFXBrmssU01NeVkE", authDomain: "gub-up.firebaseapp.com", projectId: "gub-up", storageBucket: "gub-up.firebasestorage.app", messagingSenderId: "75119179497", appId: "1:75119179497:web:2e0195a3dfd4fb03e5a278" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -197,9 +200,7 @@
         });
 
         function loadData() {
-            // Updated: Listening to BOTH collections found in your database
             const targets = ["medicine_stocks", "medicine_inventory"];
-            
             targets.forEach(colName => {
                 onSnapshot(collection(db, colName), (snap) => {
                     const colData = snap.docs.map(d => {
@@ -207,15 +208,15 @@
                         return {
                             id: d.id,
                             name: data.name || "Unknown Medicine",
-                            quantity: Number(data.count || 0), // DB uses 'count'
+                            quantity: Number(data.count || 0),
                             barangay: data.barangay || "General",
-                            expiry: data.expiryDate || "N/A", // DB uses 'expiryDate'
+                            addedDate: data.addedDate || "N/A",
+                            expiry: data.expiryDate || "N/A",
                             unit: data.unit || "", 
-                            createdAt: data.createdAt // timestamp
+                            rank: data.rank || "moderate", // MANUAL RANK FROM BHW
+                            createdAt: data.createdAt 
                         };
                     });
-
-                    // Merge and prevent duplicates
                     masterData = [...masterData.filter(m => !snap.docs.find(d => d.id === m.id)), ...colData];
                     applyFilters();
                 });
@@ -230,23 +231,18 @@
             const sortValue = document.getElementById('filter-sort').value;
 
             let filtered = masterData.filter(item => {
-                // Year logic: Check both createdAt and the year inside expiryDate
                 const date = item.createdAt?.toDate ? item.createdAt.toDate() : null;
                 const createdYear = date ? date.getFullYear().toString() : "";
                 const expiryYear = item.expiry && item.expiry.includes('-') ? item.expiry.split('-')[0] : "";
-                
-                // Show if either the creation year OR expiry year matches selected year
                 const matchesYear = (createdYear === yearValue || expiryYear === yearValue);
                 
                 const matchesSearch = item.name.toLowerCase().includes(searchTerm);
                 const matchesBrgy = (brgyValue === "all" || item.barangay === brgyValue);
-                const matchesStatus = (statusValue === "all" || 
-                                     (statusValue === "low" ? item.quantity < 50 : item.quantity >= 50));
+                const matchesStatus = (statusValue === "all" || item.rank === statusValue);
                 
                 return matchesSearch && matchesBrgy && matchesYear && matchesStatus;
             });
 
-            // Sorting logic
             filtered.sort((a, b) => {
                 if (sortValue === 'qty_high') return b.quantity - a.quantity;
                 if (sortValue === 'qty_low') return a.quantity - b.quantity;
@@ -261,13 +257,12 @@
         function renderTable(data) {
             const body = document.getElementById('stock-table-body');
             if (data.length === 0) {
-                body.innerHTML = `<tr><td colspan="5" class="py-20 text-center font-bold text-slate-300">No records found for ${document.getElementById('filter-year').value}.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="6" class="py-20 text-center font-bold text-slate-300">No records found.</td></tr>`;
                 return;
             }
 
             body.innerHTML = data.map((item, index) => {
-                const isLow = item.quantity < 50;
-                const statusClass = isLow ? "bg-red-500 text-white shadow-lg shadow-red-100" : "bg-emerald-500 text-white shadow-lg shadow-emerald-100";
+                const rank = item.rank || 'moderate';
                 
                 return `
                 <tr class="hover:bg-slate-50/80 transition-all animate-row" style="animation-delay: ${index * 0.05}s">
@@ -276,16 +271,17 @@
                             <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
                             <div>
                                 <span class="font-extrabold text-lg block leading-none mb-1">${item.name}</span>
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${item.unit}</span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${item.unit || 'pcs'}</span>
                             </div>
                         </div>
                     </td>
                     <td class="px-8 py-7 text-slate-500 font-bold text-xs uppercase tracking-wider">Brgy. ${item.barangay}</td>
+                    <td class="px-8 py-7 text-slate-400 font-bold text-xs uppercase">${item.addedDate}</td>
                     <td class="px-8 py-7 text-center font-black text-xl text-navy">${item.quantity.toLocaleString()}</td>
                     <td class="px-8 py-7 text-slate-400 text-xs font-bold uppercase">${item.expiry}</td>
                     <td class="px-10 py-7">
-                        <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest ${statusClass}">
-                            ${isLow ? 'Critical' : 'Available'}
+                        <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest status-${rank}">
+                            ${rank}
                         </span>
                     </td>
                 </tr>`;
