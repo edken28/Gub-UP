@@ -15,6 +15,7 @@
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
         
+        /* The Month Selector - Fixed Visibility */
         .month-selector { display: none; } 
 
         #sidebar { 
@@ -59,13 +60,13 @@
 
                 <nav class="space-y-2">
                     <a href="dashboard.html" class="flex items-center gap-3 bg-blue-600 text-white px-5 py-3.5 rounded-2xl font-semibold shadow-xl shadow-blue-100">
-                        <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+                        <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
                     </a>
                     <a href="stock.html" class="flex items-center gap-3 text-slate-500 hover:text-emerald-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-emerald-50 transition-all">
                         <i data-lucide="pill" class="w-5 h-5 text-emerald-500"></i> Medicine Stocks
                     </a>
                     <a href="reports.html" class="flex items-center gap-3 text-slate-500 hover:text-amber-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-amber-50 transition-all">
-                        <i data-lucide="file-text" class="w-5 h-5 text-amber-500"></i> Disease Reports
+                        <i data-lucide="clipboard-list" class="w-5 h-5 text-amber-500"></i> Disease Reports
                     </a>
                     <a href="hotlines.html" class="flex items-center gap-3 text-slate-500 hover:text-sky-600 px-5 py-3.5 rounded-2xl font-semibold hover:bg-sky-50 transition-all">
                         <i data-lucide="phone-call" class="w-5 h-5 text-sky-500"></i> Hotlines
@@ -82,7 +83,7 @@
                     </div>
                 </nav>
             </div>
-            <div class="mt-auto p-8">
+            <div class="mt-auto p-8 border-t border-slate-50">
                 <button id="logout-btn" class="flex items-center gap-3 text-slate-400 hover:text-red-500 font-bold w-full transition-colors">
                     <i data-lucide="log-out" class="w-5 h-5"></i> Logout
                 </button>
@@ -106,23 +107,24 @@
             </header>
 
             <div class="p-6 lg:p-10 space-y-8 max-w-[1400px] mx-auto">
-                
                 <div class="bg-white rounded-[2rem] border border-slate-100 p-6 lg:p-8 shadow-sm" data-aos="fade-up">
                     <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-8">
                         <div>
-                            <h3 class="text-xl font-bold text-slate-800">Disease Statistics</h3>
+                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">Disease Statistics</h3>
                             <p class="text-xs font-bold text-red-500 mt-1 uppercase tracking-widest"><span id="d-label">All Diseases</span> • Total: <span id="d-total">0</span></p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2 w-full xl:w-auto">
-                            <select id="d-mode" class="flex-1 xl:flex-none p-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none border-none">
+                            <select id="d-mode" class="flex-1 xl:flex-none p-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none">
                                 <option value="yearly">Yearly View</option>
                                 <option value="monthly">Monthly View</option>
                             </select>
-                            <select id="d-year" class="flex-1 xl:flex-none p-3 bg-blue-50 text-blue-600 rounded-xl font-bold text-[11px] outline-none border-none"></select>
-                            <select id="d-month" class="month-selector flex-1 xl:flex-none p-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-[11px] outline-none border-none"></select>
-                            <select id="d-brgy" class="flex-1 xl:flex-none p-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none border-none"></select>
+                            <select id="d-year" class="flex-1 xl:flex-none p-3 bg-blue-50 text-blue-600 rounded-xl font-bold text-[11px] outline-none"></select>
+                            
+                            <select id="d-month" class="month-selector flex-1 xl:flex-none p-3 bg-amber-50 text-amber-600 rounded-xl font-bold text-[11px] outline-none"></select>
+                            
+                            <select id="d-brgy" class="flex-1 xl:flex-none p-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none"></select>
                             <div class="relative w-full xl:w-64">
-                                <input type="text" id="d-search" placeholder="Search disease..." class="w-full px-4 py-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none border-none">
+                                <input type="text" id="d-search" placeholder="Search disease..." class="w-full px-4 py-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none">
                                 <div id="d-results" class="search-results"></div>
                             </div>
                         </div>
@@ -133,19 +135,21 @@
                 <div class="bg-white rounded-[2rem] border border-slate-100 p-6 lg:p-8 shadow-sm" data-aos="fade-up" data-aos-delay="100">
                     <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-8">
                         <div>
-                            <h3 class="text-xl font-bold text-slate-800">Inventory Levels</h3>
+                            <h3 class="text-xl font-bold text-slate-800 tracking-tight">Inventory Levels</h3>
                             <p class="text-xs font-bold text-emerald-500 mt-1 uppercase tracking-widest"><span id="m-label">All Medicines</span> • Total: <span id="m-total">0</span></p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2 w-full xl:w-auto">
-                            <select id="m-mode" class="flex-1 xl:flex-none p-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none border-none">
+                            <select id="m-mode" class="flex-1 xl:flex-none p-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none">
                                 <option value="yearly">Yearly View</option>
                                 <option value="monthly">Monthly View</option>
                             </select>
-                            <select id="m-year" class="flex-1 xl:flex-none p-3 bg-blue-50 text-blue-600 rounded-xl font-bold text-[11px] outline-none border-none"></select>
-                            <select id="m-month" class="month-selector flex-1 xl:flex-none p-3 bg-emerald-50 text-emerald-600 rounded-xl font-bold text-[11px] outline-none border-none"></select>
-                            <select id="m-brgy" class="flex-1 xl:flex-none p-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none border-none"></select>
+                            <select id="m-year" class="flex-1 xl:flex-none p-3 bg-blue-50 text-blue-600 rounded-xl font-bold text-[11px] outline-none"></select>
+                            
+                            <select id="m-month" class="month-selector flex-1 xl:flex-none p-3 bg-emerald-50 text-emerald-600 rounded-xl font-bold text-[11px] outline-none"></select>
+                            
+                            <select id="m-brgy" class="flex-1 xl:flex-none p-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none"></select>
                             <div class="relative w-full xl:w-64">
-                                <input type="text" id="m-search" placeholder="Search medicine..." class="w-full px-4 py-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none border-none">
+                                <input type="text" id="m-search" placeholder="Search medicine..." class="w-full px-4 py-3 bg-slate-100 rounded-xl font-bold text-[11px] outline-none">
                                 <div id="m-results" class="search-results"></div>
                             </div>
                         </div>
@@ -181,39 +185,47 @@
         fill('d-month', months, true); fill('m-month', months, true);
         fill('d-brgy', barangays); fill('m-brgy', barangays);
 
+        // Sidebar Control
         document.getElementById('open-sidebar').onclick = () => { document.getElementById('sidebar').classList.add('sidebar-open'); document.getElementById('overlay').classList.add('active'); };
         document.getElementById('close-sidebar').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
         document.getElementById('overlay').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
 
-        const toggleMonth = (prefix) => {
+        // DIRECT MONTH VISIBILITY FIX
+        const handleModeChange = (prefix) => {
             const mode = document.getElementById(`${prefix}-mode`).value;
             const monthEl = document.getElementById(`${prefix}-month`);
-            monthEl.style.display = (mode === 'monthly') ? "inline-block" : "none";
-            sync();
+            if (mode === 'monthly') {
+                monthEl.style.display = 'inline-block';
+            } else {
+                monthEl.style.display = 'none';
+            }
+            sync(); // Refresh data
         };
-        document.getElementById('d-mode').onchange = () => toggleMonth('d');
-        document.getElementById('m-mode').onchange = () => toggleMonth('m');
+
+        document.getElementById('d-mode').onchange = () => handleModeChange('d');
+        document.getElementById('m-mode').onchange = () => handleModeChange('m');
 
         const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
-        const dChart = new Chart(document.getElementById('diseaseChart'), { type: 'line', data: { labels: [], datasets: [{ label: 'Cases', data: [], borderColor: '#3b82f6', backgroundColor: '#3b82f611', fill: true, tension: 0.4 }] }, options: opt });
-        const mChart = new Chart(document.getElementById('stockChart'), { type: 'line', data: { labels: [], datasets: [{ label: 'Stocks', data: [], borderColor: '#10b981', backgroundColor: '#10b98111', fill: true, tension: 0.4 }] }, options: opt });
+        const dChart = new Chart(document.getElementById('diseaseChart'), { type: 'line', data: { labels: [], datasets: [{ label: '', data: [], borderColor: '#3b82f6', backgroundColor: '#3b82f611', fill: true, tension: 0.4 }] }, options: opt });
+        const mChart = new Chart(document.getElementById('stockChart'), { type: 'line', data: { labels: [], datasets: [{ label: '', data: [], borderColor: '#10b981', backgroundColor: '#10b98111', fill: true, tension: 0.4 }] }, options: opt });
 
         function sync() {
             const dMode = document.getElementById('d-mode').value;
             const dYear = document.getElementById('d-year').value;
             const dMonth = document.getElementById('d-month').value;
             const dBrgy = document.getElementById('d-brgy').value;
+
             onSnapshot(collection(db, "disease_cases"), snap => {
                 let counts = dMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
                 let labs = dMode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
                 let total = 0;
                 snap.forEach(doc => {
-                    const r = doc.data(); const d = r.createdAt?.toDate();
-                    if(!d) return;
+                    const r = doc.data(); const date = r.createdAt?.toDate();
+                    if(!date) return;
                     if((curD === "" || r.name === curD) && (dBrgy === "All Areas" || r.barangay === dBrgy)) {
-                        if(dMode === 'yearly' && d.getFullYear() == dYear) { counts[d.getMonth()] += Number(r.count); total += Number(r.count); }
-                        else if(dMode === 'monthly' && d.getMonth() == dMonth && d.getFullYear() == dYear) {
-                            const wk = Math.ceil((d.getDate() + new Date(d.getFullYear(), d.getMonth(), 1).getDay()) / 7) - 1;
+                        if(dMode === 'yearly' && date.getFullYear() == dYear) { counts[date.getMonth()] += Number(r.count); total += Number(r.count); }
+                        else if(dMode === 'monthly' && date.getMonth() == dMonth && date.getFullYear() == dYear) {
+                            const wk = Math.ceil((date.getDate() + new Date(date.getFullYear(), date.getMonth(), 1).getDay()) / 7) - 1;
                             if(wk>=0 && wk<5) { counts[wk] += Number(r.count); total += Number(r.count); }
                         }
                     }
@@ -231,12 +243,12 @@
                 let labs = mMode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
                 let total = 0;
                 snap.forEach(doc => {
-                    const r = doc.data(); const d = r.createdAt?.toDate();
-                    if(!d) return;
+                    const r = doc.data(); const date = r.createdAt?.toDate();
+                    if(!date) return;
                     if((curM === "" || r.name === curM) && (mBrgy === "All Areas" || r.barangay === mBrgy)) {
-                        if(mMode === 'yearly' && d.getFullYear() == mYear) { counts[d.getMonth()] += Number(r.count); total += Number(r.count); }
-                        else if(mMode === 'monthly' && d.getMonth() == mMonth && d.getFullYear() == mYear) {
-                            const wk = Math.ceil((d.getDate() + new Date(d.getFullYear(), d.getMonth(), 1).getDay()) / 7) - 1;
+                        if(mMode === 'yearly' && date.getFullYear() == mYear) { counts[date.getMonth()] += Number(r.count); total += Number(r.count); }
+                        else if(mMode === 'monthly' && date.getMonth() == mMonth && date.getFullYear() == mYear) {
+                            const wk = Math.ceil((date.getDate() + new Date(date.getFullYear(), date.getMonth(), 1).getDay()) / 7) - 1;
                             if(wk>=0 && wk<5) { counts[wk] += Number(r.count); total += Number(r.count); }
                         }
                     }
@@ -283,7 +295,9 @@
                 document.body.classList.add('auth-ready');
                 lucide.createIcons();
                 AOS.init();
-                toggleMonth('d'); toggleMonth('m');
+                // Check initial state
+                handleModeChange('d');
+                handleModeChange('m');
             } else { window.location.href = "login.html"; }
         });
 
