@@ -28,7 +28,6 @@
         @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-row { animation: slideIn 0.3s ease forwards; opacity: 0; }
 
-        /* Dynamic Status Colors to match BHW Console */
         .status-critical { background: #fee2e2; color: #ef4444; }
         .status-low { background: #ffedd5; color: #f97316; }
         .status-moderate { background: #fef3c7; color: #d97706; }
@@ -150,8 +149,7 @@
                                 <tr>
                                     <th class="px-10 py-7">Medicine Details</th>
                                     <th class="px-8 py-7">Barangay</th>
-                                    <th class="px-8 py-7">Date Added</th>
-                                    <th class="px-8 py-7 text-center">Quantity</th>
+                                    <th class="px-8 py-7 text-center">In-Stock</th>
                                     <th class="px-8 py-7">Expiry Date</th>
                                     <th class="px-10 py-7">Stock Ranking</th>
                                 </tr>
@@ -194,12 +192,14 @@
                     }
                 }
                 document.body.classList.add('auth-ready');
+                lucide.createIcons();
                 AOS.init({ duration: 800, once: true });
                 loadData();
             } else { window.location.href = "login.html"; }
         });
 
         function loadData() {
+            // Fetching from both collections for the master view
             const targets = ["medicine_stocks", "medicine_inventory"];
             targets.forEach(colName => {
                 onSnapshot(collection(db, colName), (snap) => {
@@ -212,11 +212,12 @@
                             barangay: data.barangay || "General",
                             addedDate: data.addedDate || "N/A",
                             expiry: data.expiryDate || "N/A",
-                            unit: data.unit || "", 
-                            rank: data.rank || "moderate", // MANUAL RANK FROM BHW
+                            unit: data.unit || "units", 
+                            rank: data.rank || "moderate",
                             createdAt: data.createdAt 
                         };
                     });
+                    // Filter out existing IDs to prevent duplicates during sync
                     masterData = [...masterData.filter(m => !snap.docs.find(d => d.id === m.id)), ...colData];
                     applyFilters();
                 });
@@ -257,7 +258,7 @@
         function renderTable(data) {
             const body = document.getElementById('stock-table-body');
             if (data.length === 0) {
-                body.innerHTML = `<tr><td colspan="6" class="py-20 text-center font-bold text-slate-300">No records found.</td></tr>`;
+                body.innerHTML = `<tr><td colspan="5" class="py-20 text-center font-bold text-slate-300">No records found.</td></tr>`;
                 return;
             }
 
@@ -271,13 +272,15 @@
                             <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center"><i data-lucide="pill" class="w-5 h-5"></i></div>
                             <div>
                                 <span class="font-extrabold text-lg block leading-none mb-1">${item.name}</span>
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${item.unit || 'pcs'}</span>
+                                <span class="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">TYPE: ${item.unit}</span>
                             </div>
                         </div>
                     </td>
                     <td class="px-8 py-7 text-slate-500 font-bold text-xs uppercase tracking-wider">Brgy. ${item.barangay}</td>
-                    <td class="px-8 py-7 text-slate-400 font-bold text-xs uppercase">${item.addedDate}</td>
-                    <td class="px-8 py-7 text-center font-black text-xl text-navy">${item.quantity.toLocaleString()}</td>
+                    <td class="px-8 py-7 text-center">
+                        <span class="font-black text-xl text-navy block leading-none">${item.quantity.toLocaleString()}</span>
+                        <span class="text-[9px] font-bold text-slate-300 uppercase mt-1">${item.unit}</span>
+                    </td>
                     <td class="px-8 py-7 text-slate-400 text-xs font-bold uppercase">${item.expiry}</td>
                     <td class="px-10 py-7">
                         <span class="px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest status-${rank}">
