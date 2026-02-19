@@ -31,7 +31,6 @@
         @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-row { animation: slideIn 0.4s ease forwards; }
         
-        /* Status Badge Styling */
         .badge { font-size: 9px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; letter-spacing: 0.025em; border: 1px solid transparent; }
         .status-critical { background: #fef2f2; color: #ef4444; border-color: #fee2e2; }
         .status-low { background: #fff7ed; color: #f97316; border-color: #ffedd5; }
@@ -40,15 +39,6 @@
         .status-good { background: #ecfdf5; color: #10b981; border-color: #d1fae5; }
         .pulse-critical { animation: pulse-red 1.5s infinite; }
         @keyframes pulse-red { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-        .dropdown-list {
-            display: none; position: absolute; top: 100%; left: 0; right: 0;
-            background: white; border: 1px solid #e2e8f0; border-radius: 1.25rem; 
-            max-height: 250px; overflow-y: auto; z-index: 200; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        }
-        .dropdown-list.active { display: block; }
-        .dropdown-item { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 700; color: #64748b; }
-        .dropdown-item:hover { background-color: #ecfdf5; color: #10b981; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -88,9 +78,6 @@
                         <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-5">Internal Management</p>
                         <a href="bhw-console.html" id="bhw-link" class="hidden flex items-center gap-3 bg-emerald-600 text-white px-5 py-3.5 font-semibold rounded-2xl shadow-xl shadow-emerald-100 transition-all">
                             <i data-lucide="users" class="w-5 h-5"></i> BHW Console
-                        </a>
-                        <a href="rhu-console.html" id="rhu-link" class="hidden flex items-center gap-3 text-red-600 px-5 py-3.5 font-semibold hover:bg-red-50 rounded-2xl transition-all">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i> RHU Console
                         </a>
                     </div>
                 </nav>
@@ -162,27 +149,41 @@
             </div>
             <form id="item-form" class="space-y-4">
                 <input type="hidden" id="entry-id">
+                
                 <div class="relative">
                     <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Medicine Name</label>
-                    <input type="text" id="medicine-input" placeholder="Search or type..." class="w-full p-4 bg-slate-50 border rounded-2xl font-bold text-slate-700 outline-none focus:ring-2 ring-emerald-100">
-                    <div id="medicine-dropdown" class="dropdown-list custom-scrollbar"></div>
+                    <input type="text" id="medicine-input" required placeholder="Ex: Amoxicillin" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold text-slate-700 outline-none focus:ring-2 ring-emerald-100">
                 </div>
+
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Quantity</label>
-                        <input type="number" id="med-count" required class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none">
+                        <input type="number" id="med-count" required placeholder="0" class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none focus:ring-2 ring-emerald-100">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Status Ranking</label>
-                        <select id="med-rank" required class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none ring-2 ring-emerald-50">
-                            <option value="critical">Critical</option>
-                            <option value="low">Low</option>
-                            <option value="moderate" selected>Moderate</option>
-                            <option value="high">High</option>
-                            <option value="good">Good</option>
+                        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Unit Type</label>
+                        <select id="med-unit" required class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none focus:ring-2 ring-emerald-100">
+                            <option value="pills">Pills/Tablets</option>
+                            <option value="boxes">Boxes</option>
+                            <option value="bottles">Bottles/Syrup</option>
+                            <option value="vials">Vials/Ampules</option>
+                            <option value="sachets">Sachets</option>
+                            <option value="pieces">Pieces</option>
                         </select>
                     </div>
                 </div>
+
+                <div>
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Status Ranking</label>
+                    <select id="med-rank" required class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none focus:ring-2 ring-emerald-100">
+                        <option value="critical">Critical</option>
+                        <option value="low">Low</option>
+                        <option value="moderate" selected>Moderate</option>
+                        <option value="high">High</option>
+                        <option value="good">Good</option>
+                    </select>
+                </div>
+
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-2">Added Date</label>
@@ -193,6 +194,7 @@
                         <input type="date" id="med-expiry" required class="w-full p-4 bg-slate-50 border rounded-2xl font-bold outline-none">
                     </div>
                 </div>
+
                 <div class="flex gap-4 pt-6">
                     <button type="button" onclick="closeModal()" class="flex-1 font-bold text-slate-400">Cancel</button>
                     <button type="submit" class="flex-[2] py-4 bg-emerald-600 text-white font-bold rounded-2xl shadow-xl shadow-emerald-100 hover:bg-emerald-700 transition-all">Save Record</button>
@@ -225,11 +227,8 @@
                     userBrgy = docSnap.data().barangay;
                     document.getElementById('user-name-display').innerText = docSnap.data().name;
                     document.getElementById('brgy-badge').innerText = `Brgy. ${userBrgy}`;
-                    
-                    // Show internal management link
                     document.getElementById('internal-section').classList.remove('hidden');
                     document.getElementById('bhw-link').classList.remove('hidden');
-                    
                     document.body.classList.add('auth-ready');
                     lucide.createIcons();
                     AOS.init({ duration: 800, once: true });
@@ -250,6 +249,7 @@
             const body = document.getElementById('inventory-table-body');
             body.innerHTML = data.map((item, index) => {
                 const rank = item.rank || 'moderate';
+                const unit = item.unit || 'units'; // Default if not set
                 return `
                 <tr class="hover:bg-slate-50 transition-all animate-row">
                     <td class="px-10 py-7">
@@ -260,7 +260,10 @@
                     <td class="px-8 py-7">
                         <span class="badge status-${rank} ${rank === 'critical' ? 'pulse-critical' : ''}">${rank}</span>
                     </td>
-                    <td class="px-8 py-7 text-center font-bold text-lg text-slate-700">${(item.count || 0).toLocaleString()}</td>
+                    <td class="px-8 py-7 text-center">
+                        <span class="font-bold text-lg text-slate-700">${(item.count || 0).toLocaleString()}</span>
+                        <span class="text-[10px] font-black text-slate-400 uppercase block tracking-tighter">${unit}</span>
+                    </td>
                     <td class="px-10 py-7 text-right">
                         <div class="flex justify-end gap-2">
                             <button onclick="editEntry('${item.id}')" class="p-2 border rounded-xl hover:bg-blue-500 hover:text-white transition-all"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
@@ -286,6 +289,7 @@
             document.getElementById('medicine-input').value = item.name;
             document.getElementById('med-added-date').value = item.addedDate;
             document.getElementById('med-count').value = item.count;
+            document.getElementById('med-unit').value = item.unit || 'pills';
             document.getElementById('med-rank').value = item.rank || 'moderate';
             document.getElementById('med-expiry').value = item.expiryDate;
             document.getElementById('item-modal').classList.remove('hidden');
@@ -300,6 +304,7 @@
                 name: document.getElementById('medicine-input').value, 
                 addedDate: document.getElementById('med-added-date').value,
                 count: parseInt(document.getElementById('med-count').value), 
+                unit: document.getElementById('med-unit').value,
                 rank: document.getElementById('med-rank').value,
                 expiryDate: document.getElementById('med-expiry').value, 
                 barangay: userBrgy, 
