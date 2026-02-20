@@ -12,8 +12,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
-        
-        /* Splash Screen Styles */
         #splash-screen {
             position: fixed; inset: 0; background: white; z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -29,11 +27,9 @@
             70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(37, 99, 235, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
         }
-
         #main-layout { display: none; }
         .auth-ready #main-layout { display: flex; }
         .month-selector { display: none; } 
-
         #sidebar { 
             position: fixed; top: 0; left: 0; height: 100vh; width: 280px; 
             z-index: 1000; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -132,7 +128,6 @@
             </header>
 
             <div class="p-6 lg:p-10 space-y-8 max-w-[1400px] mx-auto">
-                
                 <div class="bg-white rounded-[2rem] border border-slate-100 p-6 lg:p-8 shadow-sm" data-aos="fade-up">
                     <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-8">
                         <div>
@@ -193,7 +188,8 @@
         const db = getFirestore(app);
 
         const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-        const years = ["2024", "2025", "2026"];
+        // Fixed: Removed 2024, keeping 2025 and 2026
+        const years = ["2025", "2026"];
         const barangays = ["All Areas", "Ariman", "Bagacay", "Balud Del Norte", "Balud Del Sur", "Benguet", "Bentuco", "Beriran", "Buenavista", "Bulacao", "Cabigaan", "Cabiguhan", "Carriedo", "Casili", "Cogon", "Cota Na Daco", "Dita", "Jupi", "Lapinig", "Luna-Candol", "Manapao", "Manook", "Naagtan", "Nato", "Nazareno", "Ogao", "Paco", "Panganiban", "Paradijon", "Patag", "Payawin", "Pinontingan", "Rizal", "San Ignacio", "Sangat", "Santa Ana", "Tabi", "Tagaytay", "Tigkiw", "Tiris", "Togawe", "Union", "Villareal"];
         
         let curD = "", curM = "";
@@ -204,6 +200,11 @@
         fill('d-year', years); fill('m-year', years);
         fill('d-month', months, true); fill('m-month', months, true);
         fill('d-brgy', barangays); fill('m-brgy', barangays);
+
+        // Fixed: Set current year as default
+        const currentYear = new Date().getFullYear().toString();
+        document.getElementById('d-year').value = years.includes(currentYear) ? currentYear : "2026";
+        document.getElementById('m-year').value = years.includes(currentYear) ? currentYear : "2026";
 
         document.getElementById('open-sidebar').onclick = () => { document.getElementById('sidebar').classList.add('sidebar-open'); document.getElementById('overlay').classList.add('active'); };
         document.getElementById('close-sidebar').onclick = () => { document.getElementById('sidebar').classList.remove('sidebar-open'); document.getElementById('overlay').classList.remove('active'); };
@@ -218,11 +219,9 @@
         document.getElementById('d-mode').addEventListener('change', () => updateVisibility('d'));
         document.getElementById('m-mode').addEventListener('change', () => updateVisibility('m'));
 
-        const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
-        const dChart = new Chart(document.getElementById('diseaseChart'), { type: 'line', data: { labels: [], datasets: [{ label: '', data: [], borderColor: '#3b82f6', backgroundColor: '#3b82f611', fill: true, tension: 0.4 }] }, options: opt });
-        const mChart = new Chart(document.getElementById('stockChart'), { type: 'line', data: { labels: [], datasets: [{ label: '', data: [], borderColor: '#10b981', backgroundColor: '#10b98111', fill: true, tension: 0.4 }] }, options: opt });
-
-        let masterMedData = {};
+        const opt = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } };
+        const dChart = new Chart(document.getElementById('diseaseChart'), { type: 'line', data: { labels: [], datasets: [{ label: 'Cases', data: [], borderColor: '#3b82f6', backgroundColor: '#3b82f611', fill: true, tension: 0.4 }] }, options: opt });
+        const mChart = new Chart(document.getElementById('stockChart'), { type: 'line', data: { labels: [], datasets: [{ label: 'Stocks', data: [], borderColor: '#10b981', backgroundColor: '#10b98111', fill: true, tension: 0.4 }] }, options: opt });
 
         function sync() {
             const dMode = document.getElementById('d-mode').value;
@@ -230,6 +229,7 @@
             const dMonth = document.getElementById('d-month').value;
             const dBrgy = document.getElementById('d-brgy').value;
 
+            // Sync Diseases
             onSnapshot(collection(db, "disease_cases"), snap => {
                 let counts = dMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
                 let labs = dMode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
@@ -237,11 +237,11 @@
                 snap.forEach(doc => {
                     const r = doc.data(); const date = r.createdAt?.toDate();
                     if(!date) return;
-                    if((curD === "" || r.name === curD) && (dBrgy === "All Areas" || r.barangay === dBrgy)) {
-                        if(dMode === 'yearly' && date.getFullYear() == dYear) { counts[date.getMonth()] += Number(r.count); total += Number(r.count); }
-                        else if(dMode === 'monthly' && date.getMonth() == dMonth && date.getFullYear() == dYear) {
+                    if(date.getFullYear().toString() === dYear && (curD === "" || r.name === curD) && (dBrgy === "All Areas" || r.barangay === dBrgy)) {
+                        if(dMode === 'yearly') { counts[date.getMonth()] += Number(r.count || 0); total += Number(r.count || 0); }
+                        else if(dMode === 'monthly' && date.getMonth() == dMonth) {
                             const wk = Math.ceil((date.getDate() + new Date(date.getFullYear(), date.getMonth(), 1).getDay()) / 7) - 1;
-                            if(wk>=0 && wk<5) { counts[wk] += Number(r.count); total += Number(r.count); }
+                            if(wk>=0 && wk<5) { counts[wk] += Number(r.count || 0); total += Number(r.count || 0); }
                         }
                     }
                 });
@@ -249,6 +249,7 @@
                 document.getElementById('d-total').innerText = total.toLocaleString();
             });
 
+            // Sync Medicines (Both collections)
             const mMode = document.getElementById('m-mode').value;
             const mYear = document.getElementById('m-year').value;
             const mMonth = document.getElementById('m-month').value;
@@ -257,18 +258,18 @@
             
             targetCols.forEach(colName => {
                 onSnapshot(collection(db, colName), snap => {
-                    masterMedData[colName] = snap.docs.map(d => ({...d.data(), id: d.id}));
                     let combinedCounts = mMode === 'yearly' ? new Array(12).fill(0) : new Array(5).fill(0);
                     let labs = mMode === 'yearly' ? months.map(m => m.substring(0,3)) : ["Wk 1", "Wk 2", "Wk 3", "Wk 4", "Wk 5"];
                     let grandTotal = 0;
 
-                    Object.values(masterMedData).flat().forEach(r => {
+                    snap.forEach(doc => {
+                        const r = doc.data();
                         const date = r.createdAt?.toDate();
                         if(!date) return;
-                        if((curM === "" || r.name === curM) && (mBrgy === "All Areas" || r.barangay === mBrgy)) {
+                        if(date.getFullYear().toString() === mYear && (curM === "" || r.name === curM) && (mBrgy === "All Areas" || r.barangay === mBrgy)) {
                             const countVal = Number(r.count || 0);
-                            if(mMode === 'yearly' && date.getFullYear() == mYear) { combinedCounts[date.getMonth()] += countVal; grandTotal += countVal; }
-                            else if(mMode === 'monthly' && date.getMonth() == mMonth && date.getFullYear() == mYear) {
+                            if(mMode === 'yearly') { combinedCounts[date.getMonth()] += countVal; grandTotal += countVal; }
+                            else if(mMode === 'monthly' && date.getMonth() == mMonth) {
                                 const wk = Math.ceil((date.getDate() + new Date(date.getFullYear(), date.getMonth(), 1).getDay()) / 7) - 1;
                                 if(wk>=0 && wk<5) { combinedCounts[wk] += countVal; grandTotal += countVal; }
                             }
@@ -280,7 +281,6 @@
             });
         }
 
-        // Auth and Splash Removal
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const s = await getDoc(doc(db, "users", user.uid));
@@ -292,20 +292,15 @@
                         else { const link = document.getElementById(`${u.role}-link`); if(link) link.classList.remove('hidden'); }
                     }
                 }
-                
-                // Finalize dashboard and hide splash
                 document.body.classList.add('auth-ready');
                 lucide.createIcons();
                 AOS.init();
-                updateVisibility('d'); updateVisibility('m');
-
-                // Remove splash screen after 1.5s - 2s
+                sync();
                 setTimeout(() => {
                     const splash = document.getElementById('splash-screen');
                     splash.style.opacity = '0';
                     setTimeout(() => splash.remove(), 500);
                 }, 1500);
-
             } else { window.location.href = "login.html"; }
         });
 
